@@ -2,19 +2,29 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "next: build",
+			"label": "Build and Run App",
 			"type": "shell",
-			"command": "npm run build",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"label": "Build and Run Next.js on port 3011",
-			"type": "shell",
-			"command": "npm run build && PORT=3011 npm start",
-			"isBackground": false,
-			"problemMatcher": [],
-			"group": "build"
+			"command": "PORT=3011 npm run dev",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"problemMatcher": [
+				{
+					"owner": "custom",
+					"pattern": [{ "regexp": ".", "message": 1 }],
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": "▲ Next\\.js|Compiling|starting",
+						"endsPattern": "Ready in"
+					}
+				}
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		}
 	]
 }

@@ -1,0 +1,276 @@
+/* Card frame — 272×400 base size */
+.card {
+  width: 272px;
+  height: 400px;
+  border-radius: 16px;
+  border: 1.5px solid var(--gc-border);
+  background:
+    repeating-linear-gradient(120deg, rgba(255,255,255,.04) 0px, rgba(255,255,255,.04) 1px, transparent 1px, transparent 12px),
+    repeating-linear-gradient(30deg, rgba(0,0,0,.06) 0px, rgba(0,0,0,.06) 1px, transparent 1px, transparent 12px),
+    linear-gradient(160deg, rgba(255,255,255,.1) 0%, rgba(0,0,0,.18) 55%, rgba(255,255,255,.04) 100%),
+    var(--gc-card-bg);
+  box-shadow: 0 24px 48px rgba(0,0,0,.85);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 56px rgba(0,0,0,.9), 0 0 0 1px var(--gc-border);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  min-height: 44px;
+  background: var(--gc-header-bg);
+  border-bottom: 1px solid color-mix(in srgb, var(--gc-border) 40%, transparent);
+  flex-shrink: 0;
+}
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+.headerIcon {
+  flex-shrink: 0;
+  color: var(--gc-text-main);
+  display: flex;
+  align-items: center;
+}
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--gc-text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.artist {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: .4px;
+  color: var(--gc-text-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .85;
+}
+
+/* Score circle */
+.score {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--gc-border);
+  background: rgba(0,0,0,.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gc-text-main);
+  box-shadow: 0 0 var(--score-glow-r, 4px) var(--score-glow-c, transparent);
+}
+
+/* Artwork area */
+.art {
+  flex: 1;
+  overflow: hidden;
+  background: var(--gc-card-bg);
+  position: relative;
+}
+.artSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Type strip — parchment with diamond-cut corners */
+.typeStrip {
+  position: relative;
+  background: #ede4cc;
+  border-top: 1px solid var(--gc-border);
+  border-bottom: 1px solid var(--gc-border);
+  padding: 6px 14px;
+  margin: 3px 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 0 0 1px rgba(255,255,255,.2), 0 5px 12px rgba(0,0,0,.25);
+  overflow: hidden;
+}
+/* Diamond cuts at corners */
+.typeStrip::before,
+.typeStrip::after {
+  content: '';
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: var(--gc-card-bg);
+  transform: rotate(45deg);
+}
+.typeStrip::before { top: -5.5px; left: -5.5px; box-shadow: 5.5px 0 0 -3px var(--gc-card-bg), 0 5.5px 0 -3px var(--gc-card-bg); }
+.typeStrip::after  { top: -5.5px; right: -5.5px; }
+.cornerBL, .cornerBR {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: var(--gc-card-bg);
+  transform: rotate(45deg);
+}
+.cornerBL { bottom: -5.5px; left: -5.5px; }
+.cornerBR { bottom: -5.5px; right: -5.5px; }
+.typeText {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #2e2010;
+}
+.typeRight {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  background: var(--gc-border);
+  transform: rotate(45deg);
+  opacity: .9;
+}
+
+/* Ability box */
+.ability {
+  background: #f4edd8;
+  padding: 7px 10px;
+  margin: 0 4px 2px;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), inset 0 -1px 0 rgba(0,0,0,.06);
+}
+.abilityName {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #1a1208;
+  margin-bottom: 3px;
+}
+.abilityDesc {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: #2e2010;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Stats */
+.stats {
+  background: rgba(0,0,0,.28);
+  padding: 7px 8px;
+  margin: 0 4px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.statRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.statLabel {
+  font-family: 'Space Mono', monospace;
+  font-size: 6.5px;
+  letter-spacing: .6px;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+  width: 66px;
+  flex-shrink: 0;
+}
+.statBg {
+  flex: 1;
+  height: 9px;
+  border-radius: 5px;
+  background: rgba(0,0,0,.55);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+}
+.statFill {
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 8px var(--bar-glow), 0 0 16px var(--bar-glow);
+}
+.statVal {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255,255,255,.9);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 10px 6px;
+  margin: 0 4px 2px;
+  flex-shrink: 0;
+}
+.brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.55);
+}
+.rarityRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.rarityText {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+/* Small variant */
+.cardSm {
+  transform: scale(calc(149 / 272));
+  transform-origin: top left;
+}
+.wrapSm {
+  width: 149px;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+}

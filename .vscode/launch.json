@@ -2,19 +2,33 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Build and Run App",
-			"type": "node-terminal",
+			"type": "node",
 			"request": "launch",
-			"command": "npm run build && PORT=3011 npm start",
+			"name": "Launch app (dev)",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "dev"],
 			"cwd": "${workspaceFolder}",
-			"env": {
-				"NODE_OPTIONS": ""
-			},
-			"serverReadyAction": {
-				"action": "openExternally",
-				"pattern": "Local:\\s+http://localhost:(\\d+)",
-				"uriFormat": "http://localhost:%s"
-			}
+			"env": { "PORT": "3011" },
+			"console": "integratedTerminal",
+			"autoAttachChildProcesses": false
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch app (build and run)",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "launch"],
+			"cwd": "${workspaceFolder}",
+			"env": { "PORT": "3011" },
+			"console": "integratedTerminal",
+			"autoAttachChildProcesses": false
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Open app in Chrome",
+			"url": "http://localhost:3011",
+			"webRoot": "${workspaceFolder}"
 		}
 	]
 }

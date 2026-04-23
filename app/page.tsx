@@ -5,6 +5,7 @@ const sections = [
   { href: '/genres', index: '02', label: 'Genres', desc: 'Genre colour system and the wheel' },
   { href: '/typography', index: '03', label: 'Typography', desc: 'Cinzel, Cormorant Garamond, Space Mono' },
   { href: '/rarities', index: '04', label: 'Rarities', desc: 'Legendary, Epic, Rare, Common' },
+  { href: '/cards',    index: '05', label: 'Cards',    desc: 'Card frame anatomy and all genre variants' },
 ];
 
 export default function IndexPage() {
