@@ -1,0 +1,17 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Build and Run App",
+			"type": "node-terminal",
+			"request": "launch",
+			"command": "kill -9 $(lsof -ti:3011) 2>/dev/null; npm run build && PORT=3011 npm start",
+			"cwd": "${workspaceFolder}",
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "Local:\\s+http://localhost:(\\d+)",
+				"uriFormat": "http://localhost:%s"
+			}
+		}
+	]
+}
