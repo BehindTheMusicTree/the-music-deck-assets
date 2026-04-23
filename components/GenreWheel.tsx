@@ -71,7 +71,7 @@ export default function GenreWheel() {
         <defs>
           <path id="arc-pop"   d={`M ${CX},${CY - (R_INNER - 30)} A ${R_INNER - 30},${R_INNER - 30} 0 1,1 ${CX - 0.1},${CY - (R_INNER - 30)}`} />
           <path id="arc-exp-outer-inner"  d={`M ${CX},${CY - (R_INNER + 20)} A ${R_INNER + 20},${R_INNER + 20} 0 1,1 ${CX - 0.1},${CY - (R_INNER + 20)}`} />
-          <path id="arc-exp-inner-outer"  d={`M ${CX},${CY - (R_OUTER - 6)} A ${R_OUTER - 6},${R_OUTER - 6} 0 1,1 ${CX - 0.1},${CY - (R_OUTER - 6)}`} />
+          <path id="arc-exp-inner-outer"  d={`M ${CX},${CY - (R_OUTER - 1)} A ${R_OUTER - 1},${R_OUTER - 1} 0 1,1 ${CX - 0.1},${CY - (R_OUTER - 1)}`} />
           <path id="arc-hard"  d={`M ${CX},${CY - (R_HARDCORE + 30)} A ${R_HARDCORE + 30},${R_HARDCORE + 30} 0 1,1 ${CX - 0.1},${CY - (R_HARDCORE + 30)}`} />
         </defs>
 
@@ -134,7 +134,7 @@ export default function GenreWheel() {
             const idx = GENRES.findIndex(g => g.n === s.parent);
             angle = (idx / GENRES.length) * 360 - 90;
           }
-          const { x, y } = polarToXY(CX, CY, R_OUTER, angle);
+          const { x, y } = polarToXY(CX, CY, (R_INNER + R_OUTER) / 2, angle);
           return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
         })}
 
