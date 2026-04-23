@@ -1,0 +1,21 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #09080d;
+  --surface: #100f18;
+  --card:    #16141f;
+  --border:  #1e1c2c;
+  --gold:    #a87c28;
+  --gold-hi: #c8a040;
+  --white:   #d8d4f0;
+  --muted:   #6a6480;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
