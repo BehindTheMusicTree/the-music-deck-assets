@@ -4,14 +4,14 @@ const GENRES = [
   { n: 'Reggae/Dub', h: '#3a9030' },
   { n: 'Electronic', h: '#2850c8' },
   { n: 'Disco/Funk', h: '#c0387a' },
-  { n: 'Hip-hop',    h: '#c8960a' },
+  { n: 'Hip-hop',    h: '#ffd700' },
   { n: 'Rock',       h: '#d01828' },
   { n: 'Country',    h: '#7a4e20' },
   { n: 'Classical',  h: '#5c2a0a' },
   { n: 'Vintage',    h: '#787878' },
 ];
 
-const CX = 500, CY = 500, R_INNER = 270, R_OUTER = 370, R_HARDCORE = 470;
+const CX = 620, CY = 620, R_INNER = 340, R_OUTER = 460, R_HARDCORE = 580;
 
 function repeat(str: string, times: number) {
   return Array(times).fill(str).join(' · ') + ' ·';
@@ -23,10 +23,10 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
 }
 
 function Rect({ x, y, label, hex, small }: { x: number; y: number; label: string; hex: string; small?: boolean }) {
-  const w = small ? 80 : 110;
-  const h = small ? 44 : 64;
-  const fs = small ? 7 : 9;
-  const fsh = small ? 6 : 7.5;
+  const w = small ? 120 : 160;
+  const h = small ? 64 : 92;
+  const fs = small ? 10.5 : 14;
+  const fsh = small ? 8.5 : 11;
   const isDark = isLight(hex);
   const tc = isDark ? 'rgba(10,10,10,.85)' : 'rgba(255,255,255,.92)';
   const hc = isDark ? 'rgba(10,10,10,.5)' : 'rgba(255,255,255,.55)';
@@ -37,10 +37,10 @@ function Rect({ x, y, label, hex, small }: { x: number; y: number; label: string
       onClick={() => navigator.clipboard.writeText(hex)}
     >
       <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={4} fill={hex} filter={`drop-shadow(0 2px 8px ${hex}88)`} />
-      <text x={0} y={-6} textAnchor="middle" fontFamily="Cinzel, serif" fontWeight={700} fontSize={fs} letterSpacing={1} fill={tc}>
+      <text x={0} y={-8} textAnchor="middle" fontFamily="Cinzel, serif" fontWeight={700} fontSize={fs} letterSpacing={1} fill={tc}>
         {label}
       </text>
-      <text x={0} y={8} textAnchor="middle" fontFamily="Space Mono, monospace" fontSize={fsh} fill={hc}>
+      <text x={0} y={10} textAnchor="middle" fontFamily="Space Mono, monospace" fontSize={fsh} fill={hc}>
         {hex}
       </text>
     </g>
@@ -63,14 +63,16 @@ export default function GenreWheel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 48, marginTop: 40 }}>
       <svg
-        width={1000}
-        height={1000}
-        viewBox="0 0 1000 1000"
+        width={1240}
+        height={1240}
+        viewBox="0 0 1240 1240"
         style={{ overflow: 'visible', maxWidth: '100%' }}
       >
         <defs>
-          <path id="arc-genre"    d={`M ${CX},${CY - R_INNER} A ${R_INNER},${R_INNER} 0 1,1 ${CX - 0.1},${CY - R_INNER}`} />
-          <path id="arc-hardcore" d={`M ${CX},${CY - R_HARDCORE} A ${R_HARDCORE},${R_HARDCORE} 0 1,1 ${CX - 0.1},${CY - R_HARDCORE}`} />
+          <path id="arc-pop"   d={`M ${CX},${CY - (R_INNER - 30)} A ${R_INNER - 30},${R_INNER - 30} 0 1,1 ${CX - 0.1},${CY - (R_INNER - 30)}`} />
+          <path id="arc-exp-outer-inner"  d={`M ${CX},${CY - (R_INNER + 20)} A ${R_INNER + 20},${R_INNER + 20} 0 1,1 ${CX - 0.1},${CY - (R_INNER + 20)}`} />
+          <path id="arc-exp-inner-outer"  d={`M ${CX},${CY - (R_OUTER - 6)} A ${R_OUTER - 6},${R_OUTER - 6} 0 1,1 ${CX - 0.1},${CY - (R_OUTER - 6)}`} />
+          <path id="arc-hard"  d={`M ${CX},${CY - (R_HARDCORE + 30)} A ${R_HARDCORE + 30},${R_HARDCORE + 30} 0 1,1 ${CX - 0.1},${CY - (R_HARDCORE + 30)}`} />
         </defs>
 
         {/* Pop center */}
@@ -80,22 +82,25 @@ export default function GenreWheel() {
           <text x={CX} y={CY + 10} textAnchor="middle" fontFamily="Space Mono, monospace" fontSize={6.5} fill="rgba(9,8,13,.5)">#c0b8d0</text>
         </g>
 
-        {/* Genre circle */}
+        {/* Pop text — inside inner circle */}
         <circle cx={CX} cy={CY} r={R_INNER} fill="none" stroke="rgba(255,255,255,.14)" strokeWidth={1.5} strokeDasharray="4 6" />
         <text fontFamily="Cinzel, serif" fontSize={11} fill="rgba(255,255,255,.85)" letterSpacing={8}>
-          <textPath href="#arc-genre" startOffset="0%" dy={20}>{popText}</textPath>
-        </text>
-        <text fontFamily="Cinzel, serif" fontSize={10} fill="rgba(255,255,255,.22)" letterSpacing={5}>
-          <textPath href="#arc-genre" startOffset="0%" dy={-8}>{expText}</textPath>
+          <textPath href="#arc-pop" startOffset="0%" dy={16}>{popText}</textPath>
         </text>
 
-        {/* Hardcore circle */}
-        <circle cx={CX} cy={CY} r={R_HARDCORE} fill="none" stroke="rgba(255,255,255,.08)" strokeWidth={1.5} strokeDasharray="4 6" />
-        <text fontFamily="Cinzel, serif" fontSize={10} fill="rgba(255,255,255,.18)" letterSpacing={5}>
-          <textPath href="#arc-hardcore" startOffset="0%" dy={18}>{exp2Text}</textPath>
+        {/* Experimental text — just outside inner circle */}
+        <text fontFamily="Cinzel, serif" fontSize={10} fill="rgba(255,255,255,.22)" letterSpacing={5}>
+          <textPath href="#arc-exp-outer-inner" startOffset="0%" dy={16}>{expText}</textPath>
         </text>
+        {/* Experimental text — just inside outer circle */}
+        <text fontFamily="Cinzel, serif" fontSize={10} fill="rgba(255,255,255,.22)" letterSpacing={5}>
+          <textPath href="#arc-exp-inner-outer" startOffset="0%" dy={-8}>{exp2Text}</textPath>
+        </text>
+
+        {/* Hardcore circle + text — outside outer circle */}
+        <circle cx={CX} cy={CY} r={R_HARDCORE} fill="none" stroke="rgba(255,255,255,.08)" strokeWidth={1.5} strokeDasharray="4 6" />
         <text fontFamily="Cinzel, serif" fontSize={10} fill="rgba(255,255,255,.15)" letterSpacing={5}>
-          <textPath href="#arc-hardcore" startOffset="0%" dy={-8}>{hardText}</textPath>
+          <textPath href="#arc-hard" startOffset="0%" dy={16}>{hardText}</textPath>
         </text>
 
         {/* Inner genres */}
@@ -139,12 +144,12 @@ export default function GenreWheel() {
           { n: 'Pop Rock',    h: '#f07080', parent: 'Rock' },
           { n: 'EDM',         h: '#7090e8', parent: 'Electronic' },
           { n: 'Pop Country', h: '#d4a06a', parent: 'Country' },
-          { n: 'R&B',         h: '#f0d870', parent: 'Hip-hop' },
+          { n: 'R&B',         h: '#ffe94d', parent: 'Hip-hop' },
           { n: 'Roots',       h: '#5ab848', parent: 'Reggae/Dub' },
         ].map((s) => {
           const idx = GENRES.findIndex(g => g.n === s.parent);
           const angle = (idx / GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(CX, CY, 140, angle);
+          const { x, y } = polarToXY(CX, CY, 175, angle);
           return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
         })}
       </svg>
