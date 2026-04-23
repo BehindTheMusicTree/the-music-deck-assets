@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Music Deck — Assets & Design Charter
 
-## Getting Started
+Design system, visual charter, and creative assets for [The Music Deck](https://github.com/mignot/the-music-deck) — a music-themed card game.
 
-First, run the development server:
+This repository is independent from the game codebase. It serves as the single source of truth for visual identity, genre colour palette, card artwork prompts, and UI references.
+
+---
+
+## Charter App
+
+An interactive Next.js app documenting the full design system.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route | Content |
+|---|---|
+| `/` | Index — all sections |
+| `/palette` | Base design tokens and UI colours |
+| `/genres` | Genre colour wheel with subgenres |
+| `/typography` | Cinzel, Cormorant Garamond, Space Mono |
+| `/rarities` | Legendary, Epic, Rare, Common |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/                   Next.js charter pages
+components/            Shared UI components (GenreWheel, etc.)
+docs/                  Product design documentation
+public/
+  charte-graphique/    Static HTML charter (reference)
+  cards/               Card artworks, examples, AI prompts
+  ui/                  Card back, booster pack visuals
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Docs
 
-## Deploy on Vercel
+All product design documentation lives in `docs/`. Start with [`docs/INDEX.md`](docs/INDEX.md).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Key documents:
+- [`genres.md`](docs/genres.md) — genre archetypes, colours, strengths & weaknesses
+- [`charte-graphique.md`](docs/charte-graphique.md) — full visual charter reference
+- [`card-system.md`](docs/card-system.md) — card anatomy and stats
+- [`battle-system.md`](docs/battle-system.md) — combat rules
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Colour System
+
+`app/globals.css` is the source of truth for design tokens in this repo. Genre colours are defined per `.g-*` class in the game repo's `globals.css` and documented here in the charter app.
+
+When colours change in the game repo, update the charter here to stay in sync.
+
+---
+
+## Relationship to the Game Repo
+
+| Concern | Lives in |
+|---|---|
+| Genre CSS variables (`.g-*`) | `the-music-deck` → `app/globals.css` |
+| Colour documentation & charter | `the-music-deck-assets` (this repo) |
+| Card artwork & AI prompts | `the-music-deck-assets` → `public/cards/` |
+| Game logic, screens, components | `the-music-deck` |
