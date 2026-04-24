@@ -590,7 +590,6 @@ export default function CardsPage() {
                 <div
                   style={{
                     fontFamily: "Cormorant Garamond, serif",
-                    fontSize: 13,
                     color: "var(--muted)",
                     lineHeight: 1.5,
                   }}

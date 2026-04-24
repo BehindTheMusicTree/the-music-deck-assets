@@ -336,9 +336,14 @@ const WORLD_CARDS: CardData[] = [
   },
 ];
 
+function genreSampleId(genre: string) {
+  return `genre-sample-${genre.replace(/\//g, "-").replace(/\s+/g, "-").toLowerCase()}`;
+}
+
 export default function GenresPage() {
   return (
     <div
+      id="genres-page"
       style={{
         padding: "40px 24px",
         display: "flex",
@@ -346,7 +351,10 @@ export default function GenresPage() {
         alignItems: "center",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 32 }}>
+      <div
+        id="genres-back-link"
+        style={{ width: "100%", maxWidth: 1100, marginBottom: 32 }}
+      >
         <Link
           href="/"
           style={{
@@ -361,6 +369,7 @@ export default function GenresPage() {
         </Link>
       </div>
       <div
+        id="genres-chapter-index"
         style={{
           fontFamily: "Space Mono, monospace",
           fontSize: 9,
@@ -372,6 +381,7 @@ export default function GenresPage() {
         02
       </div>
       <div
+        id="genres-chapter-eyebrow"
         style={{
           fontFamily: "Space Mono, monospace",
           fontSize: 9,
@@ -383,6 +393,7 @@ export default function GenresPage() {
         Genre colour system
       </div>
       <h2
+        id="genres-heading"
         style={{
           fontFamily: "Cinzel, serif",
           fontSize: 28,
@@ -395,6 +406,7 @@ export default function GenresPage() {
         <em style={{ color: "var(--gold)", fontStyle: "normal" }}>GENRES</em>
       </h2>
       <p
+        id="genres-intro"
         style={{
           fontFamily: "Cormorant Garamond, serif",
           fontStyle: "italic",
@@ -408,6 +420,7 @@ export default function GenresPage() {
         reflects the flag of the song&apos;s country of origin.
       </p>
       <div
+        id="genres-color-ramp-explainer"
         style={{
           width: "100%",
           maxWidth: 860,
@@ -421,6 +434,7 @@ export default function GenresPage() {
         }}
       >
         <div
+          id="genres-color-ramp-explainer-title"
           style={{
             fontFamily: "Space Mono, monospace",
             fontSize: 9,
@@ -439,22 +453,26 @@ export default function GenresPage() {
             margin: 0,
           }}
         >
-          Dans chaque genre, on va du plus clair (zone pop) au plus sombre
-          (zone hardcore). Exemple en Electronic: EDM est la variante
-          commerciale (bleu moyen, proche du bleu pervenche), Electropop est la
-          variante pop (quasi blanc bleute, bleu glacier), et Psytrance est la
-          variante hardcore (bleu nuit profond). On peut aussi mixer les teintes
-          selon les influences: Nu Metal combine Metal + Rap, donc rouge cramoisi
-          + jaune or, ce qui donne un orange ambre.
+          Dans chaque genre, on va du plus clair (zone pop) au plus sombre (zone
+          hardcore). Exemple en Electronic: EDM est la variante commerciale
+          (bleu moyen, proche du bleu pervenche), Electropop est la variante pop
+          (quasi blanc bleute, bleu glacier), et Psytrance est la variante
+          hardcore (bleu nuit profond). On peut aussi mixer les teintes selon
+          les influences: Nu Metal combine Metal + Rap, donc rouge cramoisi +
+          jaune or, ce qui donne un orange ambre.
         </p>
       </div>
 
-      {/* Wheel */}
-      <GenreWheel />
+      <div id="genres-wheel">
+        <GenreWheel />
+      </div>
 
-      {/* Genre variant cards */}
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 64 }}>
+      <div
+        id="genres-variants"
+        style={{ width: "100%", maxWidth: 1100, marginBottom: 64 }}
+      >
         <div
+          id="genres-variants-title"
           style={{
             fontFamily: "Space Mono, monospace",
             fontSize: 9,
@@ -466,9 +484,13 @@ export default function GenresPage() {
         >
           Genre Variants
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+        <div
+          id="genres-variants-grid"
+          style={{ display: "flex", flexWrap: "wrap", gap: 24 }}
+        >
           {Object.entries(SAMPLE_CARDS).map(([genre, card]) => (
             <div
+              id={genreSampleId(genre)}
               key={genre}
               style={{
                 display: "flex",
@@ -479,6 +501,7 @@ export default function GenresPage() {
             >
               <Card card={card} theme={GENRE_THEMES[genre]} />
               <div
+                id={`${genreSampleId(genre)}-label`}
                 style={{
                   fontFamily: "Space Mono, monospace",
                   fontSize: 8,
@@ -493,9 +516,9 @@ export default function GenresPage() {
         </div>
       </div>
 
-      {/* World — cas particulier */}
-      <div style={{ width: "100%", maxWidth: 1100 }}>
+      <div id="genres-world" style={{ width: "100%", maxWidth: 1100 }}>
         <div
+          id="genres-world-title"
           style={{
             fontFamily: "Space Mono, monospace",
             fontSize: 9,
@@ -508,10 +531,10 @@ export default function GenresPage() {
           World — Cas particulier
         </div>
         <p
+          id="genres-world-intro"
           style={{
             fontFamily: "Cormorant Garamond, serif",
             fontStyle: "italic",
-            fontSize: 13,
             color: "var(--muted)",
             marginBottom: 32,
           }}
@@ -519,7 +542,10 @@ export default function GenresPage() {
           La bordure reflète le drapeau du pays d&apos;origine — chaque couleur
           occupe un tiers de la bordure (gauche → droite).
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div
+          id="genres-world-by-country"
+          style={{ display: "flex", flexDirection: "column", gap: 16 }}
+        >
           {Object.entries(
             WORLD_CARDS.reduce<Record<string, CardData[]>>((acc, card) => {
               const c = card.country!;
@@ -528,6 +554,7 @@ export default function GenresPage() {
             }, {}),
           ).map(([country, cards]) => (
             <details
+              id={`genres-world-${country.toLowerCase()}`}
               key={country}
               open
               style={{ borderTop: "1px solid var(--border)" }}
@@ -551,6 +578,7 @@ export default function GenresPage() {
                 {country}
               </summary>
               <div
+                id={`genres-world-${country.toLowerCase()}-cards`}
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
