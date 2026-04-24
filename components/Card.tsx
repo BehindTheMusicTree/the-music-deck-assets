@@ -19,6 +19,10 @@ export interface CardData {
   rarity: 'Legendary' | 'Epic' | 'Rare' | 'Common';
   artwork?: string;
   country?: string;
+  /** 'full' = flag fills entire card background; 'fade' = flag left-half fades into genre colour */
+  flagStyle?: 'full' | 'fade';
+  /** Colour the flag fades into for flagStyle='fade' (defaults to theme.cardBg) */
+  fadeColor?: string;
 }
 
 export interface GenreTheme {
@@ -89,11 +93,19 @@ function scoreGlowColor(power: number) {
 
 const USA_FLAG_PATH = "/cards/artworks/examples/flag-usa.webp";
 
+/** CSS gradient / url() for the card border (existing border-based system) */
 const FLAG_BORDERS: Record<string, string> = {
   USA: `url('${USA_FLAG_PATH}')`,
   /** Vertical tricolour, 90° CCW: red top, white, blue (hoist) bottom */
   France:
     "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
+};
+
+/** CSS gradient for the card background (flagStyle modes) */
+const FLAG_BG: Record<string, string> = {
+  /** Spanish flag: red / yellow / red horizontal bands */
+  Spain:
+    "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
 };
 
 function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
@@ -149,6 +161,9 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
   const flagUsR90 = country === "USA" && flagLayer;
+  const flagBg = country ? FLAG_BG[country] : undefined;
+  const flagStyle = card.flagStyle;
+  const fadeColor = card.fadeColor ?? theme.cardBg;
 
   const varStyle = {
     "--gc-border": theme.border,
@@ -159,7 +174,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
   } as React.CSSProperties;
 
   /** World flags other than USA (e.g. France): same shell as USA, no rotation */
-  const flagFlatShell = Boolean(flagLayer && !flagUsR90);
+  const flagFlatShell = Boolean(flagLayer && !flagUsR90 && !flagStyle);
 
   const cardContent = (
     <>
@@ -242,7 +257,24 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
     </>
   );
 
-  const inner = flagUsR90 ? (
+  const inner = (flagStyle === 'full' && flagBg) ? (
+    /* Full-bleed flag covers the entire card background */
+    <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
+      {cardContent}
+    </div>
+  ) : (flagStyle === 'fade' && flagBg) ? (
+    /* Left-half flag fading into genre colour via a mask gradient over the flag */
+    <div
+      className={styles.card}
+      style={{
+        ...varStyle,
+        backgroundImage: `linear-gradient(to right, transparent 40%, ${fadeColor} 80%), ${flagBg}`,
+        backgroundSize: "100% 100%, 100% 100%",
+      }}
+    >
+      {cardContent}
+    </div>
+  ) : flagUsR90 ? (
     <div className={styles.cardShell}>
       <div
         className={`${styles.cardFlagUsR90} ${styles.cardWorldFlagTarnish}`}

@@ -202,6 +202,23 @@ function worldThemeForCountry(country: string): GenreTheme {
       bg1: "#040810",
       accent: "#ffffff",
     };
+  if (country === "Spain")
+    return {
+      border: "#AA151B",
+      cardBg: "#1a0a0a",
+      headerBg: "#120606",
+      textMain: "#ffffff",
+      textBody: "#dddddd",
+      barPop: ["#AA151B", "#e03030"],
+      barExp: ["#2a6e2a", "#50b050"],
+      barGlowPop: "rgba(170,21,27,.85)",
+      barGlowExp: "rgba(80,176,80,.75)",
+      icon: WORLD_GLOBE_ICON,
+      sym: "♦",
+      bg0: "#2a0a0a",
+      bg1: "#0e0404",
+      accent: "#F1BF00",
+    };
   return GENRES.World;
 }
 
@@ -258,6 +275,25 @@ const WORLD_CARDS: CardData[] = [
     rarity: "Legendary",
     country: "France",
     artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
+  },
+  {
+    id: 25,
+    title: "Cannabis",
+    artist: "Ska-P",
+    year: 1998,
+    genre: "Spain",
+    subgenre: "Ska Punk",
+    typeStripPrimaryBorder: "#AA151B",
+    typeStripSubBorder: "#2a6e2a",
+    ability: "Contraband",
+    abilityDesc: "Opponent discards one card at random when this card enters play.",
+    power: 76,
+    pop: 62,
+    exp: 84,
+    rarity: "Rare",
+    country: "Spain",
+    flagStyle: "fade",
+    fadeColor: "#1a0808",
   },
   {
     id: 24,
@@ -498,12 +534,15 @@ export default function CardsPage() {
           <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
             World — Flags (landscape on border)
           </div>
-          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-5">
-            Each World card is tied to a subgenre of that country&apos;s popular
-            music. The flag is laid in landscape and wrapped around the border,
-            rendered with a tarnished finish so it reads as a worn print rather
-            than a digital swatch.
+          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
+            World cards represent a country or region rather than a global genre.
+            The flag is laid in landscape and wrapped around the border, rendered
+            with a tarnished finish so it reads as a worn print rather than a digital swatch.
           </p>
+          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
+            <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. USA, Bretagne)</span></li>
+            <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
+          </ul>
           <div className="flex flex-wrap gap-6">
             {WORLD_CARDS.map((card) => (
               <div key={card.id} className="flex flex-col items-center gap-2">

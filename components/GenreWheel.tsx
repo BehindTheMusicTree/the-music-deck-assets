@@ -100,7 +100,7 @@ export default function GenreWheel() {
   const popText = repeat("POP", 40);
   const expText = repeat("EXPERIMENTAL", 14);
   const exp2Text = repeat("EXPERIMENTAL", 24);
-  const hardText = repeat("HARDCORE", 32);
+  const hardText = repeat("HARDCORE", 34);
 
   return (
     <div
@@ -109,7 +109,8 @@ export default function GenreWheel() {
         flexDirection: "column",
         alignItems: "center",
         gap: 48,
-        marginTop: 40,
+        marginTop: 150,
+        marginBottom: 150,
       }}
     >
       <svg
@@ -243,7 +244,12 @@ export default function GenreWheel() {
         {GENRES.map((_, i) => {
           const angle = ((i + 0.5) / GENRES.length) * 360 - 90;
           const inner = polarToXY(CX, CY, 0, angle);
-          const outer = polarToXY(CX, CY, R_EXPERIMENTAL_HARDCORE_LINE, angle);
+          const outer = polarToXY(
+            CX,
+            CY,
+            R_EXPERIMENTAL_HARDCORE_LINE + 160,
+            angle,
+          );
           return (
             <line
               key={i}
@@ -279,12 +285,19 @@ export default function GenreWheel() {
           { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop", ring: "poppy" },
           { n: "R&B", h: "#ffe94d", parent: "Hip-hop", ring: "poppy" },
           { n: "Roots", h: "#5ab848", parent: "Reggae/Dub", ring: "poppy" },
-          { n: "Metal", h: "#7a0810", parent: "Rock", ring: "experimental" },
+          { n: "Metal", h: "#7a0810", parent: "Rock", ring: "hardcore" },
           {
             n: "Nu Metal",
             h: "#c86010",
             parent: "Rock",
             angleDelta: -14,
+            ring: "hardcore",
+          },
+          {
+            n: "Ska Punk",
+            h: "#8a3018",
+            parent: "Rock",
+            angleDelta: 14,
             ring: "experimental",
           },
           {

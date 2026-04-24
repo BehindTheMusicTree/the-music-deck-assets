@@ -19,8 +19,8 @@ export default function GenresPage() {
         <p className="font-garamond italic text-muted max-w-[600px] text-center">
           Each genre owns a border colour that spans a spectrum from its
           poppiest subgenre to its most extreme. World is the exception — its
-          border carries the country&apos;s real flag rather than a solid
-          colour.
+          border carries the flag of the card&apos;s country or region rather
+          than a solid colour.
         </p>
 
         <div className="w-full max-w-[860px] mt-6 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
