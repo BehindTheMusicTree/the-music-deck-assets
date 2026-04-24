@@ -141,7 +141,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
 
         {/* Type strip */}
         <div className={styles.typeStrip}>
-          <span className={styles.typeText}>Song · {card.year}</span>
+          <span className={styles.typeText}>{card.year}</span>
           <div className={styles.typeRight}>
             <span className={styles.typeText}>{card.genreLabel}</span>
             <div className={styles.pip} style={{ background: theme.border }} />
@@ -179,7 +179,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
 
         {/* Footer */}
         <div className={styles.footer}>
-        <span className={styles.brand}>THE MUSIC DECK</span>
+        <span className={styles.brand}>{card.year}</span>
         <div className={styles.rarityRow}>
           <span dangerouslySetInnerHTML={{ __html: RARITY_ICON[card.rarity] ?? '' }} />
           <span className={styles.rarityText} style={{ color: rarColor }}>{card.rarity}</span>
