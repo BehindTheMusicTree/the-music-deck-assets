@@ -104,10 +104,8 @@ const FLAG_BORDERS: Record<string, string> = {
     "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
 };
 
-/** CSS background value for the border in flagStyle modes (gradient or image) */
+/** CSS background value for the border in flagStyle modes (gradient only — USA uses flagUsR90 shell) */
 const FLAG_BG: Record<string, string> = {
-  /** US flag image, rotated 90° via the border shell */
-  USA: `url('${USA_FLAG_PATH}')`,
   /** Spanish flag rotated 90°: vertical stripes red / yellow / red */
   Spain:
     "linear-gradient(to right, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
@@ -395,7 +393,7 @@ export default function Card({
           backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 23%, ${fadeColor} 77%), ${flagBg}`,
           backgroundClip: "padding-box, border-box, border-box",
           backgroundOrigin: "padding-box, border-box, border-box",
-          backgroundSize: `100% 100%, 100% 100%, ${country === "USA" ? "cover" : "100% 100%"}`,
+          backgroundSize: "100% 100%, 100% 100%, 100% 100%",
         }}
       >
         {cardContent}
@@ -407,12 +405,14 @@ export default function Card({
           aria-hidden
           style={
             {
-              backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
-              backgroundSize: "100% 100%, 100% 100%",
-              backgroundPosition: "center, center",
-              backgroundRepeat: "no-repeat, no-repeat",
-              backgroundClip: "padding-box, border-box",
-              backgroundOrigin: "padding-box, border-box",
+              backgroundImage: flagStyle === 'fade'
+                ? `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
+                : `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
+              backgroundSize: flagStyle === 'fade' ? "100% 100%, 100% 100%, cover" : "100% 100%, cover",
+              backgroundPosition: flagStyle === 'fade' ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
+              backgroundRepeat: "no-repeat",
+              backgroundClip: flagStyle === 'fade' ? "padding-box, border-box, border-box" : "padding-box, border-box",
+              backgroundOrigin: flagStyle === 'fade' ? "padding-box, border-box, border-box" : "padding-box, border-box",
               border: "10px solid transparent",
             } as React.CSSProperties
           }

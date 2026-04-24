@@ -556,6 +556,7 @@ export default function CardsPage() {
           <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-8 pl-0 list-none flex flex-col gap-1">
             <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. USA, Bretagne)</span></li>
             <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
+            <li><span className="text-white">Left diamond</span> — colour represents the country or region flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
           </ul>
 
           <div className="flex flex-wrap gap-6 mb-12">
@@ -580,8 +581,10 @@ export default function CardsPage() {
           <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
             <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. Spain)</span></li>
             <li><span className="text-white">Subgenre</span> — global music genre <span className="font-mono text-xs tracking-wide">(e.g. Ska Punk)</span></li>
+            <li><span className="text-white">Left diamond</span> — colour represents the country flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
+            <li><span className="text-white">Right diamond</span> — colour represents the genre <span className="font-mono text-xs tracking-wide">(typeStripSubBorder)</span></li>
             <li><span className="text-white">Border left</span> — country flag in landscape, tarnished finish</li>
-            <li><span className="text-white">Border right</span> — genre colour <span className="font-mono text-xs tracking-wide">(typeStripSubBorder)</span></li>
+            <li><span className="text-white">Border right</span> — genre colour fades in over the flag</li>
             <li><span className="text-white">Transition</span> — short fade centred on the middle of the card</li>
           </ul>
           <div className="flex flex-wrap gap-6">
