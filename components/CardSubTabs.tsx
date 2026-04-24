@@ -7,7 +7,6 @@ const SECTIONS = [
   { id: "genre-variants", label: "Genre Variants" },
   { id: "world", label: "World" },
   { id: "rarities", label: "Rarities" },
-  { id: "colour-tokens", label: "Colour Tokens" },
 ] as const;
 
 export default function CardSubTabs() {

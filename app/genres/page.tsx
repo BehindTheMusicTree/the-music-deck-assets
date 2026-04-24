@@ -122,6 +122,117 @@ export default function GenresPage() {
         <div id="colour-wheel" className="w-full flex justify-center">
           <GenreWheel />
         </div>
+
+        {/* Colour token hierarchy */}
+        <div id="colour-tokens" className="w-full max-w-[860px] mt-4 mb-10">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">Colour Tokens</div>
+          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
+            Every genre and subgenre maps to a single hex token. Subgenres are ordered pop → hardcore within each genre.
+          </p>
+          <div className="flex flex-col gap-6">
+            {[
+              {
+                genre: "Rock", hex: "#d01828",
+                subs: [
+                  { n: "Pop Rock",  h: "#f07080", ring: "poppy" },
+                  { n: "Ska Punk",  h: "#8a3018", ring: "experimental" },
+                  { n: "Metal",     h: "#7a0810", ring: "hardcore" },
+                  { n: "Nu Metal",  h: "#c86010", ring: "hardcore" },
+                ],
+              },
+              {
+                genre: "Electronic", hex: "#2850c8",
+                subs: [
+                  { n: "Electropop",   h: "#e4ebff", ring: "pop" },
+                  { n: "EDM",          h: "#7090e8", ring: "poppy" },
+                  { n: "Drum & Bass",  h: "#3070c8", ring: "experimental" },
+                  { n: "Jungle",       h: "#288090", ring: "experimental" },
+                  { n: "Techno",       h: "#1a2e6a", ring: "experimental" },
+                  { n: "House",        h: "#4030a0", ring: "experimental" },
+                  { n: "Psytrance",    h: "#0b1f5a", ring: "hardcore" },
+                ],
+              },
+              {
+                genre: "Disco/Funk", hex: "#c0387a",
+                subs: [
+                  { n: "Disco Pop", h: "#ffd6e8", ring: "pop" },
+                  { n: "Disco",     h: "#f0a0c0", ring: "poppy" },
+                ],
+              },
+              {
+                genre: "Hip-hop", hex: "#c8960a",
+                subs: [
+                  { n: "R&B",      h: "#ffe94d", ring: "poppy" },
+                  { n: "R&B Soul", h: "#ffd060", ring: "poppy" },
+                ],
+              },
+              {
+                genre: "Reggae/Dub", hex: "#3a9030",
+                subs: [
+                  { n: "Roots", h: "#5ab848", ring: "poppy" },
+                  { n: "Dub",   h: "#28b870", ring: "experimental" },
+                ],
+              },
+              {
+                genre: "Classical", hex: "#5c2a0a",
+                subs: [],
+              },
+              {
+                genre: "Vintage", hex: "#787878",
+                subs: [
+                  { n: "Religious", h: "#888888", ring: "experimental" },
+                  { n: "Jazz",      h: "#7a5840", ring: "experimental" },
+                  { n: "Soul",      h: "#9a8f60", ring: "experimental" },
+                  { n: "Free Jazz", h: "#2a1a0e", ring: "hardcore" },
+                ],
+              },
+            ].map(({ genre, hex, subs }) => (
+              <div key={genre} className="border border-ui-border rounded-[6px] overflow-hidden">
+                {/* Genre header row */}
+                <div className="flex items-center gap-3 px-4 py-2.5" style={{ borderLeft: `4px solid ${hex}`, background: "#ede4cc" }}>
+                  <div className="w-4 h-4 shrink-0 rotate-45 rounded-[2px]" style={{ background: hex }} />
+                  <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>{genre}</span>
+                  <span className="font-mono text-xs ml-auto" style={{ color: "#8a7050" }}>{hex}</span>
+                </div>
+                {/* Subgenre rows */}
+                {subs.length > 0 && (
+                  <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
+                    {subs.map(({ n, h, ring }) => (
+                      <div key={n} className="flex items-center gap-3 pl-9 pr-4 py-2" style={{ background: "#f4edd8" }}>
+                        <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ background: h }} />
+                        <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{n}</span>
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{ring}</span>
+                        <span className="font-mono text-xs" style={{ color: "#8a7050" }}>{h}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* World — countries/regions */}
+            <div className="border border-ui-border rounded-[6px] overflow-hidden">
+              <div className="flex items-center gap-3 px-4 py-2.5" style={{ borderLeft: "4px solid #a01818", background: "#ede4cc" }}>
+                <div className="w-4 h-4 shrink-0 rotate-45 rounded-[2px]" style={{ background: "#a01818" }} />
+                <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>World</span>
+                <span className="font-mono text-xs ml-auto" style={{ color: "#8a7050" }}>flag per country / region</span>
+              </div>
+              <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
+                {[
+                  { n: "USA",    pip: <span style={{ fontSize: 10, color: "#1a1a2e", lineHeight: 1 }}>★</span> },
+                  { n: "France", pip: <span style={{ fontSize: 13, color: "#1a2a0a", lineHeight: 1 }}>⚜</span> },
+                  { n: "Spain",  pip: <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ backgroundImage: "linear-gradient(to bottom, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)" }} /> },
+                ].map(({ n, pip }) => (
+                  <div key={n} className="flex items-center gap-3 pl-9 pr-4 py-2" style={{ background: "#f4edd8" }}>
+                    <div className="w-5 flex items-center justify-center shrink-0">{pip}</div>
+                    <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{n}</span>
+                    <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>country</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <GenreAssociations />
