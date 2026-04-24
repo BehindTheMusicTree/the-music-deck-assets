@@ -14,7 +14,8 @@ type Row = {
   strengths: string[];
   weaknesses: string[];
   affinities: string[];
-  counters: string[];
+  advantageVs: string[];
+  weakVs: string[];
 };
 
 const ROWS: Row[] = [
@@ -23,63 +24,71 @@ const ROWS: Row[] = [
     strengths: ["High attack", "Crowd energy", "Versatile tempo"],
     weaknesses: ["Low subtlety", "Weak in solo play"],
     affinities: ["Metal", "Vintage"],
-    counters: ["Classical", "Reggae/Dub"],
+    advantageVs: ["Classical", "Reggae/Dub"],
+    weakVs: ["Disco/Funk", "Vintage"],
   },
   {
     genre: "Electronic",
     strengths: ["Precision timing", "Layer stacking", "Range control"],
     weaknesses: ["Low warmth", "Fragile live feel"],
     affinities: ["Hip-Hop", "Disco/Funk"],
-    counters: ["Vintage", "Classical"],
+    advantageVs: ["Vintage", "Classical"],
+    weakVs: ["Hip-Hop", "Metal"],
   },
   {
     genre: "Hip-Hop",
     strengths: ["Rhythm dominance", "Sample leverage", "Cultural reach"],
     weaknesses: ["Narrow tonal range", "Low melodic depth"],
     affinities: ["Electronic", "Disco/Funk"],
-    counters: ["Classical", "Metal"],
+    advantageVs: ["Classical", "Metal"],
+    weakVs: ["Classical", "Vintage"],
   },
   {
     genre: "Disco/Funk",
     strengths: ["Groove power", "Combo chaining", "Dance multiplier"],
     weaknesses: ["Low aggression", "Era-locked feel"],
     affinities: ["Hip-Hop", "Electronic"],
-    counters: ["Metal", "Rock"],
+    advantageVs: ["Metal", "Rock"],
+    weakVs: ["Classical", "Metal"],
   },
   {
     genre: "Reggae/Dub",
     strengths: ["Tempo control", "Defence bonus", "Vibration depth"],
     weaknesses: ["Low burst damage", "Slow build"],
     affinities: ["Vintage", "Disco/Funk"],
-    counters: ["Rock", "Metal"],
+    advantageVs: ["Rock", "Metal"],
+    weakVs: ["Electronic", "Classical"],
   },
   {
     genre: "Classical",
     strengths: ["Harmonic complexity", "Sustained power", "Prestige bonus"],
     weaknesses: ["Slow ramp", "Low crowd energy"],
     affinities: ["Vintage", "Electronic"],
-    counters: ["Hip-Hop", "Disco/Funk"],
+    advantageVs: ["Hip-Hop", "Disco/Funk"],
+    weakVs: ["Rock", "Electronic"],
   },
   {
     genre: "Vintage",
     strengths: ["Nostalgia bonus", "Wide affinity pool", "Authenticity"],
     weaknesses: ["Low tech ceiling", "Era vulnerability"],
     affinities: ["Rock", "Classical", "Reggae/Dub"],
-    counters: ["Electronic", "Hip-Hop"],
+    advantageVs: ["Electronic", "Hip-Hop"],
+    weakVs: ["Rock", "Metal"],
   },
   {
     genre: "Metal",
     strengths: ["Max aggression", "Shred tempo", "Endurance"],
     weaknesses: ["Low crossover appeal", "Narrow combos"],
     affinities: ["Rock", "Electronic"],
-    counters: ["Reggae/Dub", "Disco/Funk"],
+    advantageVs: ["Reggae/Dub", "Disco/Funk"],
+    weakVs: ["Hip-Hop", "Disco/Funk"],
   },
 ];
 
 function Pill({ label, color }: { label: string; color: string }) {
   return (
     <span
-      className="inline-block font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-[3px] mr-1 mb-1 whitespace-nowrap"
+      className="inline-block font-mono  tracking-[1px] px-2 py-0.5 rounded-[3px] mr-1 mb-1 whitespace-nowrap"
       style={{
         background: `${color}22`,
         color,
@@ -111,11 +120,12 @@ export default function GenreAssociations() {
                 "Strengths",
                 "Weaknesses",
                 "Affinities",
-                "Counters",
+                "Advantage vs",
+                "Weak vs",
               ].map((h) => (
                 <th
                   key={h}
-                  className="text-left font-mono text-[10px] tracking-[2px] uppercase text-muted px-4 py-3"
+                  className="text-left font-mono text-[9px] tracking-[2px] uppercase text-muted px-4 py-3"
                 >
                   {h}
                 </th>
@@ -135,11 +145,14 @@ export default function GenreAssociations() {
                   }}
                 >
                   <td className="px-4 py-3 align-top">
-                    <span
-                      className="font-mono text-[11px] tracking-[1px] font-semibold whitespace-nowrap"
-                      style={{ color }}
-                    >
-                      {row.genre.toUpperCase()}
+                    <span className="flex items-center gap-2 whitespace-nowrap">
+                      <span
+                        className="inline-block w-2 h-2 rounded-full shrink-0"
+                        style={{ background: color }}
+                      />
+                      <span className="font-mono text-[11px] tracking-[1px] font-semibold text-white/90">
+                        {row.genre.toUpperCase()}
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-3 align-top">
@@ -179,8 +192,23 @@ export default function GenreAssociations() {
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-wrap">
-                      {row.counters.map((c) => (
-                        <Pill key={c} label={c} color="#888" />
+                      {row.advantageVs.map((a) => (
+                        <Pill
+                          key={a}
+                          label={a}
+                          color={GENRE_COLOR[a] ?? "#888"}
+                        />
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 align-top">
+                    <div className="flex flex-wrap">
+                      {row.weakVs.map((w) => (
+                        <Pill
+                          key={w}
+                          label={w}
+                          color={GENRE_COLOR[w] ?? "#888"}
+                        />
                       ))}
                     </div>
                   </td>

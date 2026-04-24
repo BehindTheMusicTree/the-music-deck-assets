@@ -48,7 +48,7 @@ export default function GenresPage() {
               ].map(({ label, color, text }) => (
                 <div
                   key={label}
-                  className="flex-1 flex items-center justify-center font-mono text-[10px] tracking-[1px]"
+                  className="flex-1 flex items-center justify-center font-mono  tracking-[1px]"
                   style={{ background: color, color: text ?? "#c8d8f0" }}
                 >
                   {label}
@@ -56,10 +56,10 @@ export default function GenresPage() {
               ))}
             </div>
             <div className="flex justify-between mt-1 px-0.5">
-              <span className="font-mono text-[10px] text-muted opacity-50 tracking-[1px]">
+              <span className="font-mono  text-muted opacity-50 tracking-[1px]">
                 ← POP
               </span>
-              <span className="font-mono text-[10px] text-muted opacity-50 tracking-[1px]">
+              <span className="font-mono  text-muted opacity-50 tracking-[1px]">
                 HARDCORE →
               </span>
             </div>
@@ -80,7 +80,7 @@ export default function GenresPage() {
                   className="w-10 h-10 rounded-[4px]"
                   style={{ background: "#7a0810" }}
                 />
-                <span className="font-mono text-[10px] tracking-[1px] text-muted">
+                <span className="font-mono  tracking-[1px] text-muted">
                   Metal
                 </span>
               </div>
@@ -93,7 +93,7 @@ export default function GenresPage() {
                   className="w-10 h-10 rounded-[4px]"
                   style={{ background: "#c8960a" }}
                 />
-                <span className="font-mono text-[10px] tracking-[1px] text-muted">
+                <span className="font-mono  tracking-[1px] text-muted">
                   Hip-hop
                 </span>
               </div>
@@ -106,7 +106,7 @@ export default function GenresPage() {
                   className="w-10 h-10 rounded-[4px]"
                   style={{ background: "#b84008" }}
                 />
-                <span className="font-mono text-[10px] tracking-[1px] text-muted">
+                <span className="font-mono  tracking-[1px] text-muted">
                   Nu Metal
                 </span>
               </div>
