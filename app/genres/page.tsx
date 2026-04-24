@@ -359,7 +359,6 @@ export default function GenresPage() {
           href="/"
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
             letterSpacing: 2,
             color: "var(--muted)",
             textDecoration: "none",
@@ -372,7 +371,6 @@ export default function GenresPage() {
         id="genres-chapter-index"
         style={{
           fontFamily: "Space Mono, monospace",
-          fontSize: 9,
           letterSpacing: 3,
           color: "var(--muted)",
           marginBottom: 8,
@@ -384,7 +382,6 @@ export default function GenresPage() {
         id="genres-chapter-eyebrow"
         style={{
           fontFamily: "Space Mono, monospace",
-          fontSize: 9,
           letterSpacing: 2,
           color: "var(--muted)",
           marginBottom: 16,
@@ -437,7 +434,6 @@ export default function GenresPage() {
           id="genres-color-ramp-explainer-title"
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
             letterSpacing: 2,
             textTransform: "uppercase",
             marginBottom: 8,
@@ -475,7 +471,6 @@ export default function GenresPage() {
           id="genres-variants-title"
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -521,7 +516,6 @@ export default function GenresPage() {
           id="genres-world-title"
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -539,8 +533,11 @@ export default function GenresPage() {
             marginBottom: 32,
           }}
         >
-          La bordure reflète le drapeau du pays d&apos;origine — chaque couleur
-          occupe un tiers de la bordure (gauche → droite).
+          La bordure reprend le drapeau du pays d&apos;origine, selon sa
+          composition réelle (pas une règle fixe en bandes). Le drapeau est
+          affiché en orientation paysage, couché sur le pourtour de la carte :
+          par exemple pour les États-Unis, le canton aux étoiles se retrouve en
+          bas à gauche de la carte.
         </p>
         <div
           id="genres-world-by-country"
@@ -562,7 +559,6 @@ export default function GenresPage() {
               <summary
                 style={{
                   fontFamily: "Space Mono, monospace",
-                  fontSize: 9,
                   letterSpacing: 2,
                   color: "var(--muted)",
                   textTransform: "uppercase",
