@@ -5,13 +5,12 @@ import { usePathname } from "next/navigation";
 
 const TABS = [
   { href: "/", label: "Overview" },
-  { href: "/battles", label: "Battles" },
-  { href: "/tracklists", label: "Track Lists" },
-  { href: "/genres", label: "Genres" },
   { href: "/cards", label: "Cards" },
-  { href: "/palette", label: "Palette" },
-  { href: "/typography", label: "Typography" },
+  { href: "/genres", label: "Genres" },
   { href: "/rarities", label: "Rarities" },
+  { href: "/tracklists", label: "Track Lists" },
+  { href: "/battles", label: "Battles" },
+  { href: "/charter", label: "Charter" },
 ] as const;
 
 function isActive(pathname: string, href: string) {
