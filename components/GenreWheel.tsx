@@ -273,6 +273,7 @@ export default function GenreWheel() {
             ring: "pop",
           },
           { n: "Disco", h: "#f0a0c0", parent: "Disco/Funk", ring: "poppy" },
+          { n: "Disco Pop", h: "#ffd6e8", parent: "Disco/Funk", ring: "pop" },
           { n: "Pop Rock", h: "#f07080", parent: "Rock", ring: "poppy" },
           { n: "EDM", h: "#7090e8", parent: "Electronic", ring: "poppy" },
           { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop", ring: "poppy" },
