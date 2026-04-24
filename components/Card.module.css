@@ -23,6 +23,50 @@
     0 0 0 1px var(--gc-border);
 }
 
+/* World USA: drapeau en paysage + rotation 90° sens anti-horaire sur le motif de bordure */
+.cardShell {
+  position: relative;
+  width: 272px;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.85);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.cardShell:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 32px 56px rgba(0, 0, 0, 0.9),
+    0 0 0 1px var(--gc-border);
+}
+.cardFlagUsR90 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 400px;
+  height: 272px;
+  z-index: 0;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  box-sizing: border-box;
+  border-radius: 16px;
+  pointer-events: none;
+}
+.cardFlagFace {
+  position: absolute;
+  inset: 10px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--gc-card-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
 /* Header */
 .header {
   display: flex;

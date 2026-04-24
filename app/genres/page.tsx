@@ -309,7 +309,7 @@ const WORLD_CARDS: CardData[] = [
     year: 1792,
     genre: "World",
     genreLabel: "World — France",
-    ability: "Liberté",
+    ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
     pop: 68,
@@ -325,7 +325,7 @@ const WORLD_CARDS: CardData[] = [
     year: 1981,
     genre: "World",
     genreLabel: "World — France",
-    ability: "Mélancolie",
+    ability: "Melancholy",
     abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
     power: 80,
     pop: 74,
@@ -413,8 +413,13 @@ export default function GenresPage() {
           marginBottom: 0,
         }}
       >
-        Each genre owns a border colour. World is the exception — its border
-        reflects the flag of the song&apos;s country of origin.
+        Each genre owns a border colour. World is the exception: the border
+        shows that country&apos;s real flag, laid in landscape and wrapped
+        around the card — not a generic band rule. For the United States, the
+        star field reads toward the lower left of the card; for France, the
+        vertical tricolour (blue, white, red) is unfolded on the border with
+        the hoist (blue) placed according to the actual flag, not an arbitrary
+        three-way split.
       </p>
       <div
         id="genres-color-ramp-explainer"
@@ -439,7 +444,7 @@ export default function GenresPage() {
             marginBottom: 8,
           }}
         >
-          Variations de couleur
+          Colour variations
         </div>
         <p
           style={{
@@ -449,13 +454,13 @@ export default function GenresPage() {
             margin: 0,
           }}
         >
-          Dans chaque genre, on va du plus clair (zone pop) au plus sombre (zone
-          hardcore). Exemple en Electronic: EDM est la variante commerciale
-          (bleu moyen, proche du bleu pervenche), Electropop est la variante pop
-          (quasi blanc bleute, bleu glacier), et Psytrance est la variante
-          hardcore (bleu nuit profond). On peut aussi mixer les teintes selon
-          les influences: Nu Metal combine Metal + Rap, donc rouge cramoisi +
-          jaune or, ce qui donne un orange ambre.
+          Within each genre, we go from the lightest (pop zone) to the darkest
+          (hardcore zone). In Electronic, for example: EDM is the commercial
+          variant (medium blue, close to periwinkle), Electropop is the pop
+          variant (nearly off-white, icy blue), and Psytrance is the hardcore
+          variant (deep night blue). You can also mix hues by influence: Nu
+          Metal combines Metal + Rap, so crimson + gold yellow, which yields
+          amber orange.
         </p>
       </div>
 
@@ -522,7 +527,7 @@ export default function GenresPage() {
             marginBottom: 4,
           }}
         >
-          World — Cas particulier
+          World — Special case
         </div>
         <p
           id="genres-world-intro"
@@ -533,11 +538,13 @@ export default function GenresPage() {
             marginBottom: 32,
           }}
         >
-          La bordure reprend le drapeau du pays d&apos;origine, selon sa
-          composition réelle (pas une règle fixe en bandes). Le drapeau est
-          affiché en orientation paysage, couché sur le pourtour de la carte :
-          par exemple pour les États-Unis, le canton aux étoiles se retrouve en
-          bas à gauche de la carte.
+          The border follows the country of origin&apos;s flag, using its real
+          layout (not a uniform “three equal stripes” cut). The flag is shown
+          in landscape orientation, unfolded along the card edge. For the United
+          States, the star field sits at the bottom left of the card; for
+          France, the vertical tricolour (blue, white, red) wraps the border the
+          same way, with the blue side (hoist side) aligned as on the real flag,
+          not as three abstract left–right blocks.
         </p>
         <div
           id="genres-world-by-country"

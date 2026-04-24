@@ -247,7 +247,7 @@ const WORLD_CARDS: CardData[] = [
     year: 1792,
     genre: "World",
     genreLabel: "World — France",
-    ability: "Liberté",
+    ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
     pop: 68,
@@ -263,7 +263,7 @@ const WORLD_CARDS: CardData[] = [
     year: 1981,
     genre: "World",
     genreLabel: "World — France",
-    ability: "Mélancolie",
+    ability: "Melancholy",
     abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
     power: 80,
     pop: 74,
@@ -652,11 +652,28 @@ export default function CardsPage() {
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
+            marginBottom: 8,
+          }}
+        >
+          World — Flags (landscape on border)
+        </div>
+        <p
+          style={{
+            fontFamily: "Cormorant Garamond, serif",
+            fontStyle: "italic",
+            color: "var(--muted)",
+            fontSize: 14,
+            lineHeight: 1.5,
+            maxWidth: 640,
+            marginTop: 0,
             marginBottom: 20,
           }}
         >
-          World — Flag Colours
-        </div>
+          USA: the star field is toward the lower left of the card. France: the
+          vertical tricolour is unfolded along the border (blue, white, red),
+          with the blue hoist edge placed like the real flag — not a generic
+          three-band split.
+        </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
           {WORLD_CARDS.map((card) => (
             <div

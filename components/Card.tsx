@@ -58,8 +58,10 @@ function scoreGlowColor(power: number) {
 }
 
 const FLAG_BORDERS: Record<string, string> = {
-  USA:    "url('/cards/artworks/examples/flag-usa.webp')",
-  France: 'linear-gradient(to right, #0055A4 0%, #0055A4 33%, #FFFFFF 33%, #FFFFFF 66%, #EF4135 66%, #EF4135 100%)',
+  USA: "url('/cards/artworks/examples/flag-usa.webp')",
+  /** Tricolore vertical, couché 90° sens anti-horaire : rouge haut, blanc, bleu (mât) bas */
+  France:
+    "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
 };
 
 function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
@@ -109,22 +111,28 @@ function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
 export default function Card({ card, theme, small }: { card: CardData; theme: GenreTheme; small?: boolean }) {
   const rarColor = RARITY_COLOR[card.rarity] ?? '#666';
 
-  const flagGradient = card.country ? FLAG_BORDERS[card.country] : undefined;
+  const country = card.country;
+  const flagLayer = country ? FLAG_BORDERS[country] : undefined;
+  const flagUsR90 = country === "USA" && flagLayer;
 
-  const cssVars = {
-    '--gc-border':     theme.border,
-    '--gc-card-bg':    theme.cardBg,
-    '--gc-header-bg':  theme.headerBg,
-    '--gc-text-main':  theme.textMain,
-    '--gc-text-body':  theme.textBody,
-    ...(flagGradient && {
-      background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagGradient} border-box`,
-      border: '10px solid transparent',
-    }),
+  const varStyle = {
+    "--gc-border": theme.border,
+    "--gc-card-bg": theme.cardBg,
+    "--gc-header-bg": theme.headerBg,
+    "--gc-text-main": theme.textMain,
+    "--gc-text-body": theme.textBody,
   } as React.CSSProperties;
 
-  const inner = (
-    <div className={styles.card} style={cssVars}>
+  const flagFrameStyle: React.CSSProperties | undefined =
+    !flagUsR90 && flagLayer
+      ? {
+          background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
+          border: "10px solid transparent",
+        }
+      : undefined;
+
+  const cardContent = (
+    <>
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
@@ -198,6 +206,26 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         </div>
         </div>
       </div>
+    </>
+  );
+
+  const inner = flagUsR90 ? (
+    <div className={styles.cardShell}>
+      <div
+        className={styles.cardFlagUsR90}
+        aria-hidden
+        style={{
+          background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${FLAG_BORDERS.USA} border-box`,
+          border: "10px solid transparent",
+        }}
+      />
+      <div className={styles.cardFlagFace} style={varStyle}>
+        {cardContent}
+      </div>
+    </div>
+  ) : (
+    <div className={styles.card} style={{ ...varStyle, ...flagFrameStyle }}>
+      {cardContent}
     </div>
   );
 

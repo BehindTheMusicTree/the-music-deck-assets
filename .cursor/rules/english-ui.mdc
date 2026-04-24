@@ -1,0 +1,12 @@
+---
+description: User-facing copy must be in English (British spelling where the app already uses it, e.g. colour)
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# English UI copy
+
+- All user-visible strings in pages and components (headings, body text, labels, tooltips, example data shown in the design charter) must be in **English**.
+- Match existing project style: this app uses **British English** for design terms where already established (e.g. *colour*).
+- **Do not** add French or other languages for UI explanations or placeholder card fields (titles of real works may stay in the original language).
+- When adding or editing copy, prefer clear, concise technical writing consistent with the design-charter tone.
