@@ -82,7 +82,7 @@ const GENRES: Record<string, GenreTheme> = {
     bg1: "#0a0800",
     accent: "#f0b800",
   },
-  Funk: {
+  "Disco/Funk": {
     border: "#c0387a",
     cardBg: "#200812",
     headerBg: "#18060e",
@@ -224,15 +224,15 @@ function worldThemeForCountry(country: string): GenreTheme {
 
 const ART = "/cards/artworks/examples/";
 
-const WORLD_CARDS: CardData[] = [
+const WORLD_FLAG_CARDS: CardData[] = [
   {
     id: 20,
     title: "Take Me Home, Country Roads",
     artist: "John Denver",
     year: 1971,
-    genre: "World",
-    subgenre: "USA",
-    typeStripPrimaryBorder: "#a01818",
+    genre: "USA",
+    subgenre: "Country",
+    typeStripPrimaryBorder: "#B22234",
     ability: "Heartland",
     abilityDesc: "Restores 10 HP to all allied cards when played.",
     power: 70,
@@ -243,13 +243,34 @@ const WORLD_CARDS: CardData[] = [
     artwork: `${ART}artwork.example-take-me-home-country-roads-v1.png`,
   },
   {
+    id: 24,
+    title: "Les Lacs du Connemara",
+    artist: "Michel Sardou",
+    year: 1981,
+    genre: "France",
+    subgenre: "Variété Française",
+    typeStripPrimaryBorder: "#0055A4",
+    ability: "Melancholy",
+    abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
+    power: 80,
+    pop: 74,
+    exp: 48,
+    rarity: "Rare",
+    country: "France",
+    artwork: `${ART}artwork.example-michel-sardou-les-lacs-du-connemara-v1.png`,
+  },
+];
+
+const WORLD_MIXED_CARDS: CardData[] = [
+  {
     id: 21,
     title: "Amazing Grace",
     artist: "Traditional",
     year: 1779,
-    genre: "World",
-    subgenre: "USA",
-    typeStripPrimaryBorder: "#a01818",
+    genre: "USA",
+    subgenre: "Gospel",
+    typeStripPrimaryBorder: "#B22234",
+    typeStripSubBorder: "#787878",
     ability: "Redemption",
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     power: 74,
@@ -258,15 +279,18 @@ const WORLD_CARDS: CardData[] = [
     rarity: "Epic",
     country: "USA",
     artwork: `${ART}artwork.example-amazing-grace-v1.png`,
+    flagStyle: "fade",
+    fadeColor: "#787878",
   },
   {
     id: 23,
     title: "La Marseillaise",
     artist: "Rouget de Lisle",
     year: 1792,
-    genre: "World",
-    subgenre: "France",
-    typeStripPrimaryBorder: "#a01818",
+    genre: "France",
+    subgenre: "Hymne",
+    typeStripPrimaryBorder: "#0055A4",
+    typeStripSubBorder: "#5c2a0a",
     ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
@@ -275,6 +299,8 @@ const WORLD_CARDS: CardData[] = [
     rarity: "Legendary",
     country: "France",
     artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
+    flagStyle: "fade",
+    fadeColor: "#5c2a0a",
   },
   {
     id: 25,
@@ -295,23 +321,6 @@ const WORLD_CARDS: CardData[] = [
     artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
     flagStyle: "fade",
     fadeColor: "#8a3018",
-  },
-  {
-    id: 24,
-    title: "Les Lacs du Connemara",
-    artist: "Michel Sardou",
-    year: 1981,
-    genre: "World",
-    subgenre: "France",
-    typeStripPrimaryBorder: "#a01818",
-    ability: "Melancholy",
-    abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
-    power: 80,
-    pop: 74,
-    exp: 48,
-    rarity: "Rare",
-    country: "France",
-    artwork: `${ART}artwork.example-michel-sardou-les-lacs-du-connemara-v1.png`,
   },
 ];
 
@@ -392,7 +401,7 @@ const MOCK_CARDS: Record<string, CardData> = {
     rarity: "Legendary",
     artwork: `${ART}artwork.example-kendrick-lamar-humble-v1.png`,
   },
-  Funk: {
+  "Disco/Funk": {
     id: 6,
     title: "Night Fever",
     artist: "Bee Gees",
@@ -549,7 +558,17 @@ export default function CardsPage() {
             <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
           </ul>
 
-          {/* Mixed World/Genre border */}
+          <div className="flex flex-wrap gap-6 mb-12">
+            {WORLD_FLAG_CARDS.map((card) => (
+              <div key={card.id} className="flex flex-col items-center gap-2">
+                <Card card={card} theme={worldThemeForCountry(card.country!)} />
+                <div className="font-mono tracking-[1px] text-muted">
+                  {card.country!.toUpperCase()}
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="font-mono tracking-[2px] text-muted uppercase mb-3">
             Mixed World / Genre border
           </div>
@@ -566,7 +585,7 @@ export default function CardsPage() {
             <li><span className="text-white">Transition</span> — short fade centred on the middle of the card</li>
           </ul>
           <div className="flex flex-wrap gap-6">
-            {WORLD_CARDS.map((card) => (
+            {WORLD_MIXED_CARDS.map((card) => (
               <div key={card.id} className="flex flex-col items-center gap-2">
                 <Card card={card} theme={worldThemeForCountry(card.country!)} />
                 <div className="font-mono tracking-[1px] text-muted">

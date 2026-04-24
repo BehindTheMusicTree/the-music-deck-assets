@@ -104,11 +104,16 @@ const FLAG_BORDERS: Record<string, string> = {
     "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
 };
 
-/** CSS gradient for the card background (flagStyle modes) */
+/** CSS background value for the border in flagStyle modes (gradient or image) */
 const FLAG_BG: Record<string, string> = {
+  /** US flag image, rotated 90° via the border shell */
+  USA: `url('${USA_FLAG_PATH}')`,
   /** Spanish flag rotated 90°: vertical stripes red / yellow / red */
   Spain:
     "linear-gradient(to right, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+  /** French flag: vertical tricolour blue / white / red */
+  France:
+    "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
 };
 
 function CardArtSvg({ card, theme, transparent }: { card: CardData; theme: GenreTheme; transparent?: boolean }) {
@@ -275,7 +280,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 40%, ${fadeColor} 60%), ${flagBg}`,
         backgroundClip: "padding-box, border-box, border-box",
         backgroundOrigin: "padding-box, border-box, border-box",
-        backgroundSize: "100% 100%, 100% 100%, 100% 100%",
+        backgroundSize: `100% 100%, 100% 100%, ${country === "USA" ? "cover" : "100% 100%"}`,
       }}
     >
       {cardContent}
