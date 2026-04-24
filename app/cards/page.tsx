@@ -268,7 +268,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     artist: "Traditional",
     year: 1779,
     genre: "USA",
-    subgenre: "Gospel",
+    subgenre: "Religious",
     typeStripPrimaryBorder: "#B22234",
     typeStripSubBorder: "#787878",
     ability: "Redemption",

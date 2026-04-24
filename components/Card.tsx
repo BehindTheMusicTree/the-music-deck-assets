@@ -107,11 +107,15 @@ const FLAG_BORDERS: Record<string, string> = {
 /** Symbol shown inside the left pip diamond for World cards, keyed by country */
 const FLAG_PIP_SYMBOL: Record<
   string,
-  { sym: string; bg: string; color: string; size?: number }
+  { sym: string; color: string; size?: number }
 > = {
-  USA: { sym: "★", bg: "#3C3B6E", color: "#1a1a2e" },
-  France: { sym: "⚜", bg: "#0055A4", color: "#1a2a0a", size: 19 },
-  Spain: { sym: "⚜", bg: "#AA151B", color: "#3a1a00", size: 11 },
+  USA:    { sym: "★", color: "#1a1a2e" },
+  France: { sym: "⚜", color: "#1a2a0a", size: 19 },
+};
+
+/** Flag gradient for the pip diamond, for countries without a symbol */
+const FLAG_PIP_BG: Record<string, string> = {
+  Spain: "linear-gradient(to right, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
 };
 
 /** CSS background value for the border in flagStyle modes (gradient only — USA uses flagUsR90 shell) */
@@ -255,11 +259,10 @@ export default function Card({
   const strip = getTypeStripParts(card);
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
   const stripRightBorder = card.typeStripSubBorder ?? theme.border;
-  const pipLeftSymbol = card.country
-    ? FLAG_PIP_SYMBOL[card.country]
-    : undefined;
-  const pipRightSymbol =
-    pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
+  const pipLeftSymbol = card.country ? FLAG_PIP_SYMBOL[card.country] : undefined;
+  const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
+  const pipRightSymbol = pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
+  const pipRightFlagBg = pipLeftFlagBg && !card.flagStyle ? pipLeftFlagBg : undefined;
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
@@ -321,18 +324,14 @@ export default function Card({
             {pipLeftSymbol ? (
               <span
                 className={styles.pipSymbol}
-                style={{
-                  color: pipLeftSymbol.color,
-                  fontSize: pipLeftSymbol.size,
-                }}
+                style={{ color: pipLeftSymbol.color, fontSize: pipLeftSymbol.size }}
               >
                 {pipLeftSymbol.sym}
               </span>
+            ) : pipLeftFlagBg ? (
+              <div className={styles.pip} style={{ backgroundImage: pipLeftFlagBg }} />
             ) : (
-              <div
-                className={styles.pip}
-                style={{ background: stripLeftBorder }}
-              />
+              <div className={styles.pip} style={{ background: stripLeftBorder }} />
             )}
             <span className={styles.typeText}>{strip.left}</span>
           </div>
@@ -341,18 +340,14 @@ export default function Card({
             {pipRightSymbol ? (
               <span
                 className={styles.pipSymbol}
-                style={{
-                  color: pipRightSymbol.color,
-                  fontSize: pipRightSymbol.size,
-                }}
+                style={{ color: pipRightSymbol.color, fontSize: pipRightSymbol.size }}
               >
                 {pipRightSymbol.sym}
               </span>
+            ) : pipRightFlagBg ? (
+              <div className={styles.pip} style={{ backgroundImage: pipRightFlagBg }} />
             ) : (
-              <div
-                className={styles.pip}
-                style={{ background: stripRightBorder }}
-              />
+              <div className={styles.pip} style={{ background: stripRightBorder }} />
             )}
           </div>
         </div>

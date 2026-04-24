@@ -334,6 +334,13 @@ export default function GenreWheel() {
             ring: "experimental",
           },
           {
+            n: "Religious",
+            h: "#888888",
+            parent: "Vintage",
+            angleDelta: -12,
+            ring: "experimental",
+          },
+          {
             n: "Jazz",
             h: "#7a5840",
             parent: "Vintage",
