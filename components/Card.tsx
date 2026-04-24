@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styles from './Card.module.css';
+import styles from "./Card.module.css";
 
 export interface CardData {
   id: number;
@@ -16,11 +16,11 @@ export interface CardData {
   power: number;
   pop: number;
   exp: number;
-  rarity: 'Legendary' | 'Epic' | 'Rare' | 'Common';
+  rarity: "Legendary" | "Epic" | "Rare" | "Common";
   artwork?: string;
   country?: string;
   /** 'full' = flag fills entire card background; 'fade' = flag left-half fades into genre colour */
-  flagStyle?: 'full' | 'fade';
+  flagStyle?: "full" | "fade";
   /** Colour the flag fades into for flagStyle='fade' (defaults to theme.cardBg) */
   fadeColor?: string;
 }
@@ -43,17 +43,17 @@ export interface GenreTheme {
 }
 
 const RARITY_COLOR: Record<string, string> = {
-  Legendary: '#c8a040',
-  Epic:      '#a060c8',
-  Rare:      '#4a7aaa',
-  Common:    '#666',
+  Legendary: "#c8a040",
+  Epic: "#a060c8",
+  Rare: "#4a7aaa",
+  Common: "#666",
 };
 
 const RARITY_ICON: Record<string, string> = {
   Legendary: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 8,3.5 10,7 5,10 0,7 2,3.5" fill="#c8a040"/></svg>`,
-  Epic:      `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
-  Rare:      `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
-  Common:    `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
+  Epic: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
+  Rare: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
+  Common: `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
 };
 
 const STRIP_NAME_FOR_GENRE: Record<string, string> = {
@@ -116,7 +116,15 @@ const FLAG_BG: Record<string, string> = {
     "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
 };
 
-function CardArtSvg({ card, theme, transparent }: { card: CardData; theme: GenreTheme; transparent?: boolean }) {
+function CardArtSvg({
+  card,
+  theme,
+  transparent,
+}: {
+  card: CardData;
+  theme: GenreTheme;
+  transparent?: boolean;
+}) {
   const s = card.id * 137 + 42;
   const bars = Array.from({ length: 14 }, (_, i) => ({
     h: 16 + ((s + i * 31) % 52),
@@ -133,35 +141,109 @@ function CardArtSvg({ card, theme, transparent }: { card: CardData; theme: Genre
   if (card.artwork) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={card.artwork} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      <img
+        src={card.artwork}
+        alt=""
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+        }}
+      />
     );
   }
 
   return (
-    <svg viewBox="0 0 234 190" width="100%" height="100%" className={styles.artSvg}>
+    <svg
+      viewBox="0 0 234 190"
+      width="100%"
+      height="100%"
+      className={styles.artSvg}
+    >
       <defs>
         <radialGradient id={`rg${card.id}`} cx="50%" cy="42%" r="72%">
           <stop offset="0%" stopColor={theme.bg0} />
           <stop offset="100%" stopColor={theme.bg1} />
         </radialGradient>
       </defs>
-      {!transparent && <rect width={234} height={190} fill={`url(#rg${card.id})`} />}
+      {!transparent && (
+        <rect width={234} height={190} fill={`url(#rg${card.id})`} />
+      )}
       {dots.map((d, i) => (
-        <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill={theme.accent} fillOpacity={d.op} />
+        <circle
+          key={i}
+          cx={d.cx}
+          cy={d.cy}
+          r={d.r}
+          fill={theme.accent}
+          fillOpacity={d.op}
+        />
       ))}
       {bars.map((b, i) => (
-        <rect key={i} x={b.x} y={105 - b.h / 2} width={10} height={b.h} rx={5} fill={theme.accent} fillOpacity={b.op} />
+        <rect
+          key={i}
+          x={b.x}
+          y={105 - b.h / 2}
+          width={10}
+          height={b.h}
+          rx={5}
+          fill={theme.accent}
+          fillOpacity={b.op}
+        />
       ))}
-      <text x={117} y={102} fontSize={80} textAnchor="middle" fill={theme.accent} fillOpacity={0.07} fontFamily="serif">{theme.sym}</text>
-      <text x={117} y={99}  fontSize={78} textAnchor="middle" fill={theme.accent} fillOpacity={0.42} fontFamily="serif">{theme.sym}</text>
-      <rect x={0} y={160} width={234} height={30} fill={theme.bg1} fillOpacity={0.65} />
-      <rect x={0} y={0}   width={234} height={18} fill={theme.bg1} fillOpacity={0.45} />
+      <text
+        x={117}
+        y={102}
+        fontSize={80}
+        textAnchor="middle"
+        fill={theme.accent}
+        fillOpacity={0.07}
+        fontFamily="serif"
+      >
+        {theme.sym}
+      </text>
+      <text
+        x={117}
+        y={99}
+        fontSize={78}
+        textAnchor="middle"
+        fill={theme.accent}
+        fillOpacity={0.42}
+        fontFamily="serif"
+      >
+        {theme.sym}
+      </text>
+      <rect
+        x={0}
+        y={160}
+        width={234}
+        height={30}
+        fill={theme.bg1}
+        fillOpacity={0.65}
+      />
+      <rect
+        x={0}
+        y={0}
+        width={234}
+        height={18}
+        fill={theme.bg1}
+        fillOpacity={0.45}
+      />
     </svg>
   );
 }
 
-export default function Card({ card, theme, small }: { card: CardData; theme: GenreTheme; small?: boolean }) {
-  const rarColor = RARITY_COLOR[card.rarity] ?? '#666';
+export default function Card({
+  card,
+  theme,
+  small,
+}: {
+  card: CardData;
+  theme: GenreTheme;
+  small?: boolean;
+}) {
+  const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const strip = getTypeStripParts(card);
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
   const stripRightBorder = card.typeStripSubBorder ?? theme.border;
@@ -191,7 +273,9 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         <div className={styles.headerLeft}>
           <span
             className={styles.headerIcon}
-            dangerouslySetInnerHTML={{ __html: theme.icon.replace(/currentColor/g, theme.textMain) }}
+            dangerouslySetInnerHTML={{
+              __html: theme.icon.replace(/currentColor/g, theme.textMain),
+            }}
           />
           <div className={styles.titleGroup}>
             <div className={styles.title}>{card.title}</div>
@@ -200,7 +284,13 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         </div>
         <div
           className={styles.score}
-          style={{ '--score-glow-c': theme.textMain, '--score-glow-r': `${4 + Math.round((Math.max(0, Math.min(1,(card.power-40)/60))) * 14)}px`, boxShadow: scoreGlowColor(card.power) } as React.CSSProperties}
+          style={
+            {
+              "--score-glow-c": theme.textMain,
+              "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (card.power - 40) / 60)) * 14)}px`,
+              boxShadow: scoreGlowColor(card.power),
+            } as React.CSSProperties
+          }
         >
           {card.power}
         </div>
@@ -215,12 +305,18 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
-            <div className={styles.pip} style={{ background: stripLeftBorder }} />
+            <div
+              className={styles.pip}
+              style={{ background: stripLeftBorder }}
+            />
             <span className={styles.typeText}>{strip.left}</span>
           </div>
           <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
             <span className={styles.typeText}>{strip.right}</span>
-            <div className={styles.pip} style={{ background: stripRightBorder }} />
+            <div
+              className={styles.pip}
+              style={{ background: stripRightBorder }}
+            />
           </div>
         </div>
 
@@ -233,19 +329,31 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         {/* Stats */}
         <div className={styles.stats}>
           {[
-            { lbl: 'Popularity',   val: card.pop, grad: theme.barPop, glow: theme.barGlowPop },
-            { lbl: 'Experimental', val: card.exp, grad: theme.barExp, glow: theme.barGlowExp },
+            {
+              lbl: "Popularity",
+              val: card.pop,
+              grad: theme.barPop,
+              glow: theme.barGlowPop,
+            },
+            {
+              lbl: "Experimental",
+              val: card.exp,
+              grad: theme.barExp,
+              glow: theme.barGlowExp,
+            },
           ].map(({ lbl, val, grad, glow }) => (
             <div key={lbl} className={styles.statRow}>
               <span className={styles.statLabel}>{lbl}</span>
               <div className={styles.statBg}>
                 <div
                   className={styles.statFill}
-                  style={{
-                    width: `${val}%`,
-                    background: `linear-gradient(to right, ${grad[0]}, ${grad[1]})`,
-                    '--bar-glow': glow,
-                  } as React.CSSProperties}
+                  style={
+                    {
+                      width: `${val}%`,
+                      background: `linear-gradient(to right, ${grad[0]}, ${grad[1]})`,
+                      "--bar-glow": glow,
+                    } as React.CSSProperties
+                  }
                 />
               </div>
               <span className={styles.statVal}>{val}</span>
@@ -255,78 +363,85 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
 
         {/* Footer */}
         <div className={styles.footer}>
-        <span className={styles.brand}>{card.year}</span>
-        <div className={styles.rarityRow}>
-          <span dangerouslySetInnerHTML={{ __html: RARITY_ICON[card.rarity] ?? '' }} />
-          <span className={styles.rarityText} style={{ color: rarColor }}>{card.rarity}</span>
-        </div>
+          <span className={styles.brand}>{card.year}</span>
+          <div className={styles.rarityRow}>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: RARITY_ICON[card.rarity] ?? "",
+              }}
+            />
+            <span className={styles.rarityText} style={{ color: rarColor }}>
+              {card.rarity}
+            </span>
+          </div>
         </div>
       </div>
     </>
   );
 
-  const inner = (flagStyle === 'full' && flagBg) ? (
-    /* Full-bleed flag covers the entire card background */
-    <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
-      {cardContent}
-    </div>
-  ) : (flagStyle === 'fade' && flagBg) ? (
-    /* Flag+gradient on border only, normal cardBg inside */
-    <div
-      className={styles.card}
-      style={{
-        ...varStyle,
-        border: "10px solid transparent",
-        backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 40%, ${fadeColor} 60%), ${flagBg}`,
-        backgroundClip: "padding-box, border-box, border-box",
-        backgroundOrigin: "padding-box, border-box, border-box",
-        backgroundSize: `100% 100%, 100% 100%, ${country === "USA" ? "cover" : "100% 100%"}`,
-      }}
-    >
-      {cardContent}
-    </div>
-  ) : flagUsR90 ? (
-    <div className={styles.cardShell}>
-      <div
-        className={`${styles.cardFlagUsR90} ${styles.cardWorldFlagTarnish}`}
-        aria-hidden
-        style={
-          {
-            backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
-            backgroundSize: "100% 100%, 100% 100%",
-            backgroundPosition: "center, center",
-            backgroundRepeat: "no-repeat, no-repeat",
-            backgroundClip: "padding-box, border-box",
-            backgroundOrigin: "padding-box, border-box",
-            border: "10px solid transparent",
-          } as React.CSSProperties
-        }
-      />
-      <div className={styles.cardFlagFace} style={varStyle}>
+  const inner =
+    flagStyle === "full" && flagBg ? (
+      /* Full-bleed flag covers the entire card background */
+      <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
         {cardContent}
       </div>
-    </div>
-  ) : flagFlatShell ? (
-    <div className={styles.cardShell}>
+    ) : flagStyle === "fade" && flagBg ? (
+      /* Flag+gradient on border only, normal cardBg inside */
       <div
-        className={`${styles.cardFlagFlat} ${styles.cardWorldFlagTarnish}`}
-        aria-hidden
-        style={
-          {
-            background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
-            border: "10px solid transparent",
-          } as React.CSSProperties
-        }
-      />
-      <div className={styles.cardFlagFace} style={varStyle}>
+        className={styles.card}
+        style={{
+          ...varStyle,
+          border: "10px solid transparent",
+          backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 23%, ${fadeColor} 77%), ${flagBg}`,
+          backgroundClip: "padding-box, border-box, border-box",
+          backgroundOrigin: "padding-box, border-box, border-box",
+          backgroundSize: `100% 100%, 100% 100%, ${country === "USA" ? "cover" : "100% 100%"}`,
+        }}
+      >
         {cardContent}
       </div>
-    </div>
-  ) : (
-    <div className={styles.card} style={varStyle}>
-      {cardContent}
-    </div>
-  );
+    ) : flagUsR90 ? (
+      <div className={styles.cardShell}>
+        <div
+          className={`${styles.cardFlagUsR90} ${styles.cardWorldFlagTarnish}`}
+          aria-hidden
+          style={
+            {
+              backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
+              backgroundSize: "100% 100%, 100% 100%",
+              backgroundPosition: "center, center",
+              backgroundRepeat: "no-repeat, no-repeat",
+              backgroundClip: "padding-box, border-box",
+              backgroundOrigin: "padding-box, border-box",
+              border: "10px solid transparent",
+            } as React.CSSProperties
+          }
+        />
+        <div className={styles.cardFlagFace} style={varStyle}>
+          {cardContent}
+        </div>
+      </div>
+    ) : flagFlatShell ? (
+      <div className={styles.cardShell}>
+        <div
+          className={`${styles.cardFlagFlat} ${styles.cardWorldFlagTarnish}`}
+          aria-hidden
+          style={
+            {
+              background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
+              border: "10px solid transparent",
+            } as React.CSSProperties
+          }
+        />
+        <div className={styles.cardFlagFace} style={varStyle}>
+          {cardContent}
+        </div>
+      </div>
+    ) : (
+      <div className={styles.card} style={varStyle}>
+        {cardContent}
+      </div>
+    );
 
   if (!small) return inner;
 
