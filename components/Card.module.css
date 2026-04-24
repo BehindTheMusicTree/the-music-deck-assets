@@ -216,6 +216,9 @@
   font-size: 8px;
   letter-spacing: 1.5px;
   color: #2e2010;
+  line-height: 1;
+  position: relative;
+  top: 1px;
 }
 .typeStripSide {
   display: flex;
@@ -234,6 +237,8 @@
   background: var(--gc-border);
   transform: rotate(45deg);
   opacity: 0.9;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 /* Ability box */
@@ -262,6 +267,7 @@
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
