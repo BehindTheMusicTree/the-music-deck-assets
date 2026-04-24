@@ -8,7 +8,7 @@ export interface CardData {
   artist: string;
   year: number;
   genre: string;
-  genreLabel: string;
+  subgenre: string;
   typeStripPrimaryBorder?: string;
   typeStripSubBorder?: string;
   ability: string;
@@ -76,20 +76,8 @@ function normLabel(s: string) {
 
 /** Always returns two parts (genre + subgenre) for a two-column type strip. */
 function getTypeStripParts(card: CardData): { left: string; right: string } {
-  const gl = card.genreLabel.trim();
-  const mdash = gl.split(/\s*[—–]\s*/);
-  if (mdash.length === 2 && mdash[0] && mdash[1]) {
-    return { left: mdash[0].trim(), right: mdash[1].trim() };
-  }
-  const slash = gl.split(/\s*\/\s*/);
-  if (slash.length === 2 && slash[0] && slash[1]) {
-    return { left: slash[0].trim(), right: slash[1].trim() };
-  }
-  const fromKey = STRIP_NAME_FOR_GENRE[card.genre] ?? card.genre;
-  if (normLabel(fromKey) !== normLabel(gl)) {
-    return { left: fromKey, right: gl };
-  }
-  return { left: fromKey, right: fromKey };
+  const left = STRIP_NAME_FOR_GENRE[card.genre] ?? card.genre;
+  return { left, right: card.subgenre };
 }
 
 function scoreGlowColor(power: number) {
