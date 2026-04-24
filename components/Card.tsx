@@ -15,6 +15,7 @@ export interface CardData {
   pop: number;
   exp: number;
   rarity: 'Legendary' | 'Epic' | 'Rare' | 'Common';
+  artwork?: string;
 }
 
 export interface GenreTheme {
@@ -68,6 +69,13 @@ function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
     r: 1.5 + ((s + i) % 3),
     op: parseFloat((0.08 + ((s + i * 11) % 5) * 0.05).toFixed(2)),
   }));
+
+  if (card.artwork) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={card.artwork} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+    );
+  }
 
   return (
     <svg viewBox="0 0 234 190" width="100%" height="100%" className={styles.artSvg}>
@@ -125,57 +133,59 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         </div>
       </div>
 
-      {/* Artwork */}
-      <div className={styles.art}>
-        <CardArtSvg card={card} theme={theme} />
-      </div>
-
-      {/* Type strip */}
-      <div className={styles.typeStrip} style={{ '--gc-card-bg': theme.cardBg, '--gc-border': theme.border } as React.CSSProperties}>
-        <div className={styles.cornerBL} style={{ background: theme.cardBg }} />
-        <div className={styles.cornerBR} style={{ background: theme.cardBg }} />
-        <span className={styles.typeText}>Song · {card.year}</span>
-        <div className={styles.typeRight}>
-          <span className={styles.typeText}>{card.genreLabel}</span>
-          <div className={styles.pip} style={{ background: theme.border }} />
+      {/* Body: artwork fills this zone, panels overlay at the bottom */}
+      <div className={styles.body}>
+        <div className={styles.art}>
+          <CardArtSvg card={card} theme={theme} />
         </div>
-      </div>
 
-      {/* Ability */}
-      <div className={styles.ability}>
-        <div className={styles.abilityName}>{card.ability}</div>
-        <div className={styles.abilityDesc}>{card.abilityDesc}</div>
-      </div>
-
-      {/* Stats */}
-      <div className={styles.stats}>
-        {[
-          { lbl: 'Popularity',   val: card.pop, grad: theme.barPop, glow: theme.barGlowPop },
-          { lbl: 'Experimental', val: card.exp, grad: theme.barExp, glow: theme.barGlowExp },
-        ].map(({ lbl, val, grad, glow }) => (
-          <div key={lbl} className={styles.statRow}>
-            <span className={styles.statLabel}>{lbl}</span>
-            <div className={styles.statBg}>
-              <div
-                className={styles.statFill}
-                style={{
-                  width: `${val}%`,
-                  background: `linear-gradient(to right, ${grad[0]}, ${grad[1]})`,
-                  '--bar-glow': glow,
-                } as React.CSSProperties}
-              />
-            </div>
-            <span className={styles.statVal}>{val}</span>
+        {/* Type strip */}
+        <div className={styles.typeStrip} style={{ '--gc-card-bg': theme.cardBg, '--gc-border': theme.border } as React.CSSProperties}>
+          <div className={styles.cornerBL} style={{ background: theme.cardBg }} />
+          <div className={styles.cornerBR} style={{ background: theme.cardBg }} />
+          <span className={styles.typeText}>Song · {card.year}</span>
+          <div className={styles.typeRight}>
+            <span className={styles.typeText}>{card.genreLabel}</span>
+            <div className={styles.pip} style={{ background: theme.border }} />
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Footer */}
-      <div className={styles.footer}>
+        {/* Ability */}
+        <div className={styles.ability}>
+          <div className={styles.abilityName}>{card.ability}</div>
+          <div className={styles.abilityDesc}>{card.abilityDesc}</div>
+        </div>
+
+        {/* Stats */}
+        <div className={styles.stats}>
+          {[
+            { lbl: 'Popularity',   val: card.pop, grad: theme.barPop, glow: theme.barGlowPop },
+            { lbl: 'Experimental', val: card.exp, grad: theme.barExp, glow: theme.barGlowExp },
+          ].map(({ lbl, val, grad, glow }) => (
+            <div key={lbl} className={styles.statRow}>
+              <span className={styles.statLabel}>{lbl}</span>
+              <div className={styles.statBg}>
+                <div
+                  className={styles.statFill}
+                  style={{
+                    width: `${val}%`,
+                    background: `linear-gradient(to right, ${grad[0]}, ${grad[1]})`,
+                    '--bar-glow': glow,
+                  } as React.CSSProperties}
+                />
+              </div>
+              <span className={styles.statVal}>{val}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className={styles.footer}>
         <span className={styles.brand}>THE MUSIC DECK</span>
         <div className={styles.rarityRow}>
           <span dangerouslySetInnerHTML={{ __html: RARITY_ICON[card.rarity] ?? '' }} />
           <span className={styles.rarityText} style={{ color: rarColor }}>{card.rarity}</span>
+        </div>
         </div>
       </div>
     </div>
