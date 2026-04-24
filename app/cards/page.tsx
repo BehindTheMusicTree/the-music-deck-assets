@@ -437,129 +437,217 @@ export default function CardsPage() {
 
   return (
     <>
-    <CardSubTabs />
-    <div className="px-6 py-10 flex flex-col items-center min-h-screen">
-      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">05</div>
-      <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Card frame anatomy</div>
-      <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
-        THE <em className="text-gold not-italic">CARDS</em>
-      </h2>
-      <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
-        Each card adapts its colour theme to its genre. The frame anatomy —
-        header, artwork, type strip, ability box, stats, and footer — remains
-        constant across all genres and rarities.
-      </p>
+      <CardSubTabs />
+      <div className="px-6 py-10 flex flex-col items-center min-h-screen">
+        <div className="font-mono tracking-[3px] text-muted mb-2">05</div>
+        <div className="font-mono tracking-[2px] text-muted mb-4">
+          Card frame anatomy
+        </div>
+        <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
+          THE <em className="text-gold not-italic">CARDS</em>
+        </h2>
+        <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
+          Each card adapts its colour theme to its genre. The frame anatomy —
+          header, artwork, type strip, ability box, stats, and footer — remains
+          constant across all genres and rarities.
+        </p>
 
-      {/* Anatomy legend */}
-      <div id="anatomy" className="w-full max-w-[1100px] mb-14">
-        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Frame Anatomy</div>
-        <div className="flex gap-12 items-start flex-wrap">
-          <div style={{ transform: 'scale(1.5)', transformOrigin: 'top left', flexShrink: 0, width: 408, height: 600 }}>
-            <Card card={MOCK_CARDS.Pop} theme={GENRES.Pop} />
+        {/* Anatomy legend */}
+        <div id="anatomy" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Frame Anatomy
           </div>
-          <div className="flex flex-col gap-3 pt-2 flex-1">
-            {[
-              ["Header",     "Genre icon · title · artist · power score (glow scales with power)"],
-              ["Artwork",    "Procedural SVG — radial gradient, scatter dots, bar visualisation, genre symbol"],
-              ["Type strip", "Parchment (#ede4cc) with diamond-cut corners; colour diamond then main genre (left), subgenre then colour diamond (right)"],
-              ["Ability box","Parchment (#f4edd8) — ability name and flavour description"],
-              ["Stats",      "Popularity and Experimental bars — gradient fill with coloured glow per genre"],
-              ["Footer",     "Year · rarity (SVG shape + name)"],
-            ].map(([name, desc]) => (
-              <div key={name} className="flex gap-3">
-                <div className="w-[90px] shrink-0 font-cinzel text-[15px] tracking-[1px] text-gold pt-px">{name}</div>
-                <div className="font-garamond text-muted leading-[1.5]">{desc}</div>
+          <div className="flex gap-12 items-start flex-wrap">
+            <div
+              style={{
+                transform: "scale(1.5)",
+                transformOrigin: "top left",
+                flexShrink: 0,
+                width: 408,
+                height: 600,
+              }}
+            >
+              <Card card={MOCK_CARDS.Pop} theme={GENRES.Pop} />
+            </div>
+            <div className="flex flex-col gap-3 pt-2 flex-1">
+              {[
+                [
+                  "Header",
+                  "Genre icon · title · artist · power score (glow scales with power)",
+                ],
+                [
+                  "Artwork",
+                  "Procedural SVG — radial gradient, scatter dots, bar visualisation, genre symbol",
+                ],
+                [
+                  "Type strip",
+                  "Parchment (#ede4cc) with diamond-cut corners; colour diamond then main genre (left), subgenre then colour diamond (right)",
+                ],
+                [
+                  "Ability box",
+                  "Parchment (#f4edd8) — ability name and flavour description",
+                ],
+                [
+                  "Stats",
+                  "Popularity and Experimental bars — gradient fill with coloured glow per genre",
+                ],
+                ["Footer", "Year · rarity (SVG shape + name)"],
+              ].map(([name, desc]) => (
+                <div key={name} className="flex gap-3">
+                  <div className="w-[90px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
+                    {name}
+                  </div>
+                  <div className="font-garamond text-muted leading-[1.5]">
+                    {desc}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* All genre variants */}
+        <div id="genre-variants" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Genre Variants
+          </div>
+          <div className="flex flex-wrap gap-6">
+            {genreEntries.map(([genre, card]) => (
+              <div key={genre} className="flex flex-col items-center gap-2">
+                <Card card={card} theme={GENRES[genre]} />
+                <div className="font-mono tracking-[1px] text-muted">
+                  {genre.toUpperCase()}
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* All genre variants */}
-      <div id="genre-variants" className="w-full max-w-[1100px] mb-14">
-        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Variants</div>
-        <div className="flex flex-wrap gap-6">
-          {genreEntries.map(([genre, card]) => (
-            <div key={genre} className="flex flex-col items-center gap-2">
-              <Card card={card} theme={GENRES[genre]} />
-              <div className="font-mono text-[15px] tracking-[1px] text-muted">{genre.toUpperCase()}</div>
-            </div>
-          ))}
+        {/* World — by country */}
+        <div id="world" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
+            World — Flags (landscape on border)
+          </div>
+          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-5">
+            Each World card is tied to a subgenre of that country&apos;s popular
+            music. The flag is laid in landscape and wrapped around the border,
+            rendered with a tarnished finish so it reads as a worn print rather
+            than a digital swatch.
+          </p>
+          <div className="flex flex-wrap gap-6">
+            {WORLD_CARDS.map((card) => (
+              <div key={card.id} className="flex flex-col items-center gap-2">
+                <Card card={card} theme={worldThemeForCountry(card.country!)} />
+                <div className="font-mono tracking-[1px] text-muted">
+                  {card.country!.toUpperCase()}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* World — by country */}
-      <div id="world" className="w-full max-w-[1100px] mb-14">
-        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-2">
-          World — Flags (landscape on border)
+        {/* Rarity variants */}
+        <div id="rarities" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Rarity Variants — Small Size
+          </div>
+          <div className="flex flex-wrap gap-4 items-end">
+            {(["Legendary", "Epic", "Rare", "Common"] as const).map(
+              (rarity) => (
+                <div key={rarity} className="flex flex-col items-center gap-2">
+                  <Card
+                    card={{ ...MOCK_CARDS.Rock, rarity }}
+                    theme={GENRES.Rock}
+                    small
+                  />
+                  <div className="font-mono tracking-[1px] text-muted">
+                    {rarity.toUpperCase()}
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
         </div>
-        <p className="font-garamond italic text-muted text-[15px] leading-[1.5] max-w-[640px] mt-0 mb-5">
-          Each World card is tied to a subgenre of that country&apos;s popular music. The flag is laid in landscape and wrapped around the border, rendered with a tarnished finish so it reads as a worn print rather than a digital swatch.
-        </p>
-        <div className="flex flex-wrap gap-6">
-          {WORLD_CARDS.map((card) => (
-            <div key={card.id} className="flex flex-col items-center gap-2">
-              <Card card={card} theme={worldThemeForCountry(card.country!)} />
-              <div className="font-mono text-[15px] tracking-[1px] text-muted">{card.country!.toUpperCase()}</div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Rarity variants */}
-      <div id="rarities" className="w-full max-w-[1100px] mb-14">
-        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Rarity Variants — Small Size</div>
-        <div className="flex flex-wrap gap-4 items-end">
-          {(["Legendary", "Epic", "Rare", "Common"] as const).map((rarity) => (
-            <div key={rarity} className="flex flex-col items-center gap-2">
-              <Card card={{ ...MOCK_CARDS.Rock, rarity }} theme={GENRES.Rock} small />
-              <div className="font-mono text-[15px] tracking-[1px] text-muted">{rarity.toUpperCase()}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Design tokens table */}
-      <div id="colour-tokens" className="w-full max-w-[1100px]">
-        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Colour Tokens</div>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse font-mono text-[15px]">
-            <thead>
-              <tr>
-                {["Genre", "Border", "Card Bg", "Header Bg", "Text Main", "Bar Pop", "Bar Exp"].map((h) => (
-                  <th key={h} className="text-left px-3 py-2 border-b border-ui-border text-muted tracking-[1px] font-normal">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(GENRES).map(([genre, t]) => (
-                <tr key={genre} style={{ borderBottom: "1px solid rgba(30,28,44,.5)" }}>
-                  <td className="px-3 py-2 tracking-[1px]" style={{ color: t.textMain }}>{genre}</td>
-                  {[t.border, t.cardBg, t.headerBg, t.textMain].map((hex) => (
-                    <td key={hex} className="px-3 py-2">
-                      <span className="inline-flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: hex }} />
-                        <span className="text-muted">{hex}</span>
+        {/* Design tokens table */}
+        <div id="colour-tokens" className="w-full max-w-[1100px]">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Genre Colour Tokens
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse font-mono">
+              <thead>
+                <tr>
+                  {[
+                    "Genre",
+                    "Border",
+                    "Card Bg",
+                    "Header Bg",
+                    "Text Main",
+                    "Bar Pop",
+                    "Bar Exp",
+                  ].map((h) => (
+                    <th
+                      key={h}
+                      className="text-left px-3 py-2 border-b border-ui-border text-muted tracking-[1px] font-normal"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(GENRES).map(([genre, t]) => (
+                  <tr
+                    key={genre}
+                    style={{ borderBottom: "1px solid rgba(30,28,44,.5)" }}
+                  >
+                    <td
+                      className="px-3 py-2 tracking-[1px]"
+                      style={{ color: t.textMain }}
+                    >
+                      {genre}
+                    </td>
+                    {[t.border, t.cardBg, t.headerBg, t.textMain].map((hex) => (
+                      <td key={hex} className="px-3 py-2">
+                        <span className="inline-flex items-center gap-1.5">
+                          <span
+                            className="w-2.5 h-2.5 rounded-sm shrink-0"
+                            style={{ background: hex }}
+                          />
+                          <span className="text-muted">{hex}</span>
+                        </span>
+                      </td>
+                    ))}
+                    <td className="px-3 py-2">
+                      <span className="inline-flex gap-1">
+                        {t.barPop.map((h) => (
+                          <span
+                            key={h}
+                            className="w-2.5 h-2.5 rounded-sm"
+                            style={{ background: h }}
+                          />
+                        ))}
                       </span>
                     </td>
-                  ))}
-                  <td className="px-3 py-2">
-                    <span className="inline-flex gap-1">
-                      {t.barPop.map((h) => <span key={h} className="w-2.5 h-2.5 rounded-sm" style={{ background: h }} />)}
-                    </span>
-                  </td>
-                  <td className="px-3 py-2">
-                    <span className="inline-flex gap-1">
-                      {t.barExp.map((h) => <span key={h} className="w-2.5 h-2.5 rounded-sm" style={{ background: h }} />)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <td className="px-3 py-2">
+                      <span className="inline-flex gap-1">
+                        {t.barExp.map((h) => (
+                          <span
+                            key={h}
+                            className="w-2.5 h-2.5 rounded-sm"
+                            style={{ background: h }}
+                          />
+                        ))}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
