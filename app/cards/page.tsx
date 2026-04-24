@@ -1,4 +1,5 @@
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
+import CardSubTabs from "@/components/CardSubTabs";
 
 const GENRES: Record<string, GenreTheme> = {
   Rock: {
@@ -435,6 +436,8 @@ export default function CardsPage() {
   const genreEntries = Object.entries(MOCK_CARDS);
 
   return (
+    <>
+    <CardSubTabs />
     <div className="px-6 py-10 flex flex-col items-center min-h-screen">
       <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">05</div>
       <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Card frame anatomy</div>
@@ -448,7 +451,7 @@ export default function CardsPage() {
       </p>
 
       {/* Anatomy legend */}
-      <div className="w-full max-w-[1100px] mb-14">
+      <div id="anatomy" className="w-full max-w-[1100px] mb-14">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Frame Anatomy</div>
         <div className="flex gap-12 items-start flex-wrap">
           <div style={{ transform: 'scale(1.5)', transformOrigin: 'top left', flexShrink: 0, width: 408, height: 600 }}>
@@ -473,7 +476,7 @@ export default function CardsPage() {
       </div>
 
       {/* All genre variants */}
-      <div className="w-full max-w-[1100px] mb-14">
+      <div id="genre-variants" className="w-full max-w-[1100px] mb-14">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Variants</div>
         <div className="flex flex-wrap gap-6">
           {genreEntries.map(([genre, card]) => (
@@ -486,7 +489,7 @@ export default function CardsPage() {
       </div>
 
       {/* World — by country */}
-      <div className="w-full max-w-[1100px] mb-14">
+      <div id="world" className="w-full max-w-[1100px] mb-14">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-2">
           World — Flags (landscape on border)
         </div>
@@ -511,7 +514,7 @@ export default function CardsPage() {
       </div>
 
       {/* Rarity variants */}
-      <div className="w-full max-w-[1100px] mb-14">
+      <div id="rarities" className="w-full max-w-[1100px] mb-14">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Rarity Variants — Small Size</div>
         <div className="flex flex-wrap gap-4 items-end">
           {(["Legendary", "Epic", "Rare", "Common"] as const).map((rarity) => (
@@ -524,7 +527,7 @@ export default function CardsPage() {
       </div>
 
       {/* Design tokens table */}
-      <div className="w-full max-w-[1100px]">
+      <div id="colour-tokens" className="w-full max-w-[1100px]">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Colour Tokens</div>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse font-mono text-[15px]">
@@ -564,5 +567,6 @@ export default function CardsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

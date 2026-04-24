@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 
 const SECTIONS = [
-  { id: "overview", label: "Overview" },
-  { id: "colour-wheel", label: "Colour Wheel" },
+  { id: "anatomy", label: "Anatomy" },
+  { id: "genre-variants", label: "Genre Variants" },
+  { id: "world", label: "World" },
+  { id: "rarities", label: "Rarities" },
+  { id: "colour-tokens", label: "Colour Tokens" },
 ] as const;
 
-export default function GenreSubTabs() {
-  const [active, setActive] = useState("overview");
+export default function CardSubTabs() {
+  const [active, setActive] = useState("anatomy");
 
   useEffect(() => {
     const observers = SECTIONS.map(({ id }) => {
