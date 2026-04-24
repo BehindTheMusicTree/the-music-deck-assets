@@ -34,7 +34,7 @@ app/                   Next.js charter pages
 components/            Shared UI components (GenreWheel, etc.)
 docs/                  Product design documentation
 public/
-  charte-graphique/    Static HTML charter (reference)
+  charte-graphique/    Static HTML references (genre cards, etc.)
   cards/               Card artworks, examples, AI prompts
   ui/                  Card back, booster pack visuals
 ```

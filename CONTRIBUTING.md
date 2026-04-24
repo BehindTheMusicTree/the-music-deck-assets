@@ -96,7 +96,7 @@ Update `CHANGELOG.md` with every PR. Add entries to the `[Unreleased]` section. 
 
 1. Update `GenreWheel.tsx` — the `GENRES` array and any subgenre hex values
 2. Update `docs/genres.md` and `docs/charte-graphique.md`
-3. Update the static HTML charter in `public/charte-graphique/` if it exists
+
 
 Never define colours only in this repo and expect the game to follow — the sync direction is game → assets.
 
