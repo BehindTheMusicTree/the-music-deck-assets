@@ -672,7 +672,9 @@ export default function CardsPage() {
           USA: the star field is toward the lower left of the card. France: the
           vertical tricolour is unfolded along the border (blue, white, red),
           with the blue hoist edge placed like the real flag — not a generic
-          three-band split.
+          three-band split. The border is intentionally tarnished (mild
+          desaturation, lower brightness, soft inset darkening) so the flag
+          reads as a worn print in the frame, not a full-gamut digital swatch.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
           {WORLD_CARDS.map((card) => (

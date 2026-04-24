@@ -417,8 +417,8 @@ export default function GenresPage() {
         shows that country&apos;s real flag, laid in landscape and wrapped
         around the card — not a generic band rule. For the United States, the
         star field reads toward the lower left of the card; for France, the
-        vertical tricolour (blue, white, red) is unfolded on the border with
-        the hoist (blue) placed according to the actual flag, not an arbitrary
+        vertical tricolour (blue, white, red) is unfolded on the border with the
+        hoist (blue) placed according to the actual flag, not an arbitrary
         three-way split.
       </p>
       <div
@@ -539,12 +539,14 @@ export default function GenresPage() {
           }}
         >
           The border follows the country of origin&apos;s flag, using its real
-          layout (not a uniform “three equal stripes” cut). The flag is shown
-          in landscape orientation, unfolded along the card edge. For the United
-          States, the star field sits at the bottom left of the card; for
-          France, the vertical tricolour (blue, white, red) wraps the border the
-          same way, with the blue side (hoist side) aligned as on the real flag,
-          not as three abstract left–right blocks.
+          layout. The flag is shown in landscape orientation, unfolded along the
+          card edge. For the United States, the star field sits at the bottom
+          left of the card; for France, the vertical tricolour (blue, white,
+          red) wraps the border the same way, with the blue side (hoist side)
+          aligned as on the real flag, not as three abstract left–right blocks.
+          The border is rendered slightly tarnished — a bit desaturated,
+          darkened, and with a light inset wear — so it feels like a weathered
+          print on a physical card, not a flat screen flag.
         </p>
         <div
           id="genres-world-by-country"

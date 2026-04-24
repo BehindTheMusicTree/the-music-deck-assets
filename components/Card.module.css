@@ -23,7 +23,7 @@
     0 0 0 1px var(--gc-border);
 }
 
-/* World USA: drapeau en paysage + rotation 90° sens anti-horaire sur le motif de bordure */
+/* World USA: landscape flag, border motif rotated 90° counter-clockwise */
 .cardShell {
   position: relative;
   width: 272px;
@@ -55,6 +55,24 @@
   border-radius: 16px;
   pointer-events: none;
 }
+
+/* World: full-bleed flag border (e.g. France), no rotation */
+.cardFlagFlat {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+/* World border flags: slightly tarnished (faded, darkened) */
+.cardWorldFlagTarnish {
+  filter: saturate(0.78) brightness(0.9) contrast(1.03);
+  opacity: 0.7;
+  box-shadow: inset 0 0 16px rgba(12, 10, 8, 0.28);
+}
+
 .cardFlagFace {
   position: absolute;
   inset: 10px;

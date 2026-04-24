@@ -57,9 +57,11 @@ function scoreGlowColor(power: number) {
   return `0 0 ${r}px rgba(200,160,64,${o})`;
 }
 
+const USA_FLAG_PATH = "/cards/artworks/examples/flag-usa.webp";
+
 const FLAG_BORDERS: Record<string, string> = {
-  USA: "url('/cards/artworks/examples/flag-usa.webp')",
-  /** Tricolore vertical, couché 90° sens anti-horaire : rouge haut, blanc, bleu (mât) bas */
+  USA: `url('${USA_FLAG_PATH}')`,
+  /** Vertical tricolour, 90° CCW: red top, white, blue (hoist) bottom */
   France:
     "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
 };
@@ -123,13 +125,8 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
     "--gc-text-body": theme.textBody,
   } as React.CSSProperties;
 
-  const flagFrameStyle: React.CSSProperties | undefined =
-    !flagUsR90 && flagLayer
-      ? {
-          background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
-          border: "10px solid transparent",
-        }
-      : undefined;
+  /** World flags other than USA (e.g. France): same shell as USA, no rotation */
+  const flagFlatShell = Boolean(flagLayer && !flagUsR90);
 
   const cardContent = (
     <>
@@ -212,19 +209,42 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
   const inner = flagUsR90 ? (
     <div className={styles.cardShell}>
       <div
-        className={styles.cardFlagUsR90}
+        className={`${styles.cardFlagUsR90} ${styles.cardWorldFlagTarnish}`}
         aria-hidden
-        style={{
-          background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${FLAG_BORDERS.USA} border-box`,
-          border: "10px solid transparent",
-        }}
+        style={
+          {
+            backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
+            backgroundSize: "100% 100%, cover",
+            backgroundPosition: "center, center",
+            backgroundRepeat: "no-repeat, no-repeat",
+            backgroundClip: "padding-box, border-box",
+            backgroundOrigin: "padding-box, border-box",
+            border: "10px solid transparent",
+          } as React.CSSProperties
+        }
+      />
+      <div className={styles.cardFlagFace} style={varStyle}>
+        {cardContent}
+      </div>
+    </div>
+  ) : flagFlatShell ? (
+    <div className={styles.cardShell}>
+      <div
+        className={`${styles.cardFlagFlat} ${styles.cardWorldFlagTarnish}`}
+        aria-hidden
+        style={
+          {
+            background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
+            border: "10px solid transparent",
+          } as React.CSSProperties
+        }
       />
       <div className={styles.cardFlagFace} style={varStyle}>
         {cardContent}
       </div>
     </div>
   ) : (
-    <div className={styles.card} style={{ ...varStyle, ...flagFrameStyle }}>
+    <div className={styles.card} style={varStyle}>
       {cardContent}
     </div>
   );
