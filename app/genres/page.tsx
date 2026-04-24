@@ -391,7 +391,6 @@ export default function GenresPage() {
         style={{
           fontFamily: "Cormorant Garamond, serif",
           fontStyle: "italic",
-          fontSize: 14,
           color: "var(--muted)",
           maxWidth: 600,
           textAlign: "center",

@@ -2,35 +2,32 @@ import Link from 'next/link';
 
 export default function TypographyPage() {
   return (
-    <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 700, marginBottom: 32 }}>
-        <Link href="/" style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', textDecoration: 'none' }}>
+    <div className="px-6 py-10 flex flex-col items-center">
+      <div className="w-full max-w-[700px] mb-8">
+        <Link href="/" className="font-mono text-[9px] tracking-[2px] text-muted no-underline">
           ← Design Charter
         </Link>
       </div>
-      <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 3, color: 'var(--muted)', marginBottom: 8 }}>03</div>
-      <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', marginBottom: 16 }}>Type system</div>
-      <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: 28, letterSpacing: 4, color: 'var(--white)', marginBottom: 8 }}>
-        TYPO<em style={{ color: 'var(--gold)', fontStyle: 'normal' }}>GRAPHY</em>
+
+      <div className="font-mono text-[9px] tracking-[3px] text-muted mb-2">03</div>
+      <div className="font-mono text-[9px] tracking-[2px] text-muted mb-4">Type system</div>
+      <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
+        TYPO<em className="text-gold not-italic">GRAPHY</em>
       </h2>
-      <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', maxWidth: 600, textAlign: 'center', marginBottom: 56 }}>
+      <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
         Three typefaces, each with a defined role. Never swap them between contexts.
       </p>
 
-      <div style={{ width: '100%', maxWidth: 700, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div className="w-full max-w-[700px] flex flex-col gap-6">
 
         {/* Cinzel */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 4, padding: '28px 28px 24px' }}>
-          <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', marginBottom: 12 }}>CINZEL — TITLES</div>
-          <div style={{ fontFamily: 'Cinzel, serif', fontSize: 32, letterSpacing: 5, color: 'var(--white)', marginBottom: 16 }}>
-            THE MUSIC DECK
-          </div>
-          <div style={{ fontFamily: 'Cinzel, serif', fontSize: 18, letterSpacing: 3, color: 'var(--gold)', marginBottom: 20 }}>
-            Genre · Navigation · Buttons
-          </div>
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-            <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, color: 'var(--muted)', marginBottom: 6 }}>USAGE RULES</div>
-            <ul style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 14, color: 'var(--muted)', lineHeight: 1.8, paddingLeft: 20 }}>
+        <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
+          <div className="font-mono text-[9px] tracking-[2px] text-muted mb-3">CINZEL — TITLES</div>
+          <div className="font-cinzel text-[32px] tracking-[5px] text-white mb-4">THE MUSIC DECK</div>
+          <div className="font-cinzel text-[18px] tracking-[3px] text-gold mb-5">Genre · Navigation · Buttons</div>
+          <div className="border-t border-ui-border pt-4">
+            <div className="font-mono text-[9px] text-muted mb-1.5">USAGE RULES</div>
+            <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Page titles, section headings, card headers</li>
               <li>Navigation labels and button text</li>
               <li>Genre labels and badge names</li>
@@ -40,37 +37,33 @@ export default function TypographyPage() {
         </div>
 
         {/* Cormorant Garamond */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 4, padding: '28px 28px 24px' }}>
-          <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', marginBottom: 12 }}>CORMORANT GARAMOND — BODY</div>
-          <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 22, color: 'var(--white)', marginBottom: 8, lineHeight: 1.5 }}>
+        <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
+          <div className="font-mono text-[9px] tracking-[2px] text-muted mb-3">CORMORANT GARAMOND — BODY</div>
+          <div className="font-garamond text-[22px] text-white mb-2 leading-[1.5]">
             A collectible card game built around music.
           </div>
-          <div style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: 16, color: 'var(--muted)', marginBottom: 20, lineHeight: 1.6 }}>
+          <div className="font-garamond italic text-[16px] text-muted mb-5 leading-[1.6]">
             Each genre owns a border colour. World is the exception — it overlays a dotted pattern on the host genre&apos;s colour.
           </div>
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-            <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, color: 'var(--muted)', marginBottom: 6 }}>USAGE RULES</div>
-            <ul style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 14, color: 'var(--muted)', lineHeight: 1.8, paddingLeft: 20 }}>
+          <div className="border-t border-ui-border pt-4">
+            <div className="font-mono text-[9px] text-muted mb-1.5">USAGE RULES</div>
+            <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Body text, card descriptions, tooltips, paragraphs</li>
               <li>Use italic for flavour text and secondary captions</li>
               <li>Regular weight (400) for body, medium (500) for emphasis</li>
-              <li>Default body font — applied to <code style={{ fontFamily: 'Space Mono, monospace', fontSize: 10 }}>body</code> in globals.css</li>
+              <li>Default body font — applied to <code className="font-mono text-[10px]">body</code> in globals.css</li>
             </ul>
           </div>
         </div>
 
         {/* Space Mono */}
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 4, padding: '28px 28px 24px' }}>
-          <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', marginBottom: 12 }}>SPACE MONO — DATA</div>
-          <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 20, color: 'var(--white)', marginBottom: 8, letterSpacing: 1 }}>
-            #c8a040 · 120 BPM
-          </div>
-          <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 11, color: 'var(--muted)', marginBottom: 20, letterSpacing: 2 }}>
-            LEGENDARY · STACK ×3 · +45%
-          </div>
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-            <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, color: 'var(--muted)', marginBottom: 6 }}>USAGE RULES</div>
-            <ul style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 14, color: 'var(--muted)', lineHeight: 1.8, paddingLeft: 20 }}>
+        <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
+          <div className="font-mono text-[9px] tracking-[2px] text-muted mb-3">SPACE MONO — DATA</div>
+          <div className="font-mono text-[20px] text-white mb-2 tracking-[1px]">#c8a040 · 120 BPM</div>
+          <div className="font-mono text-[11px] text-muted mb-5 tracking-[2px]">LEGENDARY · STACK ×3 · +45%</div>
+          <div className="border-t border-ui-border pt-4">
+            <div className="font-mono text-[9px] text-muted mb-1.5">USAGE RULES</div>
+            <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Numeric data, scores, percentages, counters</li>
               <li>Section index labels (01, 02, 03…)</li>
               <li>Hex colour codes, technical tags, CSS tokens</li>

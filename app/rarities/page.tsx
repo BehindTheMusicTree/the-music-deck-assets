@@ -29,33 +29,46 @@ const rarities = [
 
 export default function RaritiesPage() {
   return (
-    <div style={{ padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 700, marginBottom: 32 }}>
-        <Link href="/" style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', textDecoration: 'none' }}>
+    <div className="px-6 py-10 flex flex-col items-center">
+      <div className="w-full max-w-[700px] mb-8">
+        <Link href="/" className="font-mono text-[9px] tracking-[2px] text-muted no-underline">
           ← Design Charter
         </Link>
       </div>
-      <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 3, color: 'var(--muted)', marginBottom: 8 }}>04</div>
-      <div style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 2, color: 'var(--muted)', marginBottom: 16 }}>Card rarity tiers</div>
-      <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: 28, letterSpacing: 4, color: 'var(--white)', marginBottom: 8 }}>
-        THE <em style={{ color: 'var(--gold)', fontStyle: 'normal' }}>RARITIES</em>
+
+      <div className="font-mono text-[9px] tracking-[3px] text-muted mb-2">04</div>
+      <div className="font-mono text-[9px] tracking-[2px] text-muted mb-4">Card rarity tiers</div>
+      <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
+        THE <em className="text-gold not-italic">RARITIES</em>
       </h2>
-      <p style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', maxWidth: 600, textAlign: 'center', marginBottom: 56 }}>
+      <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
         Four tiers, each with a fixed accent colour independent of genre. Rarity signals both collector value and competitive power.
       </p>
 
-      <div style={{ width: '100%', maxWidth: 700, display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="w-full max-w-[700px] flex flex-col gap-4">
         {rarities.map(({ name, hex, desc, examples }) => (
-          <div key={name} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderLeft: `3px solid ${hex}`, borderRadius: 4, padding: '24px 24px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: hex, boxShadow: `0 0 8px ${hex}` }} />
-              <span style={{ fontFamily: 'Cinzel, serif', fontSize: 16, letterSpacing: 3, color: hex }}>{name.toUpperCase()}</span>
-              <span style={{ fontFamily: 'Space Mono, monospace', fontSize: 10, color: 'var(--muted)', marginLeft: 4 }}>{hex}</span>
+          <div
+            key={name}
+            className="bg-card border border-ui-border rounded-[4px] px-6 pt-6 pb-5"
+            style={{ borderLeft: `3px solid ${hex}` }}
+          >
+            <div className="flex items-center gap-3.5 mb-3">
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ background: hex, boxShadow: `0 0 8px ${hex}` }}
+              />
+              <span className="font-cinzel text-base tracking-[3px]" style={{ color: hex }}>
+                {name.toUpperCase()}
+              </span>
+              <span className="font-mono text-[10px] text-muted ml-1">{hex}</span>
             </div>
-            <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 15, color: 'var(--white)', lineHeight: 1.6, marginBottom: 12 }}>{desc}</p>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <p className="font-garamond text-base text-white leading-[1.6] mb-3">{desc}</p>
+            <div className="flex gap-2 flex-wrap">
               {examples.map(ex => (
-                <span key={ex} style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: 1, color: 'var(--muted)', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 2, padding: '3px 8px' }}>
+                <span
+                  key={ex}
+                  className="font-mono text-[9px] tracking-[1px] text-muted bg-surface border border-ui-border rounded-sm px-2 py-0.5"
+                >
                   {ex}
                 </span>
               ))}

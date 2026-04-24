@@ -12,9 +12,12 @@ const GENRES = [
 
 const CX = 620,
   CY = 620,
-  R_INNER = 340,
-  R_OUTER = 460,
-  R_HARDCORE = 580;
+  R_POP_SUBGENRES = 130,
+  R_POPPY_SUBGENRES = 230,
+  R_POP_EXPERIMENTAL_LINE = 340,
+  R_EXPERIMENTAL_SUBGENRES = 505,
+  R_EXPERIMENTAL_HARDCORE_LINE = 620,
+  R_HARDCORE_SUBGENRES = 720;
 
 function repeat(str: string, times: number) {
   return Array(times).fill(str).join(" · ") + " ·";
@@ -118,26 +121,26 @@ export default function GenreWheel() {
         <defs>
           <path
             id="arc-pop"
-            d={`M ${CX},${CY - (R_INNER - 30)} A ${R_INNER - 30},${R_INNER - 30} 0 1,1 ${CX - 0.1},${CY - (R_INNER - 30)}`}
+            d={`M ${CX},${CY - (R_POP_EXPERIMENTAL_LINE - 30)} A ${R_POP_EXPERIMENTAL_LINE - 30},${R_POP_EXPERIMENTAL_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_POP_EXPERIMENTAL_LINE - 30)}`}
           />
           <path
             id="arc-exp-outer-inner"
-            d={`M ${CX},${CY - (R_INNER + 20)} A ${R_INNER + 20},${R_INNER + 20} 0 1,1 ${CX - 0.1},${CY - (R_INNER + 20)}`}
+            d={`M ${CX},${CY - (R_POP_EXPERIMENTAL_LINE + 20)} A ${R_POP_EXPERIMENTAL_LINE + 20},${R_POP_EXPERIMENTAL_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_POP_EXPERIMENTAL_LINE + 20)}`}
           />
           <path
             id="arc-exp-inner-outer"
-            d={`M ${CX},${CY - (R_HARDCORE - 30)} A ${R_HARDCORE - 30},${R_HARDCORE - 30} 0 1,1 ${CX - 0.1},${CY - (R_HARDCORE - 30)}`}
+            d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE - 30},${R_EXPERIMENTAL_HARDCORE_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)}`}
           />
           <path
             id="arc-hard"
-            d={`M ${CX},${CY - (R_HARDCORE + 30)} A ${R_HARDCORE + 30},${R_HARDCORE + 30} 0 1,1 ${CX - 0.1},${CY - (R_HARDCORE + 30)}`}
+            d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
           />
         </defs>
 
         {/* Pop center */}
         <g
           style={{ cursor: "pointer" }}
-          onClick={() => navigator.clipboard.writeText("#c0b8d0")}
+          onClick={() => navigator.clipboard.writeText("#ffffff")}
         >
           <rect
             x={CX - 48}
@@ -145,7 +148,7 @@ export default function GenreWheel() {
             width={96}
             height={56}
             rx={4}
-            fill="#c0b8d0"
+            fill="#ffffff"
           />
           <text
             x={CX}
@@ -167,7 +170,7 @@ export default function GenreWheel() {
             fontSize={6.5}
             fill="rgba(9,8,13,.5)"
           >
-            #c0b8d0
+            #ffffff
           </text>
         </g>
 
@@ -175,7 +178,7 @@ export default function GenreWheel() {
         <circle
           cx={CX}
           cy={CY}
-          r={R_INNER}
+          r={R_POP_EXPERIMENTAL_LINE}
           fill="none"
           stroke="rgba(255,255,255,.14)"
           strokeWidth={1.5}
@@ -219,7 +222,7 @@ export default function GenreWheel() {
         <circle
           cx={CX}
           cy={CY}
-          r={R_HARDCORE}
+          r={R_EXPERIMENTAL_HARDCORE_LINE}
           fill="none"
           stroke="rgba(255,255,255,.08)"
           strokeWidth={1.5}
@@ -240,7 +243,7 @@ export default function GenreWheel() {
         {GENRES.map((_, i) => {
           const angle = ((i + 0.5) / GENRES.length) * 360 - 90;
           const inner = polarToXY(CX, CY, 0, angle);
-          const outer = polarToXY(CX, CY, R_HARDCORE, angle);
+          const outer = polarToXY(CX, CY, R_EXPERIMENTAL_HARDCORE_LINE, angle);
           return (
             <line
               key={i}
@@ -254,78 +257,91 @@ export default function GenreWheel() {
           );
         })}
 
-        {/* Inner genres */}
+        {/* Base genres on pop/experimental line */}
         {GENRES.map((g, i) => {
           const angle = (i / GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(CX, CY, R_INNER, angle);
+          const { x, y } = polarToXY(CX, CY, R_POP_EXPERIMENTAL_LINE, angle);
           return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.h} />;
         })}
 
-        {/* Outer subgenres */}
+        {/* Subgenres by intensity: pop / poppy / experimental / hardcore */}
         {[
-          { n: "Metal", h: "#7a0810", parent: "Rock", ring: "outer" },
+          {
+            n: "Electropop",
+            h: "#e4ebff",
+            parent: "Electronic",
+            ring: "pop",
+          },
+          { n: "Disco", h: "#f0a0c0", parent: "Disco/Funk", ring: "poppy" },
+          { n: "Pop Rock", h: "#f07080", parent: "Rock", ring: "poppy" },
+          { n: "EDM", h: "#7090e8", parent: "Electronic", ring: "poppy" },
+          { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop", ring: "poppy" },
+          { n: "R&B", h: "#ffe94d", parent: "Hip-hop", ring: "poppy" },
+          { n: "Roots", h: "#5ab848", parent: "Reggae/Dub", ring: "poppy" },
+          { n: "Metal", h: "#7a0810", parent: "Rock", ring: "experimental" },
           {
             n: "Nu Metal",
             h: "#c86010",
-            parentA: "Hip-hop",
-            parentB: "Rock",
-            t: 0.5,
-            ring: "outer",
+            parent: "Rock",
+            angleDelta: -14,
+            ring: "experimental",
           },
-          { n: "Dub", h: "#28b870", parent: "Reggae/Dub", ring: "outer" },
+          {
+            n: "Dub",
+            h: "#28b870",
+            parent: "Reggae/Dub",
+            ring: "experimental",
+          },
           {
             n: "Drum & Bass",
             h: "#3070c8",
             parent: "Electronic",
-            ring: "outer",
+            ring: "experimental",
           },
-          { n: "Techno", h: "#1a2e6a", parent: "Electronic", ring: "outer" },
+          {
+            n: "Techno",
+            h: "#1a2e6a",
+            parent: "Electronic",
+            ring: "experimental",
+          },
           {
             n: "House",
             h: "#4030a0",
             parentA: "Electronic",
             angleDelta: 12,
-            ring: "outer",
+            ring: "experimental",
           },
           {
             n: "Jazz",
             h: "#7a6858",
-            parentA: "Classical",
-            parentB: "Vintage",
-            t: 0.35,
-            ring: "outer",
+            parent: "Vintage",
+            ring: "experimental",
           },
-        ].map((s: any) => {
+          {
+            n: "Free Jazz",
+            h: "#1e1c1a",
+            parent: "Vintage",
+            ring: "hardcore",
+          },
+        ].map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
-            const idx = GENRES.findIndex((g) => g.n === s.parentA);
+            const anchor = s.parentA ?? s.parent;
+            const idx = GENRES.findIndex((g) => g.n === anchor);
             angle = (idx / GENRES.length) * 360 - 90 + s.angleDelta;
-          } else if (s.parentA && s.parentB) {
-            const idxA = GENRES.findIndex((g) => g.n === s.parentA);
-            const idxB = GENRES.findIndex((g) => g.n === s.parentB);
-            const aA = (idxA / GENRES.length) * 360 - 90;
-            const aB = (idxB / GENRES.length) * 360 - 90;
-            angle = aA + (aB - aA) * (s.t ?? 0.5);
           } else {
             const idx = GENRES.findIndex((g) => g.n === s.parent);
             angle = (idx / GENRES.length) * 360 - 90;
           }
-          const { x, y } = polarToXY(CX, CY, (R_INNER + R_OUTER) / 2, angle);
-          return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
-        })}
-
-        {/* Middle ring subgenres */}
-        {[
-          { n: "Disco", h: "#f0a0c0", parent: "Disco/Funk" },
-          { n: "Pop Rock", h: "#f07080", parent: "Rock" },
-          { n: "EDM", h: "#7090e8", parent: "Electronic" },
-          { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop" },
-          { n: "R&B", h: "#ffe94d", parent: "Hip-hop" },
-          { n: "Roots", h: "#5ab848", parent: "Reggae/Dub" },
-        ].map((s) => {
-          const idx = GENRES.findIndex((g) => g.n === s.parent);
-          const angle = (idx / GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(CX, CY, 175, angle);
+          const r =
+            s.ring === "pop"
+              ? R_POP_SUBGENRES
+              : s.ring === "poppy"
+                ? R_POPPY_SUBGENRES
+                : s.ring === "hardcore"
+                  ? R_HARDCORE_SUBGENRES
+                  : R_EXPERIMENTAL_SUBGENRES;
+          const { x, y } = polarToXY(CX, CY, r, angle);
           return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
         })}
       </svg>
@@ -357,13 +373,13 @@ export default function GenreWheel() {
             style={{
               fontFamily: "Cormorant Garamond, serif",
               fontStyle: "italic",
-              fontSize: 13,
+              fontSize: 16,
               color: "#6a6480",
               lineHeight: 1.7,
               marginBottom: 20,
             }}
           >
-            World n'a pas de couleur propre. Chaque carte World emprunte la
+            World n&apos;a pas de couleur propre. Chaque carte World emprunte la
             couleur du genre hôte et y superpose un motif de pointillés blancs.
           </p>
           {[

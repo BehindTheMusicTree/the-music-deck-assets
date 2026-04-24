@@ -1,5 +1,21 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@import "tailwindcss";
 
+@theme {
+  --font-cinzel:   'Cinzel', serif;
+  --font-garamond: 'Cormorant Garamond', serif;
+  --font-mono:     'Space Mono', monospace;
+
+  --color-gold:       #a87c28;
+  --color-gold-hi:    #c8a040;
+  --color-white:      #d8d4f0;
+  --color-muted:      #6a6480;
+  --color-bg:         #09080d;
+  --color-surface:    #100f18;
+  --color-card:       #16141f;
+  --color-ui-border:  #1e1c2c;
+}
+
+/* kept for Card.tsx / GenreWheel.tsx inline style usage */
 :root {
   --bg:      #09080d;
   --surface: #100f18;
@@ -16,6 +32,6 @@ html, body {
   background: var(--bg);
   color: var(--white);
   font-family: 'Cormorant Garamond', serif;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
 }

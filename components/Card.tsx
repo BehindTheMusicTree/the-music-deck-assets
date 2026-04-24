@@ -57,8 +57,8 @@ function scoreGlowColor(power: number) {
   return `0 0 ${r}px rgba(200,160,64,${o})`;
 }
 
-const FLAG_GRADIENTS: Record<string, string> = {
-  USA:    'linear-gradient(to right, #B22234 0%, #B22234 33%, #FFFFFF 33%, #FFFFFF 66%, #3C3B6E 66%, #3C3B6E 100%)',
+const FLAG_BORDERS: Record<string, string> = {
+  USA:    "url('/cards/artworks/examples/flag-usa.webp')",
   France: 'linear-gradient(to right, #0055A4 0%, #0055A4 33%, #FFFFFF 33%, #FFFFFF 66%, #EF4135 66%, #EF4135 100%)',
 };
 
@@ -109,7 +109,7 @@ function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
 export default function Card({ card, theme, small }: { card: CardData; theme: GenreTheme; small?: boolean }) {
   const rarColor = RARITY_COLOR[card.rarity] ?? '#666';
 
-  const flagGradient = card.country ? FLAG_GRADIENTS[card.country] : undefined;
+  const flagGradient = card.country ? FLAG_BORDERS[card.country] : undefined;
 
   const cssVars = {
     '--gc-border':     theme.border,
