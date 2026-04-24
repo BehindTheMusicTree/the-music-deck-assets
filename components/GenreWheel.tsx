@@ -6,7 +6,6 @@ const GENRES = [
   { n: "Disco/Funk", h: "#c0387a" },
   { n: "Hip-hop", h: "#ffd700" },
   { n: "Rock", h: "#d01828" },
-  { n: "Country", h: "#7a4e20" },
   { n: "Classical", h: "#5c2a0a" },
   { n: "Vintage", h: "#787878" },
 ];
@@ -302,7 +301,7 @@ export default function GenreWheel() {
           { n: "Disco", h: "#f0a0c0", parent: "Disco/Funk" },
           { n: "Pop Rock", h: "#f07080", parent: "Rock" },
           { n: "EDM", h: "#7090e8", parent: "Electronic" },
-          { n: "Pop Country", h: "#d4a06a", parent: "Country" },
+          { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop" },
           { n: "R&B", h: "#ffe94d", parent: "Hip-hop" },
           { n: "Roots", h: "#5ab848", parent: "Reggae/Dub" },
         ].map((s) => {
