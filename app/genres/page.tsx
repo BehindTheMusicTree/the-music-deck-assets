@@ -12,13 +12,7 @@ export default function GenresPage() {
           THE <em className="text-gold not-italic">GENRES</em>
         </h2>
         <p className="font-garamond italic text-muted max-w-[600px] text-center">
-          Each genre owns a border colour. World is the exception: the border
-          shows that country&apos;s real flag, laid in landscape and wrapped
-          around the card — not a generic band rule. For the United States, the
-          star field reads toward the lower left of the card; for France, the
-          vertical tricolour (blue, white, red) is unfolded on the border with the
-          hoist (blue) placed according to the actual flag, not an arbitrary
-          three-way split.
+          Each genre owns a border colour that spans a spectrum from its poppiest subgenre to its most extreme. World is the exception — its border carries the country&apos;s real flag rather than a solid colour.
         </p>
 
         <div className="w-full max-w-[860px] mt-6 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">

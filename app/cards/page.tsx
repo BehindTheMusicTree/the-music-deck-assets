@@ -494,14 +494,7 @@ export default function CardsPage() {
           World — Flags (landscape on border)
         </div>
         <p className="font-garamond italic text-muted text-[15px] leading-[1.5] max-w-[640px] mt-0 mb-5">
-          USA: the star field is toward the lower left of the card. France: the
-          vertical tricolour is unfolded along the border (blue, white, red),
-          with the blue hoist edge placed like the real flag — not a generic
-          three-band split. The border is intentionally tarnished (mild
-          desaturation, lower brightness, soft inset darkening) so the flag
-          reads as a worn print in the frame, not a full-gamut digital swatch.
-          Each card is tied to a subgenre of that country&apos;s popular music
-          (e.g. United States: Country, France: variété française, Portugal: fado).
+          Each World card is tied to a subgenre of that country&apos;s popular music. The flag is laid in landscape and wrapped around the border, rendered with a tarnished finish so it reads as a worn print rather than a digital swatch.
         </p>
         <div className="flex flex-wrap gap-6">
           {WORLD_CARDS.map((card) => (
