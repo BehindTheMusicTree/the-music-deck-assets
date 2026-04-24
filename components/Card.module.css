@@ -127,60 +127,26 @@
   z-index: 1;
 }
 
-/* Type strip — parchment with diamond-cut corners */
+/* Type strip — parchment with diamond-cut corners via clip-path */
 .typeStrip {
   position: relative;
   background: #ede4cc;
-  border-top: 1px solid var(--gc-border);
-  border-bottom: 1px solid var(--gc-border);
   padding: 6px 14px;
-  margin: 3px 0px 0;
+  margin: 4;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-    0 5px 12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-}
-/* Diamond cuts at corners */
-.typeStrip::before,
-.typeStrip::after {
-  content: "";
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  background: var(--gc-card-bg);
-  transform: rotate(45deg);
-}
-.typeStrip::before {
-  top: -5.5px;
-  left: -5.5px;
-  box-shadow:
-    5.5px 0 0 -3px var(--gc-card-bg),
-    0 5.5px 0 -3px var(--gc-card-bg);
-}
-.typeStrip::after {
-  top: -5.5px;
-  right: -5.5px;
-}
-.cornerBL,
-.cornerBR {
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  background: var(--gc-card-bg);
-  transform: rotate(45deg);
-}
-.cornerBL {
-  bottom: -5.5px;
-  left: -5.5px;
-}
-.cornerBR {
-  bottom: -5.5px;
-  right: -5.5px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+  /* 10px diamond cut on left and right sides */
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 50%,
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% 50%
+  );
 }
 .typeText {
   font-family: "Cinzel", serif;

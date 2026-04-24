@@ -140,9 +140,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         </div>
 
         {/* Type strip */}
-        <div className={styles.typeStrip} style={{ '--gc-card-bg': theme.cardBg, '--gc-border': theme.border } as React.CSSProperties}>
-          <div className={styles.cornerBL} style={{ background: theme.cardBg }} />
-          <div className={styles.cornerBR} style={{ background: theme.cardBg }} />
+        <div className={styles.typeStrip}>
           <span className={styles.typeText}>Song · {card.year}</span>
           <div className={styles.typeRight}>
             <span className={styles.typeText}>{card.genreLabel}</span>
