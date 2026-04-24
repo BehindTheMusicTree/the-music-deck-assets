@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const SECTIONS = [
   { id: "overview", label: "Overview" },
   { id: "colour-wheel", label: "Colour Wheel" },
+  { id: "associations", label: "Associations" },
 ] as const;
 
 export default function GenreSubTabs() {
