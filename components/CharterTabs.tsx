@@ -8,6 +8,8 @@ const TABS = [
   { href: "/cards", label: "Cards" },
   { href: "/genres", label: "Genres" },
   { href: "/rarities", label: "Rarities" },
+  { href: "/collection", label: "Collection" },
+  { href: "/catalog", label: "Catalog" },
   { href: "/tracklists", label: "Track Lists" },
   { href: "/battles", label: "Battles" },
   { href: "/charter", label: "Charter" },

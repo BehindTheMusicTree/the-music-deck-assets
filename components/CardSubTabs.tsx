@@ -43,7 +43,7 @@ export default function CardSubTabs() {
                 const nav = (e.currentTarget as HTMLElement).closest("nav");
                 if (!el) return;
                 const stickyOffset =
-                  ((nav?.previousElementSibling as HTMLElement | null)?.offsetHeight ?? 0) +
+                  (document.querySelector("header")?.offsetHeight ?? 0) +
                   (nav?.offsetHeight ?? 0);
                 window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - stickyOffset, behavior: "smooth" });
               }}

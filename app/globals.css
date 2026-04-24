@@ -27,6 +27,10 @@
   --muted:   #6a6480;
 }
 
+html {
+  scroll-padding-top: 100px;
+}
+
 html, body {
   min-height: 100%;
   background: var(--bg);

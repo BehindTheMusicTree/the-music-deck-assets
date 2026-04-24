@@ -20,22 +20,34 @@ const sections = [
     desc: "Legendary, Epic, Rare, Common",
   },
   {
-    href: "/tracklists",
+    href: "/collection",
     index: "04",
+    label: "Collection",
+    desc: "Cards you own, segmented by genre",
+  },
+  {
+    href: "/catalog",
+    index: "05",
+    label: "Catalog",
+    desc: "All available cards across genres and rarities",
+  },
+  {
+    href: "/tracklists",
+    index: "06",
     label: "Track Lists",
     desc: "Deck building — prepare your tracklist for a battle",
   },
   {
     href: "/battles",
-    index: "05",
+    index: "07",
     label: "Battles",
     desc: "Battle rules, formats, and scoring concepts",
   },
   {
     href: "/charter",
-    index: "06",
-    label: "Typography",
-    desc: "Cinzel, Cormorant Garamond, Space Mono",
+    index: "08",
+    label: "Charter",
+    desc: "Colour palette, typography, and design tokens",
   },
 ];
 
