@@ -221,7 +221,7 @@ export default function GenresPage() {
                 {[
                   { n: "USA",    pip: <span style={{ fontSize: 10, color: "#1a1a2e", lineHeight: 1 }}>★</span> },
                   { n: "France", pip: <span style={{ fontSize: 13, color: "#1a2a0a", lineHeight: 1 }}>⚜</span> },
-                  { n: "Spain",  pip: <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ backgroundImage: "linear-gradient(to bottom, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)" }} /> },
+                  { n: "Spain",  pip: <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ backgroundImage: "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)" }} /> },
                 ].map(({ n, pip }) => (
                   <div key={n} className="flex items-center gap-3 pl-9 pr-4 py-2" style={{ background: "#f4edd8" }}>
                     <div className="w-5 flex items-center justify-center shrink-0">{pip}</div>

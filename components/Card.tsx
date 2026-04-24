@@ -115,7 +115,7 @@ const FLAG_PIP_SYMBOL: Record<
 
 /** Flag gradient for the pip diamond, for countries without a symbol */
 const FLAG_PIP_BG: Record<string, string> = {
-  Spain: "linear-gradient(to right, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
+  Spain: "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
 };
 
 /** CSS background value for the border in flagStyle modes (gradient only — USA uses flagUsR90 shell) */
