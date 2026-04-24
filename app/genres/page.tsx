@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import GenreWheel from "@/components/GenreWheel";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 import Link from "next/link";
@@ -359,6 +360,7 @@ export default function GenresPage() {
           href="/"
           style={{
             fontFamily: "Space Mono, monospace",
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textDecoration: "none",
@@ -371,6 +373,7 @@ export default function GenresPage() {
         id="genres-chapter-index"
         style={{
           fontFamily: "Space Mono, monospace",
+          fontSize: 15,
           letterSpacing: 3,
           color: "var(--muted)",
           marginBottom: 8,
@@ -382,6 +385,7 @@ export default function GenresPage() {
         id="genres-chapter-eyebrow"
         style={{
           fontFamily: "Space Mono, monospace",
+          fontSize: 15,
           letterSpacing: 2,
           color: "var(--muted)",
           marginBottom: 16,
@@ -407,6 +411,7 @@ export default function GenresPage() {
         style={{
           fontFamily: "Cormorant Garamond, serif",
           fontStyle: "italic",
+          fontSize: 17,
           color: "var(--muted)",
           maxWidth: 600,
           textAlign: "center",
@@ -439,6 +444,7 @@ export default function GenresPage() {
           id="genres-color-ramp-explainer-title"
           style={{
             fontFamily: "Space Mono, monospace",
+            fontSize: 15,
             letterSpacing: 2,
             textTransform: "uppercase",
             marginBottom: 8,
@@ -476,6 +482,7 @@ export default function GenresPage() {
           id="genres-variants-title"
           style={{
             fontFamily: "Space Mono, monospace",
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -504,7 +511,7 @@ export default function GenresPage() {
                 id={`${genreSampleId(genre)}-label`}
                 style={{
                   fontFamily: "Space Mono, monospace",
-                  fontSize: 8,
+                  fontSize: 15,
                   letterSpacing: 1,
                   color: "var(--muted)",
                 }}
@@ -521,6 +528,7 @@ export default function GenresPage() {
           id="genres-world-title"
           style={{
             fontFamily: "Space Mono, monospace",
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -529,25 +537,74 @@ export default function GenresPage() {
         >
           World — Special case
         </div>
-        <p
-          id="genres-world-intro"
+        <dl
+          id="genres-world-properties"
           style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontStyle: "italic",
-            color: "var(--muted)",
-            marginBottom: 32,
+            margin: "0 0 32px",
+            maxWidth: 720,
+            display: "grid",
+            gridTemplateColumns: "minmax(150px, auto) 1fr",
+            columnGap: 28,
+            rowGap: 12,
+            alignItems: "start",
           }}
         >
-          The border follows the country of origin&apos;s flag, using its real
-          layout. The flag is shown in landscape orientation, unfolded along the
-          card edge. For the United States, the star field sits at the bottom
-          left of the card; for France, the vertical tricolour (blue, white,
-          red) wraps the border the same way, with the blue side (hoist side)
-          aligned as on the real flag, not as three abstract left–right blocks.
-          The border is rendered slightly tarnished — a bit desaturated,
-          darkened, and with a light inset wear — so it feels like a weathered
-          print on a physical card, not a flat screen flag.
-        </p>
+          {(
+            [
+              [
+                "Source",
+                "The country of origin's flag, using its real layout (not a generic band pattern).",
+              ],
+              [
+                "Orientation",
+                "Landscape, unfolded along the card edge.",
+              ],
+              [
+                "United States",
+                "The star field sits toward the lower left of the card.",
+              ],
+              [
+                "France",
+                "Vertical tricolour (blue, white, red) on the border; the blue hoist side is aligned as on the real flag, not as three abstract left–right blocks.",
+              ],
+              [
+                "Border treatment",
+                "Slightly tarnished: desaturated, darkened, light inset wear — reads as a weathered print on a physical card, not a flat screen flag.",
+              ],
+              [
+                "Subgenre",
+                "A subgenre of the source country's popular music is associated with the card — for example: United States: Country, France: variété française, Portugal: fado.",
+              ],
+            ] as const
+          ).map(([label, value]) => (
+            <Fragment key={label}>
+              <dt
+                style={{
+                  fontFamily: "Space Mono, monospace",
+                  fontSize: 15,
+                  letterSpacing: 1,
+                  color: "var(--muted)",
+                  textTransform: "uppercase",
+                  margin: 0,
+                }}
+              >
+                {label}
+              </dt>
+              <dd
+                style={{
+                  fontFamily: "Cormorant Garamond, serif",
+                  fontStyle: "italic",
+                  color: "var(--muted)",
+                  margin: 0,
+                  fontSize: 16,
+                  lineHeight: 1.45,
+                }}
+              >
+                {value}
+              </dd>
+            </Fragment>
+          ))}
+        </dl>
         <div
           id="genres-world-by-country"
           style={{ display: "flex", flexDirection: "column", gap: 16 }}
@@ -568,6 +625,7 @@ export default function GenresPage() {
               <summary
                 style={{
                   fontFamily: "Space Mono, monospace",
+                  fontSize: 15,
                   letterSpacing: 2,
                   color: "var(--muted)",
                   textTransform: "uppercase",
@@ -579,7 +637,7 @@ export default function GenresPage() {
                   gap: 10,
                 }}
               >
-                <span style={{ opacity: 0.4, fontSize: 8 }}>▶</span>
+                <span style={{ opacity: 0.4, fontSize: 15 }}>▶</span>
                 {country}
               </summary>
               <div

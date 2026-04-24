@@ -31,13 +31,13 @@ export default function RaritiesPage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">
       <div className="w-full max-w-[700px] mb-8">
-        <Link href="/" className="font-mono text-[9px] tracking-[2px] text-muted no-underline">
+        <Link href="/" className="font-mono text-[15px] tracking-[2px] text-muted no-underline">
           ← Design Charter
         </Link>
       </div>
 
-      <div className="font-mono text-[9px] tracking-[3px] text-muted mb-2">04</div>
-      <div className="font-mono text-[9px] tracking-[2px] text-muted mb-4">Card rarity tiers</div>
+      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">04</div>
+      <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Card rarity tiers</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
         THE <em className="text-gold not-italic">RARITIES</em>
       </h2>
@@ -60,14 +60,14 @@ export default function RaritiesPage() {
               <span className="font-cinzel text-base tracking-[3px]" style={{ color: hex }}>
                 {name.toUpperCase()}
               </span>
-              <span className="font-mono text-[10px] text-muted ml-1">{hex}</span>
+              <span className="font-mono text-[15px] text-muted ml-1">{hex}</span>
             </div>
             <p className="font-garamond text-base text-white leading-[1.6] mb-3">{desc}</p>
             <div className="flex gap-2 flex-wrap">
               {examples.map(ex => (
                 <span
                   key={ex}
-                  className="font-mono text-[9px] tracking-[1px] text-muted bg-surface border border-ui-border rounded-sm px-2 py-0.5"
+                  className="font-mono text-[15px] tracking-[1px] text-muted bg-surface border border-ui-border rounded-sm px-2 py-0.5"
                 >
                   {ex}
                 </span>

@@ -447,7 +447,7 @@ export default function CardsPage() {
           href="/"
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textDecoration: "none",
@@ -461,7 +461,7 @@ export default function CardsPage() {
       <div
         style={{
           fontFamily: "Space Mono, monospace",
-          fontSize: 9,
+          fontSize: 15,
           letterSpacing: 3,
           color: "var(--muted)",
           marginBottom: 8,
@@ -472,7 +472,7 @@ export default function CardsPage() {
       <div
         style={{
           fontFamily: "Space Mono, monospace",
-          fontSize: 9,
+          fontSize: 15,
           letterSpacing: 2,
           color: "var(--muted)",
           marginBottom: 16,
@@ -495,7 +495,7 @@ export default function CardsPage() {
         style={{
           fontFamily: "Cormorant Garamond, serif",
           fontStyle: "italic",
-          fontSize: 14,
+          fontSize: 15,
           color: "var(--muted)",
           maxWidth: 600,
           textAlign: "center",
@@ -521,7 +521,7 @@ export default function CardsPage() {
         <div
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -579,7 +579,7 @@ export default function CardsPage() {
                     width: 90,
                     flexShrink: 0,
                     fontFamily: "Cinzel, serif",
-                    fontSize: 10,
+                    fontSize: 15,
                     letterSpacing: 1,
                     color: "var(--gold)",
                     paddingTop: 1,
@@ -607,7 +607,7 @@ export default function CardsPage() {
         <div
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -631,7 +631,7 @@ export default function CardsPage() {
               <div
                 style={{
                   fontFamily: "Space Mono, monospace",
-                  fontSize: 8,
+                  fontSize: 15,
                   letterSpacing: 1,
                   color: "var(--muted)",
                 }}
@@ -648,7 +648,7 @@ export default function CardsPage() {
         <div
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -662,7 +662,7 @@ export default function CardsPage() {
             fontFamily: "Cormorant Garamond, serif",
             fontStyle: "italic",
             color: "var(--muted)",
-            fontSize: 14,
+            fontSize: 15,
             lineHeight: 1.5,
             maxWidth: 640,
             marginTop: 0,
@@ -675,6 +675,8 @@ export default function CardsPage() {
           three-band split. The border is intentionally tarnished (mild
           desaturation, lower brightness, soft inset darkening) so the flag
           reads as a worn print in the frame, not a full-gamut digital swatch.
+          Each card is tied to a subgenre of that country&apos;s popular music
+          (e.g. United States: Country, France: variété française, Portugal: fado).
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
           {WORLD_CARDS.map((card) => (
@@ -691,7 +693,7 @@ export default function CardsPage() {
               <div
                 style={{
                   fontFamily: "Space Mono, monospace",
-                  fontSize: 8,
+                  fontSize: 15,
                   letterSpacing: 1,
                   color: "var(--muted)",
                 }}
@@ -708,7 +710,7 @@ export default function CardsPage() {
         <div
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -743,7 +745,7 @@ export default function CardsPage() {
               <div
                 style={{
                   fontFamily: "Space Mono, monospace",
-                  fontSize: 8,
+                  fontSize: 15,
                   letterSpacing: 1,
                   color: "var(--muted)",
                 }}
@@ -760,7 +762,7 @@ export default function CardsPage() {
         <div
           style={{
             fontFamily: "Space Mono, monospace",
-            fontSize: 9,
+            fontSize: 15,
             letterSpacing: 2,
             color: "var(--muted)",
             textTransform: "uppercase",
@@ -775,7 +777,7 @@ export default function CardsPage() {
               width: "100%",
               borderCollapse: "collapse",
               fontFamily: "Space Mono, monospace",
-              fontSize: 9,
+              fontSize: 15,
             }}
           >
             <thead>

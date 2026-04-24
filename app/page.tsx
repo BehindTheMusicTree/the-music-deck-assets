@@ -11,7 +11,7 @@ const sections = [
 export default function IndexPage() {
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-6 py-[60px]">
-      <div className="font-mono text-[9px] tracking-[3px] text-muted mb-4 uppercase">
+      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-4 uppercase">
         Design Charter
       </div>
       <h1 className="font-cinzel text-4xl font-bold tracking-[6px] text-white mb-2 text-center">
@@ -25,7 +25,7 @@ export default function IndexPage() {
         {sections.map(({ href, index, label, desc }) => (
           <Link key={href} href={href} className="no-underline">
             <div className="bg-card border border-ui-border rounded px-6 py-7">
-              <div className="font-mono text-[9px] tracking-[3px] text-muted mb-2.5">{index}</div>
+              <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2.5">{index}</div>
               <div className="font-cinzel text-sm tracking-[2px] text-gold mb-2 uppercase">{label}</div>
               <div className="font-garamond text-sm text-muted leading-[1.5]">{desc}</div>
             </div>
