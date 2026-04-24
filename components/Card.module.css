@@ -231,14 +231,28 @@
   justify-content: flex-end;
 }
 .pip {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 1px;
   background: var(--gc-border);
-  transform: rotate(45deg);
+  transform: rotate(45deg) translateY(1px);
   opacity: 0.9;
   flex-shrink: 0;
   align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.pipSymbol {
+  font-size: 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  align-self: center;
+  position: relative;
+  top: 1px;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Ability box */

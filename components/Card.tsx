@@ -104,6 +104,16 @@ const FLAG_BORDERS: Record<string, string> = {
     "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
 };
 
+/** Symbol shown inside the left pip diamond for World cards, keyed by country */
+const FLAG_PIP_SYMBOL: Record<
+  string,
+  { sym: string; bg: string; color: string; size?: number }
+> = {
+  USA: { sym: "★", bg: "#3C3B6E", color: "#1a1a2e" },
+  France: { sym: "⚜", bg: "#0055A4", color: "#1a2a0a", size: 19 },
+  Spain: { sym: "⚜", bg: "#AA151B", color: "#3a1a00", size: 11 },
+};
+
 /** CSS background value for the border in flagStyle modes (gradient only — USA uses flagUsR90 shell) */
 const FLAG_BG: Record<string, string> = {
   /** Spanish flag rotated 90°: vertical stripes red / yellow / red */
@@ -245,6 +255,11 @@ export default function Card({
   const strip = getTypeStripParts(card);
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
   const stripRightBorder = card.typeStripSubBorder ?? theme.border;
+  const pipLeftSymbol = card.country
+    ? FLAG_PIP_SYMBOL[card.country]
+    : undefined;
+  const pipRightSymbol =
+    pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
@@ -303,18 +318,42 @@ export default function Card({
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
-            <div
-              className={styles.pip}
-              style={{ background: stripLeftBorder }}
-            />
+            {pipLeftSymbol ? (
+              <span
+                className={styles.pipSymbol}
+                style={{
+                  color: pipLeftSymbol.color,
+                  fontSize: pipLeftSymbol.size,
+                }}
+              >
+                {pipLeftSymbol.sym}
+              </span>
+            ) : (
+              <div
+                className={styles.pip}
+                style={{ background: stripLeftBorder }}
+              />
+            )}
             <span className={styles.typeText}>{strip.left}</span>
           </div>
           <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
             <span className={styles.typeText}>{strip.right}</span>
-            <div
-              className={styles.pip}
-              style={{ background: stripRightBorder }}
-            />
+            {pipRightSymbol ? (
+              <span
+                className={styles.pipSymbol}
+                style={{
+                  color: pipRightSymbol.color,
+                  fontSize: pipRightSymbol.size,
+                }}
+              >
+                {pipRightSymbol.sym}
+              </span>
+            ) : (
+              <div
+                className={styles.pip}
+                style={{ background: stripRightBorder }}
+              />
+            )}
           </div>
         </div>
 
@@ -405,14 +444,25 @@ export default function Card({
           aria-hidden
           style={
             {
-              backgroundImage: flagStyle === 'fade'
-                ? `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
-                : `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
-              backgroundSize: flagStyle === 'fade' ? "100% 100%, 100% 100%, cover" : "100% 100%, cover",
-              backgroundPosition: flagStyle === 'fade' ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
+              backgroundImage:
+                flagStyle === "fade"
+                  ? `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
+                  : `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
+              backgroundSize:
+                flagStyle === "fade"
+                  ? "100% 100%, 100% 100%, cover"
+                  : "100% 100%, cover",
+              backgroundPosition:
+                flagStyle === "fade" ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
               backgroundRepeat: "no-repeat",
-              backgroundClip: flagStyle === 'fade' ? "padding-box, border-box, border-box" : "padding-box, border-box",
-              backgroundOrigin: flagStyle === 'fade' ? "padding-box, border-box, border-box" : "padding-box, border-box",
+              backgroundClip:
+                flagStyle === "fade"
+                  ? "padding-box, border-box, border-box"
+                  : "padding-box, border-box",
+              backgroundOrigin:
+                flagStyle === "fade"
+                  ? "padding-box, border-box, border-box"
+                  : "padding-box, border-box",
               border: "10px solid transparent",
             } as React.CSSProperties
           }

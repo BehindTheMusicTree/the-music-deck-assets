@@ -556,7 +556,8 @@ export default function CardsPage() {
           <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-8 pl-0 list-none flex flex-col gap-1">
             <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. USA, Bretagne)</span></li>
             <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
-            <li><span className="text-white">Left diamond</span> — colour represents the country or region flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
+            <li><span className="text-white">Left diamond</span> — symbol or colour representing the country or region flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
+            <li><span className="text-white">Right diamond</span> — repeats the left symbol, indicating the subgenre is native to the region</li>
           </ul>
 
           <div className="flex flex-wrap gap-6 mb-12">
