@@ -217,10 +217,15 @@
   letter-spacing: 1.5px;
   color: #2e2010;
 }
-.typeRight {
+.typeStripSide {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+/* Right column: subgenre text to the left of its diamond; cluster aligned to strip end */
+.typeStripSubSide {
+  flex: 1;
+  justify-content: flex-end;
 }
 .pip {
   width: 7px;

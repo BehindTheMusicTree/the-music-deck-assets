@@ -9,6 +9,8 @@ export interface CardData {
   year: number;
   genre: string;
   genreLabel: string;
+  typeStripPrimaryBorder?: string;
+  typeStripSubBorder?: string;
   ability: string;
   abilityDesc: string;
   power: number;
@@ -49,6 +51,46 @@ const RARITY_ICON: Record<string, string> = {
   Rare:      `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
   Common:    `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
 };
+
+const STRIP_NAME_FOR_GENRE: Record<string, string> = {
+  Rock: "Rock",
+  Pop: "Pop",
+  Electro: "Electro",
+  Electronic: "Electronic",
+  Reggae: "Reggae",
+  "Reggae/Dub": "Reggae",
+  HipHop: "Hip-hop",
+  "Hip-hop": "Hip-hop",
+  Funk: "Funk",
+  "Disco/Funk": "Disco",
+  Classic: "Classical",
+  Classical: "Classical",
+  Vintage: "Vintage",
+  World: "World",
+  Metal: "Metal",
+};
+
+function normLabel(s: string) {
+  return s.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+/** Always returns two parts (genre + subgenre) for a two-column type strip. */
+function getTypeStripParts(card: CardData): { left: string; right: string } {
+  const gl = card.genreLabel.trim();
+  const mdash = gl.split(/\s*[—–]\s*/);
+  if (mdash.length === 2 && mdash[0] && mdash[1]) {
+    return { left: mdash[0].trim(), right: mdash[1].trim() };
+  }
+  const slash = gl.split(/\s*\/\s*/);
+  if (slash.length === 2 && slash[0] && slash[1]) {
+    return { left: slash[0].trim(), right: slash[1].trim() };
+  }
+  const fromKey = STRIP_NAME_FOR_GENRE[card.genre] ?? card.genre;
+  if (normLabel(fromKey) !== normLabel(gl)) {
+    return { left: fromKey, right: gl };
+  }
+  return { left: fromKey, right: fromKey };
+}
 
 function scoreGlowColor(power: number) {
   const t = Math.max(0, Math.min(1, (power - 40) / 60));
@@ -112,6 +154,9 @@ function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
 
 export default function Card({ card, theme, small }: { card: CardData; theme: GenreTheme; small?: boolean }) {
   const rarColor = RARITY_COLOR[card.rarity] ?? '#666';
+  const strip = getTypeStripParts(card);
+  const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
+  const stripRightBorder = card.typeStripSubBorder ?? theme.border;
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
@@ -156,12 +201,15 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
           <CardArtSvg card={card} theme={theme} />
         </div>
 
-        {/* Type strip */}
+        {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>
-          <span className={styles.typeText}>{card.year}</span>
-          <div className={styles.typeRight}>
-            <span className={styles.typeText}>{card.genreLabel}</span>
-            <div className={styles.pip} style={{ background: theme.border }} />
+          <div className={styles.typeStripSide}>
+            <div className={styles.pip} style={{ background: stripLeftBorder }} />
+            <span className={styles.typeText}>{strip.left}</span>
+          </div>
+          <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
+            <span className={styles.typeText}>{strip.right}</span>
+            <div className={styles.pip} style={{ background: stripRightBorder }} />
           </div>
         </div>
 
