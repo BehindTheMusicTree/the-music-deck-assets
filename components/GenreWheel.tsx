@@ -127,7 +127,7 @@ export default function GenreWheel() {
           />
           <path
             id="arc-exp-inner-outer"
-            d={`M ${CX},${CY - (R_OUTER - 1)} A ${R_OUTER - 1},${R_OUTER - 1} 0 1,1 ${CX - 0.1},${CY - (R_OUTER - 1)}`}
+            d={`M ${CX},${CY - (R_HARDCORE - 30)} A ${R_HARDCORE - 30},${R_HARDCORE - 30} 0 1,1 ${CX - 0.1},${CY - (R_HARDCORE - 30)}`}
           />
           <path
             id="arc-hard"
