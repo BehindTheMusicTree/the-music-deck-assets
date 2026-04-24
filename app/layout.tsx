@@ -8,8 +8,8 @@ const garamond = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500"]
 const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: "The Music Deck — Design Charter",
-  description: "Design system and visual charter for The Music Deck.",
+  title: "The Music Deck",
+  description: "Game reference — design system, battle rules, genres, and card decks for The Music Deck.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
