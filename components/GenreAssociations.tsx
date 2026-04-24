@@ -125,7 +125,7 @@ export default function GenreAssociations() {
               ].map((h) => (
                 <th
                   key={h}
-                  className="text-left font-mono text-[9px] tracking-[2px] uppercase text-muted px-4 py-3"
+                  className="text-left font-mono text-[13px] tracking-[2px] uppercase text-muted px-4 py-3"
                 >
                   {h}
                 </th>
