@@ -99,16 +99,19 @@ const FLAG_BORDERS: Record<string, string> = {
   /** Vertical tricolour, 90° CCW: red top, white, blue (hoist) bottom */
   France:
     "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-};
-
-/** CSS gradient for the card background (flagStyle modes) */
-const FLAG_BG: Record<string, string> = {
-  /** Spanish flag: red / yellow / red horizontal bands */
+  /** Horizontal tricolour: red / yellow / red */
   Spain:
     "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
 };
 
-function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
+/** CSS gradient for the card background (flagStyle modes) */
+const FLAG_BG: Record<string, string> = {
+  /** Spanish flag rotated 90°: vertical stripes red / yellow / red */
+  Spain:
+    "linear-gradient(to right, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+};
+
+function CardArtSvg({ card, theme, transparent }: { card: CardData; theme: GenreTheme; transparent?: boolean }) {
   const s = card.id * 137 + 42;
   const bars = Array.from({ length: 14 }, (_, i) => ({
     h: 16 + ((s + i * 31) % 52),
@@ -137,7 +140,7 @@ function CardArtSvg({ card, theme }: { card: CardData; theme: GenreTheme }) {
           <stop offset="100%" stopColor={theme.bg1} />
         </radialGradient>
       </defs>
-      <rect width={234} height={190} fill={`url(#rg${card.id})`} />
+      {!transparent && <rect width={234} height={190} fill={`url(#rg${card.id})`} />}
       {dots.map((d, i) => (
         <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill={theme.accent} fillOpacity={d.op} />
       ))}
@@ -263,13 +266,16 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
       {cardContent}
     </div>
   ) : (flagStyle === 'fade' && flagBg) ? (
-    /* Left-half flag fading into genre colour via a mask gradient over the flag */
+    /* Flag+gradient on border only, normal cardBg inside */
     <div
       className={styles.card}
       style={{
         ...varStyle,
-        backgroundImage: `linear-gradient(to right, transparent 40%, ${fadeColor} 80%), ${flagBg}`,
-        backgroundSize: "100% 100%, 100% 100%",
+        border: "10px solid transparent",
+        backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 40%, ${fadeColor} 60%), ${flagBg}`,
+        backgroundClip: "padding-box, border-box, border-box",
+        backgroundOrigin: "padding-box, border-box, border-box",
+        backgroundSize: "100% 100%, 100% 100%, 100% 100%",
       }}
     >
       {cardContent}
@@ -282,7 +288,7 @@ export default function Card({ card, theme, small }: { card: CardData; theme: Ge
         style={
           {
             backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
-            backgroundSize: "100% 100%, cover",
+            backgroundSize: "100% 100%, 100% 100%",
             backgroundPosition: "center, center",
             backgroundRepeat: "no-repeat, no-repeat",
             backgroundClip: "padding-box, border-box",

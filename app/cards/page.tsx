@@ -292,8 +292,9 @@ const WORLD_CARDS: CardData[] = [
     exp: 84,
     rarity: "Rare",
     country: "Spain",
+    artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
     flagStyle: "fade",
-    fadeColor: "#1a0808",
+    fadeColor: "#8a3018",
   },
   {
     id: 24,
@@ -498,6 +499,10 @@ export default function CardsPage() {
                   "Popularity and Experimental bars — gradient fill with coloured glow per genre",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
+                [
+                  "Border",
+                  "10px solid genre colour — World cards use the country flag in landscape; mixed World/Genre cards fade from flag (left) to genre colour (right)",
+                ],
               ].map(([name, desc]) => (
                 <div key={name} className="flex gap-3">
                   <div className="w-[90px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
@@ -539,9 +544,26 @@ export default function CardsPage() {
             The flag is laid in landscape and wrapped around the border, rendered
             with a tarnished finish so it reads as a worn print rather than a digital swatch.
           </p>
-          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
+          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-8 pl-0 list-none flex flex-col gap-1">
             <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. USA, Bretagne)</span></li>
             <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
+          </ul>
+
+          {/* Mixed World/Genre border */}
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-3">
+            Mixed World / Genre border
+          </div>
+          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
+            When a card belongs to a specific country <em>and</em> a global genre (e.g. Ska Punk from Spain),
+            the border transitions from the country flag on the left to the genre colour on the right.
+            The flag is laid in landscape (rotated 90°); the genre colour bleeds in over a short central fade zone.
+          </p>
+          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
+            <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. Spain)</span></li>
+            <li><span className="text-white">Subgenre</span> — global music genre <span className="font-mono text-xs tracking-wide">(e.g. Ska Punk)</span></li>
+            <li><span className="text-white">Border left</span> — country flag in landscape, tarnished finish</li>
+            <li><span className="text-white">Border right</span> — genre colour <span className="font-mono text-xs tracking-wide">(typeStripSubBorder)</span></li>
+            <li><span className="text-white">Transition</span> — short fade centred on the middle of the card</li>
           </ul>
           <div className="flex flex-wrap gap-6">
             {WORLD_CARDS.map((card) => (
