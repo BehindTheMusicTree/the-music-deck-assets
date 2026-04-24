@@ -236,6 +236,24 @@ export default function GenreWheel() {
           </textPath>
         </text>
 
+        {/* Radial dividers between genre zones */}
+        {GENRES.map((_, i) => {
+          const angle = ((i + 0.5) / GENRES.length) * 360 - 90;
+          const inner = polarToXY(CX, CY, 0, angle);
+          const outer = polarToXY(CX, CY, R_HARDCORE, angle);
+          return (
+            <line
+              key={i}
+              x1={inner.x}
+              y1={inner.y}
+              x2={outer.x}
+              y2={outer.y}
+              stroke="rgba(255,255,255,.18)"
+              strokeWidth={1}
+            />
+          );
+        })}
+
         {/* Inner genres */}
         {GENRES.map((g, i) => {
           const angle = (i / GENRES.length) * 360 - 90;
