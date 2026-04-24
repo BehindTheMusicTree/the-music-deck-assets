@@ -1,13 +1,15 @@
 "use client";
 
+import { GENRE_THEMES, SUBGENRES } from "@/lib/genres";
+
 const GENRES = [
-  { n: "Reggae/Dub", h: "#3a9030" },
-  { n: "Electronic", h: "#2850c8" },
-  { n: "Disco/Funk", h: "#c0387a" },
-  { n: "Hip-hop", h: "#ffd700" },
-  { n: "Rock", h: "#d01828" },
-  { n: "Classical", h: "#5c2a0a" },
-  { n: "Vintage", h: "#787878" },
+  { n: "Reggae/Dub", h: GENRE_THEMES["Reggae/Dub"].border },
+  { n: "Electronic", h: GENRE_THEMES.Electronic.border },
+  { n: "Disco/Funk", h: GENRE_THEMES["Disco/Funk"].border },
+  { n: "Hip-Hop",    h: GENRE_THEMES["Hip-Hop"].border },
+  { n: "Rock",       h: GENRE_THEMES.Rock.border },
+  { n: "Classical",  h: GENRE_THEMES.Classical.border },
+  { n: "Vintage",    h: GENRE_THEMES.Vintage.border },
 ];
 
 const CX = 620,
@@ -271,101 +273,7 @@ export default function GenreWheel() {
         })}
 
         {/* Subgenres by intensity: pop / poppy / experimental / hardcore */}
-        {[
-          {
-            n: "Electropop",
-            h: "#e4ebff",
-            parent: "Electronic",
-            ring: "pop",
-          },
-          { n: "Disco", h: "#f0a0c0", parent: "Disco/Funk", ring: "poppy" },
-          { n: "Disco Pop", h: "#ffd6e8", parent: "Disco/Funk", ring: "pop" },
-          { n: "Pop Rock", h: "#f07080", parent: "Rock", ring: "poppy" },
-          { n: "EDM", h: "#7090e8", parent: "Electronic", ring: "poppy" },
-          { n: "R&B Soul", h: "#ffd060", parent: "Hip-hop", ring: "poppy" },
-          { n: "R&B", h: "#ffe94d", parent: "Hip-hop", ring: "poppy" },
-          { n: "Roots", h: "#5ab848", parent: "Reggae/Dub", ring: "poppy" },
-          { n: "Metal", h: "#7a0810", parent: "Rock", ring: "hardcore" },
-          {
-            n: "Nu Metal",
-            h: "#c86010",
-            parent: "Rock",
-            angleDelta: -14,
-            ring: "hardcore",
-          },
-          {
-            n: "Ska Punk",
-            h: "#8a3018",
-            parent: "Rock",
-            angleDelta: 14,
-            ring: "experimental",
-          },
-          {
-            n: "Dub",
-            h: "#28b870",
-            parent: "Reggae/Dub",
-            ring: "experimental",
-          },
-          {
-            n: "Drum & Bass",
-            h: "#3070c8",
-            parent: "Electronic",
-            ring: "experimental",
-          },
-          {
-            n: "Jungle",
-            h: "#288090",
-            parentA: "Electronic",
-            parentB: "Reggae/Dub",
-            t: 0.34,
-            ring: "experimental",
-          },
-          {
-            n: "Techno",
-            h: "#1a2e6a",
-            parent: "Electronic",
-            ring: "experimental",
-          },
-          {
-            n: "House",
-            h: "#4030a0",
-            parentA: "Electronic",
-            angleDelta: 12,
-            ring: "experimental",
-          },
-          {
-            n: "Religious",
-            h: "#888888",
-            parent: "Vintage",
-            angleDelta: -12,
-            ring: "experimental",
-          },
-          {
-            n: "Jazz",
-            h: "#7a5840",
-            parent: "Vintage",
-            ring: "experimental",
-          },
-          {
-            n: "Soul",
-            h: "#9a8f60",
-            parent: "Vintage",
-            angleDelta: 12,
-            ring: "experimental",
-          },
-          {
-            n: "Free Jazz",
-            h: "#2a1a0e",
-            parent: "Vintage",
-            ring: "hardcore",
-          },
-          {
-            n: "Psytrance",
-            h: "#0b1f5a",
-            parent: "Electronic",
-            ring: "hardcore",
-          },
-        ].map((s) => {
+        {SUBGENRES.map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
             const anchor = s.parentA ?? s.parent;

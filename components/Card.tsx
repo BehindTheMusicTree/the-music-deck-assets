@@ -74,9 +74,6 @@ const STRIP_NAME_FOR_GENRE: Record<string, string> = {
   Metal: "Metal",
 };
 
-function normLabel(s: string) {
-  return s.trim().toLowerCase().replace(/\s+/g, " ");
-}
 
 /** Always returns two parts (genre + subgenre) for a two-column type strip. */
 function getTypeStripParts(card: CardData): { left: string; right: string } {
@@ -91,42 +88,14 @@ function scoreGlowColor(power: number) {
   return `0 0 ${r}px rgba(200,160,64,${o})`;
 }
 
-const USA_FLAG_PATH = "/cards/artworks/examples/flag-usa.webp";
+import {
+  USA_FLAG_PATH,
+  FLAG_BORDERS,
+  FLAG_BG,
+  FLAG_PIP_SYMBOL,
+  FLAG_PIP_BG,
+} from "@/lib/genres";
 
-/** CSS gradient / url() for the card border (existing border-based system) */
-const FLAG_BORDERS: Record<string, string> = {
-  USA: `url('${USA_FLAG_PATH}')`,
-  /** Vertical tricolour, 90° CCW: red top, white, blue (hoist) bottom */
-  France:
-    "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-  /** Horizontal tricolour: red / yellow / red */
-  Spain:
-    "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-};
-
-/** Symbol shown inside the left pip diamond for World cards, keyed by country */
-const FLAG_PIP_SYMBOL: Record<
-  string,
-  { sym: string; color: string; size?: number }
-> = {
-  USA:    { sym: "★", color: "#1a1a2e" },
-  France: { sym: "⚜", color: "#1a2a0a", size: 19 },
-};
-
-/** Flag gradient for the pip diamond, for countries without a symbol */
-const FLAG_PIP_BG: Record<string, string> = {
-  Spain: "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
-};
-
-/** CSS background value for the border in flagStyle modes (gradient only — USA uses flagUsR90 shell) */
-const FLAG_BG: Record<string, string> = {
-  /** Spanish flag rotated 90°: vertical stripes red / yellow / red */
-  Spain:
-    "linear-gradient(to right, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-  /** French flag: vertical tricolour blue / white / red */
-  France:
-    "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-};
 
 function CardArtSvg({
   card,
