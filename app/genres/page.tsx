@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import GenreWheel from "@/components/GenreWheel";
+import GenreSubTabs from "@/components/GenreSubTabs";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
 const GLOBE_ICON =
@@ -346,8 +347,10 @@ function genreSampleId(genre: string) {
 
 export default function GenresPage() {
   return (
+    <>
+    <GenreSubTabs />
     <div className="px-6 py-10 flex flex-col items-center">
-      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">02</div>
+      <div id="overview" className="font-mono text-[15px] tracking-[3px] text-muted mb-2">02</div>
       <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Genre colour system</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
         THE <em className="text-gold not-italic">GENRES</em>
@@ -375,9 +378,11 @@ export default function GenresPage() {
         </p>
       </div>
 
-      <GenreWheel />
+      <div id="colour-wheel" className="w-full flex justify-center">
+        <GenreWheel />
+      </div>
 
-      <div className="w-full max-w-[1100px] mb-16">
+      <div id="genre-variants" className="w-full max-w-[1100px] mb-16">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Variants</div>
         <div className="flex flex-wrap gap-6">
           {Object.entries(SAMPLE_CARDS).map(([genre, card]) => (
@@ -391,7 +396,7 @@ export default function GenresPage() {
         </div>
       </div>
 
-      <div className="w-full max-w-[1100px]">
+      <div id="world" className="w-full max-w-[1100px]">
         <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-1">World — Special case</div>
         <dl className="m-0 mb-8 max-w-[720px] grid grid-cols-[minmax(150px,auto)_1fr] gap-x-7 gap-y-3 items-start">
           {(
@@ -433,5 +438,6 @@ export default function GenresPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
