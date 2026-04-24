@@ -322,13 +322,20 @@ export default function GenreWheel() {
           },
           {
             n: "Jazz",
-            h: "#7a6858",
+            h: "#7a5840",
             parent: "Vintage",
             ring: "experimental",
           },
           {
+            n: "Soul",
+            h: "#9a8f60",
+            parent: "Vintage",
+            angleDelta: 12,
+            ring: "experimental",
+          },
+          {
             n: "Free Jazz",
-            h: "#1e1c1a",
+            h: "#2a1a0e",
             parent: "Vintage",
             ring: "hardcore",
           },

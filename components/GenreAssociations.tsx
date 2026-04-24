@@ -1,13 +1,8 @@
-const GENRE_COLOR: Record<string, string> = {
-  Rock: "#d01828",
-  Electronic: "#2850c8",
-  "Hip-Hop": "#c8960a",
-  "Disco/Funk": "#c86000",
-  "Reggae/Dub": "#188000",
-  Classical: "#8060a0",
-  Vintage: "#906030",
-  Metal: "#7a0810",
-};
+import { GENRE_THEMES } from "@/lib/genres";
+
+const GENRE_COLOR: Record<string, string> = Object.fromEntries(
+  Object.entries(GENRE_THEMES).map(([name, theme]) => [name, theme.border]),
+);
 
 type Row = {
   genre: string;
@@ -19,6 +14,22 @@ type Row = {
 };
 
 const ROWS: Row[] = [
+  {
+    genre: "Pop",
+    strengths: ["Early (low cost)"],
+    weaknesses: ["Low power"],
+    affinities: [
+      "Rock",
+      "Electronic",
+      "Hip-Hop",
+      "Disco/Funk",
+      "Reggae/Dub",
+      "Classical",
+      "Vintage",
+    ],
+    advantageVs: [],
+    weakVs: [],
+  },
   {
     genre: "Rock",
     strengths: ["High attack", "Crowd energy", "Versatile tempo"],
@@ -74,14 +85,6 @@ const ROWS: Row[] = [
     affinities: ["Rock", "Classical", "Reggae/Dub"],
     advantageVs: ["Electronic", "Hip-Hop"],
     weakVs: ["Rock", "Metal"],
-  },
-  {
-    genre: "Metal",
-    strengths: ["Max aggression", "Shred tempo", "Endurance"],
-    weaknesses: ["Low crossover appeal", "Narrow combos"],
-    affinities: ["Rock", "Electronic"],
-    advantageVs: ["Reggae/Dub", "Disco/Funk"],
-    weakVs: ["Hip-Hop", "Disco/Funk"],
   },
 ];
 
