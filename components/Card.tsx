@@ -94,7 +94,8 @@ import {
   FLAG_BG,
   FLAG_PIP_SYMBOL,
   FLAG_PIP_BG,
-} from "@/lib/genres";
+  FLAG_ROTATE_R90,
+} from "@/lib/countries";
 
 
 function CardArtSvg({
@@ -235,7 +236,7 @@ export default function Card({
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
-  const flagUsR90 = country === "USA" && flagLayer;
+  const flagUsR90 = country && FLAG_ROTATE_R90.has(country) && flagLayer;
   const flagBg = country ? FLAG_BG[country] : undefined;
   const flagStyle = card.flagStyle;
   const fadeColor = card.fadeColor ?? theme.cardBg;

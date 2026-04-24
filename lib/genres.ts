@@ -1,4 +1,5 @@
 import type { GenreTheme } from "@/components/Card";
+import { COUNTRY_DATA } from "@/lib/countries";
 
 // ---------------------------------------------------------------------------
 // Canonical genre names
@@ -141,38 +142,11 @@ export const SUBGENRES: Subgenre[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// World / country themes
+// World / country themes — derived from the canonical COUNTRY_DATA in countries.ts
 // ---------------------------------------------------------------------------
-export const WORLD_THEMES: Record<string, GenreTheme> = {
-  USA: {
-    border: "#B22234", cardBg: "#08101e", headerBg: "#060c18",
-    textMain: "#ffffff", textBody: "#cccccc",
-    barPop: ["#B22234", "#e84455"], barExp: ["#3C3B6E", "#6060cc"],
-    barGlowPop: "rgba(178,34,52,.85)", barGlowExp: "rgba(96,96,204,.75)",
-    icon: GLOBE_ICON, sym: "★", bg0: "#1a2050", bg1: "#060a1e", accent: "#ffffff",
-  },
-  France: {
-    border: "#0055A4", cardBg: "#060d1e", headerBg: "#04091a",
-    textMain: "#ffffff", textBody: "#cccccc",
-    barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
-    barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
-    icon: GLOBE_ICON, sym: "⚜", bg0: "#0a1830", bg1: "#040810", accent: "#ffffff",
-  },
-  Spain: {
-    border: "#AA151B", cardBg: "#1a0a0a", headerBg: "#120606",
-    textMain: "#ffffff", textBody: "#dddddd",
-    barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
-    barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
-    icon: GLOBE_ICON, sym: "♦", bg0: "#2a0a0a", bg1: "#0e0404", accent: "#F1BF00",
-  },
-  Bretagne: {
-    border: "#222222", cardBg: "#0e0e0e", headerBg: "#0a0a0a",
-    textMain: "#ffffff", textBody: "#cccccc",
-    barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
-    barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",
-    icon: GLOBE_ICON, sym: "☘", bg0: "#1a1a1a", bg1: "#080808", accent: "#ffffff",
-  },
-};
+export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
+  Object.entries(COUNTRY_DATA).map(([k, v]) => [k, v.theme]),
+);
 
 export function themeForCountry(country: string): GenreTheme {
   return WORLD_THEMES[country] ?? GENRE_THEMES.World;
@@ -182,39 +156,6 @@ export function themeForCard(genre: string, country?: string): GenreTheme {
   if (country) return themeForCountry(country);
   return GENRE_THEMES[genre as GenreName] ?? GENRE_THEMES.Rock;
 }
-
-// ---------------------------------------------------------------------------
-// Flag pip symbols & gradients — used by Card.tsx and genre colour table
-// ---------------------------------------------------------------------------
-export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?: number }> = {
-  USA:      { sym: "★", color: "#1a1a2e" },
-  France:   { sym: "⚜", color: "#1a2a0a", size: 19 },
-  Bretagne: { sym: "✦", color: "#222222", size: 17 },
-};
-
-export const FLAG_PIP_BG: Record<string, string> = {
-  Spain:    "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
-  Bretagne: "repeating-linear-gradient(to bottom, #000000 0%, #000000 50%, #ffffff 50%, #ffffff 100%)",
-};
-
-// ---------------------------------------------------------------------------
-// Flag border / background CSS values
-// ---------------------------------------------------------------------------
-export const USA_FLAG_PATH = "/cards/artworks/examples/flag-usa.webp";
-
-export const FLAG_BORDERS: Record<string, string> = {
-  USA: `url('${USA_FLAG_PATH}')`,
-  France: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-  Spain:  "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-  // Gwenn-ha-Du: 11 alternating black/white stripes
-  Bretagne: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-};
-
-export const FLAG_BG: Record<string, string> = {
-  Spain:  "linear-gradient(to right, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-  France: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-  Bretagne: "repeating-linear-gradient(to right, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-};
 
 // ---------------------------------------------------------------------------
 // Colour tokens table — genre + subgenres grouped for the Genres page
