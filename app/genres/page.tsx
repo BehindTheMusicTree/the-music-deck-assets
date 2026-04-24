@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import GenreWheel from "@/components/GenreWheel";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
-import Link from "next/link";
 
 const GLOBE_ICON =
   '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>';
@@ -347,81 +346,13 @@ function genreSampleId(genre: string) {
 
 export default function GenresPage() {
   return (
-    <div
-      id="genres-page"
-      style={{
-        padding: "40px 24px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div
-        id="genres-back-link"
-        style={{ width: "100%", maxWidth: 1100, marginBottom: 32 }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textDecoration: "none",
-          }}
-        >
-          ← Design Charter
-        </Link>
-      </div>
-      <div
-        id="genres-chapter-index"
-        style={{
-          fontFamily: "Space Mono, monospace",
-          fontSize: 15,
-          letterSpacing: 3,
-          color: "var(--muted)",
-          marginBottom: 8,
-        }}
-      >
-        02
-      </div>
-      <div
-        id="genres-chapter-eyebrow"
-        style={{
-          fontFamily: "Space Mono, monospace",
-          fontSize: 15,
-          letterSpacing: 2,
-          color: "var(--muted)",
-          marginBottom: 16,
-        }}
-      >
-        Genre colour system
-      </div>
-      <h2
-        id="genres-heading"
-        style={{
-          fontFamily: "Cinzel, serif",
-          fontSize: 28,
-          letterSpacing: 4,
-          color: "var(--white)",
-          marginBottom: 8,
-        }}
-      >
-        THE{" "}
-        <em style={{ color: "var(--gold)", fontStyle: "normal" }}>GENRES</em>
+    <div className="px-6 py-10 flex flex-col items-center">
+      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">02</div>
+      <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Genre colour system</div>
+      <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
+        THE <em className="text-gold not-italic">GENRES</em>
       </h2>
-      <p
-        id="genres-intro"
-        style={{
-          fontFamily: "Cormorant Garamond, serif",
-          fontStyle: "italic",
-          fontSize: 17,
-          color: "var(--muted)",
-          maxWidth: 600,
-          textAlign: "center",
-          marginBottom: 0,
-        }}
-      >
+      <p className="font-garamond italic text-muted max-w-[600px] text-center">
         Each genre owns a border colour. World is the exception: the border
         shows that country&apos;s real flag, laid in landscape and wrapped
         around the card — not a generic band rule. For the United States, the
@@ -430,40 +361,10 @@ export default function GenresPage() {
         hoist (blue) placed according to the actual flag, not an arbitrary
         three-way split.
       </p>
-      <div
-        id="genres-color-ramp-explainer"
-        style={{
-          width: "100%",
-          maxWidth: 860,
-          marginTop: 24,
-          marginBottom: 10,
-          padding: "16px 18px",
-          border: "1px solid var(--border)",
-          borderRadius: 6,
-          background: "rgba(255,255,255,.02)",
-          color: "var(--muted)",
-        }}
-      >
-        <div
-          id="genres-color-ramp-explainer-title"
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            marginBottom: 8,
-          }}
-        >
-          Colour variations
-        </div>
-        <p
-          style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontSize: 17,
-            lineHeight: 1.45,
-            margin: 0,
-          }}
-        >
+
+      <div className="w-full max-w-[860px] mt-6 mb-2.5 px-[18px] py-4 border border-ui-border rounded-[6px] bg-white/[0.02] text-muted">
+        <div className="font-mono text-[15px] tracking-[2px] uppercase mb-2">Colour variations</div>
+        <p className="font-garamond text-[17px] leading-[1.45] m-0">
           Within each genre, we go from the lightest (pop zone) to the darkest
           (hardcore zone). In Electronic, for example: EDM is the commercial
           variant (medium blue, close to periwinkle), Electropop is the pop
@@ -474,52 +375,15 @@ export default function GenresPage() {
         </p>
       </div>
 
-      <div id="genres-wheel">
-        <GenreWheel />
-      </div>
+      <GenreWheel />
 
-      <div
-        id="genres-variants"
-        style={{ width: "100%", maxWidth: 1100, marginBottom: 64 }}
-      >
-        <div
-          id="genres-variants-title"
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Genre Variants
-        </div>
-        <div
-          id="genres-variants-grid"
-          style={{ display: "flex", flexWrap: "wrap", gap: 24 }}
-        >
+      <div className="w-full max-w-[1100px] mb-16">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Variants</div>
+        <div className="flex flex-wrap gap-6">
           {Object.entries(SAMPLE_CARDS).map(([genre, card]) => (
-            <div
-              id={genreSampleId(genre)}
-              key={genre}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+            <div id={genreSampleId(genre)} key={genre} className="flex flex-col items-center gap-2">
               <Card card={card} theme={GENRE_THEMES[genre]} />
-              <div
-                id={`${genreSampleId(genre)}-label`}
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  color: "var(--muted)",
-                }}
-              >
+              <div className="font-mono text-[15px] tracking-[1px] text-muted">
                 {genre.toUpperCase()}
               </div>
             </div>
@@ -527,92 +391,26 @@ export default function GenresPage() {
         </div>
       </div>
 
-      <div id="genres-world" style={{ width: "100%", maxWidth: 1100 }}>
-        <div
-          id="genres-world-title"
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 4,
-          }}
-        >
-          World — Special case
-        </div>
-        <dl
-          id="genres-world-properties"
-          style={{
-            margin: "0 0 32px",
-            maxWidth: 720,
-            display: "grid",
-            gridTemplateColumns: "minmax(150px, auto) 1fr",
-            columnGap: 28,
-            rowGap: 12,
-            alignItems: "start",
-          }}
-        >
+      <div className="w-full max-w-[1100px]">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-1">World — Special case</div>
+        <dl className="m-0 mb-8 max-w-[720px] grid grid-cols-[minmax(150px,auto)_1fr] gap-x-7 gap-y-3 items-start">
           {(
             [
-              [
-                "Source",
-                "The country of origin's flag, using its real layout (not a generic band pattern).",
-              ],
-              [
-                "Orientation",
-                "Landscape, unfolded along the card edge.",
-              ],
-              [
-                "United States",
-                "The star field sits toward the lower left of the card.",
-              ],
-              [
-                "France",
-                "Vertical tricolour (blue, white, red) on the border; the blue hoist side is aligned as on the real flag, not as three abstract left–right blocks.",
-              ],
-              [
-                "Border treatment",
-                "Slightly tarnished: desaturated, darkened, light inset wear — reads as a weathered print on a physical card, not a flat screen flag.",
-              ],
-              [
-                "Subgenre",
-                "A subgenre of the source country's popular music is associated with the card — for example: United States: Country, France: variété française, Portugal: fado.",
-              ],
+              ["Source", "The country of origin's flag, using its real layout (not a generic band pattern)."],
+              ["Orientation", "Landscape, unfolded along the card edge."],
+              ["United States", "The star field sits toward the lower left of the card."],
+              ["France", "Vertical tricolour (blue, white, red) on the border; the blue hoist side is aligned as on the real flag, not as three abstract left–right blocks."],
+              ["Border treatment", "Slightly tarnished: desaturated, darkened, light inset wear — reads as a weathered print on a physical card, not a flat screen flag."],
+              ["Subgenre", "A subgenre of the source country's popular music is associated with the card — for example: United States: Country, France: variété française, Portugal: fado."],
             ] as const
           ).map(([label, value]) => (
             <Fragment key={label}>
-              <dt
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  color: "var(--muted)",
-                  textTransform: "uppercase",
-                  margin: 0,
-                }}
-              >
-                {label}
-              </dt>
-              <dd
-                style={{
-                  fontFamily: "Cormorant Garamond, serif",
-                  fontStyle: "italic",
-                  color: "var(--muted)",
-                  margin: 0,
-                  fontSize: 16,
-                  lineHeight: 1.45,
-                }}
-              >
-                {value}
-              </dd>
+              <dt className="font-mono text-[15px] tracking-[1px] text-muted uppercase m-0">{label}</dt>
+              <dd className="font-garamond italic text-muted m-0 text-[16px] leading-[1.45]">{value}</dd>
             </Fragment>
           ))}
         </dl>
-        <div
-          id="genres-world-by-country"
-          style={{ display: "flex", flexDirection: "column", gap: 16 }}
-        >
+        <div className="flex flex-col gap-4">
           {Object.entries(
             WORLD_CARDS.reduce<Record<string, CardData[]>>((acc, card) => {
               const c = card.country!;
@@ -620,45 +418,14 @@ export default function GenresPage() {
               return acc;
             }, {}),
           ).map(([country, cards]) => (
-            <details
-              id={`genres-world-${country.toLowerCase()}`}
-              key={country}
-              open
-              style={{ borderTop: "1px solid var(--border)" }}
-            >
-              <summary
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 2,
-                  color: "var(--muted)",
-                  textTransform: "uppercase",
-                  padding: "14px 0",
-                  cursor: "pointer",
-                  listStyle: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                <span style={{ opacity: 0.4, fontSize: 15 }}>▶</span>
+            <details key={country} open className="border-t border-ui-border">
+              <summary className="font-mono text-[15px] tracking-[2px] text-muted uppercase py-3.5 cursor-pointer list-none flex items-center gap-2.5">
+                <span className="opacity-40">▶</span>
                 {country}
               </summary>
-              <div
-                id={`genres-world-${country.toLowerCase()}-cards`}
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 24,
-                  paddingBottom: 32,
-                }}
-              >
+              <div className="flex flex-wrap gap-6 pb-8">
                 {cards.map((card) => (
-                  <Card
-                    key={card.id}
-                    card={card}
-                    theme={worldThemeForCountry(card.country!)}
-                  />
+                  <Card key={card.id} card={card} theme={worldThemeForCountry(card.country!)} />
                 ))}
               </div>
             </details>

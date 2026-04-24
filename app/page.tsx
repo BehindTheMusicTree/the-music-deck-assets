@@ -10,9 +10,9 @@ const sections = [
 
 export default function IndexPage() {
   return (
-    <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-6 py-[60px]">
+    <div className="min-h-[calc(100vh-56px)] bg-bg flex flex-col items-center justify-center px-6 py-12 sm:py-[60px]">
       <div className="font-mono text-[15px] tracking-[3px] text-muted mb-4 uppercase">
-        Design Charter
+        Design charter
       </div>
       <h1 className="font-cinzel text-4xl font-bold tracking-[6px] text-white mb-2 text-center">
         THE <em className="text-gold not-italic">MUSIC DECK</em>

@@ -1,14 +1,6 @@
-import Link from 'next/link';
-
 export default function TypographyPage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">
-      <div className="w-full max-w-[700px] mb-8">
-        <Link href="/" className="font-mono text-[15px] tracking-[2px] text-muted no-underline">
-          ← Design Charter
-        </Link>
-      </div>
-
       <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">03</div>
       <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Type system</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">

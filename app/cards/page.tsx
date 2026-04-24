@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
 const GENRES: Record<string, GenreTheme> = {
@@ -436,170 +435,35 @@ export default function CardsPage() {
   const genreEntries = Object.entries(MOCK_CARDS);
 
   return (
-    <div
-      style={{
-        padding: "40px 24px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        minHeight: "100vh",
-      }}
-    >
-      {/* Breadcrumb */}
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 32 }}>
-        <Link
-          href="/"
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textDecoration: "none",
-          }}
-        >
-          ← Design Charter
-        </Link>
-      </div>
-
-      {/* Header */}
-      <div
-        style={{
-          fontFamily: "Space Mono, monospace",
-          fontSize: 15,
-          letterSpacing: 3,
-          color: "var(--muted)",
-          marginBottom: 8,
-        }}
-      >
-        05
-      </div>
-      <div
-        style={{
-          fontFamily: "Space Mono, monospace",
-          fontSize: 15,
-          letterSpacing: 2,
-          color: "var(--muted)",
-          marginBottom: 16,
-        }}
-      >
-        Card frame anatomy
-      </div>
-      <h2
-        style={{
-          fontFamily: "Cinzel, serif",
-          fontSize: 28,
-          letterSpacing: 4,
-          color: "var(--white)",
-          marginBottom: 8,
-        }}
-      >
-        THE <em style={{ color: "var(--gold)", fontStyle: "normal" }}>CARDS</em>
+    <div className="px-6 py-10 flex flex-col items-center min-h-screen">
+      <div className="font-mono text-[15px] tracking-[3px] text-muted mb-2">05</div>
+      <div className="font-mono text-[15px] tracking-[2px] text-muted mb-4">Card frame anatomy</div>
+      <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
+        THE <em className="text-gold not-italic">CARDS</em>
       </h2>
-      <p
-        style={{
-          fontFamily: "Cormorant Garamond, serif",
-          fontStyle: "italic",
-          fontSize: 15,
-          color: "var(--muted)",
-          maxWidth: 600,
-          textAlign: "center",
-          marginBottom: 56,
-        }}
-      >
+      <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
         Each card adapts its colour theme to its genre. The frame anatomy —
         header, artwork, type strip, ability box, stats, and footer — remains
         constant across all genres and rarities.
       </p>
 
       {/* Anatomy legend */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 1100,
-          marginBottom: 56,
-          display: "flex",
-          flexDirection: "column",
-          gap: 0,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Frame Anatomy
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 48,
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-          }}
-        >
+      <div className="w-full max-w-[1100px] mb-14">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Frame Anatomy</div>
+        <div className="flex gap-12 items-start flex-wrap">
           <Card card={MOCK_CARDS.Pop} theme={GENRES.Pop} />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-              paddingTop: 8,
-            }}
-          >
+          <div className="flex flex-col gap-3 pt-2 flex-1">
             {[
-              [
-                "Header",
-                "Genre icon · title · artist · power score (glow scales with power)",
-              ],
-              [
-                "Artwork",
-                "Procedural SVG — radial gradient, scatter dots, bar visualisation, genre symbol",
-              ],
-              [
-                "Type strip",
-                "Parchment (#ede4cc) with diamond-cut corners; colour diamond then main genre (left), subgenre then colour diamond (right)",
-              ],
-              [
-                "Ability box",
-                "Parchment (#f4edd8) — ability name and flavour description",
-              ],
-              [
-                "Stats",
-                "Popularity and Experimental bars — gradient fill with coloured glow per genre",
-              ],
-              ["Footer", "Year · rarity (SVG shape + name)"],
+              ["Header",     "Genre icon · title · artist · power score (glow scales with power)"],
+              ["Artwork",    "Procedural SVG — radial gradient, scatter dots, bar visualisation, genre symbol"],
+              ["Type strip", "Parchment (#ede4cc) with diamond-cut corners; colour diamond then main genre (left), subgenre then colour diamond (right)"],
+              ["Ability box","Parchment (#f4edd8) — ability name and flavour description"],
+              ["Stats",      "Popularity and Experimental bars — gradient fill with coloured glow per genre"],
+              ["Footer",     "Year · rarity (SVG shape + name)"],
             ].map(([name, desc]) => (
-              <div
-                key={name}
-                style={{ display: "flex", gap: 12, maxWidth: 440 }}
-              >
-                <div
-                  style={{
-                    width: 90,
-                    flexShrink: 0,
-                    fontFamily: "Cinzel, serif",
-                    fontSize: 15,
-                    letterSpacing: 1,
-                    color: "var(--gold)",
-                    paddingTop: 1,
-                  }}
-                >
-                  {name}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "Cormorant Garamond, serif",
-                    color: "var(--muted)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {desc}
-                </div>
+              <div key={name} className="flex gap-3">
+                <div className="w-[90px] shrink-0 font-cinzel text-[15px] tracking-[1px] text-gold pt-px">{name}</div>
+                <div className="font-garamond text-muted leading-[1.5]">{desc}</div>
               </div>
             ))}
           </div>
@@ -607,72 +471,24 @@ export default function CardsPage() {
       </div>
 
       {/* All genre variants */}
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 56 }}>
-        <div
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Genre Variants
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+      <div className="w-full max-w-[1100px] mb-14">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Variants</div>
+        <div className="flex flex-wrap gap-6">
           {genreEntries.map(([genre, card]) => (
-            <div
-              key={genre}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+            <div key={genre} className="flex flex-col items-center gap-2">
               <Card card={card} theme={GENRES[genre]} />
-              <div
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  color: "var(--muted)",
-                }}
-              >
-                {genre.toUpperCase()}
-              </div>
+              <div className="font-mono text-[15px] tracking-[1px] text-muted">{genre.toUpperCase()}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* World — by country */}
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 56 }}>
-        <div
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 8,
-          }}
-        >
+      <div className="w-full max-w-[1100px] mb-14">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-2">
           World — Flags (landscape on border)
         </div>
-        <p
-          style={{
-            fontFamily: "Cormorant Garamond, serif",
-            fontStyle: "italic",
-            color: "var(--muted)",
-            fontSize: 15,
-            lineHeight: 1.5,
-            maxWidth: 640,
-            marginTop: 0,
-            marginBottom: 20,
-          }}
-        >
+        <p className="font-garamond italic text-muted text-[15px] leading-[1.5] max-w-[640px] mt-0 mb-5">
           USA: the star field is toward the lower left of the card. France: the
           vertical tricolour is unfolded along the border (blue, white, red),
           with the blue hoist edge placed like the real flag — not a generic
@@ -682,200 +498,61 @@ export default function CardsPage() {
           Each card is tied to a subgenre of that country&apos;s popular music
           (e.g. United States: Country, France: variété française, Portugal: fado).
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+        <div className="flex flex-wrap gap-6">
           {WORLD_CARDS.map((card) => (
-            <div
-              key={card.id}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+            <div key={card.id} className="flex flex-col items-center gap-2">
               <Card card={card} theme={worldThemeForCountry(card.country!)} />
-              <div
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  color: "var(--muted)",
-                }}
-              >
-                {card.country!.toUpperCase()}
-              </div>
+              <div className="font-mono text-[15px] tracking-[1px] text-muted">{card.country!.toUpperCase()}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Rarity variants */}
-      <div style={{ width: "100%", maxWidth: 1100, marginBottom: 56 }}>
-        <div
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Rarity Variants — Small Size
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 16,
-            alignItems: "flex-end",
-          }}
-        >
+      <div className="w-full max-w-[1100px] mb-14">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Rarity Variants — Small Size</div>
+        <div className="flex flex-wrap gap-4 items-end">
           {(["Legendary", "Epic", "Rare", "Common"] as const).map((rarity) => (
-            <div
-              key={rarity}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <Card
-                card={{ ...MOCK_CARDS.Rock, rarity }}
-                theme={GENRES.Rock}
-                small
-              />
-              <div
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 15,
-                  letterSpacing: 1,
-                  color: "var(--muted)",
-                }}
-              >
-                {rarity.toUpperCase()}
-              </div>
+            <div key={rarity} className="flex flex-col items-center gap-2">
+              <Card card={{ ...MOCK_CARDS.Rock, rarity }} theme={GENRES.Rock} small />
+              <div className="font-mono text-[15px] tracking-[1px] text-muted">{rarity.toUpperCase()}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Design tokens table */}
-      <div style={{ width: "100%", maxWidth: 1100 }}>
-        <div
-          style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: 15,
-            letterSpacing: 2,
-            color: "var(--muted)",
-            textTransform: "uppercase",
-            marginBottom: 20,
-          }}
-        >
-          Genre Colour Tokens
-        </div>
-        <div style={{ overflowX: "auto" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontFamily: "Space Mono, monospace",
-              fontSize: 15,
-            }}
-          >
+      <div className="w-full max-w-[1100px]">
+        <div className="font-mono text-[15px] tracking-[2px] text-muted uppercase mb-5">Genre Colour Tokens</div>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse font-mono text-[15px]">
             <thead>
               <tr>
-                {[
-                  "Genre",
-                  "Border",
-                  "Card Bg",
-                  "Header Bg",
-                  "Text Main",
-                  "Bar Pop",
-                  "Bar Exp",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    style={{
-                      textAlign: "left",
-                      padding: "8px 12px",
-                      borderBottom: "1px solid var(--border)",
-                      color: "var(--muted)",
-                      letterSpacing: 1,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {h}
-                  </th>
+                {["Genre", "Border", "Card Bg", "Header Bg", "Text Main", "Bar Pop", "Bar Exp"].map((h) => (
+                  <th key={h} className="text-left px-3 py-2 border-b border-ui-border text-muted tracking-[1px] font-normal">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {Object.entries(GENRES).map(([genre, t]) => (
-                <tr
-                  key={genre}
-                  style={{ borderBottom: "1px solid rgba(30,28,44,.5)" }}
-                >
-                  <td
-                    style={{
-                      padding: "8px 12px",
-                      color: t.textMain,
-                      letterSpacing: 1,
-                    }}
-                  >
-                    {genre}
-                  </td>
+                <tr key={genre} style={{ borderBottom: "1px solid rgba(30,28,44,.5)" }}>
+                  <td className="px-3 py-2 tracking-[1px]" style={{ color: t.textMain }}>{genre}</td>
                   {[t.border, t.cardBg, t.headerBg, t.textMain].map((hex) => (
-                    <td key={hex} style={{ padding: "8px 12px" }}>
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 6,
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 2,
-                            background: hex,
-                            flexShrink: 0,
-                          }}
-                        />
-                        <span style={{ color: "var(--muted)" }}>{hex}</span>
+                    <td key={hex} className="px-3 py-2">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: hex }} />
+                        <span className="text-muted">{hex}</span>
                       </span>
                     </td>
                   ))}
-                  <td style={{ padding: "8px 12px" }}>
-                    <span style={{ display: "inline-flex", gap: 4 }}>
-                      {t.barPop.map((h) => (
-                        <span
-                          key={h}
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 2,
-                            background: h,
-                          }}
-                        />
-                      ))}
+                  <td className="px-3 py-2">
+                    <span className="inline-flex gap-1">
+                      {t.barPop.map((h) => <span key={h} className="w-2.5 h-2.5 rounded-sm" style={{ background: h }} />)}
                     </span>
                   </td>
-                  <td style={{ padding: "8px 12px" }}>
-                    <span style={{ display: "inline-flex", gap: 4 }}>
-                      {t.barExp.map((h) => (
-                        <span
-                          key={h}
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 2,
-                            background: h,
-                          }}
-                        />
-                      ))}
+                  <td className="px-3 py-2">
+                    <span className="inline-flex gap-1">
+                      {t.barExp.map((h) => <span key={h} className="w-2.5 h-2.5 rounded-sm" style={{ background: h }} />)}
                     </span>
                   </td>
                 </tr>
