@@ -158,6 +158,8 @@ function worldThemeForCountry(country: string): GenreTheme {
   return GENRE_THEMES.Rock;
 }
 
+const ART = "/cards/artworks/examples/";
+
 const SAMPLE_CARDS: Record<string, CardData> = {
   Rock: {
     id: 1,
@@ -172,6 +174,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 92,
     exp: 78,
     rarity: "Legendary",
+    artwork: `${ART}artwork.example-bohemian-rhapsody-v2.png`,
   },
   Electronic: {
     id: 2,
@@ -186,6 +189,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 88,
     exp: 75,
     rarity: "Epic",
+    artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
   },
   "Disco/Funk": {
     id: 3,
@@ -200,6 +204,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 90,
     exp: 50,
     rarity: "Rare",
+    artwork: `${ART}artwork.example-night-fever-v1.png`,
   },
   "Hip-hop": {
     id: 4,
@@ -215,6 +220,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 86,
     exp: 70,
     rarity: "Legendary",
+    artwork: `${ART}artwork.example-kendrick-lamar-humble-v1.png`,
   },
   "Reggae/Dub": {
     id: 5,
@@ -229,6 +235,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 82,
     exp: 40,
     rarity: "Epic",
+    artwork: `${ART}artwork.example-is-this-love-v1.png`,
   },
   Classical: {
     id: 6,
@@ -243,6 +250,7 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 58,
     exp: 92,
     rarity: "Legendary",
+    artwork: `${ART}artwork.example-wagner-ride-of-the-valkyries-v1.png`,
   },
   Vintage: {
     id: 7,
@@ -257,10 +265,9 @@ const SAMPLE_CARDS: Record<string, CardData> = {
     pop: 55,
     exp: 88,
     rarity: "Epic",
+    artwork: `${ART}artwork.example-miles-davis-so-what-v1.png`,
   },
 };
-
-const ART = "/cards/artworks/examples/";
 
 const WORLD_CARDS: CardData[] = [
   {
@@ -400,6 +407,47 @@ export default function GenresPage() {
         Each genre owns a border colour. World is the exception — its border
         reflects the flag of the song&apos;s country of origin.
       </p>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 860,
+          marginTop: 24,
+          marginBottom: 10,
+          padding: "16px 18px",
+          border: "1px solid var(--border)",
+          borderRadius: 6,
+          background: "rgba(255,255,255,.02)",
+          color: "var(--muted)",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: 9,
+            letterSpacing: 2,
+            textTransform: "uppercase",
+            marginBottom: 8,
+          }}
+        >
+          Variations de couleur
+        </div>
+        <p
+          style={{
+            fontFamily: "Cormorant Garamond, serif",
+            fontSize: 17,
+            lineHeight: 1.45,
+            margin: 0,
+          }}
+        >
+          Dans chaque genre, on va du plus clair (zone pop) au plus sombre
+          (zone hardcore). Exemple en Electronic: EDM est la variante
+          commerciale (bleu moyen, proche du bleu pervenche), Electropop est la
+          variante pop (quasi blanc bleute, bleu glacier), et Psytrance est la
+          variante hardcore (bleu nuit profond). On peut aussi mixer les teintes
+          selon les influences: Nu Metal combine Metal + Rap, donc rouge cramoisi
+          + jaune or, ce qui donne un orange ambre.
+        </p>
+      </div>
 
       {/* Wheel */}
       <GenreWheel />

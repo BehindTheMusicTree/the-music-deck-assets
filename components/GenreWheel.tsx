@@ -299,6 +299,14 @@ export default function GenreWheel() {
             ring: "experimental",
           },
           {
+            n: "Jungle",
+            h: "#288090",
+            parentA: "Electronic",
+            parentB: "Reggae/Dub",
+            t: 0.34,
+            ring: "experimental",
+          },
+          {
             n: "Techno",
             h: "#1a2e6a",
             parent: "Electronic",
@@ -323,12 +331,24 @@ export default function GenreWheel() {
             parent: "Vintage",
             ring: "hardcore",
           },
+          {
+            n: "Psytrance",
+            h: "#0b1f5a",
+            parent: "Electronic",
+            ring: "hardcore",
+          },
         ].map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
             const anchor = s.parentA ?? s.parent;
             const idx = GENRES.findIndex((g) => g.n === anchor);
             angle = (idx / GENRES.length) * 360 - 90 + s.angleDelta;
+          } else if (s.parentA && s.parentB) {
+            const idxA = GENRES.findIndex((g) => g.n === s.parentA);
+            const idxB = GENRES.findIndex((g) => g.n === s.parentB);
+            const aA = (idxA / GENRES.length) * 360 - 90;
+            const aB = (idxB / GENRES.length) * 360 - 90;
+            angle = aA + (aB - aA) * (s.t ?? 0.5);
           } else {
             const idx = GENRES.findIndex((g) => g.n === s.parent);
             angle = (idx / GENRES.length) * 360 - 90;
@@ -345,94 +365,6 @@ export default function GenreWheel() {
           return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
         })}
       </svg>
-
-      {/* World aside */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 800,
-          display: "flex",
-          gap: 32,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 220 }}>
-          <div
-            style={{
-              fontFamily: "Cinzel, serif",
-              fontSize: 10,
-              letterSpacing: 2,
-              color: "#d8d4f0",
-              fontWeight: 700,
-              marginBottom: 12,
-            }}
-          >
-            WORLD — cas particulier
-          </div>
-          <p
-            style={{
-              fontFamily: "Cormorant Garamond, serif",
-              fontStyle: "italic",
-              fontSize: 16,
-              color: "#6a6480",
-              lineHeight: 1.7,
-              marginBottom: 20,
-            }}
-          >
-            World n&apos;a pas de couleur propre. Chaque carte World emprunte la
-            couleur du genre hôte et y superpose un motif de pointillés blancs.
-          </p>
-          {[
-            { label: "Les Lacs du Connemara — Vintage", bg: "#987040" },
-            { label: "Hip-hop World", bg: "#c8960a" },
-          ].map((ex) => (
-            <div
-              key={ex.label}
-              style={{
-                background: "#100f18",
-                border: "1px solid #1e1c2c",
-                borderRadius: 4,
-                padding: "14px 16px",
-                marginBottom: 10,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: 8,
-                  letterSpacing: 1,
-                  color: "#6a6480",
-                  textTransform: "uppercase",
-                }}
-              >
-                {ex.label}
-              </div>
-              <div
-                style={{
-                  height: 32,
-                  borderRadius: 3,
-                  background: ex.bg,
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    backgroundImage:
-                      "radial-gradient(circle, rgba(255,255,255,.85) 1.5px, transparent 1.5px)",
-                    backgroundSize: "6px 6px",
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
