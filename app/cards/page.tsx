@@ -5,7 +5,7 @@ import { GENRE_THEMES as GT, themeForCountry as worldThemeForCountry } from "@/l
 const GENRES: Record<string, import("@/components/Card").GenreTheme> = {
   Rock: GT.Rock, Pop: GT.Pop, Electro: GT.Electronic, Reggae: GT["Reggae/Dub"],
   HipHop: GT["Hip-Hop"], "Disco/Funk": GT["Disco/Funk"], Classic: GT.Classical,
-  Vintage: GT.Vintage, World: GT.World, Metal: GT.Metal,
+  Vintage: GT.Vintage,
 };
 
 const ART = "/cards/artworks/examples/";

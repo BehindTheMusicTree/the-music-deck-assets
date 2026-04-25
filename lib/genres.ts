@@ -12,8 +12,7 @@ export type GenreName =
   | "Disco/Funk"
   | "Reggae/Dub"
   | "Classical"
-  | "Vintage"
-  | "World";
+  | "Vintage";
 
 export const GENRE_NAMES: GenreName[] = [
   "Rock",
@@ -24,11 +23,7 @@ export const GENRE_NAMES: GenreName[] = [
   "Reggae/Dub",
   "Classical",
   "Vintage",
-  "World",
 ];
-
-export const GLOBE_ICON =
-  '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>';
 
 // ---------------------------------------------------------------------------
 // Genre themes
@@ -154,21 +149,6 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     bg1: "#0a0806",
     accent: "#b09878",
   },
-  World: {
-    border: "#a01818",
-    headerBg: "#180404",
-    textMain: "#d85858",
-    textBody: "#b83838",
-    barPop: ["#780808", "#e03030"],
-    barExp: ["#580808", "#b02020"],
-    barGlowPop: "rgba(224,48,48,.75)",
-    barGlowExp: "rgba(176,32,32,.7)",
-    icon: GLOBE_ICON,
-    sym: "🌍",
-    bg0: "#2a1208",
-    bg1: "#0c0400",
-    accent: "#c05040",
-  },
 };
 
 // ---------------------------------------------------------------------------
@@ -254,7 +234,7 @@ export const SUBGENRES: Subgenre[] = [
 ];
 
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
-  SUBGENRES.map(s => [s.n, s.h])
+  SUBGENRES.map((s) => [s.n, s.h]),
 );
 
 // ---------------------------------------------------------------------------
@@ -265,7 +245,7 @@ export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
 );
 
 export function themeForCountry(country: string): GenreTheme {
-  return WORLD_THEMES[country] ?? GENRE_THEMES.World;
+  return WORLD_THEMES[country] ?? GENRE_THEMES.Rock;
 }
 
 export function themeForCard(genre: string, country?: string): GenreTheme {
