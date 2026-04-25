@@ -336,6 +336,18 @@
   justify-content: center;
   overflow: hidden;
 }
+.pipFlag {
+  width: 9px;
+  height: 9px;
+  border-radius: 1px;
+  box-sizing: border-box;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transform: rotate(-90deg) translateY(1px);
+  flex-shrink: 0;
+  align-self: center;
+  opacity: 0.95;
+  overflow: hidden;
+}
 .pipSymbol {
   font-size: 8px;
   line-height: 1;

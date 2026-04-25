@@ -371,8 +371,11 @@ export default function Card({
               </span>
             ) : pipLeftFlagBg ? (
               <div
-                className={styles.pip}
-                style={{ backgroundImage: pipLeftFlagBg }}
+                className={styles.pipFlag}
+                style={{
+                  backgroundImage: pipLeftFlagBg,
+                  border: "1px solid rgba(20, 16, 10, 0.35)",
+                }}
               />
             ) : (
               <div
@@ -401,8 +404,11 @@ export default function Card({
               </span>
             ) : pipRightFlagBg ? (
               <div
-                className={styles.pip}
-                style={{ backgroundImage: pipRightFlagBg }}
+                className={styles.pipFlag}
+                style={{
+                  backgroundImage: pipRightFlagBg,
+                  border: "1px solid rgba(20, 16, 10, 0.35)",
+                }}
               />
             ) : (
               <div

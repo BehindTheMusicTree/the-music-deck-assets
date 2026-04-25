@@ -60,8 +60,11 @@ function CountryDiamond({ country }: { country: string }) {
 
   return (
     <div
-      className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border border border-black/10"
-      style={{ backgroundImage: flagBg ?? "none" }}
+      className="w-3 h-3 shrink-0 rounded-[1px] box-border border border-black/10 -rotate-90"
+      style={{
+        backgroundImage: flagBg ?? "none",
+        clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+      }}
     />
   );
 }
