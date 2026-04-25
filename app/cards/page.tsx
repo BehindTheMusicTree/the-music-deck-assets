@@ -3,32 +3,18 @@ import CardSubTabs from "@/components/CardSubTabs";
 import {
   type AppGenreName,
   APP_GENRE_THEMES,
-  GENRE_THEMES as GT,
   SUBGENRE_COLOR,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 
 const ART = "/cards/artworks/examples/";
 
-function canonicalGenreColor(genre: string): string {
-  const theme = GT[genre as keyof typeof GT];
-  if (!theme) {
-    throw new Error(`Missing canonical genre color for "${genre}"`);
-  }
-  return theme.border;
-}
-
-function mixedGenreColor(subgenre: string, genreFallback: string): string {
+function mixedGenreColor(subgenre: string): string {
   const subgenreColor = SUBGENRE_COLOR[subgenre];
-  if (subgenreColor) return subgenreColor;
-
-  try {
-    return canonicalGenreColor(genreFallback);
-  } catch {
-    throw new Error(
-      `Missing canonical color for subgenre "${subgenre}" and genre "${genreFallback}"`,
-    );
+  if (!subgenreColor) {
+    throw new Error(`Missing canonical color for subgenre "${subgenre}"`);
   }
+  return subgenreColor;
 }
 
 const WORLD_FLAG_CARDS: CardData[] = [
@@ -94,7 +80,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "France",
     subgenre: "Hip-Hop",
     typeStripPrimaryBorder: "#0055A4",
-    typeStripSubBorder: mixedGenreColor("Hip-Hop", "Hip-Hop"),
+    typeStripSubBorder: mixedGenreColor("Hip-Hop"),
     ability: "Street Anthem",
     abilityDesc:
       "Allied Hip-Hop cards gain +12 popularity on the turn this card is played.",
@@ -105,7 +91,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "France",
     artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
     flagStyle: "fade",
-    fadeColor: mixedGenreColor("Hip-Hop", "Hip-Hop"),
+    fadeColor: mixedGenreColor("Hip-Hop"),
   },
   {
     id: 21,
@@ -115,7 +101,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "USA",
     subgenre: "Religious",
     typeStripPrimaryBorder: "#B22234",
-    typeStripSubBorder: mixedGenreColor("Religious", "Vintage"),
+    typeStripSubBorder: mixedGenreColor("Religious"),
     ability: "Redemption",
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     power: 74,
@@ -125,7 +111,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "USA",
     artwork: `${ART}artwork.example-amazing-grace-v1.png`,
     flagStyle: "fade",
-    fadeColor: mixedGenreColor("Religious", "Vintage"),
+    fadeColor: mixedGenreColor("Religious"),
   },
   {
     id: 23,
@@ -135,7 +121,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "France",
     subgenre: "Hymne",
     typeStripPrimaryBorder: "#0055A4",
-    typeStripSubBorder: mixedGenreColor("Hymne", "Classical"),
+    typeStripSubBorder: mixedGenreColor("Hymne"),
     ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
@@ -145,7 +131,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "France",
     artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
     flagStyle: "fade",
-    fadeColor: mixedGenreColor("Hymne", "Classical"),
+    fadeColor: mixedGenreColor("Hymne"),
   },
   {
     id: 25,
@@ -155,7 +141,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "Spain",
     subgenre: "Ska Punk",
     typeStripPrimaryBorder: "#AA151B",
-    typeStripSubBorder: mixedGenreColor("Ska Punk", "Rock"),
+    typeStripSubBorder: mixedGenreColor("Ska Punk"),
     ability: "Contraband",
     abilityDesc:
       "Opponent discards one card at random when this card enters play.",
@@ -166,7 +152,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "Spain",
     artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
     flagStyle: "fade",
-    fadeColor: mixedGenreColor("Ska Punk", "Rock"),
+    fadeColor: mixedGenreColor("Ska Punk"),
   },
 ];
 
