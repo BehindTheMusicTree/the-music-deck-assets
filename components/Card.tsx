@@ -6,7 +6,7 @@ import { SUBGENRE_COLOR, subgenreTheme } from "@/lib/genres";
 export interface CardData {
   id: number;
   title: string;
-  artist: string;
+  artist?: string;
   year: number;
   genre: string;
   subgenre: string;
@@ -166,9 +166,11 @@ export default function Card({
               __html: effectiveTheme.icon.replace(/currentColor/g, effectiveTheme.textMain),
             }}
           />
-          <div className={styles.titleGroup}>
+          <div
+            className={`${styles.titleGroup} ${!card.artist ? styles.titleGroupSolo : ""}`}
+          >
             <div className={styles.title}>{card.title}</div>
-            <div className={styles.artist}>{card.artist}</div>
+            {card.artist ? <div className={styles.artist}>{card.artist}</div> : null}
           </div>
         </div>
         <div

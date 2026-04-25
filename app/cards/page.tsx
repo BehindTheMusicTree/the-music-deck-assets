@@ -302,7 +302,7 @@ export default function CardsPage() {
               {[
                 [
                   "Header",
-                  "Genre icon · title · artist · power score (glow scales with power)",
+                  "Genre icon · title · artist (optional) · power score (glow scales with power). If artist is missing, title is vertically centered.",
                 ],
                 [
                   "Artwork",

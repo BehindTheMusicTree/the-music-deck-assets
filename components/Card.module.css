@@ -114,6 +114,10 @@
   gap: 1px;
   min-width: 0;
 }
+.titleGroupSolo {
+  justify-content: center;
+  min-height: 24px;
+}
 .title {
   font-family: "Cinzel", serif;
   font-weight: 700;
