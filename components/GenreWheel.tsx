@@ -1,6 +1,6 @@
 "use client";
 
-import { WHEEL_GENRES as GENRES, SUBGENRES } from "@/lib/genres";
+import { GENRE_THEMES, WHEEL_GENRES as GENRES, SUBGENRES } from "@/lib/genres";
 
 const CX = 620,
   CY = 620,
@@ -89,6 +89,12 @@ function isLight(hex: string) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128;
 }
 
+function genreAngle(genre?: string) {
+  if (genre === "Pop") return -90;
+  const idx = GENRES.findIndex((g) => g.n === genre);
+  return (idx / GENRES.length) * 360 - 90;
+}
+
 export default function GenreWheel() {
   const popText = repeat("POP", 20);
   const softText1 = repeat("SOFT", 23);
@@ -141,42 +147,6 @@ export default function GenreWheel() {
           />
         </defs>
 
-        {/* Pop center */}
-        <g
-          style={{ cursor: "pointer" }}
-          onClick={() => navigator.clipboard.writeText("#ffffff")}
-        >
-          <rect
-            x={CX - 48}
-            y={CY - 28}
-            width={96}
-            height={56}
-            rx={4}
-            fill="#ffffff"
-          />
-          <text
-            x={CX}
-            y={CY - 4}
-            textAnchor="middle"
-            fontFamily="Cinzel, serif"
-            fontWeight={700}
-            fontSize={9}
-            letterSpacing={2}
-            fill="#09080d"
-          >
-            POP
-          </text>
-          <text
-            x={CX}
-            y={CY + 10}
-            textAnchor="middle"
-            fontFamily="Space Mono, monospace"
-            fontSize={6.5}
-            fill="rgba(9,8,13,.5)"
-          >
-            #ffffff
-          </text>
-        </g>
 
         {/* Pop text */}
         <circle
@@ -330,23 +300,20 @@ export default function GenreWheel() {
           const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
           return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
         })}
+        <Rect x={CX} y={CY} label="Pop" hex={GENRE_THEMES.Pop.border} />
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
             const anchor = s.parentA ?? s.parent;
-            const idx = GENRES.findIndex((g) => g.n === anchor);
-            angle = (idx / GENRES.length) * 360 - 90 + s.angleDelta;
+            angle = genreAngle(anchor) + s.angleDelta;
           } else if (s.parentA && s.parentB) {
-            const idxA = GENRES.findIndex((g) => g.n === s.parentA);
-            const idxB = GENRES.findIndex((g) => g.n === s.parentB);
-            const aA = (idxA / GENRES.length) * 360 - 90;
-            const aB = (idxB / GENRES.length) * 360 - 90;
+            const aA = genreAngle(s.parentA);
+            const aB = genreAngle(s.parentB);
             angle = aA + (aB - aA) * (s.t ?? 0.5);
           } else {
-            const idx = GENRES.findIndex((g) => g.n === s.parent);
-            angle = (idx / GENRES.length) * 360 - 90;
+            angle = genreAngle(s.parent);
           }
           const r =
             s.ring === "pop"

@@ -15,7 +15,7 @@ export default function BattlesPage() {
           Battle rules, formats, and scoring concepts — how players face off using their music decks.
         </p>
 
-        <div id="vibe" className="border border-ui-border rounded px-6 py-5 bg-card mb-8 max-w-[560px]">
+        <div id="vibe" className="mb-8 max-w-[560px]">
           <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Vibe</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>
@@ -34,7 +34,7 @@ export default function BattlesPage() {
           </ul>
         </div>
 
-        <div className="border border-ui-border rounded px-6 py-5 bg-card mb-8 max-w-[560px]">
+        <div className="mb-8 max-w-[560px]">
           <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-3">Vibe gauge (reference)</div>
           <div className="flex items-center justify-between font-mono text-[10px] text-muted tracking-wide mb-1.5">
             <span>P1 100%</span>
@@ -59,7 +59,7 @@ export default function BattlesPage() {
           </p>
         </div>
 
-        <div id="initialisation-phase" className="border border-ui-border rounded px-6 py-5 bg-card mb-8 max-w-[560px]">
+        <div id="initialisation-phase" className="mb-8 max-w-[560px]">
           <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Initialisation phase</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>Both players load one saved track list (exactly 60 cards).</li>
@@ -68,7 +68,7 @@ export default function BattlesPage() {
           </ul>
         </div>
 
-        <div id="turns" className="border border-ui-border rounded px-6 py-5 bg-card mb-8 max-w-[560px]">
+        <div id="turns" className="mb-8 max-w-[560px]">
           <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Game turns</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>Each turn follows a fixed order: draw, play, resolve effects, then end phase.</li>
@@ -77,7 +77,7 @@ export default function BattlesPage() {
           </ul>
         </div>
 
-        <div id="formats" className="border border-ui-border rounded px-8 py-10 bg-card text-muted font-garamond italic text-lg text-center max-w-[560px]">
+        <div id="formats" className="text-muted font-garamond italic text-lg text-center max-w-[560px]">
           Further battle rules and formats coming soon.
         </div>
       </div>
