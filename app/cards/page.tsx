@@ -1,21 +1,12 @@
 import Card, { type CardData } from "@/components/Card";
 import CardSubTabs from "@/components/CardSubTabs";
 import {
+  type AppGenreName,
+  APP_GENRE_THEMES,
   GENRE_THEMES as GT,
   SUBGENRE_COLOR,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
-
-const GENRES: Record<string, import("@/components/Card").GenreTheme> = {
-  Rock: GT.Rock,
-  Pop: GT.Pop,
-  Electronic: GT.Electronic,
-  Roots: GT["Reggae/Dub"],
-  "Hip-Hop": GT["Hip-Hop"],
-  "Disco/Funk": GT["Disco/Funk"],
-  Classical: GT.Classical,
-  Vintage: GT.Vintage,
-};
 
 const ART = "/cards/artworks/examples/";
 
@@ -179,7 +170,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
   },
 ];
 
-const MOCK_CARDS: Record<string, CardData> = {
+const MOCK_CARDS: Record<AppGenreName, CardData> = {
   Rock: {
     id: 1,
     title: "Bohemian Rhapsody",
@@ -304,7 +295,7 @@ const MOCK_CARDS: Record<string, CardData> = {
 };
 
 export default function CardsPage() {
-  const genreEntries = Object.entries(MOCK_CARDS);
+  const genreEntries = Object.entries(MOCK_CARDS) as [AppGenreName, CardData][];
 
   return (
     <>
@@ -338,7 +329,7 @@ export default function CardsPage() {
                 height: 600,
               }}
             >
-              <Card card={MOCK_CARDS.Pop} theme={GENRES.Pop} />
+              <Card card={MOCK_CARDS.Pop} theme={APP_GENRE_THEMES.Pop} />
             </div>
             <div className="flex flex-col gap-3 pt-2 flex-1">
               {[
@@ -401,7 +392,7 @@ export default function CardsPage() {
           <div className="flex flex-wrap gap-6">
             {genreEntries.map(([genre, card]) => (
               <div key={genre} className="flex flex-col items-center gap-2">
-                <Card card={card} theme={GENRES[genre]} />
+                <Card card={card} theme={APP_GENRE_THEMES[genre]} />
                 <div className="font-mono tracking-[1px] text-muted">
                   {genre.toUpperCase()}
                 </div>
@@ -531,7 +522,7 @@ export default function CardsPage() {
                 <div key={rarity} className="flex flex-col items-center gap-2">
                   <Card
                     card={{ ...MOCK_CARDS.Rock, rarity }}
-                    theme={GENRES.Rock}
+                    theme={APP_GENRE_THEMES.Rock}
                     small
                   />
                   <div className="font-mono tracking-[1px] text-muted">
