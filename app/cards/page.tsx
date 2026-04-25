@@ -253,7 +253,8 @@ export default function CardsPage() {
   const themeRuleExamples: Array<{
     key: string;
     title: string;
-    explain: string;
+    left: string;
+    right: string;
     border: string;
     card: CardData;
     theme: (typeof APP_GENRE_THEMES)[AppGenreName];
@@ -262,8 +263,8 @@ export default function CardsPage() {
     {
       key: "genre-subgenre-no-country",
       title: "Genre-subgenre without country",
-      explain:
-        "Strip labels: left = parent genre (displayed as Pop for pop-intensity), right = genre-subgenre.",
+      left: "Parent genre (displayed as Pop for Mainstream and pop-intensity).",
+      right: "Genre-subgenre.",
       border:
         "Border uses the subgenre-derived colour theme (no country flag layer).",
       card: MOCK_CARDS.Mainstream,
@@ -272,7 +273,8 @@ export default function CardsPage() {
     {
       key: "country-subgenre",
       title: "Country-subgenre",
-      explain: "Strip labels: left = country/region, right = country-subgenre.",
+      left: "Country/region.",
+      right: "Country-subgenre.",
       border:
         "Border and full theme always come from the country/region theme.",
       card: WORLD_FLAG_CARDS[1],
@@ -281,7 +283,8 @@ export default function CardsPage() {
     {
       key: "country-plus-genre",
       title: "Country/region + genre",
-      explain: "Strip labels: left = country/region, right = genre.",
+      left: "Country/region.",
+      right: "Genre.",
       border: "Border fades from country flag (left) to genre colour (right).",
       card: {
         ...MOCK_CARDS.Mainstream,
@@ -297,7 +300,8 @@ export default function CardsPage() {
     {
       key: "country-plus-genre-subgenre",
       title: "Country/region + genre-subgenre",
-      explain: "Strip labels: left = country/region, right = genre-subgenre.",
+      left: "Country/region.",
+      right: "Genre-subgenre.",
       border:
         "Border fades from country flag (left) to subgenre/genre colour (right).",
       card: WORLD_MIXED_CARDS[0],
@@ -399,20 +403,27 @@ export default function CardsPage() {
                       <Card
                         card={item.card}
                         theme={item.theme}
-                        small
                         genreName={item.genreName}
                       />
                     </div>
                     <div className="min-w-0">
-                      <div className="font-cinzel text-[13px] tracking-[1px] text-white mb-1">
+                      <div className="font-cinzel text-[15px] tracking-[1px] text-white mb-1">
                         {item.title}
                       </div>
-                      <p className="font-garamond text-muted text-[14px] leading-[1.5] mb-1">
-                        {item.explain}
-                      </p>
-                      <p className="font-garamond text-muted text-[14px] leading-[1.5]">
-                        {item.border}
-                      </p>
+                      <ul className="font-garamond text-muted text-[16px] leading-[1.5] list-none pl-0 flex flex-col gap-0.5">
+                        <li>
+                          <span className="text-white">Type strip — primary:</span>{" "}
+                          {item.left}
+                        </li>
+                        <li>
+                          <span className="text-white">Type strip — secondary:</span>{" "}
+                          {item.right}
+                        </li>
+                        <li>
+                          <span className="text-white">Frame border:</span>{" "}
+                          {item.border}
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 ))}
