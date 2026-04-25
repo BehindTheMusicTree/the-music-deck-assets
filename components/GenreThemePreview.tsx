@@ -252,6 +252,10 @@ export default function GenreThemePreview() {
                       return;
                     }
                   }
+                  if (selectedGenreOnly) {
+                    applyRulePreview({ genre: selectedGenreOnly, country });
+                    return;
+                  }
                     const firstCountrySubgenre = countrySubs[0]?.n;
                     if (!firstCountrySubgenre) return;
                     setSelectedSubgenre(firstCountrySubgenre);

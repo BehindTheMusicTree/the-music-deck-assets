@@ -297,6 +297,13 @@ export const SUBGENRES: Subgenre[] = [
     intensity: "soft",
   },
   {
+    kind: "country",
+    n: "Flamenco",
+    color: "#AA151B",
+    parentA: "Spain",
+    intensity: "soft",
+  },
+  {
     kind: "genre",
     n: "Electropop",
     color: "#e4ebff",
@@ -508,6 +515,11 @@ function toCanonicalGenre(genre: ResolvableGenre): GenreName {
   throw new Error(`Unknown canonical genre theme "${genre}"`);
 }
 
+function toAppGenre(genre: ResolvableGenre): AppGenreName {
+  const canonical = toCanonicalGenre(genre);
+  return canonical === "Reggae/Dub" ? "Roots" : canonical;
+}
+
 function displayGenreLabel(genre: AppGenreName): string {
   return genre === "Mainstream" ? "Pop" : genre;
 }
@@ -591,9 +603,24 @@ export function resolveThemeSelection({
     };
   }
 
-  throw new Error(
-    `Unsupported selection: genre "${genre}" without subgenre. Use a genre-subgenre or country-subgenre.`,
-  );
+  if (!country) {
+    throw new Error(`Genre-only card "${genre}" requires an explicit country`);
+  }
+
+  const appGenre = toAppGenre(genre!);
+  const resolvedTheme = APP_GENRE_THEMES[appGenre];
+  return {
+    theme: resolvedTheme,
+    displayGenre: country,
+    leftLabel: country,
+    rightLabel: displayGenreLabel(appGenre),
+    resolvedCountry: country,
+    resolvedGenre: appGenre,
+    flagStyle: "fade",
+    fadeColor: resolvedTheme.border,
+    typeStripPrimaryBorder: countryTheme!.border,
+    typeStripSubBorder: resolvedTheme.border,
+  };
 }
 
 // ---------------------------------------------------------------------------

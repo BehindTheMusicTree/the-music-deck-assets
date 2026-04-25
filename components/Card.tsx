@@ -132,6 +132,7 @@ export default function Card({
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
+  const titleScaleRef = useRef(1);
   const resolved = card.country || card.subgenre || genreName
     ? resolveThemeSelection({
         genre: genreName,
@@ -188,18 +189,32 @@ export default function Card({
 
   useLayoutEffect(() => {
     setTitleScale(1);
-  }, [card.title]);
+    titleScaleRef.current = 1;
+  }, [card.title, card.artist, small]);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
     if (!el) return;
-    const available = el.clientWidth;
-    const needed = el.scrollWidth;
-    if (!available || !needed) return;
-    if (needed <= available + 1) return;
-    const next = Math.max(0.58, Math.min(1, titleScale * (available / needed)));
-    if (Math.abs(next - titleScale) > 0.01) setTitleScale(next);
-  }, [card.title, titleScale]);
+
+    const recompute = () => {
+      const available = el.clientWidth;
+      const needed = el.scrollWidth;
+      if (!available || !needed) return;
+
+      const currentScale = titleScaleRef.current || 1;
+      const naturalWidth = needed / currentScale;
+      const next = Math.max(0.3, Math.min(1, (available / naturalWidth) * 0.97));
+      if (Math.abs(next - currentScale) > 0.005) {
+        titleScaleRef.current = next;
+        setTitleScale(next);
+      }
+    };
+
+    recompute();
+    const observer = new ResizeObserver(() => recompute());
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [card.title, card.artist, small]);
 
   const cardContent = (
     <>
@@ -223,7 +238,7 @@ export default function Card({
               className={styles.title}
               style={{
                 fontSize: `${12 * titleScale}px`,
-                letterSpacing: `${1 * titleScale}px`,
+                letterSpacing: `${0.8 * titleScale}px`,
               }}
             >
               {card.title}

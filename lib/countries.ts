@@ -75,10 +75,6 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       border: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
       bg:     "linear-gradient(to right,  #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
     },
-    pip: {
-      sym: "♦", color: "#AA151B",
-      bg: "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)",
-    },
   },
 
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
@@ -100,6 +96,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       bg: "repeating-linear-gradient(to bottom, #000000 0%, #000000 50%, #ffffff 50%, #ffffff 100%)",
     },
   },
+
 };
 
 // ---------------------------------------------------------------------------
@@ -128,8 +125,8 @@ export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?
 
 export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
-    .filter(([, v]) => v.pip?.bg)
-    .map(([k, v]) => [k, v.pip!.bg!]),
+    .filter(([, v]) => v.pip?.bg || v.flag.bg)
+    .map(([k, v]) => [k, v.pip?.bg ?? v.flag.bg!]),
 );
 
 export const FLAG_ROTATE_R90 = new Set(
