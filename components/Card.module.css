@@ -406,27 +406,67 @@
   align-items: stretch;
   gap: 2px;
 }
+/* Right triangle (triangle rectangle): right angle at bottom-right (100% width) */
 .intensityTrack {
   position: relative;
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  height: 10px;
   overflow: hidden;
+  /* Vertices: bottom-left, bottom-right, top-right — L droit en bas à droite = 100 % */
+  clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
+  background: linear-gradient(
+    180deg,
+    #3a3a40 0%,
+    #2c2c32 40%,
+    #232327 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+  opacity: 0.95;
 }
+/* Visible fill width = pct%; inner layer is wider so spectrum is anchored: red fixed at track 100% */
 .intensityFill {
-  height: 100%;
-  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  transition: width 0.14s ease-out;
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+}
+.intensityFillInner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  /* Spans full triangle width; parent clips to pct% so red stays aligned to track 100% */
+  width: calc(100% / (var(--intensity-pct, 100) / 100));
   background: linear-gradient(
     90deg,
-    #1e9a52 0%,
+    #1a9a4a 0%,
     #6ab04a 22%,
     #d4a520 52%,
     #d94a38 78%,
-    #c41e2a 100%
+    #c01e2a 100%
   );
   background-size: 100% 100%;
-  transition: width 0.12s ease-out;
+  pointer-events: none;
+}
+/* Cursor (curseur) at the proportional fill edge */
+.intensityFill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: rgba(255, 250, 245, 0.98);
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.35),
+    0 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
 }
 .intensityNoteRow {
   position: relative;
@@ -454,7 +494,7 @@
   color: rgba(255, 255, 255, 0.35);
 }
 .statsSm .intensityTrack {
-  height: 7px;
+  height: 8px;
 }
 .statsSm .intensityNote,
 .statsSm .intensityNoteMuted {

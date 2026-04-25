@@ -426,7 +426,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Matchup strip",
-                  "Same parchment base and clipped shape as the type strip, directly beneath it. Left half has a reddish wash and lists genres this card is weak against (name + colour diamond per target). Right half has a greenish wash and lists genres it has an advantage against. Data is canonical in lib/genres.ts (GENRE_BATTLE_MATCHUP). Pure world cards (no resolved genre) show an em dash on each side.",
+                  "Same parchment base and clipped shape as the type strip, directly beneath it. Left half has a reddish wash and lists genres this card is weak against (colour diamond left, genre name right). Right half has a greenish wash and lists advantage targets (name left, diamond right, like the type strip). Data is canonical in lib/genres.ts (GENRE_BATTLE_MATCHUP). Pure world cards (no resolved genre) show an em dash on each side.",
                 ],
                 [
                   "Ability box",
@@ -434,7 +434,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Stats",
-                  "Single row: left — popularity as award symbols only (no text label, no 1–9 number). Right — intensity as a horizontal green→red gradient fill (1–4), with the numeric level printed under the fill end (cursor).",
+                  "Single row: left — popularity as award symbols only (no text label, no 1–9 number). Right — intensity as a right triangle (triangle rectangle) with the right angle on the right at 100% (bottom edge × right edge). The full triangle is visible in a dull (terne) grey; the filled band uses a green→red gradient for 1/4 (pop) through 4/4 (hardcore); a vertical cursor marks the fill edge, with the same fill percentage (25%–100%) under that position.",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
@@ -648,6 +648,12 @@ export default function CardsPage() {
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-3">
               Intensity replaces the old experimental gauge with four canonical levels.
+              On the card it reads as a right-triangle volume gauge (right angle at the
+              bottom-right at 100% width): the empty shape stays visible in dull grey; the
+              saturated green→red band fills
+              ¼ to 4/4 of its width (pop…hardcore), with a cursor and the matching percentage
+              (25%–100%) at the fill edge. The spectrum is always anchored: red is fixed at the
+              full 100% width, so lower levels only reveal the left (greener) part of that same ramp.
             </p>
             <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
               <li>Pop (1): low edge, broad accessibility.</li>

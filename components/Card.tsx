@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import styles from "./Card.module.css";
 import {
   type AppGenreName,
@@ -430,11 +436,6 @@ export default function Card({
                 return (
                   <span key={`weak-${name}`} className={styles.matchupCluster}>
                     <span
-                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
-                    >
-                      {matchupGenreDisplayLabel(name)}
-                    </span>
-                    <span
                       className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
                       style={{
                         background: color,
@@ -443,6 +444,11 @@ export default function Card({
                           : "none",
                       }}
                     />
+                    <span
+                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
+                    >
+                      {matchupGenreDisplayLabel(name)}
+                    </span>
                   </span>
                 );
               })
@@ -518,12 +524,23 @@ export default function Card({
               const pct = idx ? (idx / 4) * 100 : 0;
               return (
                 <>
-                  <div className={styles.intensityTrack}>
+                  <div
+                    className={styles.intensityTrack}
+                    style={
+                      idx
+                        ? ({
+                            ["--intensity-pct" as string]: String(Math.round(pct)),
+                          } as CSSProperties)
+                        : undefined
+                    }
+                  >
                     {idx ? (
                       <div
                         className={styles.intensityFill}
                         style={{ width: `${pct}%` }}
-                      />
+                      >
+                        <div className={styles.intensityFillInner} />
+                      </div>
                     ) : null}
                   </div>
                   <div className={styles.intensityNoteRow}>
@@ -539,7 +556,7 @@ export default function Card({
                             : { left: `${pct}%`, transform: "translateX(-50%)" }
                         }
                       >
-                        {idx}
+                        {Math.round(pct)}%
                       </span>
                     ) : (
                       <span className={styles.intensityNoteMuted}>—</span>
