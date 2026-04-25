@@ -310,6 +310,12 @@ export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
   return sub.parent as GenreName;
 }
 
+export function appGenreFromSubgenre(subgenre: string): AppGenreName {
+  const canonical = canonicalGenreFromSubgenre(subgenre);
+  if (canonical === "Reggae/Dub") return "Roots";
+  return canonical;
+}
+
 // ---------------------------------------------------------------------------
 // World / country themes — derived from the canonical COUNTRY_DATA in countries.ts
 // ---------------------------------------------------------------------------

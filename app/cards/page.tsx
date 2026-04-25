@@ -3,6 +3,7 @@ import CardSubTabs from "@/components/CardSubTabs";
 import {
   type AppGenreName,
   APP_GENRE_THEMES,
+  appGenreFromSubgenre,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 
@@ -205,7 +206,7 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     title: "HUMBLE.",
     artist: "Kendrick Lamar",
     year: 2017,
-    genre: "Hip-Hop",
+    genre: appGenreFromSubgenre("R&B Soul"),
     subgenre: "R&B Soul",
     ability: "Lyrical",
     abilityDesc:
