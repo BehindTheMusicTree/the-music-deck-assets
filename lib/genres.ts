@@ -498,6 +498,11 @@ export interface ResolvedThemeSelection {
   displayGenre: string;
   leftLabel: string;
   rightLabel: string;
+  frameBorder?: string;
+  frameBg?: string;
+  frameRotateR90?: boolean;
+  frameFilter?: string;
+  frameOpacity?: number;
   resolvedCountry?: string;
   resolvedGenre?: string;
   resolvedSubgenre?: string;
@@ -559,6 +564,11 @@ export function resolveThemeSelection({
         displayGenre: resolvedCountry,
         leftLabel: resolvedCountry,
         rightLabel: subgenre,
+        frameBorder: resolvedTheme.frameBorder,
+        frameBg: resolvedTheme.frameBg,
+        frameRotateR90: resolvedTheme.frameRotateR90,
+        frameFilter: resolvedTheme.frameFilter,
+        frameOpacity: resolvedTheme.frameOpacity,
         resolvedCountry,
         resolvedSubgenre: subgenre,
         typeStripPrimaryBorder: resolvedTheme.border,
@@ -590,6 +600,11 @@ export function resolveThemeSelection({
         displayGenre: country,
         leftLabel: country,
         rightLabel: subgenre,
+        frameBorder: countryFrameTheme.frameBorder,
+        frameBg: countryFrameTheme.frameBg,
+        frameRotateR90: countryFrameTheme.frameRotateR90,
+        frameFilter: countryFrameTheme.frameFilter,
+        frameOpacity: countryFrameTheme.frameOpacity,
         resolvedCountry: country,
         resolvedGenre: appGenre,
         resolvedSubgenre: subgenre,
@@ -630,6 +645,11 @@ export function resolveThemeSelection({
     displayGenre: country,
     leftLabel: country,
     rightLabel: displayGenreLabel(appGenre),
+    frameBorder: countryFrameTheme.frameBorder,
+    frameBg: countryFrameTheme.frameBg,
+    frameRotateR90: countryFrameTheme.frameRotateR90,
+    frameFilter: countryFrameTheme.frameFilter,
+    frameOpacity: countryFrameTheme.frameOpacity,
     resolvedCountry: country,
     resolvedGenre: appGenre,
     flagStyle: "fade",

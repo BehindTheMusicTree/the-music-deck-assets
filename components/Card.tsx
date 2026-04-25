@@ -98,7 +98,6 @@ function isVeryLight(hex: string) {
 }
 
 import {
-  USA_FLAG_PATH,
   FLAG_PIP_SYMBOL,
   FLAG_PIP_BG,
 } from "@/lib/countries";
@@ -171,11 +170,13 @@ export default function Card({
     pipLeftFlagBg && rightUsesCountryIdentity ? pipLeftFlagBg : undefined;
 
   const country = card.country;
-  const flagLayer = effectiveTheme.frameBorder;
-  const flagBg = effectiveTheme.frameBg;
-  const flagUsR90 = Boolean(effectiveTheme.frameRotateR90 && flagLayer);
-  const worldFrameFilter = effectiveTheme.frameFilter;
-  const worldFrameOpacity = effectiveTheme.frameOpacity;
+  const flagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
+  const flagBg = resolved.frameBg ?? effectiveTheme.frameBg;
+  const flagUsR90 = Boolean(
+    (resolved.frameRotateR90 ?? effectiveTheme.frameRotateR90) && flagLayer,
+  );
+  const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
+  const worldFrameOpacity = resolved.frameOpacity ?? effectiveTheme.frameOpacity;
   const flagStyle = card.flagStyle ?? resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? (card.fadeColor ?? resolved.fadeColor) : undefined;
@@ -195,7 +196,7 @@ export default function Card({
   } as React.CSSProperties;
 
   /** World flags other than USA (e.g. France): same shell as USA, no rotation */
-  const flagFlatShell = Boolean(flagLayer && !flagUsR90 && !flagStyle);
+  const flagFlatShell = Boolean(flagLayer && !flagUsR90);
 
   useLayoutEffect(() => {
     setTitleScale(1);
@@ -213,7 +214,11 @@ export default function Card({
 
       const currentScale = titleScaleRef.current || 1;
       const naturalWidth = needed / currentScale;
-      const next = Math.max(0.3, Math.min(1, (available / naturalWidth) * 0.97));
+      const ratio = available / naturalWidth;
+      const next =
+        ratio >= 1
+          ? 1
+          : Math.max(0.5, Math.min(1, ratio * 0.98));
       if (Math.abs(next - currentScale) > 0.005) {
         titleScaleRef.current = next;
         setTitleScale(next);
@@ -223,6 +228,11 @@ export default function Card({
     recompute();
     const observer = new ResizeObserver(() => recompute());
     observer.observe(el);
+    if (typeof document !== "undefined" && "fonts" in document) {
+      void (document as Document & { fonts?: FontFaceSet }).fonts?.ready.then(
+        () => recompute(),
+      );
+    }
     return () => observer.disconnect();
   }, [card.title, card.artist, small]);
 
@@ -405,20 +415,6 @@ export default function Card({
       <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
         {cardContent}
       </div>
-    ) : flagStyle === "fade" && flagBg ? (
-      <div
-        className={styles.card}
-        style={{
-          ...varStyle,
-          border: "10px solid transparent",
-          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
-          backgroundClip: "padding-box, border-box, border-box",
-          backgroundOrigin: "padding-box, border-box, border-box",
-          backgroundSize: "100% 100%, 100% 100%, 100% 100%",
-        }}
-      >
-        {cardContent}
-      </div>
     ) : flagUsR90 ? (
       <div className={styles.cardShell}>
         <div
@@ -428,14 +424,16 @@ export default function Card({
             {
               backgroundImage:
                 flagStyle === "fade"
-                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 46%, ${resolvedFadeColor} 54%), url("${USA_FLAG_PATH}")`
-                  : `linear-gradient(${"transparent"}, ${"transparent"}), url("${USA_FLAG_PATH}")`,
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 46%, ${resolvedFadeColor} 54%), ${flagBg}`
+                  : `linear-gradient(${"transparent"}, ${"transparent"}), ${flagBg}`,
               backgroundSize:
                 flagStyle === "fade"
                   ? "100% 100%, 100% 100%, cover"
                   : "100% 100%, cover",
               backgroundPosition:
-                flagStyle === "fade" ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
+                flagStyle === "fade"
+                  ? "0% 0%, 0% 0%, 0% 0%"
+                  : "0% 0%, 0% 0%",
               backgroundRepeat: "no-repeat",
               backgroundClip:
                 flagStyle === "fade"
@@ -462,7 +460,10 @@ export default function Card({
           aria-hidden
           style={
             {
-              background: `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
+              background:
+                flagStyle === "fade"
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%) border-box, ${flagLayer} border-box`
+                  : `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
               border: "10px solid transparent",
               filter: worldFrameFilter,
               opacity: worldFrameOpacity,
@@ -472,6 +473,20 @@ export default function Card({
         <div className={styles.cardFlagFace} style={varStyle}>
           {cardContent}
         </div>
+      </div>
+    ) : flagStyle === "fade" && flagBg ? (
+      <div
+        className={styles.card}
+        style={{
+          ...varStyle,
+          border: "10px solid transparent",
+          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
+          backgroundClip: "padding-box, border-box, border-box",
+          backgroundOrigin: "padding-box, border-box, border-box",
+          backgroundSize: "100% 100%, 100% 100%, 100% 100%",
+        }}
+      >
+        {cardContent}
       </div>
     ) : (
       <div className={styles.card} style={varStyle}>
