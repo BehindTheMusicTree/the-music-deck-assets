@@ -20,11 +20,24 @@ const GENRES: Record<string, import("@/components/Card").GenreTheme> = {
 const ART = "/cards/artworks/examples/";
 
 function canonicalGenreColor(genre: string): string {
-  return GT[genre as keyof typeof GT]?.border ?? GT.Rock.border;
+  const theme = GT[genre as keyof typeof GT];
+  if (!theme) {
+    throw new Error(`Missing canonical genre color for "${genre}"`);
+  }
+  return theme.border;
 }
 
 function mixedGenreColor(subgenre: string, genreFallback: string): string {
-  return SUBGENRE_COLOR[subgenre] ?? canonicalGenreColor(genreFallback);
+  const subgenreColor = SUBGENRE_COLOR[subgenre];
+  if (subgenreColor) return subgenreColor;
+
+  try {
+    return canonicalGenreColor(genreFallback);
+  } catch {
+    throw new Error(
+      `Missing canonical color for subgenre "${subgenre}" and genre "${genreFallback}"`,
+    );
+  }
 }
 
 const WORLD_FLAG_CARDS: CardData[] = [

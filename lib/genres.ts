@@ -25,6 +25,27 @@ export const GENRE_NAMES: GenreName[] = [
   "Vintage",
 ];
 
+export type AppGenreName =
+  | "Rock"
+  | "Pop"
+  | "Electronic"
+  | "Hip-Hop"
+  | "Disco/Funk"
+  | "Roots"
+  | "Classical"
+  | "Vintage";
+
+export const APP_GENRE_NAMES: AppGenreName[] = [
+  "Rock",
+  "Pop",
+  "Electronic",
+  "Hip-Hop",
+  "Disco/Funk",
+  "Roots",
+  "Classical",
+  "Vintage",
+];
+
 // ---------------------------------------------------------------------------
 // Genre themes
 // ---------------------------------------------------------------------------
@@ -117,6 +138,17 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     barGlowExp: "rgba(104,104,104,.6)",
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".85"/><circle cx="8" cy="8" r="5" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="0.6"/><circle cx="8" cy="8" r="2.2" fill="rgba(0,0,0,0.45)"/><circle cx="8" cy="8" r="0.8" fill="rgba(255,255,255,0.55)"/></svg>',
   },
+};
+
+export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
+  Rock: GENRE_THEMES.Rock,
+  Pop: GENRE_THEMES.Pop,
+  Electronic: GENRE_THEMES.Electronic,
+  "Hip-Hop": GENRE_THEMES["Hip-Hop"],
+  "Disco/Funk": GENRE_THEMES["Disco/Funk"],
+  Roots: GENRE_THEMES["Reggae/Dub"],
+  Classical: GENRE_THEMES.Classical,
+  Vintage: GENRE_THEMES.Vintage,
 };
 
 // Wheel genre order (angular positions). Pop is the centre — not in this list.
