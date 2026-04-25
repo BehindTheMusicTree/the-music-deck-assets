@@ -193,54 +193,96 @@ export default function GenreThemePreview() {
           <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mt-2 mb-1 opacity-70">
             World Themes
           </div>
-          {Object.entries(WORLD_THEMES).map(([country, t]) => (
-            <div
-              key={country}
-              className="border border-ui-border rounded-[6px] overflow-hidden"
-            >
-              <button
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
-                style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
-                onClick={() => {
-                  setSelectedCountry(country);
-                  if (selectedSubgenre) {
-                    applyRulePreview({ subgenre: selectedSubgenre, country });
-                    return;
-                  }
-                  if (selectedGenreOnly) {
-                    applyRulePreview({ genre: selectedGenreOnly, country });
-                    return;
-                  }
-                  const firstCountrySubgenre = SUBGENRES.find(
-                    (s) => s.kind === "country" && s.parentA === country,
-                  )?.n;
-                  if (!firstCountrySubgenre) return;
-                  setSelectedSubgenre(firstCountrySubgenre);
-                  applyRulePreview({ subgenre: firstCountrySubgenre, country });
-                }}
+          {Object.entries(WORLD_THEMES).map(([country, t]) => {
+            const countrySubs = SUBGENRES.filter(
+              (s) => s.kind === "country" && s.parentA === country,
+            );
+            return (
+              <div
+                key={country}
+                className="border border-ui-border rounded-[6px] overflow-hidden"
               >
-                <span
-                  className="shrink-0"
-                  dangerouslySetInnerHTML={{
-                    __html: t.icon.replace(/currentColor/g, t.border),
+                <button
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
+                  style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
+                  onClick={() => {
+                    setSelectedCountry(country);
+                    if (selectedSubgenre) {
+                      applyRulePreview({ subgenre: selectedSubgenre, country });
+                      return;
+                    }
+                    if (selectedGenreOnly) {
+                      applyRulePreview({ genre: selectedGenreOnly, country });
+                      return;
+                    }
+                    const firstCountrySubgenre = countrySubs[0]?.n;
+                    if (!firstCountrySubgenre) return;
+                    setSelectedSubgenre(firstCountrySubgenre);
+                    applyRulePreview({ subgenre: firstCountrySubgenre, country });
                   }}
-                />
-                <span
-                  className="font-cinzel text-sm tracking-[2px]"
-                  style={{ color: "#2e2010" }}
                 >
-                  {country}
-                </span>
-                <span
-                  className="font-mono text-[10px] tracking-wide uppercase ml-auto"
-                  style={{ color: "#8a7050" }}
-                >
-                  Country / Region
-                </span>
-                <div className="w-3 h-3 rounded-[2px] border border-black/10 shrink-0" style={{ background: t.border }} />
-              </button>
-            </div>
-          ))}
+                  <span
+                    className="shrink-0"
+                    dangerouslySetInnerHTML={{
+                      __html: t.icon.replace(/currentColor/g, t.border),
+                    }}
+                  />
+                  <span
+                    className="font-cinzel text-sm tracking-[2px]"
+                    style={{ color: "#2e2010" }}
+                  >
+                    {country}
+                  </span>
+                  <span
+                    className="font-mono text-[10px] tracking-wide uppercase ml-auto"
+                    style={{ color: "#8a7050" }}
+                  >
+                    Country / Region
+                  </span>
+                  <div className="w-3 h-3 rounded-[2px] border border-black/10 shrink-0" style={{ background: t.border }} />
+                </button>
+                {countrySubs.length > 0 && (
+                  <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
+                    {countrySubs.map((s) => (
+                      <button
+                        key={s.n}
+                        className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
+                        style={{ background: "#f4edd8" }}
+                        onClick={() => {
+                          setSelectedCountry(country);
+                          setSelectedGenreOnly(undefined);
+                          setSelectedSubgenre(s.n);
+                          applyRulePreview({ subgenre: s.n, country });
+                        }}
+                      >
+                        <div
+                          className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
+                          style={{
+                            background: s.color,
+                            border: isVeryLight(s.color)
+                              ? "1px solid rgba(20, 16, 10, 0.45)"
+                              : "none",
+                          }}
+                        />
+                        <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>
+                          {s.n}
+                        </span>
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#8a7050" }}>
+                          {country}
+                        </span>
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>
+                          {s.intensity}
+                        </span>
+                        <span className="font-mono text-xs" style={{ color: "#8a7050" }}>
+                          {s.color}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
