@@ -126,7 +126,7 @@ export default function GenresPage() {
         <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-2">Genre Themes</div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
-            Each genre defines a full colour theme used across the card frame. Subgenres with a canonical colour derive their own theme automatically. Click any row to preview.
+            Each genre defines a full colour theme used across the card frame. You can preview a subgenre alone, a country or region alone, or combine a subgenre with a country to apply the World/Genre border rule automatically.
           </p>
           <GenreThemePreview />
         </div>

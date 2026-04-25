@@ -2,14 +2,16 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
-import { SUBGENRE_COLOR, appGenreFromSubgenre, subgenreTheme } from "@/lib/genres";
+import {
+  resolveThemeSelection,
+} from "@/lib/genres";
 
 export interface CardData {
   id: number;
   title: string;
   artist?: string;
   year: number;
-  subgenre: string;
+  subgenre?: string;
   typeStripPrimaryBorder?: string;
   typeStripSubBorder?: string;
   ability: string;
@@ -66,10 +68,10 @@ const STRIP_NAME_FOR_GENRE: Record<string, string> = {
   Vintage: "Vintage",
 };
 
-/** Always returns two parts (genre + subgenre) for a two-column type strip. */
-function getTypeStripParts(card: CardData, leftGenre: string): { left: string; right: string } {
-  const left = STRIP_NAME_FOR_GENRE[leftGenre] ?? leftGenre;
-  return { left, right: card.subgenre };
+/** Always returns two parts for a two-column type strip. */
+function getTypeStripParts(leftLabel: string, rightLabel: string): { left: string; right: string } {
+  const left = STRIP_NAME_FOR_GENRE[leftLabel] ?? leftLabel;
+  return { left, right: rightLabel };
 }
 
 function scoreGlowColor(power: number) {
@@ -129,21 +131,24 @@ export default function Card({
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
-  const derivedGenre =
-    genreName ??
-    (card.country
-      ? card.country
-      : card.subgenre
-        ? appGenreFromSubgenre(card.subgenre)
-        : "—");
-  const strip = getTypeStripParts(card, derivedGenre);
-  const canonicalSubgenreColor = SUBGENRE_COLOR[card.subgenre];
-  const applySubgenreTheme = Boolean(canonicalSubgenreColor && !card.country);
-  const effectiveTheme = applySubgenreTheme
-    ? subgenreTheme(canonicalSubgenreColor, theme)
-    : theme;
-  const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
-  const stripRightBorder = card.typeStripSubBorder ?? effectiveTheme.border;
+  const resolved = card.country || card.subgenre || genreName
+    ? resolveThemeSelection({
+        genre: genreName,
+        subgenre: card.subgenre || undefined,
+        country: card.country,
+      })
+    : {
+        theme,
+        displayGenre: "—",
+        leftLabel: "—",
+        rightLabel: card.subgenre ?? "—",
+      };
+  const effectiveTheme = resolved.theme;
+  const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
+  const stripLeftBorder =
+    card.typeStripPrimaryBorder ?? resolved.typeStripPrimaryBorder ?? effectiveTheme.border;
+  const stripRightBorder =
+    card.typeStripSubBorder ?? resolved.typeStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const pipLeftSymbol = card.country
@@ -159,12 +164,12 @@ export default function Card({
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
   const flagUsR90 = country && FLAG_ROTATE_R90.has(country) && flagLayer;
   const flagBg = country ? FLAG_BG[country] : undefined;
-  const flagStyle = card.flagStyle;
+  const flagStyle = card.flagStyle ?? resolved.flagStyle;
   const resolvedFadeColor =
-    flagStyle === "fade" ? (card.fadeColor ?? canonicalSubgenreColor) : undefined;
+    flagStyle === "fade" ? (card.fadeColor ?? resolved.fadeColor) : undefined;
   if (flagStyle === "fade" && !resolvedFadeColor) {
     throw new Error(
-      `Missing canonical subgenre color for fade border: "${card.subgenre}"`,
+      `Missing canonical color for fade border on "${card.title}"`,
     );
   }
 

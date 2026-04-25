@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import {
+  APP_GENRE_THEMES,
   GENRE_NAMES,
   GENRE_THEMES,
   SUBGENRES,
   WORLD_THEMES,
+  resolveThemeSelection,
   subgenreTheme,
 } from "@/lib/genres";
 import type { GenreName } from "@/lib/genres";
@@ -26,13 +28,6 @@ const BASE_CARD: CardData = {
   artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
 };
 
-const WORLD_SUBGENRE_BY_COUNTRY: Record<string, string> = {
-  USA: "Country",
-  France: "French Variety",
-  Bretagne: "Folk Breton",
-  Spain: "Country",
-};
-
 function isVeryLight(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
   const r = parseInt(hex.slice(1, 3), 16);
@@ -45,11 +40,50 @@ function isVeryLight(hex: string) {
 export default function GenreThemePreview() {
   const [card, setCard] = useState<CardData>({ ...BASE_CARD });
   const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Mainstream);
-  const [selectedGenre, setSelectedGenre] = useState<GenreName>("Mainstream");
+  const [selectedGenreLabel, setSelectedGenreLabel] = useState<string>("Mainstream");
+  const [selectedRightLabel, setSelectedRightLabel] = useState<string>("Disco Pop");
+  const [selectedGenreForCard, setSelectedGenreForCard] = useState<string | undefined>(
+    undefined,
+  );
+  const [selectedGenreOnly, setSelectedGenreOnly] = useState<GenreName | undefined>(
+    "Mainstream",
+  );
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
+    undefined,
+  );
+  const [selectedSubgenre, setSelectedSubgenre] = useState<string | undefined>(
+    undefined,
+  );
   const orderedGenres: GenreName[] = [
     "Mainstream",
     ...GENRE_NAMES.filter((name) => name !== "Mainstream"),
   ];
+  const worldCountries = Object.keys(WORLD_THEMES);
+
+  const applyRulePreview = ({
+    subgenre,
+    country,
+    genre,
+  }: {
+    subgenre?: string;
+    country?: string;
+    genre?: GenreName;
+  }) => {
+    const resolved = resolveThemeSelection({ genre, subgenre, country });
+    setTheme(resolved.theme);
+    setSelectedGenreLabel(resolved.leftLabel);
+    setSelectedRightLabel(resolved.rightLabel);
+    setSelectedGenreForCard(resolved.resolvedGenre);
+    setCard({
+      ...BASE_CARD,
+      country: resolved.resolvedCountry,
+      subgenre: resolved.resolvedSubgenre,
+      flagStyle: resolved.flagStyle,
+      fadeColor: resolved.fadeColor,
+      typeStripPrimaryBorder: resolved.typeStripPrimaryBorder,
+      typeStripSubBorder: resolved.typeStripSubBorder,
+    });
+  };
 
   return (
     <div className="w-full overflow-x-auto md:overflow-visible pb-2">
@@ -57,13 +91,13 @@ export default function GenreThemePreview() {
         {/* Sticky card preview */}
         <div className="shrink-0 flex flex-col items-center gap-2 self-start md:sticky md:top-[104px]">
           <div className="sm:hidden">
-            <Card card={card} theme={theme} small genreName={selectedGenre} />
+            <Card card={card} theme={theme} small genreName={selectedGenreForCard} />
           </div>
           <div className="hidden sm:block">
-            <Card card={card} theme={theme} genreName={selectedGenre} />
+            <Card card={card} theme={theme} genreName={selectedGenreForCard} />
           </div>
           <div className="font-mono text-[10px] tracking-[1px] text-muted">
-            {card.subgenre ? `${selectedGenre} · ${card.subgenre}` : selectedGenre}
+            {`${selectedGenreLabel} · ${selectedRightLabel}`}
           </div>
         </div>
 
@@ -82,9 +116,12 @@ export default function GenreThemePreview() {
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
                   style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                   onClick={() => {
-                    setTheme(t);
-                    setSelectedGenre(name);
-                    setCard({ ...BASE_CARD, subgenre: "" });
+                    setSelectedGenreOnly(name);
+                    setSelectedCountry(undefined);
+                    const firstSubgenre = subs[0]?.n;
+                    if (!firstSubgenre) return;
+                    setSelectedSubgenre(firstSubgenre);
+                    applyRulePreview({ subgenre: firstSubgenre });
                   }}
                 >
                   <span
@@ -118,9 +155,9 @@ export default function GenreThemePreview() {
                           className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
                           style={{ background: "#f4edd8" }}
                           onClick={() => {
-                            setTheme(t);
-                            setSelectedGenre(name);
-                            setCard({ ...BASE_CARD, subgenre: s.n });
+                            setSelectedGenreOnly(undefined);
+                            setSelectedSubgenre(s.n);
+                            applyRulePreview({ subgenre: s.n, country: selectedCountry });
                           }}
                         >
                           <div
@@ -165,13 +202,21 @@ export default function GenreThemePreview() {
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
                 style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                 onClick={() => {
-                  setTheme(t);
-                  setSelectedGenre(country as GenreName);
-                  setCard({
-                    ...BASE_CARD,
-                    country,
-                    subgenre: WORLD_SUBGENRE_BY_COUNTRY[country] ?? "Country",
-                  });
+                  setSelectedCountry(country);
+                  if (selectedSubgenre) {
+                    applyRulePreview({ subgenre: selectedSubgenre, country });
+                    return;
+                  }
+                  if (selectedGenreOnly) {
+                    applyRulePreview({ genre: selectedGenreOnly, country });
+                    return;
+                  }
+                  const firstCountrySubgenre = SUBGENRES.find(
+                    (s) => s.kind === "country" && s.parentA === country,
+                  )?.n;
+                  if (!firstCountrySubgenre) return;
+                  setSelectedSubgenre(firstCountrySubgenre);
+                  applyRulePreview({ subgenre: firstCountrySubgenre, country });
                 }}
               >
                 <span
