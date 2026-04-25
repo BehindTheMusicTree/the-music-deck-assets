@@ -172,10 +172,10 @@ export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
   { n: "Electronic", color: GENRE_THEMES.Electronic.border },
   { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
-  { n: "Hip-Hop",    color: GENRE_THEMES["Hip-Hop"].border },
-  { n: "Rock",       color: GENRE_THEMES.Rock.border },
-  { n: "Classical",  color: GENRE_THEMES.Classical.border },
-  { n: "Vintage",    color: GENRE_THEMES.Vintage.border },
+  { n: "Hip-Hop", color: GENRE_THEMES["Hip-Hop"].border },
+  { n: "Rock", color: GENRE_THEMES.Rock.border },
+  { n: "Classical", color: GENRE_THEMES.Classical.border },
+  { n: "Vintage", color: GENRE_THEMES.Vintage.border },
 ];
 
 // ---------------------------------------------------------------------------
@@ -225,8 +225,8 @@ function mixHex(base: string, tint: string, amount: number): string {
 }
 
 function parchFromBorder(border: string): { strip: string; ability: string } {
-  const amountStrip = isVeryLight(border) ? 0.04 : 0.1;
-  const amountAbility = isVeryLight(border) ? 0.03 : 0.08;
+  const amountStrip = isVeryLight(border) ? 0.26 : 0.32;
+  const amountAbility = isVeryLight(border) ? 0.09 : 0.18;
   return {
     strip: mixHex("#ede4cc", border, amountStrip),
     ability: mixHex("#f4edd8", border, amountAbility),
@@ -266,7 +266,12 @@ export interface Subgenre {
 }
 
 export const SUBGENRES: Subgenre[] = [
-  { n: "Electropop", color: "#e4ebff", parentA: "Electronic", intensity: "pop" },
+  {
+    n: "Electropop",
+    color: "#e4ebff",
+    parentA: "Electronic",
+    intensity: "pop",
+  },
   { n: "Disco Pop", color: "#ffd6e8", parentA: "Disco/Funk", intensity: "pop" },
   { n: "Pop Rock", color: "#f07080", parentA: "Rock", intensity: "soft" },
   { n: "EDM", color: "#7090e8", parentA: "Electronic", intensity: "soft" },
@@ -282,7 +287,12 @@ export const SUBGENRES: Subgenre[] = [
     angleDelta: 14,
     intensity: "experimental",
   },
-  { n: "Dub", color: "#28b870", parentA: "Reggae/Dub", intensity: "experimental" },
+  {
+    n: "Dub",
+    color: "#28b870",
+    parentA: "Reggae/Dub",
+    intensity: "experimental",
+  },
   {
     n: "Drum & Bass",
     color: "#3070c8",
@@ -297,7 +307,12 @@ export const SUBGENRES: Subgenre[] = [
     t: 0.34,
     intensity: "experimental",
   },
-  { n: "Techno", color: "#1a2e6a", parentA: "Electronic", intensity: "experimental" },
+  {
+    n: "Techno",
+    color: "#1a2e6a",
+    parentA: "Electronic",
+    intensity: "experimental",
+  },
   {
     n: "House",
     color: "#4030a0",
@@ -318,7 +333,12 @@ export const SUBGENRES: Subgenre[] = [
     parentA: "Classical",
     intensity: "experimental",
   },
-  { n: "Jazz", color: "#7a5840", parentA: "Vintage", intensity: "experimental" },
+  {
+    n: "Jazz",
+    color: "#7a5840",
+    parentA: "Vintage",
+    intensity: "experimental",
+  },
   {
     n: "Soul",
     color: "#9a8f60",
@@ -334,8 +354,18 @@ export const SUBGENRES: Subgenre[] = [
     angleDelta: -14,
     intensity: "hardcore",
   },
-  { n: "Free Jazz", color: "#2a1a0e", parentA: "Vintage", intensity: "hardcore" },
-  { n: "Psytrance", color: "#0b1f5a", parentA: "Electronic", intensity: "hardcore" },
+  {
+    n: "Free Jazz",
+    color: "#2a1a0e",
+    parentA: "Vintage",
+    intensity: "hardcore",
+  },
+  {
+    n: "Psytrance",
+    color: "#0b1f5a",
+    parentA: "Electronic",
+    intensity: "hardcore",
+  },
 ];
 
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
