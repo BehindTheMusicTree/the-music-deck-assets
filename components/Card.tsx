@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import styles from "./Card.module.css";
 import { SUBGENRE_COLOR, subgenreTheme } from "@/lib/genres";
 
@@ -124,6 +125,7 @@ export default function Card({
   theme: GenreTheme;
   small?: boolean;
 }) {
+  const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const strip = getTypeStripParts(card);
   const effectiveTheme = SUBGENRE_COLOR[card.subgenre]
@@ -298,7 +300,7 @@ export default function Card({
     </>
   );
 
-  const inner =
+  const renderInnerCard = () =>
     flagStyle === "full" && flagBg ? (
       /* Full-bleed flag covers the entire card background */
       <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
@@ -374,11 +376,58 @@ export default function Card({
       </div>
     );
 
-  if (!small) return inner;
+  const onCardKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setIsZoomed(true);
+    } else if (e.key === "Escape") {
+      setIsZoomed(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isZoomed) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsZoomed(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isZoomed]);
+
+  const baseCard = small ? (
+    <div className={styles.wrapSm}>
+      <div className={styles.cardSm}>{renderInnerCard()}</div>
+    </div>
+  ) : (
+    renderInnerCard()
+  );
 
   return (
-    <div className={styles.wrapSm}>
-      <div className={styles.cardSm}>{inner}</div>
-    </div>
+    <>
+      <div
+        className={styles.zoomTrigger}
+        role="button"
+        tabIndex={0}
+        aria-label={`Zoom card ${card.title}`}
+        onClick={() => setIsZoomed(true)}
+        onKeyDown={onCardKeyDown}
+      >
+        {baseCard}
+      </div>
+      {isZoomed && (
+        <div
+          className={styles.zoomOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Zoomed card ${card.title}`}
+          onClick={() => setIsZoomed(false)}
+          onKeyDown={onCardKeyDown}
+        >
+          <div className={styles.zoomCard} onClick={(e) => e.stopPropagation()}>
+            {renderInnerCard()}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

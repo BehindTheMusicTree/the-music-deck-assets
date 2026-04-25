@@ -75,6 +75,27 @@ const WORLD_FLAG_CARDS: CardData[] = [
 
 const WORLD_MIXED_CARDS: CardData[] = [
   {
+    id: 27,
+    title: "Bande Organisée",
+    artist: "13 Organisé",
+    year: 2020,
+    genre: "France",
+    subgenre: "Hip-hop",
+    typeStripPrimaryBorder: "#0055A4",
+    typeStripSubBorder: "#c8960a",
+    ability: "Street Anthem",
+    abilityDesc:
+      "Allied Hip-hop cards gain +12 popularity on the turn this card is played.",
+    power: 84,
+    pop: 90,
+    exp: 61,
+    rarity: "Epic",
+    country: "France",
+    artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
+    flagStyle: "fade",
+    fadeColor: "#c8960a",
+  },
+  {
     id: 21,
     title: "Amazing Grace",
     artist: "Traditional",

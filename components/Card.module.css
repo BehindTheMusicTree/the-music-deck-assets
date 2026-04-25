@@ -374,3 +374,24 @@
   overflow: hidden;
   flex-shrink: 0;
 }
+
+.zoomTrigger {
+  display: inline-block;
+}
+
+.zoomOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 6, 8, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.zoomCard {
+  transform: scale(1.55);
+  transform-origin: center;
+}
