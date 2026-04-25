@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
 import {
+  isCountrySubgenre,
   resolveThemeSelection,
 } from "@/lib/genres";
 
@@ -157,10 +158,15 @@ export default function Card({
     ? FLAG_PIP_SYMBOL[card.country]
     : undefined;
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
+  const rightUsesCountryIdentity = Boolean(
+    card.country &&
+      resolved.resolvedSubgenre &&
+      isCountrySubgenre(resolved.resolvedSubgenre),
+  );
   const pipRightSymbol =
-    pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
+    pipLeftSymbol && rightUsesCountryIdentity ? pipLeftSymbol : undefined;
   const pipRightFlagBg =
-    pipLeftFlagBg && !card.flagStyle ? pipLeftFlagBg : undefined;
+    pipLeftFlagBg && rightUsesCountryIdentity ? pipLeftFlagBg : undefined;
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
