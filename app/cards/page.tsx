@@ -250,6 +250,60 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
 
 export default function CardsPage() {
   const genreEntries = Object.entries(MOCK_CARDS) as [AppGenreName, CardData][];
+  const themeRuleExamples: Array<{
+    key: string;
+    title: string;
+    explain: string;
+    border: string;
+    card: CardData;
+    theme: (typeof APP_GENRE_THEMES)[AppGenreName];
+    genreName?: string;
+  }> = [
+    {
+      key: "genre-subgenre-no-country",
+      title: "Genre-subgenre without country",
+      explain:
+        "Strip labels: left = parent genre (displayed as Pop for pop-intensity), right = genre-subgenre.",
+      border:
+        "Border uses the subgenre-derived colour theme (no country flag layer).",
+      card: MOCK_CARDS.Mainstream,
+      theme: APP_GENRE_THEMES.Mainstream,
+    },
+    {
+      key: "country-subgenre",
+      title: "Country-subgenre",
+      explain: "Strip labels: left = country/region, right = country-subgenre.",
+      border:
+        "Border and full theme always come from the country/region theme.",
+      card: WORLD_FLAG_CARDS[1],
+      theme: worldThemeForCountry(WORLD_FLAG_CARDS[1].country!),
+    },
+    {
+      key: "country-plus-genre",
+      title: "Country/region + genre",
+      explain: "Strip labels: left = country/region, right = genre.",
+      border: "Border fades from country flag (left) to genre colour (right).",
+      card: {
+        ...MOCK_CARDS.Mainstream,
+        id: 9101,
+        title: "Genre + Country Preview",
+        country: "France",
+        subgenre: undefined,
+        flagStyle: undefined,
+      },
+      theme: worldThemeForCountry("France"),
+      genreName: "Mainstream",
+    },
+    {
+      key: "country-plus-genre-subgenre",
+      title: "Country/region + genre-subgenre",
+      explain: "Strip labels: left = country/region, right = genre-subgenre.",
+      border:
+        "Border fades from country flag (left) to subgenre/genre colour (right).",
+      card: WORLD_MIXED_CARDS[0],
+      theme: worldThemeForCountry(WORLD_MIXED_CARDS[0].country!),
+    },
+  ];
 
   return (
     <>
@@ -283,7 +337,10 @@ export default function CardsPage() {
                 height: 600,
               }}
             >
-              <Card card={MOCK_CARDS.Mainstream} theme={APP_GENRE_THEMES.Mainstream} />
+              <Card
+                card={MOCK_CARDS.Mainstream}
+                theme={APP_GENRE_THEMES.Mainstream}
+              />
             </div>
             <div className="flex flex-col gap-3 pt-2 flex-1">
               {[
@@ -322,27 +379,61 @@ export default function CardsPage() {
                   </div>
                 </div>
               ))}
-              <div className="flex gap-3">
-                <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
-                  Theme resolution
-                </div>
-                <div className="font-garamond text-muted leading-[1.5]">
-                  If the card&apos;s subgenre matches a canonical entry in
-                  SUBGENRES (with a colour), a full theme is derived from that
-                  colour: header background, text, stat bars, glow, and border
-                  all follow the subgenre colour. The genre icon is inherited
-                  from the parent genre. Left diamond always shows the genre
-                  colour. Very light diamonds in the strip and in the Genre
-                  Themes table automatically receive a subtle dark border for
-                  contrast.{" "}
-                  <a
-                    href="/genres#genre-themes"
-                    className="text-gold underline underline-offset-2 hover:text-white transition-colors"
+            </div>
+          </div>
+        </div>
+
+        <div id="theme-rules" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Theme Rules
+          </div>
+          <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 flex flex-col gap-4">
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {themeRuleExamples.map((item) => (
+                  <div
+                    key={item.key}
+                    className="rounded-[6px] border border-ui-border bg-[#12121a]/45 p-3 flex gap-3 items-start"
                   >
-                    Genre Themes →
-                  </a>
-                </div>
+                    <div className="shrink-0">
+                      <Card
+                        card={item.card}
+                        theme={item.theme}
+                        small
+                        genreName={item.genreName}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-cinzel text-[13px] tracking-[1px] text-white mb-1">
+                        {item.title}
+                      </div>
+                      <p className="font-garamond text-muted text-[14px] leading-[1.5] mb-1">
+                        {item.explain}
+                      </p>
+                      <p className="font-garamond text-muted text-[14px] leading-[1.5]">
+                        {item.border}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <div>
+              <div className="font-mono text-[11px] tracking-[0.16em] text-gold uppercase mb-1.5">
+                Display conventions
+              </div>
+              <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
+                <li>
+                  Mainstream is displayed as Pop; pop-intensity subgenres also
+                  display Pop on the left label.
+                </li>
+                <li>Genre and genre-subgenre use colour diamonds.</li>
+                <li>
+                  Country and country-subgenre use country identity: symbol when
+                  available, otherwise flag diamond.
+                </li>
+              </ul>
             </div>
           </div>
         </div>
