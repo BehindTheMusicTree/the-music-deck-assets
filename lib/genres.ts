@@ -119,6 +119,17 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
   },
 };
 
+// Wheel genre order (angular positions). Pop is the centre — not in this list.
+export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
+  { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
+  { n: "Electronic", color: GENRE_THEMES.Electronic.border },
+  { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
+  { n: "Hip-Hop",    color: GENRE_THEMES["Hip-Hop"].border },
+  { n: "Rock",       color: GENRE_THEMES.Rock.border },
+  { n: "Classical",  color: GENRE_THEMES.Classical.border },
+  { n: "Vintage",    color: GENRE_THEMES.Vintage.border },
+];
+
 // ---------------------------------------------------------------------------
 // Color utilities (no external deps)
 // ---------------------------------------------------------------------------

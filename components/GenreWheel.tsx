@@ -1,16 +1,6 @@
 "use client";
 
-import { GENRE_THEMES, SUBGENRES } from "@/lib/genres";
-
-const GENRES = [
-  { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
-  { n: "Electronic", color: GENRE_THEMES.Electronic.border },
-  { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
-  { n: "Hip-Hop", color: GENRE_THEMES["Hip-Hop"].border },
-  { n: "Rock", color: GENRE_THEMES.Rock.border },
-  { n: "Classical", color: GENRE_THEMES.Classical.border },
-  { n: "Vintage", color: GENRE_THEMES.Vintage.border },
-];
+import { WHEEL_GENRES as GENRES, SUBGENRES } from "@/lib/genres";
 
 const CX = 620,
   CY = 620,
@@ -361,7 +351,7 @@ export default function GenreWheel() {
           const r =
             s.ring === "pop"
               ? R_POP_SUBGENRES
-              : s.ring === "SOFT"
+              : s.ring === "soft"
                 ? R_SOFT_SUBGENRES
                 : s.ring === "hardcore"
                   ? R_HARDCORE_SUBGENRES
