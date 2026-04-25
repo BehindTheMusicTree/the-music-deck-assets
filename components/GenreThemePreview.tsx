@@ -12,7 +12,7 @@ import {
   resolveThemeSelection,
   subgenreTheme,
 } from "@/lib/genres";
-import { FLAG_BORDERS } from "@/lib/countries";
+import { FLAG_PIP_BG, FLAG_PIP_SYMBOL } from "@/lib/countries";
 import type { GenreName } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
@@ -38,6 +38,33 @@ function isVeryLight(hex: string) {
   const b = parseInt(hex.slice(5, 7), 16);
   const luminance = (r * 299 + g * 587 + b * 114) / 1000;
   return luminance > 205;
+}
+
+function CountryDiamond({ country }: { country: string }) {
+  const symbol = FLAG_PIP_SYMBOL[country];
+  const flagBg = FLAG_PIP_BG[country];
+
+  if (symbol) {
+    return (
+      <span
+        className="shrink-0"
+        style={{
+          color: symbol.color,
+          fontSize: symbol.size ?? 16,
+          lineHeight: 1,
+        }}
+      >
+        {symbol.sym}
+      </span>
+    );
+  }
+
+  return (
+    <div
+      className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border border border-black/10"
+      style={{ backgroundImage: flagBg ?? "none" }}
+    />
+  );
 }
 
 export default function GenreThemePreview() {
@@ -249,7 +276,7 @@ export default function GenreThemePreview() {
                   >
                     Country / Region
                   </span>
-                  <div className="w-3 h-3 rounded-[2px] border border-black/10 shrink-0" style={{ background: t.border }} />
+                  <CountryDiamond country={country} />
                 </button>
                 {countrySubs.length > 0 && (
                   <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
@@ -265,15 +292,7 @@ export default function GenreThemePreview() {
                           applyRulePreview({ subgenre: s.n, country });
                         }}
                       >
-                        <div
-                          className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
-                          style={{
-                            background: FLAG_BORDERS[country] ?? s.color,
-                            border: isVeryLight(t.border)
-                              ? "1px solid rgba(20, 16, 10, 0.45)"
-                              : "none",
-                          }}
-                        />
+                        <CountryDiamond country={country} />
                         <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>
                           {s.n}
                         </span>
