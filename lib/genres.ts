@@ -297,6 +297,19 @@ export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
   SUBGENRES.map((s) => [s.n, s.color]),
 );
 
+export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
+  const sub = SUBGENRES.find((s) => s.n === subgenre);
+  if (!sub) {
+    throw new Error(`Unknown canonical subgenre "${subgenre}"`);
+  }
+  if (!sub.parent) {
+    throw new Error(
+      `Subgenre "${subgenre}" has no single canonical parent genre`,
+    );
+  }
+  return sub.parent as GenreName;
+}
+
 // ---------------------------------------------------------------------------
 // World / country themes — derived from the canonical COUNTRY_DATA in countries.ts
 // ---------------------------------------------------------------------------
