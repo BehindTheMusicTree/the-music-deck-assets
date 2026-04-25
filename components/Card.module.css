@@ -121,13 +121,21 @@
 .title {
   font-family: "Cinzel", serif;
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 12px;
   letter-spacing: 1px;
   line-height: 1.2;
   color: var(--gc-text-main);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.titleSm {
+  font-size: 10.5px;
+  letter-spacing: 0.65px;
+}
+.titleXs {
+  font-size: 9.5px;
+  letter-spacing: 0.45px;
 }
 .artist {
   font-family: "Cormorant Garamond", serif;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
 import { SUBGENRE_COLOR, appGenreFromSubgenre, subgenreTheme } from "@/lib/genres";
 
@@ -125,6 +125,8 @@ export default function Card({
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
+  const [titleScale, setTitleScale] = useState(1);
+  const titleRef = useRef<HTMLDivElement>(null);
   const derivedGenre = card.country
     ? card.country
     : card.subgenre
@@ -174,6 +176,21 @@ export default function Card({
   /** World flags other than USA (e.g. France): same shell as USA, no rotation */
   const flagFlatShell = Boolean(flagLayer && !flagUsR90 && !flagStyle);
 
+  useLayoutEffect(() => {
+    setTitleScale(1);
+  }, [card.title]);
+
+  useLayoutEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    const available = el.clientWidth;
+    const needed = el.scrollWidth;
+    if (!available || !needed) return;
+    if (needed <= available + 1) return;
+    const next = Math.max(0.58, Math.min(1, titleScale * (available / needed)));
+    if (Math.abs(next - titleScale) > 0.01) setTitleScale(next);
+  }, [card.title, titleScale]);
+
   const cardContent = (
     <>
       {/* Header */}
@@ -191,7 +208,16 @@ export default function Card({
           <div
             className={`${styles.titleGroup} ${!card.artist ? styles.titleGroupSolo : ""}`}
           >
-            <div className={styles.title}>{card.title}</div>
+            <div
+              ref={titleRef}
+              className={styles.title}
+              style={{
+                fontSize: `${12 * titleScale}px`,
+                letterSpacing: `${1 * titleScale}px`,
+              }}
+            >
+              {card.title}
+            </div>
             {card.artist ? (
               <div className={styles.artist}>{card.artist}</div>
             ) : null}
