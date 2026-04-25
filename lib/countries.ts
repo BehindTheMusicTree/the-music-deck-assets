@@ -36,7 +36,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#B22234", "#e84455"], barExp: ["#3C3B6E", "#6060cc"],
       barGlowPop: "rgba(178,34,52,.85)", barGlowExp: "rgba(96,96,204,.75)",
-      icon: GLOBE_ICON, sym: "★", bg0: "#1a2050", bg1: "#060a1e", accent: "#ffffff",
+      icon: GLOBE_ICON,
     },
     flag: {
       border: `url('${USA_FLAG_PATH}')`,
@@ -51,7 +51,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
       barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
-      icon: GLOBE_ICON, sym: "⚜", bg0: "#0a1830", bg1: "#040810", accent: "#ffffff",
+      icon: GLOBE_ICON,
     },
     flag: {
       border: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
@@ -66,7 +66,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       textMain: "#ffffff", textBody: "#dddddd",
       barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
       barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
-      icon: GLOBE_ICON, sym: "♦", bg0: "#2a0a0a", bg1: "#0e0404", accent: "#F1BF00",
+      icon: GLOBE_ICON,
     },
     flag: {
       border: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
@@ -85,7 +85,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
       barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",
-      icon: GLOBE_ICON, sym: "✦", bg0: "#1a1a1a", bg1: "#080808", accent: "#ffffff",
+      icon: GLOBE_ICON,
     },
     flag: {
       border: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",

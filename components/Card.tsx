@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./Card.module.css";
-import { SUBGENRE_COLOR } from "@/lib/genres";
+import { SUBGENRE_COLOR, subgenreTheme } from "@/lib/genres";
 
 export interface CardData {
   id: number;
@@ -36,10 +36,6 @@ export interface GenreTheme {
   barGlowPop: string;
   barGlowExp: string;
   icon: string;
-  sym: string;
-  bg0: string;
-  bg1: string;
-  accent: string;
 }
 
 const RARITY_COLOR: Record<string, string> = {
@@ -98,121 +94,15 @@ import {
 } from "@/lib/countries";
 
 
-function CardArtSvg({
-  card,
-  theme,
-  transparent,
-}: {
-  card: CardData;
-  theme: GenreTheme;
-  transparent?: boolean;
-}) {
-  const s = card.id * 137 + 42;
-  const bars = Array.from({ length: 14 }, (_, i) => ({
-    h: 16 + ((s + i * 31) % 52),
-    x: 6 + i * 16,
-    op: parseFloat((0.18 + ((s + i * 7) % 6) * 0.1).toFixed(2)),
-  }));
-  const dots = Array.from({ length: 12 }, (_, i) => ({
-    cx: 15 + ((s * i * 3) % 210),
-    cy: 10 + ((s * i * 7 + 33) % 160),
-    r: 1.5 + ((s + i) % 3),
-    op: parseFloat((0.08 + ((s + i * 11) % 5) * 0.05).toFixed(2)),
-  }));
-
-  if (card.artwork) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={card.artwork}
-        alt=""
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
-      />
-    );
-  }
-
+function CardArtwork({ card }: { card: CardData }) {
+  if (!card.artwork) return null;
   return (
-    <svg
-      viewBox="0 0 234 190"
-      width="100%"
-      height="100%"
-      className={styles.artSvg}
-    >
-      <defs>
-        <radialGradient id={`rg${card.id}`} cx="50%" cy="42%" r="72%">
-          <stop offset="0%" stopColor={theme.bg0} />
-          <stop offset="100%" stopColor={theme.bg1} />
-        </radialGradient>
-      </defs>
-      {!transparent && (
-        <rect width={234} height={190} fill={`url(#rg${card.id})`} />
-      )}
-      {dots.map((d, i) => (
-        <circle
-          key={i}
-          cx={d.cx}
-          cy={d.cy}
-          r={d.r}
-          fill={theme.accent}
-          fillOpacity={d.op}
-        />
-      ))}
-      {bars.map((b, i) => (
-        <rect
-          key={i}
-          x={b.x}
-          y={105 - b.h / 2}
-          width={10}
-          height={b.h}
-          rx={5}
-          fill={theme.accent}
-          fillOpacity={b.op}
-        />
-      ))}
-      <text
-        x={117}
-        y={102}
-        fontSize={80}
-        textAnchor="middle"
-        fill={theme.accent}
-        fillOpacity={0.07}
-        fontFamily="serif"
-      >
-        {theme.sym}
-      </text>
-      <text
-        x={117}
-        y={99}
-        fontSize={78}
-        textAnchor="middle"
-        fill={theme.accent}
-        fillOpacity={0.42}
-        fontFamily="serif"
-      >
-        {theme.sym}
-      </text>
-      <rect
-        x={0}
-        y={160}
-        width={234}
-        height={30}
-        fill={theme.bg1}
-        fillOpacity={0.65}
-      />
-      <rect
-        x={0}
-        y={0}
-        width={234}
-        height={18}
-        fill={theme.bg1}
-        fillOpacity={0.45}
-      />
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={card.artwork}
+      alt=""
+      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+    />
   );
 }
 
@@ -227,8 +117,11 @@ export default function Card({
 }) {
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const strip = getTypeStripParts(card);
+  const effectiveTheme = SUBGENRE_COLOR[card.subgenre]
+    ? subgenreTheme(SUBGENRE_COLOR[card.subgenre], theme)
+    : theme;
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
-  const stripRightBorder = card.typeStripSubBorder ?? SUBGENRE_COLOR[card.subgenre] ?? theme.border;
+  const stripRightBorder = card.typeStripSubBorder ?? effectiveTheme.border;
   const pipLeftSymbol = card.country ? FLAG_PIP_SYMBOL[card.country] : undefined;
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
   const pipRightSymbol = pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
@@ -242,10 +135,10 @@ export default function Card({
   const fadeColor = card.fadeColor;
 
   const varStyle = {
-    "--gc-border": theme.border,
-    "--gc-header-bg": theme.headerBg,
-    "--gc-text-main": theme.textMain,
-    "--gc-text-body": theme.textBody,
+    "--gc-border": effectiveTheme.border,
+    "--gc-header-bg": effectiveTheme.headerBg,
+    "--gc-text-main": effectiveTheme.textMain,
+    "--gc-text-body": effectiveTheme.textBody,
   } as React.CSSProperties;
 
   /** World flags other than USA (e.g. France): same shell as USA, no rotation */
@@ -259,7 +152,7 @@ export default function Card({
           <span
             className={styles.headerIcon}
             dangerouslySetInnerHTML={{
-              __html: theme.icon.replace(/currentColor/g, theme.textMain),
+              __html: effectiveTheme.icon.replace(/currentColor/g, effectiveTheme.textMain),
             }}
           />
           <div className={styles.titleGroup}>
@@ -271,7 +164,7 @@ export default function Card({
           className={styles.score}
           style={
             {
-              "--score-glow-c": theme.textMain,
+              "--score-glow-c": effectiveTheme.textMain,
               "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (card.power - 40) / 60)) * 14)}px`,
               boxShadow: scoreGlowColor(card.power),
             } as React.CSSProperties
@@ -284,7 +177,7 @@ export default function Card({
       {/* Body: artwork fills this zone, panels overlay at the bottom */}
       <div className={styles.body}>
         <div className={styles.art}>
-          <CardArtSvg card={card} theme={theme} />
+          <CardArtwork card={card} />
         </div>
 
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
@@ -333,14 +226,14 @@ export default function Card({
             {
               lbl: "Popularity",
               val: card.pop,
-              grad: theme.barPop,
-              glow: theme.barGlowPop,
+              grad: effectiveTheme.barPop,
+              glow: effectiveTheme.barGlowPop,
             },
             {
               lbl: "Experimental",
               val: card.exp,
-              grad: theme.barExp,
-              glow: theme.barGlowExp,
+              grad: effectiveTheme.barExp,
+              glow: effectiveTheme.barGlowExp,
             },
           ].map(({ lbl, val, grad, glow }) => (
             <div key={lbl} className={styles.statRow}>

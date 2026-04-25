@@ -35,7 +35,7 @@ const sections = [
     href: "/tracklists",
     index: "06",
     label: "Track Lists",
-    desc: "Deck building — prepare your tracklist for a battle",
+    desc: "Deck building — 60 cards per track list",
   },
   {
     href: "/battles",

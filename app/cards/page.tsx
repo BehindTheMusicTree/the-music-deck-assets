@@ -1,10 +1,18 @@
 import Card, { type CardData } from "@/components/Card";
 import CardSubTabs from "@/components/CardSubTabs";
-import { GENRE_THEMES as GT, themeForCountry as worldThemeForCountry } from "@/lib/genres";
+import {
+  GENRE_THEMES as GT,
+  themeForCountry as worldThemeForCountry,
+} from "@/lib/genres";
 
 const GENRES: Record<string, import("@/components/Card").GenreTheme> = {
-  Rock: GT.Rock, Pop: GT.Pop, Electro: GT.Electronic, Reggae: GT["Reggae/Dub"],
-  HipHop: GT["Hip-Hop"], "Disco/Funk": GT["Disco/Funk"], Classic: GT.Classical,
+  Rock: GT.Rock,
+  Pop: GT.Pop,
+  Electro: GT.Electronic,
+  Reggae: GT["Reggae/Dub"],
+  HipHop: GT["Hip-Hop"],
+  "Disco/Funk": GT["Disco/Funk"],
+  Classic: GT.Classical,
   Vintage: GT.Vintage,
 };
 
@@ -54,7 +62,8 @@ const WORLD_FLAG_CARDS: CardData[] = [
     subgenre: "Folk Breton",
     typeStripPrimaryBorder: "#222222",
     ability: "Marée Montante",
-    abilityDesc: "Gagne +10 en puissance pour chaque carte World alliée en jeu.",
+    abilityDesc:
+      "Gagne +10 en puissance pour chaque carte World alliée en jeu.",
     power: 72,
     pop: 58,
     exp: 66,
@@ -115,7 +124,8 @@ const WORLD_MIXED_CARDS: CardData[] = [
     typeStripPrimaryBorder: "#AA151B",
     typeStripSubBorder: "#2a6e2a",
     ability: "Contraband",
-    abilityDesc: "Opponent discards one card at random when this card enters play.",
+    abilityDesc:
+      "Opponent discards one card at random when this card enters play.",
     power: 76,
     pop: 62,
     exp: 84,
@@ -296,11 +306,11 @@ export default function CardsPage() {
                 ],
                 [
                   "Artwork",
-                  "Procedural SVG — radial gradient, scatter dots, bar visualisation, genre symbol",
+                  "Real asset image (always required); no procedural fallback.",
                 ],
                 [
                   "Type strip",
-                  "Parchment (#ede4cc) with diamond-cut corners; colour diamond then main genre (left), subgenre then colour diamond (right)",
+                  "Parchment (#ede4cc); left side = genre diamond + genre name, right side = subgenre name + subgenre diamond. Both diamonds and the entire card chrome use the subgenre theme when one exists (see below).",
                 ],
                 [
                   "Ability box",
@@ -308,16 +318,20 @@ export default function CardsPage() {
                 ],
                 [
                   "Stats",
-                  "Popularity and Experimental bars — gradient fill with coloured glow per genre",
+                  "Popularity and Experimental bars — gradient fill and glow derived from the active theme (subgenre if known, genre otherwise)",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
                   "Border",
-                  "10px solid genre colour — World cards use the country flag in landscape; mixed World/Genre cards fade from flag (left) to genre colour (right)",
+                  "10px solid; colour = subgenre canonical colour if the subgenre has one, otherwise genre border colour. World cards use the country flag in landscape; mixed World/Genre cards fade from flag (left) to genre colour (right).",
+                ],
+                [
+                  "Theme resolution",
+                  "If the card's subgenre matches a canonical entry in SUBGENRES (with a colour), a full theme is derived from that colour: header background, text, stat bars, glow, and border all follow the subgenre colour. The genre icon is inherited from the parent genre. Left diamond always shows the genre colour.",
                 ],
               ].map(([name, desc]) => (
                 <div key={name} className="flex gap-3">
-                  <div className="w-[90px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
+                  <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
                     {name}
                   </div>
                   <div className="font-garamond text-muted leading-[1.5]">
@@ -352,15 +366,35 @@ export default function CardsPage() {
             World — Flags (landscape on border)
           </div>
           <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
-            World cards represent a country or region rather than a global genre.
-            The flag is laid in landscape and wrapped around the border, rendered
-            with a tarnished finish so it reads as a worn print rather than a digital swatch.
+            World cards represent a country or region rather than a global
+            genre. The flag is laid in landscape and wrapped around the border,
+            rendered with a tarnished finish so it reads as a worn print rather
+            than a digital swatch.
           </p>
           <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-8 pl-0 list-none flex flex-col gap-1">
-            <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. USA, Bretagne)</span></li>
-            <li><span className="text-white">Subgenre</span> — local music style <span className="font-mono text-xs tracking-wide">(e.g. Country, Polyphonie, Schlager)</span></li>
-            <li><span className="text-white">Left diamond</span> — symbol or colour representing the country or region flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
-            <li><span className="text-white">Right diamond</span> — repeats the left symbol, indicating the subgenre is native to the region</li>
+            <li>
+              <span className="text-white">Genre</span> — country or region name{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (e.g. USA, Bretagne)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Subgenre</span> — local music style{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (e.g. Country, Polyphonie, Schlager)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Left diamond</span> — symbol or
+              colour representing the country or region flag{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (typeStripPrimaryBorder)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Right diamond</span> — repeats the
+              left symbol, indicating the subgenre is native to the region
+            </li>
           </ul>
 
           <div className="flex flex-wrap gap-6 mb-12">
@@ -378,18 +412,51 @@ export default function CardsPage() {
             Mixed World / Genre border
           </div>
           <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
-            When a card belongs to a specific country <em>and</em> a global genre (e.g. Ska Punk from Spain),
-            the border transitions from the country flag on the left to the genre colour on the right.
-            The flag is laid in landscape (rotated 90°); the genre colour bleeds in over a short central fade zone.
+            When a card belongs to a specific country <em>and</em> a global
+            genre (e.g. Ska Punk from Spain), the border transitions from the
+            country flag on the left to the genre colour on the right. The flag
+            is laid in landscape (rotated 90°); the genre colour bleeds in over
+            a short central fade zone.
           </p>
           <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
-            <li><span className="text-white">Genre</span> — country or region name <span className="font-mono text-xs tracking-wide">(e.g. Spain)</span></li>
-            <li><span className="text-white">Subgenre</span> — global music genre <span className="font-mono text-xs tracking-wide">(e.g. Ska Punk)</span></li>
-            <li><span className="text-white">Left diamond</span> — colour represents the country flag <span className="font-mono text-xs tracking-wide">(typeStripPrimaryBorder)</span></li>
-            <li><span className="text-white">Right diamond</span> — colour represents the genre <span className="font-mono text-xs tracking-wide">(typeStripSubBorder)</span></li>
-            <li><span className="text-white">Border left</span> — country flag in landscape, tarnished finish</li>
-            <li><span className="text-white">Border right</span> — genre colour fades in over the flag</li>
-            <li><span className="text-white">Transition</span> — short fade centred on the middle of the card</li>
+            <li>
+              <span className="text-white">Genre</span> — country or region name{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (e.g. Spain)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Subgenre</span> — global music genre{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (e.g. Ska Punk)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Left diamond</span> — colour
+              represents the country flag{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (typeStripPrimaryBorder)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Right diamond</span> — colour
+              represents the genre{" "}
+              <span className="font-mono text-xs tracking-wide">
+                (typeStripSubBorder)
+              </span>
+            </li>
+            <li>
+              <span className="text-white">Border left</span> — country flag in
+              landscape, tarnished finish
+            </li>
+            <li>
+              <span className="text-white">Border right</span> — genre colour
+              fades in over the flag
+            </li>
+            <li>
+              <span className="text-white">Transition</span> — short fade
+              centred on the middle of the card
+            </li>
           </ul>
           <div className="flex flex-wrap gap-6">
             {WORLD_MIXED_CARDS.map((card) => (
@@ -425,7 +492,6 @@ export default function CardsPage() {
             )}
           </div>
         </div>
-
       </div>
     </>
   );

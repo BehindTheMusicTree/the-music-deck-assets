@@ -3,13 +3,13 @@
 import { GENRE_THEMES, SUBGENRES } from "@/lib/genres";
 
 const GENRES = [
-  { n: "Reggae/Dub", h: GENRE_THEMES["Reggae/Dub"].border },
-  { n: "Electronic", h: GENRE_THEMES.Electronic.border },
-  { n: "Disco/Funk", h: GENRE_THEMES["Disco/Funk"].border },
-  { n: "Hip-Hop",    h: GENRE_THEMES["Hip-Hop"].border },
-  { n: "Rock",       h: GENRE_THEMES.Rock.border },
-  { n: "Classical",  h: GENRE_THEMES.Classical.border },
-  { n: "Vintage",    h: GENRE_THEMES.Vintage.border },
+  { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
+  { n: "Electronic", color: GENRE_THEMES.Electronic.border },
+  { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
+  { n: "Hip-Hop",    color: GENRE_THEMES["Hip-Hop"].border },
+  { n: "Rock",       color: GENRE_THEMES.Rock.border },
+  { n: "Classical",  color: GENRE_THEMES.Classical.border },
+  { n: "Vintage",    color: GENRE_THEMES.Vintage.border },
 ];
 
 const CX = 620,
@@ -269,7 +269,7 @@ export default function GenreWheel() {
         {GENRES.map((g, i) => {
           const angle = (i / GENRES.length) * 360 - 90;
           const { x, y } = polarToXY(CX, CY, R_POP_EXPERIMENTAL_LINE, angle);
-          return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.h} />;
+          return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
         })}
 
         {/* Subgenres by intensity: pop / poppy / experimental / hardcore */}
@@ -298,7 +298,7 @@ export default function GenreWheel() {
                   ? R_HARDCORE_SUBGENRES
                   : R_EXPERIMENTAL_SUBGENRES;
           const { x, y } = polarToXY(CX, CY, r, angle);
-          return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.h} small />;
+          return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.color} small />;
         })}
       </svg>
     </div>
