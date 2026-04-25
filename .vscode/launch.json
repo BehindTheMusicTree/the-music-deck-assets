@@ -6,7 +6,7 @@
 			"request": "launch",
 			"name": "Launch app (dev)",
 			"runtimeExecutable": "npm",
-			"runtimeArgs": ["run", "dev"],
+			"runtimeArgs": ["run", "dev:webpack"],
 			"cwd": "${workspaceFolder}",
 			"env": { "PORT": "3011" },
 			"console": "integratedTerminal",
@@ -27,6 +27,7 @@
 			"type": "chrome",
 			"request": "launch",
 			"name": "Open app in Chrome",
+			"preLaunchTask": "Build then Run Dev App",
 			"url": "http://localhost:3011",
 			"webRoot": "${workspaceFolder}"
 		}

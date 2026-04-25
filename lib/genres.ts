@@ -50,19 +50,6 @@ export const APP_GENRE_NAMES: AppGenreName[] = [
 // Genre themes
 // ---------------------------------------------------------------------------
 export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
-  Rock: {
-    border: "#d01828",
-    headerBg: "#180404",
-    textMain: "#f04858",
-    textBody: "#d02838",
-    parchStrip: parchFromBorder("#d01828").strip,
-    parchAbility: parchFromBorder("#d01828").ability,
-    barPop: ["#800810", "#e82030"],
-    barExp: ["#600610", "#b81828"],
-    barGlowPop: "rgba(232,32,48,.85)",
-    barGlowExp: "rgba(184,24,40,.75)",
-    icon: '<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>',
-  },
   Mainstream: {
     border: "#f6f6f2",
     headerBg: "#141218",
@@ -75,6 +62,19 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     barGlowPop: "rgba(247,246,239,.8)",
     barGlowExp: "rgba(217,214,204,.7)",
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,14.5 8,11.5 3.5,14.5 5,9.5 1,6 6,6" fill="currentColor"/></svg>',
+  },
+  Rock: {
+    border: "#d01828",
+    headerBg: "#180404",
+    textMain: "#f04858",
+    textBody: "#d02838",
+    parchStrip: parchFromBorder("#d01828").strip,
+    parchAbility: parchFromBorder("#d01828").ability,
+    barPop: ["#800810", "#e82030"],
+    barExp: ["#600610", "#b81828"],
+    barGlowPop: "rgba(232,32,48,.85)",
+    barGlowExp: "rgba(184,24,40,.75)",
+    icon: '<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>',
   },
   Electronic: {
     border: "#2850c8",
@@ -273,7 +273,12 @@ export const SUBGENRES: Subgenre[] = [
     parentA: "France",
     intensity: "soft",
   },
-  { n: "Folk Breton", color: "#222222", parentA: "Bretagne", intensity: "soft" },
+  {
+    n: "Folk Breton",
+    color: "#222222",
+    parentA: "Bretagne",
+    intensity: "soft",
+  },
   {
     n: "Electropop",
     color: "#e4ebff",

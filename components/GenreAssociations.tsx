@@ -114,8 +114,9 @@ export default function GenreAssociations() {
         and the genres it tends to counter.
       </p>
 
-      <div className="border border-ui-border rounded-[6px] overflow-hidden">
-        <table className="w-full border-collapse">
+      <div className="overflow-x-auto">
+        <div className="border border-ui-border rounded-[6px] overflow-hidden min-w-[980px]">
+          <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-ui-border bg-white/[0.02]">
               {[
@@ -219,7 +220,8 @@ export default function GenreAssociations() {
               );
             })}
           </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </div>
   );

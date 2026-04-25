@@ -1,6 +1,11 @@
 "use client";
 
-import { GENRE_THEMES, WHEEL_GENRES as GENRES, SUBGENRES } from "@/lib/genres";
+import {
+  GENRE_THEMES,
+  WHEEL_GENRES as GENRES,
+  SUBGENRES,
+  WORLD_THEMES,
+} from "@/lib/genres";
 
 const CX = 620,
   CY = 620,
@@ -18,7 +23,12 @@ function repeat(str: string, times: number) {
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180;
-  return { x: cx + Math.cos(rad) * r, y: cy + Math.sin(rad) * r };
+  const x = cx + Math.cos(rad) * r;
+  const y = cy + Math.sin(rad) * r;
+  return {
+    x: Number(x.toFixed(4)),
+    y: Number(y.toFixed(4)),
+  };
 }
 
 function Rect({
@@ -308,6 +318,8 @@ export default function GenreWheel() {
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {
+          if (s.parentA in WORLD_THEMES) return null;
+          if (s.parentB && s.parentB in WORLD_THEMES) return null;
           if (!(s.parentA in GENRE_THEMES)) {
             throw new Error(
               `Subgenre "${s.n}" has non-global parentA "${s.parentA}" in GenreWheel`,

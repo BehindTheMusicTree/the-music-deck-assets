@@ -2,9 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build and Run App",
+			"label": "Build then Run Dev App",
 			"type": "shell",
-			"command": "PORT=3011 npm run dev",
+			"command": "npm run build && PORT=3011 npm run dev:webpack",
 			"isBackground": true,
 			"presentation": {
 				"reveal": "always",
