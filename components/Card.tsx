@@ -56,21 +56,14 @@ const RARITY_ICON: Record<string, string> = {
 const STRIP_NAME_FOR_GENRE: Record<string, string> = {
   Rock: "Rock",
   Pop: "Pop",
-  Electro: "Electro",
   Electronic: "Electronic",
-  Reggae: "Reggae",
-  "Reggae/Dub": "Reggae",
+  "Reggae/Dub": "Reggae/Dub",
   HipHop: "Hip-hop",
-  "Hip-hop": "Hip-hop",
   Funk: "Funk",
-  "Disco/Funk": "Disco",
-  Classic: "Classical",
+  "Disco/Funk": "Disco/Funk",
   Classical: "Classical",
   Vintage: "Vintage",
-  World: "World",
-  Metal: "Metal",
 };
-
 
 /** Always returns two parts (genre + subgenre) for a two-column type strip. */
 function getTypeStripParts(card: CardData): { left: string; right: string } {
@@ -103,7 +96,6 @@ import {
   FLAG_ROTATE_R90,
 } from "@/lib/countries";
 
-
 function CardArtwork({ card }: { card: CardData }) {
   if (!card.artwork) return null;
   return (
@@ -111,7 +103,12 @@ function CardArtwork({ card }: { card: CardData }) {
     <img
       src={card.artwork}
       alt=""
-      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        display: "block",
+      }}
     />
   );
 }
@@ -135,10 +132,14 @@ export default function Card({
   const stripRightBorder = card.typeStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
-  const pipLeftSymbol = card.country ? FLAG_PIP_SYMBOL[card.country] : undefined;
+  const pipLeftSymbol = card.country
+    ? FLAG_PIP_SYMBOL[card.country]
+    : undefined;
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
-  const pipRightSymbol = pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
-  const pipRightFlagBg = pipLeftFlagBg && !card.flagStyle ? pipLeftFlagBg : undefined;
+  const pipRightSymbol =
+    pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
+  const pipRightFlagBg =
+    pipLeftFlagBg && !card.flagStyle ? pipLeftFlagBg : undefined;
 
   const country = card.country;
   const flagLayer = country ? FLAG_BORDERS[country] : undefined;
@@ -165,14 +166,19 @@ export default function Card({
           <span
             className={styles.headerIcon}
             dangerouslySetInnerHTML={{
-              __html: effectiveTheme.icon.replace(/currentColor/g, effectiveTheme.textMain),
+              __html: effectiveTheme.icon.replace(
+                /currentColor/g,
+                effectiveTheme.textMain,
+              ),
             }}
           />
           <div
             className={`${styles.titleGroup} ${!card.artist ? styles.titleGroupSolo : ""}`}
           >
             <div className={styles.title}>{card.title}</div>
-            {card.artist ? <div className={styles.artist}>{card.artist}</div> : null}
+            {card.artist ? (
+              <div className={styles.artist}>{card.artist}</div>
+            ) : null}
           </div>
         </div>
         <div
@@ -201,18 +207,26 @@ export default function Card({
             {pipLeftSymbol ? (
               <span
                 className={styles.pipSymbol}
-                style={{ color: pipLeftSymbol.color, fontSize: pipLeftSymbol.size }}
+                style={{
+                  color: pipLeftSymbol.color,
+                  fontSize: pipLeftSymbol.size,
+                }}
               >
                 {pipLeftSymbol.sym}
               </span>
             ) : pipLeftFlagBg ? (
-              <div className={styles.pip} style={{ backgroundImage: pipLeftFlagBg }} />
+              <div
+                className={styles.pip}
+                style={{ backgroundImage: pipLeftFlagBg }}
+              />
             ) : (
               <div
                 className={styles.pip}
                 style={{
                   background: stripLeftBorder,
-                  border: leftPipNeedsBorder ? "1px solid rgba(20, 16, 10, 0.45)" : "none",
+                  border: leftPipNeedsBorder
+                    ? "1px solid rgba(20, 16, 10, 0.45)"
+                    : "none",
                 }}
               />
             )}
@@ -223,18 +237,26 @@ export default function Card({
             {pipRightSymbol ? (
               <span
                 className={styles.pipSymbol}
-                style={{ color: pipRightSymbol.color, fontSize: pipRightSymbol.size }}
+                style={{
+                  color: pipRightSymbol.color,
+                  fontSize: pipRightSymbol.size,
+                }}
               >
                 {pipRightSymbol.sym}
               </span>
             ) : pipRightFlagBg ? (
-              <div className={styles.pip} style={{ backgroundImage: pipRightFlagBg }} />
+              <div
+                className={styles.pip}
+                style={{ backgroundImage: pipRightFlagBg }}
+              />
             ) : (
               <div
                 className={styles.pip}
                 style={{
                   background: stripRightBorder,
-                  border: rightPipNeedsBorder ? "1px solid rgba(20, 16, 10, 0.45)" : "none",
+                  border: rightPipNeedsBorder
+                    ? "1px solid rgba(20, 16, 10, 0.45)"
+                    : "none",
                 }}
               />
             )}
