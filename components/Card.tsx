@@ -212,16 +212,25 @@ export default function Card({
 
     const recompute = () => {
       const available = el.clientWidth;
-      const needed = el.scrollWidth;
-      if (!available || !needed) return;
+      if (!available) return;
 
-      const currentScale = titleScaleRef.current || 1;
-      const naturalWidth = needed / currentScale;
-      const ratio = available / naturalWidth;
-      const next = ratio >= 1 ? 1 : Math.max(0.66, Math.min(1, ratio * 0.98));
-      if (Math.abs(next - currentScale) > 0.005) {
-        titleScaleRef.current = next;
-        setTitleScale(next);
+      // Fit title width as tightly as possible.
+      let scale = 1;
+      const minScale = 0.5;
+      const epsilon = 0.5;
+      for (let i = 0; i < 3; i += 1) {
+        const needed = el.scrollWidth;
+        if (!needed) return;
+        if (needed <= available + epsilon) break;
+        const ratio = available / needed;
+        scale = Math.max(minScale, Math.min(1, scale * ratio));
+        el.style.fontSize = `${12 * scale}px`;
+        el.style.letterSpacing = `${0.8 * scale}px`;
+      }
+
+      if (Math.abs(scale - titleScaleRef.current) > 0.003) {
+        titleScaleRef.current = scale;
+        setTitleScale(scale);
       }
     };
 
