@@ -2,6 +2,13 @@ import GenreWheel from "@/components/GenreWheel";
 import GenreSubTabs from "@/components/GenreSubTabs";
 import GenreAssociations from "@/components/GenreAssociations";
 import GenreThemePreview from "@/components/GenreThemePreview";
+import IntensityGauge from "@/components/IntensityGauge";
+import {
+  APP_GENRE_NAMES,
+  appGenreIntensity,
+  displayGenreLabel,
+  intensityLevelIndex,
+} from "@/lib/genres";
 
 export default function GenresPage() {
   return (
@@ -120,6 +127,61 @@ export default function GenresPage() {
 
         <div id="colour-wheel" className="w-full flex justify-center">
           <GenreWheel />
+        </div>
+
+        <div id="genre-intensity" className="w-full max-w-[860px] mt-10 mb-10">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
+            Genre-level intensity
+          </div>
+          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[680px]">
+            When a card has a subgenre, intensity comes from that subgenre. When
+            there is no subgenre (genre-only card), intensity is taken from the
+            genre row below: <span className="text-white/80">Electronic</span>{" "}
+            is <span className="text-white/80">hardcore</span>,{" "}
+            <span className="text-white/80">Hip-Hop</span> is{" "}
+            <span className="text-white/80">soft</span>,{" "}
+            <span className="text-white/80">Classical</span> and{" "}
+            <span className="text-white/80">Rock</span> are{" "}
+            <span className="text-white/80">experimental</span>, and all other
+            genres are <span className="text-white/80">pop</span>.
+          </p>
+          <div className="border border-ui-border rounded-[6px] overflow-hidden">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b border-ui-border bg-white/[0.02]">
+                  <th className="font-mono text-[12px] tracking-[2px] uppercase text-muted px-4 py-3">
+                    Genre
+                  </th>
+                  <th className="font-mono text-[12px] tracking-[2px] uppercase text-muted px-4 py-3">
+                    Intensity (no subgenre)
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...APP_GENRE_NAMES]
+                  .sort(
+                    (a, b) =>
+                      intensityLevelIndex(appGenreIntensity(a)) -
+                      intensityLevelIndex(appGenreIntensity(b)),
+                  )
+                  .map((g) => (
+                  <tr
+                    key={g}
+                    className="border-b border-ui-border last:border-0 odd:bg-transparent even:bg-white/[0.02]"
+                  >
+                    <td className="px-4 py-3 font-mono text-[11px] tracking-[1px] text-white/90">
+                      {displayGenreLabel(g)}
+                    </td>
+                    <td className="px-4 py-3 align-middle">
+                      <div className="max-w-[148px]">
+                        <IntensityGauge intensity={appGenreIntensity(g)} />
+                      </div>
+                    </td>
+                  </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Genre themes */}

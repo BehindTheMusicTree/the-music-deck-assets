@@ -166,7 +166,7 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     rarity: "Epic",
     artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
   },
-  Roots: {
+  "Reggae/Dub": {
     id: 4,
     title: "Is This Love",
     artist: "Bob Marley",

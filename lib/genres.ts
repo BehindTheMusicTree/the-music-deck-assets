@@ -31,7 +31,7 @@ export type AppGenreName =
   | "Electronic"
   | "Hip-Hop"
   | "Disco/Funk"
-  | "Roots"
+  | "Reggae/Dub"
   | "Classical"
   | "Vintage";
 
@@ -41,7 +41,7 @@ export const APP_GENRE_NAMES: AppGenreName[] = [
   "Electronic",
   "Hip-Hop",
   "Disco/Funk",
-  "Roots",
+  "Reggae/Dub",
   "Classical",
   "Vintage",
 ];
@@ -162,7 +162,7 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
   Electronic: GENRE_THEMES.Electronic,
   "Hip-Hop": GENRE_THEMES["Hip-Hop"],
   "Disco/Funk": GENRE_THEMES["Disco/Funk"],
-  Roots: GENRE_THEMES["Reggae/Dub"],
+  "Reggae/Dub": GENRE_THEMES["Reggae/Dub"],
   Classical: GENRE_THEMES.Classical,
   Vintage: GENRE_THEMES.Vintage,
 };
@@ -207,8 +207,7 @@ export function matchupTargetsForAppGenre(
   genre: AppGenreName | undefined,
 ): { advantageVs: string[]; weakVs: string[] } {
   if (!genre) return { advantageVs: [], weakVs: [] };
-  const key = genre === "Roots" ? "Reggae/Dub" : genre;
-  const row = GENRE_BATTLE_MATCHUP[key as GenreName];
+  const row = GENRE_BATTLE_MATCHUP[genre as GenreName];
   if (!row) return { advantageVs: [], weakVs: [] };
   return {
     advantageVs: [...row.advantageVs],
@@ -303,6 +302,13 @@ export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
 // Subgenres (wheel data)
 // ---------------------------------------------------------------------------
 export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
+
+export function intensityLevelIndex(level: Intensity): number {
+  if (level === "pop") return 1;
+  if (level === "soft") return 2;
+  if (level === "experimental") return 3;
+  return 4;
+}
 
 type CountryName = keyof typeof COUNTRY_DATA;
 
@@ -505,12 +511,19 @@ export function subgenreIntensity(subgenre: string): Intensity {
   return sub.intensity;
 }
 
+/** Intensity when the card has no subgenre (genre-only); subgenre overrides when present. */
+const APP_GENRE_ONLY_INTENSITY: Partial<Record<AppGenreName, Intensity>> = {
+  Electronic: "hardcore",
+  "Hip-Hop": "soft",
+  Classical: "experimental",
+  Rock: "experimental",
+};
+
 export function appGenreIntensity(genre: AppGenreName): Intensity {
   if (!(genre in APP_GENRE_THEMES)) {
     throw new Error(`Unknown app genre "${genre}"`);
   }
-  // Canonical rule: a genre-level card uses pop intensity.
-  return "pop";
+  return APP_GENRE_ONLY_INTENSITY[genre] ?? "pop";
 }
 
 export function matchupTargetDiamondColor(name: string): string {
@@ -524,7 +537,6 @@ export function matchupTargetDiamondColor(name: string): string {
 
 export function matchupGenreDisplayLabel(name: string): string {
   if (name === "Mainstream") return "Pop";
-  if (name === "Reggae/Dub") return "Roots";
   return name;
 }
 
@@ -559,8 +571,7 @@ export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
 
 export function appGenreFromSubgenre(subgenre: string): AppGenreName {
   const canonical = canonicalGenreFromSubgenre(subgenre);
-  if (canonical === "Reggae/Dub") return "Roots";
-  return canonical;
+  return canonical as AppGenreName;
 }
 
 type ResolvableGenre = GenreName | AppGenreName | string;
@@ -594,18 +605,15 @@ export interface ResolvedThemeSelection {
 
 function toCanonicalGenre(genre: ResolvableGenre): GenreName {
   if (isGenreName(genre)) return genre;
-  if (isAppGenreName(genre)) {
-    return genre === "Roots" ? "Reggae/Dub" : genre;
-  }
+  if (isAppGenreName(genre)) return genre as GenreName;
   throw new Error(`Unknown canonical genre theme "${genre}"`);
 }
 
 function toAppGenre(genre: ResolvableGenre): AppGenreName {
-  const canonical = toCanonicalGenre(genre);
-  return canonical === "Reggae/Dub" ? "Roots" : canonical;
+  return toCanonicalGenre(genre) as AppGenreName;
 }
 
-function displayGenreLabel(genre: AppGenreName): string {
+export function displayGenreLabel(genre: AppGenreName): string {
   return genre === "Mainstream" ? "Pop" : genre;
 }
 

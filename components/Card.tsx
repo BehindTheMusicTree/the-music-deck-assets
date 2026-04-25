@@ -5,9 +5,9 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
 } from "react";
 import styles from "./Card.module.css";
+import IntensityGauge from "@/components/IntensityGauge";
 import {
   type AppGenreName,
   appGenreIntensity,
@@ -138,15 +138,6 @@ function awardSymbolSvg(tier: "gold" | "platinum" | "diamond"): string {
     return `<svg width="${AWARD_SYMBOL_SIZE}" height="${AWARD_SYMBOL_SIZE}" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.2l3.6 1.2v3.2c0 2.6-1.7 4.3-3.6 5.2-1.9-.9-3.6-2.6-3.6-5.2V2.4L6 1.2z" fill="#c7d0d9" stroke="#eff4f8" stroke-width="0.8"/><path d="M3.2 3.2l-.8.6.6.9-.9.3.35.98-1 .06.06 1.03 1-.1.14.98.98-.24.34.93.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/><path d="M8.8 3.2l.8.6-.6.9.9.3-.35.98 1 .06-.06 1.03-1-.1-.14.98-.98-.24-.34.93-.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/></svg>`;
   }
   return `<svg width="${AWARD_SYMBOL_SIZE}" height="${AWARD_SYMBOL_SIZE}" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.2L4.2 2h3.6L10 4.2 6 10 2 4.2z" fill="#7fe3ff" stroke="#e8fbff" stroke-width="0.8"/><path d="M4.2 2L6 4.2 7.8 2M2 4.2h8M6 4.2v5.8" stroke="#dff8ff" stroke-width="0.6" fill="none"/></svg>`;
-}
-
-type IntensityLevel = "pop" | "soft" | "experimental" | "hardcore";
-
-function intensityIndex(level: IntensityLevel): number {
-  if (level === "pop") return 1;
-  if (level === "soft") return 2;
-  if (level === "experimental") return 3;
-  return 4;
 }
 
 function isVeryLight(hex: string) {
@@ -527,59 +518,22 @@ export default function Card({
             })()}
           </div>
           <div className={styles.statsIntensity}>
-            {(() => {
-              const intensitySubgenre =
-                resolved.resolvedSubgenre ?? card.subgenre;
-              const level = intensitySubgenre
-                ? subgenreIntensity(intensitySubgenre)
-                : resolved.resolvedGenre
-                  ? appGenreIntensity(resolved.resolvedGenre as AppGenreName)
-                  : undefined;
-              const idx = level ? intensityIndex(level) : null;
-              const pct = idx ? (idx / 4) * 100 : 0;
-              return (
-                <>
-                  <div
-                    className={styles.intensityTrack}
-                    style={
-                      idx
-                        ? ({
-                            ["--intensity-pct" as string]: String(Math.round(pct)),
-                          } as CSSProperties)
-                        : undefined
-                    }
-                  >
-                    {idx ? (
-                      <div
-                        className={styles.intensityFill}
-                        style={{ width: `${pct}%` }}
-                      >
-                        <div className={styles.intensityFillInner} />
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className={styles.intensityNoteRow}>
-                    {idx ? (
-                      <span
-                        className={styles.intensityNote}
-                        style={
-                          pct >= 99.5
-                            ? {
-                                left: "100%",
-                                transform: "translateX(-100%)",
-                              }
-                            : { left: `${pct}%`, transform: "translateX(-50%)" }
-                        }
-                      >
-                        {Math.round(pct)}%
-                      </span>
-                    ) : (
-                      <span className={styles.intensityNoteMuted}>—</span>
-                    )}
-                  </div>
-                </>
-              );
-            })()}
+            <IntensityGauge
+              small={Boolean(small)}
+              intensity={(() => {
+                const intensitySubgenre =
+                  resolved.resolvedSubgenre ?? card.subgenre;
+                if (intensitySubgenre) {
+                  return subgenreIntensity(intensitySubgenre);
+                }
+                if (resolved.resolvedGenre) {
+                  return appGenreIntensity(
+                    resolved.resolvedGenre as AppGenreName,
+                  );
+                }
+                return undefined;
+              })()}
+            />
           </div>
         </div>
 
