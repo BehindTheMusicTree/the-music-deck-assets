@@ -84,6 +84,9 @@ export default function GenreThemePreview() {
                 <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
                   {subs.map((s) => {
                     const d = subgenreTheme(s.color, t);
+                    const parentLabel = s.parentB
+                      ? `${s.parentA ?? s.parent} + ${s.parentB}`
+                      : (s.parentA ?? s.parent ?? "—");
                     return (
                       <button
                         key={s.n}
@@ -104,6 +107,9 @@ export default function GenreThemePreview() {
                           }}
                         />
                         <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{s.n}</span>
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#8a7050" }}>
+                          {parentLabel}
+                        </span>
                         <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{s.ring}</span>
                         <span className="font-mono text-xs" style={{ color: "#8a7050" }}>{s.color}</span>
                         <div className="flex items-center gap-1 ml-2 shrink-0">
