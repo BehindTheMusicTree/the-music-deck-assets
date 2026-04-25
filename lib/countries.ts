@@ -92,8 +92,8 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       icon: GLOBE_ICON,
     },
     flag: {
-      border: "repeating-linear-gradient(to right, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-      bg:     "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      border: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      bg:     "repeating-linear-gradient(to right, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
     },
     pip: {
       sym: "✦", color: "#222222", size: 17,
