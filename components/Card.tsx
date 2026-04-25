@@ -2,10 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
-import {
-  isCountrySubgenre,
-  resolveThemeSelection,
-} from "@/lib/genres";
+import { isCountrySubgenre, resolveThemeSelection } from "@/lib/genres";
 
 export interface CardData {
   id: number;
@@ -76,7 +73,10 @@ const STRIP_NAME_FOR_GENRE: Record<string, string> = {
 };
 
 /** Always returns two parts for a two-column type strip. */
-function getTypeStripParts(leftLabel: string, rightLabel: string): { left: string; right: string } {
+function getTypeStripParts(
+  leftLabel: string,
+  rightLabel: string,
+): { left: string; right: string } {
   const left = STRIP_NAME_FOR_GENRE[leftLabel] ?? leftLabel;
   return { left, right: rightLabel };
 }
@@ -97,10 +97,7 @@ function isVeryLight(hex: string) {
   return luminance > 205;
 }
 
-import {
-  FLAG_PIP_SYMBOL,
-  FLAG_PIP_BG,
-} from "@/lib/countries";
+import { FLAG_PIP_SYMBOL, FLAG_PIP_BG } from "@/lib/countries";
 
 function CardArtwork({ card }: { card: CardData }) {
   if (!card.artwork) return null;
@@ -135,24 +132,29 @@ export default function Card({
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleScaleRef = useRef(1);
-  const resolved = card.country || card.subgenre || genreName
-    ? resolveThemeSelection({
-        genre: genreName,
-        subgenre: card.subgenre || undefined,
-        country: card.country,
-      })
-    : {
-        theme,
-        displayGenre: "—",
-        leftLabel: "—",
-        rightLabel: card.subgenre ?? "—",
-      };
+  const resolved =
+    card.country || card.subgenre || genreName
+      ? resolveThemeSelection({
+          genre: genreName,
+          subgenre: card.subgenre || undefined,
+          country: card.country,
+        })
+      : {
+          theme,
+          displayGenre: "—",
+          leftLabel: "—",
+          rightLabel: card.subgenre ?? "—",
+        };
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
   const stripLeftBorder =
-    card.typeStripPrimaryBorder ?? resolved.typeStripPrimaryBorder ?? effectiveTheme.border;
+    card.typeStripPrimaryBorder ??
+    resolved.typeStripPrimaryBorder ??
+    effectiveTheme.border;
   const stripRightBorder =
-    card.typeStripSubBorder ?? resolved.typeStripSubBorder ?? effectiveTheme.border;
+    card.typeStripSubBorder ??
+    resolved.typeStripSubBorder ??
+    effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const pipLeftSymbol = card.country
@@ -161,8 +163,8 @@ export default function Card({
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
   const rightUsesCountryIdentity = Boolean(
     card.country &&
-      resolved.resolvedSubgenre &&
-      isCountrySubgenre(resolved.resolvedSubgenre),
+    resolved.resolvedSubgenre &&
+    isCountrySubgenre(resolved.resolvedSubgenre),
   );
   const pipRightSymbol =
     pipLeftSymbol && rightUsesCountryIdentity ? pipLeftSymbol : undefined;
@@ -176,7 +178,8 @@ export default function Card({
     (resolved.frameRotateR90 ?? effectiveTheme.frameRotateR90) && flagLayer,
   );
   const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
-  const worldFrameOpacity = resolved.frameOpacity ?? effectiveTheme.frameOpacity;
+  const worldFrameOpacity =
+    resolved.frameOpacity ?? effectiveTheme.frameOpacity;
   const flagStyle = card.flagStyle ?? resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? (card.fadeColor ?? resolved.fadeColor) : undefined;
@@ -215,10 +218,7 @@ export default function Card({
       const currentScale = titleScaleRef.current || 1;
       const naturalWidth = needed / currentScale;
       const ratio = available / naturalWidth;
-      const next =
-        ratio >= 1
-          ? 1
-          : Math.max(0.5, Math.min(1, ratio * 0.98));
+      const next = ratio >= 1 ? 1 : Math.max(0.66, Math.min(1, ratio * 0.98));
       if (Math.abs(next - currentScale) > 0.005) {
         titleScaleRef.current = next;
         setTitleScale(next);
@@ -431,9 +431,7 @@ export default function Card({
                   ? "100% 100%, 100% 100%, cover"
                   : "100% 100%, cover",
               backgroundPosition:
-                flagStyle === "fade"
-                  ? "0% 0%, 0% 0%, 0% 0%"
-                  : "0% 0%, 0% 0%",
+                flagStyle === "fade" ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
               backgroundRepeat: "no-repeat",
               backgroundClip:
                 flagStyle === "fade"
