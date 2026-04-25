@@ -232,6 +232,7 @@
   height: 9px;
   border-radius: 1px;
   background: var(--gc-border);
+  box-sizing: border-box;
   transform: rotate(45deg) translateY(1px);
   opacity: 0.9;
   flex-shrink: 0;

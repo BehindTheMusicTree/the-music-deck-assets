@@ -310,7 +310,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Type strip",
-                  "Parchment (#ede4cc); left side = genre diamond + genre name, right side = subgenre name + subgenre diamond. Both diamonds and the entire card chrome use the subgenre theme when one exists (see below).",
+                  "Parchment (#ede4cc); left side = genre diamond + genre name, right side = subgenre name + subgenre diamond. Both diamonds and the entire card chrome use the subgenre theme when one exists (see below). Very light diamonds get a subtle dark border for readability.",
                 ],
                 [
                   "Ability box",
@@ -341,6 +341,7 @@ export default function CardsPage() {
                 </div>
                 <div className="font-garamond text-muted leading-[1.5]">
                   If the card&apos;s subgenre matches a canonical entry in SUBGENRES (with a colour), a full theme is derived from that colour: header background, text, stat bars, glow, and border all follow the subgenre colour. The genre icon is inherited from the parent genre. Left diamond always shows the genre colour.{" "}
+                  Very light diamonds in the strip and in the Genre Themes table automatically receive a subtle dark border for contrast.{" "}
                   <a href="/genres#genre-themes" className="text-gold underline underline-offset-2 hover:text-white transition-colors">
                     Genre Themes →
                   </a>

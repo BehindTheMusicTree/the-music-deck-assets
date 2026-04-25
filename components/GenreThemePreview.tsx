@@ -20,6 +20,15 @@ const BASE_CARD: CardData = {
   artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
 };
 
+function isVeryLight(hex: string) {
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+  return luminance > 210;
+}
+
 export default function GenreThemePreview() {
   const [card, setCard] = useState<CardData>({ ...BASE_CARD });
   const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Rock);
@@ -85,7 +94,15 @@ export default function GenreThemePreview() {
                           setCard({ ...BASE_CARD, genre: name, subgenre: s.n });
                         }}
                       >
-                        <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ background: s.color }} />
+                        <div
+                          className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
+                          style={{
+                            background: s.color,
+                            border: isVeryLight(s.color)
+                              ? "1px solid rgba(20, 16, 10, 0.45)"
+                              : "none",
+                          }}
+                        />
                         <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{s.n}</span>
                         <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{s.ring}</span>
                         <span className="font-mono text-xs" style={{ color: "#8a7050" }}>{s.color}</span>

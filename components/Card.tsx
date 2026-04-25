@@ -84,6 +84,15 @@ function scoreGlowColor(power: number) {
   return `0 0 ${r}px rgba(200,160,64,${o})`;
 }
 
+function isVeryLight(hex: string) {
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+  return luminance > 210;
+}
+
 import {
   USA_FLAG_PATH,
   FLAG_BORDERS,
@@ -122,6 +131,8 @@ export default function Card({
     : theme;
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
   const stripRightBorder = card.typeStripSubBorder ?? effectiveTheme.border;
+  const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
+  const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const pipLeftSymbol = card.country ? FLAG_PIP_SYMBOL[card.country] : undefined;
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
   const pipRightSymbol = pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
@@ -193,7 +204,13 @@ export default function Card({
             ) : pipLeftFlagBg ? (
               <div className={styles.pip} style={{ backgroundImage: pipLeftFlagBg }} />
             ) : (
-              <div className={styles.pip} style={{ background: stripLeftBorder }} />
+              <div
+                className={styles.pip}
+                style={{
+                  background: stripLeftBorder,
+                  border: leftPipNeedsBorder ? "1px solid rgba(20, 16, 10, 0.45)" : "none",
+                }}
+              />
             )}
             <span className={styles.typeText}>{strip.left}</span>
           </div>
@@ -209,7 +226,13 @@ export default function Card({
             ) : pipRightFlagBg ? (
               <div className={styles.pip} style={{ backgroundImage: pipRightFlagBg }} />
             ) : (
-              <div className={styles.pip} style={{ background: stripRightBorder }} />
+              <div
+                className={styles.pip}
+                style={{
+                  background: stripRightBorder,
+                  border: rightPipNeedsBorder ? "1px solid rgba(20, 16, 10, 0.45)" : "none",
+                }}
+              />
             )}
           </div>
         </div>
