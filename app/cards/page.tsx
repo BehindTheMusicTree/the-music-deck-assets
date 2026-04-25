@@ -377,10 +377,8 @@ export default function CardsPage() {
     <>
       <CardSubTabs />
       <div className="px-6 py-10 flex flex-col items-center min-h-screen">
-        <div className="font-mono tracking-[3px] text-muted mb-2">05</div>
-        <div className="font-mono tracking-[2px] text-muted mb-4">
-          Card frame anatomy
-        </div>
+        <div className="page-index mb-2">05</div>
+        <div className="page-eyebrow mb-4">Card frame anatomy</div>
         <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
           THE <em className="text-gold not-italic">CARDS</em>
         </h2>
@@ -392,9 +390,7 @@ export default function CardsPage() {
 
         {/* Anatomy legend */}
         <div id="anatomy" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Frame Anatomy
-          </div>
+          <div className="section-title mb-5">Frame Anatomy</div>
           <div className="flex gap-12 items-start flex-wrap">
             <div
               style={{
@@ -456,9 +452,7 @@ export default function CardsPage() {
         </div>
 
         <div id="theme" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Theme
-          </div>
+          <div className="section-title mb-5">Theme</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 flex flex-col gap-4">
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -499,9 +493,7 @@ export default function CardsPage() {
             </div>
 
             <div>
-              <div className="font-mono text-[11px] tracking-[0.16em] text-gold uppercase mb-1.5">
-                Display conventions
-              </div>
+              <div className="section-label-accent mb-1.5">Display conventions</div>
               <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
                 <li>
                   Mainstream is displayed as Pop; pop-intensity subgenres also
@@ -518,9 +510,7 @@ export default function CardsPage() {
         </div>
 
         <div id="advantage-weakness" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Advantage &amp; Weakness
-          </div>
+          <div className="section-title mb-5">Advantage &amp; Weakness</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-4">
               In battles, genres form a matchup layer: each archetype is strong
@@ -530,18 +520,14 @@ export default function CardsPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <div className="font-mono text-[11px] tracking-[0.16em] text-gold uppercase mb-1.5">
-                  Advantage
-                </div>
+                <div className="section-label-accent mb-1.5">Advantage</div>
                 <p className="font-garamond text-muted leading-[1.6] m-0">
                   When your genre counters the opponent&apos;s genre, battle
                   modifiers favour you (see the battle rules for exact values).
                 </p>
               </div>
               <div>
-                <div className="font-mono text-[11px] tracking-[0.16em] text-gold uppercase mb-1.5">
-                  Weakness
-                </div>
+                <div className="section-label-accent mb-1.5">Weakness</div>
                 <p className="font-garamond text-muted leading-[1.6] m-0">
                   When your genre is weak against the opponent&apos;s genre, you
                   take the corresponding penalty — plan sideboard and tempo
@@ -571,9 +557,7 @@ export default function CardsPage() {
         </div>
 
         <div id="popularity" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Popularity
-          </div>
+          <div className="section-title mb-5">Popularity</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-3">
               Popularity is shown as a 1-9 award note instead of a bar.
@@ -609,9 +593,7 @@ export default function CardsPage() {
         </div>
 
         <div id="intensity" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Intensity
-          </div>
+          <div className="section-title mb-5">Intensity</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-3">
               Intensity replaces the old experimental gauge with four canonical levels.
@@ -653,9 +635,7 @@ export default function CardsPage() {
 
         {/* Rarity variants */}
         <div id="rarities" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Rarity Variants
-          </div>
+          <div className="section-title mb-5">Rarity Variants</div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {(["Common", "Rare", "Epic", "Legendary"] as const).map(
               (rarity) => (

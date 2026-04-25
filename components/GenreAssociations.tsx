@@ -89,9 +89,7 @@ function Pill({ label, color }: { label: string; color: string }) {
 export default function GenreAssociations() {
   return (
     <div id="associations" className="w-full max-w-[1000px] mx-auto px-6 pb-14">
-      <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
-        Associations
-      </div>
+      <div className="section-title mb-2">Associations</div>
       <p className="font-garamond italic text-muted leading-[1.5] mb-6 max-w-[600px]">
         Each genre carries inherent strengths, weaknesses, and the genres it
         tends to counter.

@@ -228,9 +228,7 @@ export default function GenreThemePreview() {
             );
           })}
 
-          <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mt-2 mb-1 opacity-70">
-            World Themes
-          </div>
+          <div className="section-title-sub mt-2 mb-1">World Themes</div>
           {Object.entries(WORLD_THEMES).map(([country, t]) => {
             const countrySubs = SUBGENRES.filter(
               (s) => s.kind === "country" && s.parentA === country,

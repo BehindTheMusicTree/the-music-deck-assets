@@ -14,10 +14,8 @@ const GENRES = [
 export default function CollectionPage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">
-      <div className="font-mono tracking-[3px] text-muted mb-2">04</div>
-      <div className="font-mono tracking-[2px] text-muted mb-4">
-        Your cards
-      </div>
+      <div className="page-index mb-2">04</div>
+      <div className="page-eyebrow mb-4">Your cards</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
         COLLEC<em className="text-gold not-italic">TION</em>
       </h2>

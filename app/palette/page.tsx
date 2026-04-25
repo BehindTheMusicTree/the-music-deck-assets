@@ -18,10 +18,8 @@ const tokens = [
 export default function PalettePage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">
-      <div className="font-mono tracking-[3px] text-muted mb-2">01</div>
-      <div className="font-mono tracking-[2px] text-muted mb-4">
-        Base design tokens
-      </div>
+      <div className="page-index mb-2">01</div>
+      <div className="page-eyebrow mb-4">Base design tokens</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
         COLOUR <em className="text-gold not-italic">PALETTE</em>
       </h2>

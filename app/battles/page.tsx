@@ -6,9 +6,7 @@ export default function BattlesPage() {
     <>
       <BattlesSubTabs />
       <div className="min-h-[calc(100vh-56px)] bg-bg px-6 py-12 sm:py-[60px] max-w-4xl mx-auto">
-        <div className="font-mono tracking-[3px] text-muted mb-4 uppercase text-sm">
-          Game
-        </div>
+        <div className="page-kicker mb-4">Game</div>
         <h1 className="font-cinzel text-3xl font-bold tracking-[4px] text-white mb-3">
           Battles
         </h1>
@@ -17,9 +15,7 @@ export default function BattlesPage() {
         </p>
 
         <div id="card-attributes" className="mb-8 max-w-[560px]">
-          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">
-            Card attributes
-          </div>
+          <div className="section-title mb-2">Card attributes</div>
           <p className="font-garamond text-muted leading-normal m-0 mb-3">
             Every playable card surfaces four values on the frame. Battle rules and
             card text refer to them when applying modifiers, checks, and resolution.
@@ -61,7 +57,7 @@ export default function BattlesPage() {
         </div>
 
         <div id="vibe" className="mb-8 max-w-[560px]">
-          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Vibe</div>
+          <div className="section-title mb-2">Vibe</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>
               The score is a single <span className="text-white">Vibe</span> gauge, not a detached number on its
@@ -80,7 +76,7 @@ export default function BattlesPage() {
         </div>
 
         <div className="mb-8 max-w-[560px]">
-          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-3">Vibe gauge (reference)</div>
+          <div className="section-title mb-3">Vibe gauge (reference)</div>
           <div className="flex items-center justify-between font-mono text-[10px] text-muted tracking-wide mb-1.5">
             <span>P1 100%</span>
             <span>P2 100%</span>
@@ -105,7 +101,7 @@ export default function BattlesPage() {
         </div>
 
         <div id="initialisation-phase" className="mb-8 max-w-[560px]">
-          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Initialisation phase</div>
+          <div className="section-title mb-2">Initialisation phase</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>Both players load one saved track list (exactly 60 cards).</li>
             <li>The game validates the list, then sets the Vibe gauge at 0 (neutral centre).</li>
@@ -114,7 +110,7 @@ export default function BattlesPage() {
         </div>
 
         <div id="turns" className="mb-8 max-w-[560px]">
-          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Game turns</div>
+          <div className="section-title mb-2">Game turns</div>
           <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
             <li>Each turn follows a fixed order: draw, play, resolve effects, then end phase.</li>
             <li>Stacks, synergies, and matchup modifiers are applied during effect resolution.</li>

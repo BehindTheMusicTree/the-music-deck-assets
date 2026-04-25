@@ -15,12 +15,10 @@ export default function GenresPage() {
     <>
       <GenreSubTabs />
       <div className="px-6 py-10 flex flex-col items-center">
-        <div id="overview" className="font-mono tracking-[3px] text-muted mb-2">
+        <div id="overview" className="page-index mb-2">
           02
         </div>
-        <div className="font-mono tracking-[2px] text-muted mb-4">
-          Genre colour system
-        </div>
+        <div className="page-eyebrow mb-4">Genre colour system</div>
         <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
           THE <em className="text-gold not-italic">GENRES</em>
         </h2>
@@ -32,9 +30,7 @@ export default function GenresPage() {
 
         <div className="w-full max-w-[860px] mt-6 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           <div className="px-[18px] pt-4 pb-3">
-            <div className="font-mono tracking-[2px] uppercase text-muted mb-1">
-              Intensity Scale
-            </div>
+            <div className="section-title mb-1">Intensity Scale</div>
             <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
               Each genre spans an intensity scale — from pop intensity to
               hardcore intensity.
@@ -43,9 +39,7 @@ export default function GenresPage() {
 
           {/* Spectrum row: Electronic */}
           <div className="px-[18px] pb-4">
-            <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mb-2 opacity-60">
-              Example — Electronic
-            </div>
+            <div className="section-title-sub mb-2">Example — Electronic</div>
             <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
               {[
                 { label: "Electropop", color: "#b8d4f0", text: "#0a1020" },
@@ -76,9 +70,7 @@ export default function GenresPage() {
         <div className="w-full max-w-[860px] mt-2 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           {/* Mix rule */}
           <div className="px-[18px] py-4">
-            <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mb-3 opacity-60">
-              Cross-genre colour mixing
-            </div>
+            <div className="section-title-sub mb-3">Cross-genre colour mixing</div>
             <div className="flex items-center gap-3 flex-wrap">
               {/* Metal swatch */}
               <div className="flex flex-col items-center gap-1">
@@ -130,9 +122,7 @@ export default function GenresPage() {
         </div>
 
         <div id="genre-intensity" className="w-full max-w-[1100px] mt-10 mb-10">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
-            Genre-level intensity
-          </div>
+          <div className="section-title mb-2">Genre-level intensity</div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[680px]">
             When a card has a subgenre, intensity comes from that subgenre. When
             there is no subgenre (genre-only card), intensity is taken from the
@@ -186,9 +176,7 @@ export default function GenresPage() {
         </div>
 
         <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
-            Genre Themes
-          </div>
+          <div className="section-title mb-2">Genre Themes</div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
             Each genre defines a full colour theme used across the card frame. You
             can preview a subgenre alone, a country or region alone, or combine a

@@ -39,3 +39,25 @@ html, body {
   font-size: 18px;
   line-height: 1.6;
 }
+
+/* Shared section / page chrome typography (use + Tailwind spacing utilities, e.g. mb-5) */
+@layer components {
+  .page-kicker {
+    @apply font-mono text-sm tracking-[3px] text-muted uppercase;
+  }
+  .page-index {
+    @apply font-mono text-sm tracking-[3px] text-muted;
+  }
+  .page-eyebrow {
+    @apply font-mono text-sm tracking-[2px] text-muted;
+  }
+  .section-title {
+    @apply font-mono text-xs tracking-[2px] text-muted uppercase;
+  }
+  .section-title-sub {
+    @apply font-mono text-[11px] tracking-[2px] text-muted uppercase opacity-60;
+  }
+  .section-label-accent {
+    @apply font-mono text-[11px] tracking-[2px] text-gold uppercase;
+  }
+}

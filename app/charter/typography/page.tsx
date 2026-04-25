@@ -1,10 +1,8 @@
 export default function TypographyPage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">
-      <div className="font-mono tracking-[3px] text-muted mb-2">03</div>
-      <div className="font-mono tracking-[2px] text-muted mb-4">
-        Type system
-      </div>
+      <div className="page-index mb-2">03</div>
+      <div className="page-eyebrow mb-4">Type system</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
         TYPO<em className="text-gold not-italic">GRAPHY</em>
       </h2>
@@ -16,9 +14,7 @@ export default function TypographyPage() {
       <div className="w-full max-w-[700px] flex flex-col gap-6">
         {/* Cinzel */}
         <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
-          <div className="font-mono tracking-[2px] text-muted mb-3">
-            CINZEL — TITLES
-          </div>
+          <div className="section-title mb-3">Cinzel — titles</div>
           <div className="font-cinzel text-[32px] tracking-[5px] text-white mb-4">
             THE MUSIC DECK
           </div>
@@ -26,7 +22,7 @@ export default function TypographyPage() {
             Genre · Navigation · Buttons
           </div>
           <div className="border-t border-ui-border pt-4">
-            <div className="font-mono text-muted mb-1.5">USAGE RULES</div>
+            <div className="section-title mb-1.5">Usage rules</div>
             <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Page titles, section headings, card headers</li>
               <li>Navigation labels and button text</li>
@@ -38,9 +34,7 @@ export default function TypographyPage() {
 
         {/* Cormorant Garamond */}
         <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
-          <div className="font-mono tracking-[2px] text-muted mb-3">
-            CORMORANT GARAMOND — BODY
-          </div>
+          <div className="section-title mb-3">Cormorant Garamond — body</div>
           <div className="font-garamond text-[22px] text-white mb-2 leading-[1.5]">
             A collectible card game built around music.
           </div>
@@ -49,7 +43,7 @@ export default function TypographyPage() {
             overlays a dotted pattern on the host genre&apos;s colour.
           </div>
           <div className="border-t border-ui-border pt-4">
-            <div className="font-mono text-muted mb-1.5">USAGE RULES</div>
+            <div className="section-title mb-1.5">Usage rules</div>
             <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Body text, card descriptions, tooltips, paragraphs</li>
               <li>Use italic for flavour text and secondary captions</li>
@@ -64,9 +58,7 @@ export default function TypographyPage() {
 
         {/* Space Mono */}
         <div className="bg-card border border-ui-border rounded px-7 pt-7 pb-6">
-          <div className="font-mono tracking-[2px] text-muted mb-3">
-            SPACE MONO — DATA
-          </div>
+          <div className="section-title mb-3">Space Mono — data</div>
           <div className="font-mono text-[20px] text-white mb-2 tracking-[1px]">
             #c8a040 · 120 BPM
           </div>
@@ -74,7 +66,7 @@ export default function TypographyPage() {
             LEGENDARY · STACK ×3 · +45%
           </div>
           <div className="border-t border-ui-border pt-4">
-            <div className="font-mono text-muted mb-1.5">USAGE RULES</div>
+            <div className="section-title mb-1.5">Usage rules</div>
             <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
               <li>Numeric data, scores, percentages, counters</li>
               <li>Section index labels (01, 02, 03…)</li>
