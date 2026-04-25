@@ -1,6 +1,6 @@
 const GENRES = [
   "Rock",
-  "Pop",
+  "Mainstream",
   "Jazz",
   "Hip-Hop",
   "Electronic",

@@ -156,12 +156,12 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     rarity: "Legendary",
     artwork: `${ART}artwork.example-bohemian-rhapsody-v2.png`,
   },
-  Pop: {
+  Mainstream: {
     id: 2,
     title: "Billie Jean",
     artist: "Michael Jackson",
     year: 1982,
-    genre: "Pop",
+    genre: "Mainstream",
     subgenre: "Disco Pop",
     ability: "Crossover",
     abilityDesc: "Gains +10 popularity when played after a dance track.",
@@ -299,7 +299,7 @@ export default function CardsPage() {
                 height: 600,
               }}
             >
-              <Card card={MOCK_CARDS.Pop} theme={APP_GENRE_THEMES.Pop} />
+              <Card card={MOCK_CARDS.Mainstream} theme={APP_GENRE_THEMES.Mainstream} />
             </div>
             <div className="flex flex-col gap-3 pt-2 flex-1">
               {[

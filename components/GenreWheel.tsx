@@ -90,7 +90,7 @@ function isLight(hex: string) {
 }
 
 function genreAngle(genre?: string) {
-  if (genre === "Pop") return -90;
+  if (genre === "Mainstream") return -90;
   const idx = GENRES.findIndex((g) => g.n === genre);
   return (idx / GENRES.length) * 360 - 90;
 }
@@ -148,7 +148,7 @@ export default function GenreWheel() {
         </defs>
 
 
-        {/* Pop text */}
+        {/* Mainstream text */}
         <circle
           cx={CX}
           cy={CY}
@@ -300,7 +300,7 @@ export default function GenreWheel() {
           const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
           return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
         })}
-        <Rect x={CX} y={CY} label="Pop" hex={GENRE_THEMES.Pop.border} />
+        <Rect x={CX} y={CY} label="Mainstream" hex={GENRE_THEMES.Mainstream.border} />
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {

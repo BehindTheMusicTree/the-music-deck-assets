@@ -6,7 +6,7 @@ import { COUNTRY_DATA } from "@/lib/countries";
 // ---------------------------------------------------------------------------
 export type GenreName =
   | "Rock"
-  | "Pop"
+  | "Mainstream"
   | "Electronic"
   | "Hip-Hop"
   | "Disco/Funk"
@@ -16,7 +16,7 @@ export type GenreName =
 
 export const GENRE_NAMES: GenreName[] = [
   "Rock",
-  "Pop",
+  "Mainstream",
   "Electronic",
   "Hip-Hop",
   "Disco/Funk",
@@ -27,7 +27,7 @@ export const GENRE_NAMES: GenreName[] = [
 
 export type AppGenreName =
   | "Rock"
-  | "Pop"
+  | "Mainstream"
   | "Electronic"
   | "Hip-Hop"
   | "Disco/Funk"
@@ -37,7 +37,7 @@ export type AppGenreName =
 
 export const APP_GENRE_NAMES: AppGenreName[] = [
   "Rock",
-  "Pop",
+  "Mainstream",
   "Electronic",
   "Hip-Hop",
   "Disco/Funk",
@@ -61,7 +61,7 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     barGlowExp: "rgba(184,24,40,.75)",
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><polygon points="9,1 6,8 9,8 5,15 12,6 8,6" fill="currentColor"/></svg>',
   },
-  Pop: {
+  Mainstream: {
     border: "#c0b8d0",
     headerBg: "#141218",
     textMain: "#e8e4f4",
@@ -142,7 +142,7 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
 
 export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
   Rock: GENRE_THEMES.Rock,
-  Pop: GENRE_THEMES.Pop,
+  Mainstream: GENRE_THEMES.Mainstream,
   Electronic: GENRE_THEMES.Electronic,
   "Hip-Hop": GENRE_THEMES["Hip-Hop"],
   "Disco/Funk": GENRE_THEMES["Disco/Funk"],
@@ -151,7 +151,7 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
   Vintage: GENRE_THEMES.Vintage,
 };
 
-// Wheel genre order (angular positions). Pop is the centre — not in this list.
+// Wheel genre order (angular positions). Mainstream is the centre — not in this list.
 export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
   { n: "Electronic", color: GENRE_THEMES.Electronic.border },

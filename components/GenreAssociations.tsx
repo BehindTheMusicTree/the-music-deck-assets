@@ -15,7 +15,7 @@ type Row = {
 
 const ROWS: Row[] = [
   {
-    genre: "Pop",
+    genre: "Mainstream",
     strengths: ["Early (low cost)"],
     weaknesses: ["Low power"],
     affinities: [
