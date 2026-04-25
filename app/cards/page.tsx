@@ -261,14 +261,24 @@ export default function CardsPage() {
     genreName?: string;
   }> = [
     {
-      key: "genre-subgenre-no-country",
-      title: "Genre-subgenre without country",
+      key: "genre-subgenre-pop",
+      title: "Genre-subgenre (pop intensity)",
       left: "Parent genre (displayed as Pop for Mainstream and pop-intensity).",
-      right: "Genre-subgenre.",
+      right: "Disco Pop.",
       border:
         "Border uses the subgenre-derived colour theme (no country flag layer).",
       card: MOCK_CARDS.Mainstream,
       theme: APP_GENRE_THEMES.Mainstream,
+    },
+    {
+      key: "genre-subgenre-non-pop",
+      title: "Genre-subgenre (non-pop intensity)",
+      left: "Parent genre.",
+      right: "House.",
+      border:
+        "Border uses the subgenre-derived colour theme (no country flag layer).",
+      card: MOCK_CARDS.Electronic,
+      theme: APP_GENRE_THEMES.Electronic,
     },
     {
       key: "country-subgenre",
@@ -279,23 +289,6 @@ export default function CardsPage() {
         "Border and full theme always come from the country/region theme.",
       card: WORLD_FLAG_CARDS[1],
       theme: worldThemeForCountry(WORLD_FLAG_CARDS[1].country!),
-    },
-    {
-      key: "country-plus-genre",
-      title: "Country/region + genre",
-      left: "Country/region.",
-      right: "Genre.",
-      border: "Border fades from country flag (left) to genre colour (right).",
-      card: {
-        ...MOCK_CARDS.Mainstream,
-        id: 9101,
-        title: "Genre + Country Preview",
-        country: "France",
-        subgenre: undefined,
-        flagStyle: undefined,
-      },
-      theme: worldThemeForCountry("France"),
-      genreName: "Mainstream",
     },
     {
       key: "country-plus-genre-subgenre",
