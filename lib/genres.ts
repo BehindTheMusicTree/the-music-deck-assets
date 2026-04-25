@@ -207,42 +207,41 @@ export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
 // ---------------------------------------------------------------------------
 // Subgenres (wheel data)
 // ---------------------------------------------------------------------------
-export type Ring = "pop" | "soft" | "experimental" | "hardcore";
+export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
 
 export interface Subgenre {
   n: string;
   color: string;
-  parent?: string;
-  parentA?: string;
+  parentA: GenreName;
   parentB?: string;
   t?: number;
   angleDelta?: number;
-  ring: Ring;
+  intensity: Intensity;
 }
 
 export const SUBGENRES: Subgenre[] = [
-  { n: "Electropop", color: "#e4ebff", parent: "Electronic", ring: "pop" },
-  { n: "Disco Pop", color: "#ffd6e8", parent: "Disco/Funk", ring: "pop" },
-  { n: "Pop Rock", color: "#f07080", parent: "Rock", ring: "soft" },
-  { n: "EDM", color: "#7090e8", parent: "Electronic", ring: "soft" },
-  { n: "R&B Soul", color: "#ffd060", parent: "Hip-Hop", ring: "soft" },
-  { n: "R&B", color: "#ffe94d", parent: "Hip-Hop", ring: "soft" },
-  { n: "Rap", color: "#c8960a", parent: "Hip-Hop", ring: "soft" },
-  { n: "Roots", color: "#5ab848", parent: "Reggae/Dub", ring: "soft" },
-  { n: "Disco", color: "#f0a0c0", parent: "Disco/Funk", ring: "soft" },
+  { n: "Electropop", color: "#e4ebff", parentA: "Electronic", intensity: "pop" },
+  { n: "Disco Pop", color: "#ffd6e8", parentA: "Disco/Funk", intensity: "pop" },
+  { n: "Pop Rock", color: "#f07080", parentA: "Rock", intensity: "soft" },
+  { n: "EDM", color: "#7090e8", parentA: "Electronic", intensity: "soft" },
+  { n: "R&B Soul", color: "#ffd060", parentA: "Hip-Hop", intensity: "soft" },
+  { n: "R&B", color: "#ffe94d", parentA: "Hip-Hop", intensity: "soft" },
+  { n: "Rap", color: "#c8960a", parentA: "Hip-Hop", intensity: "soft" },
+  { n: "Roots", color: "#5ab848", parentA: "Reggae/Dub", intensity: "soft" },
+  { n: "Disco", color: "#f0a0c0", parentA: "Disco/Funk", intensity: "soft" },
   {
     n: "Ska Punk",
     color: "#8a3018",
-    parent: "Rock",
+    parentA: "Rock",
     angleDelta: 14,
-    ring: "experimental",
+    intensity: "experimental",
   },
-  { n: "Dub", color: "#28b870", parent: "Reggae/Dub", ring: "experimental" },
+  { n: "Dub", color: "#28b870", parentA: "Reggae/Dub", intensity: "experimental" },
   {
     n: "Drum & Bass",
     color: "#3070c8",
-    parent: "Electronic",
-    ring: "experimental",
+    parentA: "Electronic",
+    intensity: "experimental",
   },
   {
     n: "Jungle",
@@ -250,47 +249,47 @@ export const SUBGENRES: Subgenre[] = [
     parentA: "Electronic",
     parentB: "Reggae/Dub",
     t: 0.34,
-    ring: "experimental",
+    intensity: "experimental",
   },
-  { n: "Techno", color: "#1a2e6a", parent: "Electronic", ring: "experimental" },
+  { n: "Techno", color: "#1a2e6a", parentA: "Electronic", intensity: "experimental" },
   {
     n: "House",
     color: "#4030a0",
     parentA: "Electronic",
     angleDelta: 12,
-    ring: "experimental",
+    intensity: "experimental",
   },
   {
     n: "Religious",
     color: "#888888",
-    parent: "Vintage",
+    parentA: "Vintage",
     angleDelta: -12,
-    ring: "experimental",
+    intensity: "experimental",
   },
   {
     n: "Anthem",
     color: "#5c2a0a",
-    parent: "Classical",
-    ring: "experimental",
+    parentA: "Classical",
+    intensity: "experimental",
   },
-  { n: "Jazz", color: "#7a5840", parent: "Vintage", ring: "experimental" },
+  { n: "Jazz", color: "#7a5840", parentA: "Vintage", intensity: "experimental" },
   {
     n: "Soul",
     color: "#9a8f60",
-    parent: "Vintage",
+    parentA: "Vintage",
     angleDelta: 12,
-    ring: "experimental",
+    intensity: "experimental",
   },
-  { n: "Metal", color: "#7a0810", parent: "Rock", ring: "hardcore" },
+  { n: "Metal", color: "#7a0810", parentA: "Rock", intensity: "hardcore" },
   {
     n: "Nu Metal",
     color: "#c86010",
-    parent: "Rock",
+    parentA: "Rock",
     angleDelta: -14,
-    ring: "hardcore",
+    intensity: "hardcore",
   },
-  { n: "Free Jazz", color: "#2a1a0e", parent: "Vintage", ring: "hardcore" },
-  { n: "Psytrance", color: "#0b1f5a", parent: "Electronic", ring: "hardcore" },
+  { n: "Free Jazz", color: "#2a1a0e", parentA: "Vintage", intensity: "hardcore" },
+  { n: "Psytrance", color: "#0b1f5a", parentA: "Electronic", intensity: "hardcore" },
 ];
 
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
@@ -302,12 +301,12 @@ export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
   if (!sub) {
     throw new Error(`Unknown canonical subgenre "${subgenre}"`);
   }
-  if (!sub.parent) {
+  if (sub.parentB) {
     throw new Error(
-      `Subgenre "${subgenre}" has no single canonical parent genre`,
+      `Subgenre "${subgenre}" has multiple canonical parent genres`,
     );
   }
-  return sub.parent as GenreName;
+  return sub.parentA;
 }
 
 export function appGenreFromSubgenre(subgenre: string): AppGenreName {

@@ -48,7 +48,7 @@ export default function GenreThemePreview() {
         {GENRE_NAMES.map((name) => {
           const t = GENRE_THEMES[name];
           const subs = SUBGENRES.filter(
-            (s) => s.parent === name || s.parentA === name || s.parentB === name,
+            (s) => s.parentA === name || s.parentB === name,
           );
 
           return (
@@ -85,8 +85,8 @@ export default function GenreThemePreview() {
                   {subs.map((s) => {
                     const d = subgenreTheme(s.color, t);
                     const parentLabel = s.parentB
-                      ? `${s.parentA ?? s.parent} + ${s.parentB}`
-                      : (s.parentA ?? s.parent ?? "—");
+                      ? `${s.parentA} + ${s.parentB}`
+                      : s.parentA;
                     return (
                       <button
                         key={s.n}
@@ -110,7 +110,7 @@ export default function GenreThemePreview() {
                         <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#8a7050" }}>
                           {parentLabel}
                         </span>
-                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{s.ring}</span>
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{s.intensity}</span>
                         <span className="font-mono text-xs" style={{ color: "#8a7050" }}>{s.color}</span>
                         <div className="flex items-center gap-1 ml-2 shrink-0">
                           {[d.headerBg, d.textMain, d.textBody].map((c, i) => (

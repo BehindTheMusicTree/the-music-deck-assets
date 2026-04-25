@@ -306,21 +306,20 @@ export default function GenreWheel() {
         {SUBGENRES.map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
-            const anchor = s.parentA ?? s.parent;
-            angle = genreAngle(anchor) + s.angleDelta;
+            angle = genreAngle(s.parentA) + s.angleDelta;
           } else if (s.parentA && s.parentB) {
             const aA = genreAngle(s.parentA);
             const aB = genreAngle(s.parentB);
             angle = aA + (aB - aA) * (s.t ?? 0.5);
           } else {
-            angle = genreAngle(s.parent);
+            angle = genreAngle(s.parentA);
           }
           const r =
-            s.ring === "pop"
+            s.intensity === "pop"
               ? R_POP_SUBGENRES
-              : s.ring === "soft"
+              : s.intensity === "soft"
                 ? R_SOFT_SUBGENRES
-                : s.ring === "hardcore"
+                : s.intensity === "hardcore"
                   ? R_HARDCORE_SUBGENRES
                   : R_EXPERIMENTAL_SUBGENRES;
           const { x, y } = polarToXY(CX, CY, r, angle);
