@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { GENRE_NAMES, GENRE_THEMES, SUBGENRES, subgenreTheme } from "@/lib/genres";
+import {
+  GENRE_NAMES,
+  GENRE_THEMES,
+  SUBGENRES,
+  WORLD_THEMES,
+  subgenreTheme,
+} from "@/lib/genres";
 import type { GenreName } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
@@ -18,6 +24,13 @@ const BASE_CARD: CardData = {
   exp: 60,
   rarity: "Epic",
   artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
+};
+
+const WORLD_SUBGENRE_BY_COUNTRY: Record<string, string> = {
+  USA: "Country",
+  France: "French Variety",
+  Bretagne: "Folk Breton",
+  Spain: "Country",
 };
 
 function isVeryLight(hex: string) {
@@ -39,10 +52,10 @@ export default function GenreThemePreview() {
   ];
 
   return (
-    <div className="w-full overflow-x-auto pb-2">
-      <div className="flex gap-8 items-start min-w-[980px]">
+    <div className="w-full overflow-x-auto md:overflow-visible pb-2">
+      <div className="flex gap-8 items-start min-w-[980px] md:min-w-0">
         {/* Sticky card preview */}
-        <div className="sticky top-[104px] shrink-0 flex flex-col items-center gap-2">
+        <div className="shrink-0 flex flex-col items-center gap-2 self-start md:sticky md:top-[104px]">
           <div className="sm:hidden">
             <Card card={card} theme={theme} small genreName={selectedGenre} />
           </div>
@@ -139,6 +152,50 @@ export default function GenreThemePreview() {
               </div>
             );
           })}
+
+          <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mt-2 mb-1 opacity-70">
+            World Themes
+          </div>
+          {Object.entries(WORLD_THEMES).map(([country, t]) => (
+            <div
+              key={country}
+              className="border border-ui-border rounded-[6px] overflow-hidden"
+            >
+              <button
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
+                style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
+                onClick={() => {
+                  setTheme(t);
+                  setSelectedGenre(country as GenreName);
+                  setCard({
+                    ...BASE_CARD,
+                    country,
+                    subgenre: WORLD_SUBGENRE_BY_COUNTRY[country] ?? "Country",
+                  });
+                }}
+              >
+                <span
+                  className="shrink-0"
+                  dangerouslySetInnerHTML={{
+                    __html: t.icon.replace(/currentColor/g, t.border),
+                  }}
+                />
+                <span
+                  className="font-cinzel text-sm tracking-[2px]"
+                  style={{ color: "#2e2010" }}
+                >
+                  {country}
+                </span>
+                <span
+                  className="font-mono text-[10px] tracking-wide uppercase ml-auto"
+                  style={{ color: "#8a7050" }}
+                >
+                  Country / Region
+                </span>
+                <div className="w-3 h-3 rounded-[2px] border border-black/10 shrink-0" style={{ background: t.border }} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
