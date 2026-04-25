@@ -425,6 +425,10 @@ export default function CardsPage() {
                   "Parchment (#ede4cc); left side = genre diamond + genre name, right side = subgenre name + subgenre diamond. Both diamonds and the entire card chrome use the subgenre theme when one exists (see below). Very light diamonds get a subtle dark border for readability.",
                 ],
                 [
+                  "Matchup strip",
+                  "Same parchment base and clipped shape as the type strip, directly beneath it. Left half has a reddish wash and lists genres this card is weak against (name + colour diamond per target). Right half has a greenish wash and lists genres it has an advantage against. Data is canonical in lib/genres.ts (GENRE_BATTLE_MATCHUP). Pure world cards (no resolved genre) show an em dash on each side.",
+                ],
+                [
                   "Ability box",
                   "Parchment (#f4edd8) — ability name and flavour description",
                 ],

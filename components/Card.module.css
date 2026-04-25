@@ -192,6 +192,7 @@
 
 /* Panels above artwork */
 .typeStrip,
+.matchupStrip,
 .ability,
 .stats,
 .footer {
@@ -239,6 +240,87 @@
   flex: 1;
   justify-content: flex-end;
 }
+
+/* Matchup strip — below type strip: weak (reddish left), advantage (greenish right) */
+.matchupStrip {
+  margin: 0 4px 4px;
+  display: flex;
+  flex-shrink: 0;
+  min-height: 22px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+  clip-path: polygon(
+    8px 0%,
+    calc(100% - 8px) 0%,
+    100% 50%,
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0% 50%
+  );
+}
+.matchupHalf {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 5px;
+  padding: 4px 5px;
+}
+.matchupWeak {
+  background:
+    linear-gradient(145deg, rgba(140, 36, 36, 0.42), rgba(90, 22, 22, 0.28)),
+    #e8dcc8;
+}
+.matchupAdv {
+  background:
+    linear-gradient(145deg, rgba(32, 110, 72, 0.4), rgba(48, 130, 88, 0.28)),
+    #e8dcc8;
+}
+.matchupCluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.matchupName {
+  font-family: "Cinzel", serif;
+  font-size: 6.5px;
+  letter-spacing: 0.6px;
+  color: #2a1c10;
+  line-height: 1;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.matchupNameSm {
+  font-size: 5.5px;
+  letter-spacing: 0.45px;
+  max-width: 58px;
+}
+.matchupPip {
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
+  box-sizing: border-box;
+  transform: rotate(45deg) translateY(0.5px);
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+.matchupPipSm {
+  width: 6px;
+  height: 6px;
+}
+.matchupEmpty {
+  font-family: "Space Mono", monospace;
+  font-size: 7px;
+  letter-spacing: 0.5px;
+  color: rgba(46, 32, 16, 0.45);
+}
+.matchupEmptySm {
+  font-size: 6px;
+}
+
 .pip {
   width: 9px;
   height: 9px;

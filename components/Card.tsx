@@ -3,9 +3,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
 import {
+  type AppGenreName,
   isCountrySubgenre,
-  subgenreIntensity,
+  matchupGenreDisplayLabel,
+  matchupTargetDiamondColor,
+  matchupTargetsForAppGenre,
   resolveThemeSelection,
+  subgenreIntensity,
 } from "@/lib/genres";
 
 export interface CardData {
@@ -202,6 +206,9 @@ export default function Card({
         };
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
+  const matchup = matchupTargetsForAppGenre(
+    resolved.resolvedGenre as AppGenreName | undefined,
+  );
   const stripLeftBorder =
     card.typeStripPrimaryBorder ??
     resolved.typeStripPrimaryBorder ??
@@ -406,6 +413,78 @@ export default function Card({
                     : "none",
                 }}
               />
+            )}
+          </div>
+        </div>
+
+        {/* Matchup strip — weak (left, reddish), advantage (right, greenish) */}
+        <div
+          className={styles.matchupStrip}
+          role="group"
+          aria-label="Genre weak matchups and strong matchups"
+        >
+          <div className={`${styles.matchupHalf} ${styles.matchupWeak}`}>
+            {matchup.weakVs.length === 0 ? (
+              <span
+                className={`${styles.matchupEmpty} ${small ? styles.matchupEmptySm : ""}`}
+              >
+                —
+              </span>
+            ) : (
+              matchup.weakVs.map((name) => {
+                const color = matchupTargetDiamondColor(name);
+                const pipLight = isVeryLight(color);
+                return (
+                  <span key={`weak-${name}`} className={styles.matchupCluster}>
+                    <span
+                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
+                    >
+                      {matchupGenreDisplayLabel(name)}
+                    </span>
+                    <span
+                      className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
+                      style={{
+                        background: color,
+                        border: pipLight
+                          ? "1px solid rgba(20, 16, 10, 0.45)"
+                          : "none",
+                      }}
+                    />
+                  </span>
+                );
+              })
+            )}
+          </div>
+          <div className={`${styles.matchupHalf} ${styles.matchupAdv}`}>
+            {matchup.advantageVs.length === 0 ? (
+              <span
+                className={`${styles.matchupEmpty} ${small ? styles.matchupEmptySm : ""}`}
+              >
+                —
+              </span>
+            ) : (
+              matchup.advantageVs.map((name) => {
+                const color = matchupTargetDiamondColor(name);
+                const pipLight = isVeryLight(color);
+                return (
+                  <span key={`adv-${name}`} className={styles.matchupCluster}>
+                    <span
+                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
+                    >
+                      {matchupGenreDisplayLabel(name)}
+                    </span>
+                    <span
+                      className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
+                      style={{
+                        background: color,
+                        border: pipLight
+                          ? "1px solid rgba(20, 16, 10, 0.45)"
+                          : "none",
+                      }}
+                    />
+                  </span>
+                );
+              })
             )}
           </div>
         </div>

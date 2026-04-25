@@ -1,4 +1,4 @@
-import { GENRE_THEMES } from "@/lib/genres";
+import { GENRE_BATTLE_MATCHUP, GENRE_THEMES, type GenreName } from "@/lib/genres";
 
 const GENRE_COLOR: Record<string, string> = Object.fromEntries(
   Object.entries(GENRE_THEMES).map(([name, theme]) => [name, theme.border]),
@@ -12,6 +12,14 @@ type Row = {
   advantageVs: string[];
   weakVs: string[];
 };
+
+function battleMatchupColumns(genre: GenreName): Pick<Row, "advantageVs" | "weakVs"> {
+  const m = GENRE_BATTLE_MATCHUP[genre];
+  return {
+    advantageVs: [...m.advantageVs],
+    weakVs: [...m.weakVs],
+  };
+}
 
 const ROWS: Row[] = [
   {
@@ -27,64 +35,56 @@ const ROWS: Row[] = [
       "Classical",
       "Vintage",
     ],
-    advantageVs: [],
-    weakVs: [],
+    ...battleMatchupColumns("Mainstream"),
   },
   {
     genre: "Rock",
     strengths: ["High attack", "Crowd energy", "Versatile tempo"],
     weaknesses: ["Low subtlety", "Weak in solo play"],
     affinities: ["Metal", "Vintage"],
-    advantageVs: ["Classical", "Reggae/Dub"],
-    weakVs: ["Disco/Funk", "Vintage"],
+    ...battleMatchupColumns("Rock"),
   },
   {
     genre: "Electronic",
     strengths: ["Precision timing", "Layer stacking", "Range control"],
     weaknesses: ["Low warmth", "Fragile live feel"],
     affinities: ["Hip-Hop", "Disco/Funk"],
-    advantageVs: ["Vintage", "Classical"],
-    weakVs: ["Hip-Hop", "Metal"],
+    ...battleMatchupColumns("Electronic"),
   },
   {
     genre: "Hip-Hop",
     strengths: ["Rhythm dominance", "Sample leverage", "Cultural reach"],
     weaknesses: ["Narrow tonal range", "Low melodic depth"],
     affinities: ["Electronic", "Disco/Funk"],
-    advantageVs: ["Classical", "Metal"],
-    weakVs: ["Classical", "Vintage"],
+    ...battleMatchupColumns("Hip-Hop"),
   },
   {
     genre: "Disco/Funk",
     strengths: ["Groove power", "Combo chaining", "Dance multiplier"],
     weaknesses: ["Low aggression", "Era-locked feel"],
     affinities: ["Hip-Hop", "Electronic"],
-    advantageVs: ["Metal", "Rock"],
-    weakVs: ["Classical", "Metal"],
+    ...battleMatchupColumns("Disco/Funk"),
   },
   {
     genre: "Reggae/Dub",
     strengths: ["Tempo control", "Defence bonus", "Vibration depth"],
     weaknesses: ["Low burst damage", "Slow build"],
     affinities: ["Vintage", "Disco/Funk"],
-    advantageVs: ["Rock", "Metal"],
-    weakVs: ["Electronic", "Classical"],
+    ...battleMatchupColumns("Reggae/Dub"),
   },
   {
     genre: "Classical",
     strengths: ["Harmonic complexity", "Sustained power", "Prestige bonus"],
     weaknesses: ["Slow ramp", "Low crowd energy"],
     affinities: ["Vintage", "Electronic"],
-    advantageVs: ["Hip-Hop", "Disco/Funk"],
-    weakVs: ["Rock", "Electronic"],
+    ...battleMatchupColumns("Classical"),
   },
   {
     genre: "Vintage",
     strengths: ["Nostalgia bonus", "Wide affinity pool", "Authenticity"],
     weaknesses: ["Low tech ceiling", "Era vulnerability"],
     affinities: ["Rock", "Classical", "Reggae/Dub"],
-    advantageVs: ["Electronic", "Hip-Hop"],
-    weakVs: ["Rock", "Metal"],
+    ...battleMatchupColumns("Vintage"),
   },
 ];
 

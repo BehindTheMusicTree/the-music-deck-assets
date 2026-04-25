@@ -167,6 +167,55 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
   Vintage: GENRE_THEMES.Vintage,
 };
 
+/** Weak vs / Advantage vs targets (canonical; aligns with Genres — Associations). */
+export const GENRE_BATTLE_MATCHUP: Record<
+  GenreName,
+  { readonly advantageVs: readonly string[]; readonly weakVs: readonly string[] }
+> = {
+  Mainstream: { advantageVs: [], weakVs: [] },
+  Rock: {
+    advantageVs: ["Classical", "Reggae/Dub"],
+    weakVs: ["Disco/Funk", "Vintage"],
+  },
+  Electronic: {
+    advantageVs: ["Vintage", "Classical"],
+    weakVs: ["Hip-Hop", "Metal"],
+  },
+  "Hip-Hop": {
+    advantageVs: ["Classical", "Metal"],
+    weakVs: ["Classical", "Vintage"],
+  },
+  "Disco/Funk": {
+    advantageVs: ["Metal", "Rock"],
+    weakVs: ["Classical", "Metal"],
+  },
+  "Reggae/Dub": {
+    advantageVs: ["Rock", "Metal"],
+    weakVs: ["Electronic", "Classical"],
+  },
+  Classical: {
+    advantageVs: ["Hip-Hop", "Disco/Funk"],
+    weakVs: ["Rock", "Electronic"],
+  },
+  Vintage: {
+    advantageVs: ["Electronic", "Hip-Hop"],
+    weakVs: ["Rock", "Metal"],
+  },
+};
+
+export function matchupTargetsForAppGenre(
+  genre: AppGenreName | undefined,
+): { advantageVs: string[]; weakVs: string[] } {
+  if (!genre) return { advantageVs: [], weakVs: [] };
+  const key = genre === "Roots" ? "Reggae/Dub" : genre;
+  const row = GENRE_BATTLE_MATCHUP[key as GenreName];
+  if (!row) return { advantageVs: [], weakVs: [] };
+  return {
+    advantageVs: [...row.advantageVs],
+    weakVs: [...row.weakVs],
+  };
+}
+
 // Wheel genre order (angular positions). Mainstream is the centre — not in this list.
 export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
@@ -454,6 +503,21 @@ export function subgenreIntensity(subgenre: string): Intensity {
     throw new Error(`Unknown canonical subgenre "${subgenre}"`);
   }
   return sub.intensity;
+}
+
+export function matchupTargetDiamondColor(name: string): string {
+  if (name in GENRE_THEMES) {
+    return GENRE_THEMES[name as GenreName].border;
+  }
+  const sub = SUBGENRE_BY_NAME[name];
+  if (sub?.color) return sub.color;
+  throw new Error(`Unknown matchup target "${name}"`);
+}
+
+export function matchupGenreDisplayLabel(name: string): string {
+  if (name === "Mainstream") return "Pop";
+  if (name === "Reggae/Dub") return "Roots";
+  return name;
 }
 
 export function canonicalCountryFromSubgenre(subgenre: string): string {
