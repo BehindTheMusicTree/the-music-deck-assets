@@ -249,7 +249,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
 };
 
 export default function CardsPage() {
-  const genreEntries = Object.entries(MOCK_CARDS) as [AppGenreName, CardData][];
   const themeRuleExamples: Array<{
     key: string;
     title: string;
@@ -289,6 +288,16 @@ export default function CardsPage() {
         "Border and full theme always come from the country/region theme.",
       card: WORLD_FLAG_CARDS[0],
       theme: worldThemeForCountry(WORLD_FLAG_CARDS[0].country!),
+    },
+    {
+      key: "region-subgenre",
+      title: "Country/region (region example)",
+      left: "Country/region.",
+      right: "Country-subgenre.",
+      border:
+        "Border and full theme always come from the region theme (same rule as country-subgenre).",
+      card: WORLD_FLAG_CARDS[2],
+      theme: worldThemeForCountry(WORLD_FLAG_CARDS[2].country!),
     },
     {
       key: "country-plus-genre",
@@ -464,133 +473,6 @@ export default function CardsPage() {
                 </li>
               </ul>
             </div>
-          </div>
-        </div>
-
-        {/* All genre variants */}
-        <div id="genre-variants" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Genre Variants
-          </div>
-          <div className="flex flex-wrap gap-6">
-            {genreEntries.map(([genre, card]) => (
-              <div key={genre} className="flex flex-col items-center gap-2">
-                <Card card={card} theme={APP_GENRE_THEMES[genre]} />
-                <div className="font-mono tracking-[1px] text-muted">
-                  {genre.toUpperCase()}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* World — by country */}
-        <div id="world" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
-            World — Flags (landscape on border)
-          </div>
-          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
-            World cards represent a country or region rather than a global
-            genre. The flag is laid in landscape and wrapped around the border,
-            rendered with a tarnished finish so it reads as a worn print rather
-            than a digital swatch.
-          </p>
-          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-8 pl-0 list-none flex flex-col gap-1">
-            <li>
-              <span className="text-white">Genre</span> — country or region name{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (e.g. USA, Bretagne)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Subgenre</span> — local music style{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (e.g. Country, Polyphonie, Schlager)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Left diamond</span> — symbol or
-              colour representing the country or region flag{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (typeStripPrimaryBorder)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Right diamond</span> — repeats the
-              left symbol, indicating the subgenre is native to the region
-            </li>
-          </ul>
-
-          <div className="flex flex-wrap gap-6 mb-12">
-            {WORLD_FLAG_CARDS.map((card) => (
-              <div key={card.id} className="flex flex-col items-center gap-2">
-                <Card card={card} theme={worldThemeForCountry(card.country!)} />
-                <div className="font-mono tracking-[1px] text-muted">
-                  {card.country!.toUpperCase()}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-3">
-            Mixed World / Genre border
-          </div>
-          <p className="font-garamond italic text-muted leading-[1.5] max-w-[640px] mt-0 mb-3">
-            When a card belongs to a specific country <em>and</em> a global
-            genre (e.g. Ska Punk from Spain), the border transitions from the
-            country flag on the left to the genre colour on the right. The flag
-            is laid in landscape (rotated 90°); the genre colour bleeds in over
-            a short central fade zone.
-          </p>
-          <ul className="font-garamond text-muted leading-[1.6] max-w-[640px] mb-5 pl-0 list-none flex flex-col gap-1">
-            <li>
-              <span className="text-white">Genre</span> — country or region name{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (e.g. Spain)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Subgenre</span> — global music genre{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (e.g. Ska Punk)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Left diamond</span> — colour
-              represents the country flag{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (typeStripPrimaryBorder)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Right diamond</span> — colour
-              represents the genre{" "}
-              <span className="font-mono text-xs tracking-wide">
-                (typeStripSubBorder)
-              </span>
-            </li>
-            <li>
-              <span className="text-white">Border left</span> — country flag in
-              landscape, tarnished finish
-            </li>
-            <li>
-              <span className="text-white">Border right</span> — genre colour
-              fades in over the flag
-            </li>
-            <li>
-              <span className="text-white">Transition</span> — short fade
-              centred on the middle of the card
-            </li>
-          </ul>
-          <div className="flex flex-wrap gap-6">
-            {WORLD_MIXED_CARDS.map((card) => (
-              <div key={card.id} className="flex flex-col items-center gap-2">
-                <Card card={card} theme={worldThemeForCountry(card.country!)} />
-                <div className="font-mono tracking-[1px] text-muted">
-                  {card.country!.toUpperCase()}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
 
