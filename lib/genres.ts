@@ -505,6 +505,14 @@ export function subgenreIntensity(subgenre: string): Intensity {
   return sub.intensity;
 }
 
+export function appGenreIntensity(genre: AppGenreName): Intensity {
+  if (!(genre in APP_GENRE_THEMES)) {
+    throw new Error(`Unknown app genre "${genre}"`);
+  }
+  // Canonical rule: a genre-level card uses pop intensity.
+  return "pop";
+}
+
 export function matchupTargetDiamondColor(name: string): string {
   if (name in GENRE_THEMES) {
     return GENRE_THEMES[name as GenreName].border;

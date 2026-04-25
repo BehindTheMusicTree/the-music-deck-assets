@@ -10,6 +10,7 @@ import {
 import styles from "./Card.module.css";
 import {
   type AppGenreName,
+  appGenreIntensity,
   isCountrySubgenre,
   matchupGenreDisplayLabel,
   matchupTargetDiamondColor,
@@ -374,7 +375,7 @@ export default function Card({
                 className={styles.pipFlag}
                 style={{
                   backgroundImage: pipLeftFlagBg,
-                  backgroundSize: "160% 160%",
+                  backgroundSize: "100% 160%",
                   backgroundPosition: "center",
                   border: "1px solid rgba(20, 16, 10, 0.35)",
                 }}
@@ -409,7 +410,7 @@ export default function Card({
                 className={styles.pipFlag}
                 style={{
                   backgroundImage: pipRightFlagBg,
-                  backgroundSize: "160% 160%",
+                  backgroundSize: "100% 160%",
                   backgroundPosition: "center",
                   border: "1px solid rgba(20, 16, 10, 0.35)",
                 }}
@@ -531,7 +532,9 @@ export default function Card({
                 resolved.resolvedSubgenre ?? card.subgenre;
               const level = intensitySubgenre
                 ? subgenreIntensity(intensitySubgenre)
-                : undefined;
+                : resolved.resolvedGenre
+                  ? appGenreIntensity(resolved.resolvedGenre as AppGenreName)
+                  : undefined;
               const idx = level ? intensityIndex(level) : null;
               const pct = idx ? (idx / 4) * 100 : 0;
               return (

@@ -63,7 +63,7 @@ function CountryDiamond({ country }: { country: string }) {
       className="w-3 h-3 shrink-0 rounded-[1px] box-border border border-black/10 -rotate-90"
       style={{
         backgroundImage: flagBg ?? "none",
-        backgroundSize: "160% 160%",
+        backgroundSize: "100% 160%",
         backgroundPosition: "center",
         clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
       }}
