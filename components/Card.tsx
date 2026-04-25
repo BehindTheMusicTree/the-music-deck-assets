@@ -57,8 +57,9 @@ const RARITY_ICON: Record<string, string> = {
 };
 
 const STRIP_NAME_FOR_GENRE: Record<string, string> = {
+  Pop: "Pop",
   Rock: "Rock",
-  Mainstream: "Mainstream",
+  Mainstream: "Pop",
   Electronic: "Electronic",
   "Reggae/Dub": "Reggae/Dub",
   HipHop: "Hip-hop",

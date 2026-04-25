@@ -513,6 +513,10 @@ function toAppGenre(genre: ResolvableGenre): AppGenreName {
   return canonical === "Reggae/Dub" ? "Roots" : canonical;
 }
 
+function displayGenreLabel(genre: AppGenreName): string {
+  return genre === "Mainstream" ? "Pop" : genre;
+}
+
 export function resolveThemeSelection({
   genre,
   subgenre,
@@ -584,7 +588,7 @@ export function resolveThemeSelection({
     return {
       theme: resolvedTheme,
       displayGenre: appGenre,
-      leftLabel: appGenre,
+      leftLabel: def.intensity === "pop" ? "Pop" : displayGenreLabel(appGenre),
       rightLabel: subgenre,
       resolvedGenre: appGenre,
       resolvedSubgenre: subgenre,
@@ -601,7 +605,7 @@ export function resolveThemeSelection({
     theme: resolvedTheme,
     displayGenre: country,
     leftLabel: country,
-    rightLabel: appGenre,
+    rightLabel: displayGenreLabel(appGenre),
     resolvedCountry: country,
     resolvedGenre: appGenre,
     flagStyle: "fade",

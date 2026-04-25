@@ -158,7 +158,9 @@ export default function GenreThemePreview() {
                     className="shrink-0"
                     dangerouslySetInnerHTML={{ __html: t.icon.replace(/currentColor/g, t.border) }}
                   />
-                  <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>{name}</span>
+                  <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>
+                    {name === "Mainstream" ? "Pop" : name}
+                  </span>
                   <div className="flex items-center gap-2 ml-auto">
                     {([["border", t.border], ["header", t.headerBg], ["text", t.textMain], ["muted", t.textBody]] as [string, string][]).map(([lbl, val]) => (
                       <div key={lbl} className="flex items-center gap-1" title={`${lbl}: ${val}`}>
@@ -178,7 +180,9 @@ export default function GenreThemePreview() {
                       const d = subgenreTheme(s.color, t);
                       const parentLabel = s.parentB
                         ? `${s.parentA} + ${s.parentB}`
-                        : s.parentA;
+                        : s.intensity === "pop"
+                          ? "Pop"
+                          : s.parentA;
                       return (
                         <button
                           key={s.n}
