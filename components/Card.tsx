@@ -31,6 +31,11 @@ export interface CardData {
 
 export interface GenreTheme {
   border: string;
+  frameBorder?: string;
+  frameBg?: string;
+  frameRotateR90?: boolean;
+  frameFilter?: string;
+  frameOpacity?: number;
   headerBg: string;
   textMain: string;
   textBody: string;
@@ -94,11 +99,8 @@ function isVeryLight(hex: string) {
 
 import {
   USA_FLAG_PATH,
-  FLAG_BORDERS,
-  FLAG_BG,
   FLAG_PIP_SYMBOL,
   FLAG_PIP_BG,
-  FLAG_ROTATE_R90,
 } from "@/lib/countries";
 
 function CardArtwork({ card }: { card: CardData }) {
@@ -169,9 +171,11 @@ export default function Card({
     pipLeftFlagBg && rightUsesCountryIdentity ? pipLeftFlagBg : undefined;
 
   const country = card.country;
-  const flagLayer = country ? FLAG_BORDERS[country] : undefined;
-  const flagUsR90 = country && FLAG_ROTATE_R90.has(country) && flagLayer;
-  const flagBg = country ? FLAG_BG[country] : undefined;
+  const flagLayer = effectiveTheme.frameBorder;
+  const flagBg = effectiveTheme.frameBg;
+  const flagUsR90 = Boolean(effectiveTheme.frameRotateR90 && flagLayer);
+  const worldFrameFilter = effectiveTheme.frameFilter;
+  const worldFrameOpacity = effectiveTheme.frameOpacity;
   const flagStyle = card.flagStyle ?? resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? (card.fadeColor ?? resolved.fadeColor) : undefined;
@@ -418,7 +422,7 @@ export default function Card({
     ) : flagUsR90 ? (
       <div className={styles.cardShell}>
         <div
-          className={`${styles.cardFlagUsR90} ${styles.cardWorldFlagTarnish}`}
+          className={styles.cardFlagUsR90}
           aria-hidden
           style={
             {
@@ -442,6 +446,8 @@ export default function Card({
                   ? "padding-box, border-box, border-box"
                   : "padding-box, border-box",
               border: "10px solid transparent",
+              filter: worldFrameFilter,
+              opacity: worldFrameOpacity,
             } as React.CSSProperties
           }
         />
@@ -452,12 +458,14 @@ export default function Card({
     ) : flagFlatShell ? (
       <div className={styles.cardShell}>
         <div
-          className={`${styles.cardFlagFlat} ${styles.cardWorldFlagTarnish}`}
+          className={styles.cardFlagFlat}
           aria-hidden
           style={
             {
               background: `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
               border: "10px solid transparent",
+              filter: worldFrameFilter,
+              opacity: worldFrameOpacity,
             } as React.CSSProperties
           }
         />

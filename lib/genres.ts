@@ -577,8 +577,16 @@ export function resolveThemeSelection({
     const resolvedTheme = subgenreTheme(def.color, APP_GENRE_THEMES[appGenre]);
 
     if (country) {
+      const countryFrameTheme = countryTheme!;
       return {
-        theme: resolvedTheme,
+        theme: {
+          ...resolvedTheme,
+          frameBorder: countryFrameTheme.frameBorder,
+          frameBg: countryFrameTheme.frameBg,
+          frameRotateR90: countryFrameTheme.frameRotateR90,
+          frameFilter: countryFrameTheme.frameFilter,
+          frameOpacity: countryFrameTheme.frameOpacity,
+        },
         displayGenre: country,
         leftLabel: country,
         rightLabel: subgenre,
@@ -609,8 +617,16 @@ export function resolveThemeSelection({
 
   const appGenre = toAppGenre(genre!);
   const resolvedTheme = APP_GENRE_THEMES[appGenre];
+  const countryFrameTheme = countryTheme!;
   return {
-    theme: resolvedTheme,
+    theme: {
+      ...resolvedTheme,
+      frameBorder: countryFrameTheme.frameBorder,
+      frameBg: countryFrameTheme.frameBg,
+      frameRotateR90: countryFrameTheme.frameRotateR90,
+      frameFilter: countryFrameTheme.frameFilter,
+      frameOpacity: countryFrameTheme.frameOpacity,
+    },
     displayGenre: country,
     leftLabel: country,
     rightLabel: displayGenreLabel(appGenre),
