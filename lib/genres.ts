@@ -15,8 +15,8 @@ export type GenreName =
   | "Vintage";
 
 export const GENRE_NAMES: GenreName[] = [
-  "Rock",
   "Mainstream",
+  "Rock",
   "Electronic",
   "Hip-Hop",
   "Disco/Funk",

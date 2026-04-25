@@ -118,20 +118,24 @@ export default function Card({
   card,
   theme,
   small,
+  genreName,
 }: {
   card: CardData;
   theme: GenreTheme;
   small?: boolean;
+  genreName?: string;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
-  const derivedGenre = card.country
-    ? card.country
-    : card.subgenre
-      ? appGenreFromSubgenre(card.subgenre)
-      : "—";
+  const derivedGenre =
+    genreName ??
+    (card.country
+      ? card.country
+      : card.subgenre
+        ? appGenreFromSubgenre(card.subgenre)
+        : "—");
   const strip = getTypeStripParts(card, derivedGenre);
   const canonicalSubgenreColor = SUBGENRE_COLOR[card.subgenre];
   const applySubgenreTheme = Boolean(canonicalSubgenreColor && !card.country);

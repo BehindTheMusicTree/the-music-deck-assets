@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { GENRE_NAMES, GENRE_THEMES, SUBGENRES, subgenreTheme } from "@/lib/genres";
+import type { GenreName } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
 const BASE_CARD: CardData = {
@@ -9,7 +10,7 @@ const BASE_CARD: CardData = {
   title: "Preview Track",
   artist: "Artist",
   year: 2024,
-  subgenre: "",
+  subgenre: "Disco Pop",
   ability: "Preview",
   abilityDesc: "Live preview of the selected genre or subgenre theme.",
   power: 80,
@@ -30,7 +31,12 @@ function isVeryLight(hex: string) {
 
 export default function GenreThemePreview() {
   const [card, setCard] = useState<CardData>({ ...BASE_CARD });
-  const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Rock);
+  const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Mainstream);
+  const [selectedGenre, setSelectedGenre] = useState<GenreName>("Mainstream");
+  const orderedGenres: GenreName[] = [
+    "Mainstream",
+    ...GENRE_NAMES.filter((name) => name !== "Mainstream"),
+  ];
 
   return (
     <div className="w-full overflow-x-auto pb-2">
@@ -38,19 +44,19 @@ export default function GenreThemePreview() {
         {/* Sticky card preview */}
         <div className="sticky top-[104px] shrink-0 flex flex-col items-center gap-2">
           <div className="sm:hidden">
-            <Card card={card} theme={theme} small />
+            <Card card={card} theme={theme} small genreName={selectedGenre} />
           </div>
           <div className="hidden sm:block">
-            <Card card={card} theme={theme} />
+            <Card card={card} theme={theme} genreName={selectedGenre} />
           </div>
           <div className="font-mono text-[10px] tracking-[1px] text-muted">
-            {card.subgenre || "—"}
+            {card.subgenre ? `${selectedGenre} · ${card.subgenre}` : selectedGenre}
           </div>
         </div>
 
         {/* Genre themes table */}
         <div className="flex-1 flex flex-col gap-4 min-w-0">
-          {GENRE_NAMES.map((name) => {
+          {orderedGenres.map((name) => {
             const t = GENRE_THEMES[name];
             const subs = SUBGENRES.filter(
               (s) => s.parentA === name || s.parentB === name,
@@ -64,6 +70,7 @@ export default function GenreThemePreview() {
                   style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                   onClick={() => {
                     setTheme(t);
+                    setSelectedGenre(name);
                     setCard({ ...BASE_CARD, subgenre: "" });
                   }}
                 >
@@ -99,6 +106,7 @@ export default function GenreThemePreview() {
                           style={{ background: "#f4edd8" }}
                           onClick={() => {
                             setTheme(t);
+                            setSelectedGenre(name);
                             setCard({ ...BASE_CARD, subgenre: s.n });
                           }}
                         >
