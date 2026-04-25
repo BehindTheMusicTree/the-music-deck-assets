@@ -1,3 +1,4 @@
+import Link from "next/link";
 import BattlesSubTabs from "@/components/BattlesSubTabs";
 
 export default function BattlesPage() {
@@ -14,6 +15,50 @@ export default function BattlesPage() {
         <p className="font-garamond italic text-muted mb-8 max-w-[560px]">
           Battle rules, formats, and scoring concepts — how players face off using their music decks.
         </p>
+
+        <div id="card-attributes" className="mb-8 max-w-[560px]">
+          <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">
+            Card attributes
+          </div>
+          <p className="font-garamond text-muted leading-normal m-0 mb-3">
+            Every playable card surfaces four values on the frame. Battle rules and
+            card text refer to them when applying modifiers, checks, and resolution.
+          </p>
+          <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
+            <li>
+              <span className="text-white">Popularity</span> — Shown as 1–9 award
+              symbols on the stat row (gold, platinum, then diamond tiers). It
+              measures how broadly the track lands with an audience and is
+              independent of intensity.
+            </li>
+            <li>
+              <span className="text-white">Intensity</span> — The triangle gauge
+              encodes one of four levels: pop, soft, experimental, or hardcore.
+              With a subgenre, intensity follows that subgenre; on a genre-only card
+              it follows the parent genre mapping.
+            </li>
+            <li>
+              <span className="text-white">Advantage</span> — The matchup strip
+              (green side) names genres this card is strong against, each with a
+              colour diamond taken from the genre palette.
+            </li>
+            <li>
+              <span className="text-white">Weakness</span> — The same strip (red
+              side) names genres this card is weak against, again with matching
+              diamonds.
+            </li>
+          </ul>
+          <p className="font-garamond text-muted text-sm leading-normal mt-3 mb-0">
+            Full advantage and weakness columns per genre:{" "}
+            <Link
+              href="/genres#associations"
+              className="text-gold underline-offset-2 hover:underline"
+            >
+              Genres — Associations
+            </Link>
+            .
+          </p>
+        </div>
 
         <div id="vibe" className="mb-8 max-w-[560px]">
           <div className="font-mono tracking-[2px] text-muted text-xs uppercase mb-2">Vibe</div>

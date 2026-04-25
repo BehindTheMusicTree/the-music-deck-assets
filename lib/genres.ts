@@ -517,6 +517,7 @@ const APP_GENRE_ONLY_INTENSITY: Partial<Record<AppGenreName, Intensity>> = {
   "Hip-Hop": "soft",
   Classical: "experimental",
   Rock: "experimental",
+  "Reggae/Dub": "experimental",
 };
 
 export function appGenreIntensity(genre: AppGenreName): Intensity {

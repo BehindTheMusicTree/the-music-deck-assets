@@ -129,7 +129,7 @@ export default function GenresPage() {
           <GenreWheel />
         </div>
 
-        <div id="genre-intensity" className="w-full max-w-[860px] mt-10 mb-10">
+        <div id="genre-intensity" className="w-full max-w-[1100px] mt-10 mb-10">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
             Genre-level intensity
           </div>
@@ -140,8 +140,9 @@ export default function GenresPage() {
             is <span className="text-white/80">hardcore</span>,{" "}
             <span className="text-white/80">Hip-Hop</span> is{" "}
             <span className="text-white/80">soft</span>,{" "}
-            <span className="text-white/80">Classical</span> and{" "}
-            <span className="text-white/80">Rock</span> are{" "}
+            <span className="text-white/80">Classical</span>,{" "}
+            <span className="text-white/80">Rock</span>, and{" "}
+            <span className="text-white/80">Reggae/Dub</span> are{" "}
             <span className="text-white/80">experimental</span>, and all other
             genres are <span className="text-white/80">pop</span>.
           </p>
@@ -165,30 +166,34 @@ export default function GenresPage() {
                       intensityLevelIndex(appGenreIntensity(b)),
                   )
                   .map((g) => (
-                  <tr
-                    key={g}
-                    className="border-b border-ui-border last:border-0 odd:bg-transparent even:bg-white/[0.02]"
-                  >
-                    <td className="px-4 py-3 font-mono text-[11px] tracking-[1px] text-white/90">
-                      {displayGenreLabel(g)}
-                    </td>
-                    <td className="px-4 py-3 align-middle">
-                      <div className="max-w-[148px]">
-                        <IntensityGauge intensity={appGenreIntensity(g)} />
-                      </div>
-                    </td>
-                  </tr>
+                    <tr
+                      key={g}
+                      className="border-b border-ui-border last:border-0 odd:bg-transparent even:bg-white/[0.02]"
+                    >
+                      <td className="px-4 py-3 font-mono text-[11px] tracking-[1px] text-white/90">
+                        {displayGenreLabel(g)}
+                      </td>
+                      <td className="px-4 py-3 align-middle">
+                        <div className="max-w-[148px]">
+                          <IntensityGauge intensity={appGenreIntensity(g)} />
+                        </div>
+                      </td>
+                    </tr>
                   ))}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Genre themes */}
         <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">Genre Themes</div>
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">
+            Genre Themes
+          </div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
-            Each genre defines a full colour theme used across the card frame. You can preview a subgenre alone, a country or region alone, or combine a subgenre with a country to apply the World/Genre border rule automatically.
+            Each genre defines a full colour theme used across the card frame. You
+            can preview a subgenre alone, a country or region alone, or combine a
+            subgenre with a country to apply the World/Genre border rule
+            automatically.
           </p>
           <GenreThemePreview />
         </div>

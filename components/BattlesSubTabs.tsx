@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const SECTIONS = [
+  { id: "card-attributes", label: "Card stats" },
   { id: "vibe", label: "Vibe" },
   { id: "initialisation-phase", label: "Initialisation" },
   { id: "turns", label: "Turns" },
@@ -10,7 +11,7 @@ const SECTIONS = [
 ] as const;
 
 export default function BattlesSubTabs() {
-  const [active, setActive] = useState("vibe");
+  const [active, setActive] = useState("card-attributes");
 
   useEffect(() => {
     const observers = SECTIONS.map(({ id }) => {
