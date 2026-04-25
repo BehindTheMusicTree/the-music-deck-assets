@@ -253,6 +253,10 @@ export const SUBGENRES: Subgenre[] = [
   { n: "Psytrance", h: "#0b1f5a", parent: "Electronic", ring: "hardcore" },
 ];
 
+export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
+  SUBGENRES.map(s => [s.n, s.h])
+);
+
 // ---------------------------------------------------------------------------
 // World / country themes — derived from the canonical COUNTRY_DATA in countries.ts
 // ---------------------------------------------------------------------------

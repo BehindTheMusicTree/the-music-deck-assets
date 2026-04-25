@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./Card.module.css";
+import { SUBGENRE_COLOR } from "@/lib/genres";
 
 export interface CardData {
   id: number;
@@ -227,7 +228,7 @@ export default function Card({
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const strip = getTypeStripParts(card);
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
-  const stripRightBorder = card.typeStripSubBorder ?? theme.border;
+  const stripRightBorder = card.typeStripSubBorder ?? SUBGENRE_COLOR[card.subgenre] ?? theme.border;
   const pipLeftSymbol = card.country ? FLAG_PIP_SYMBOL[card.country] : undefined;
   const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
   const pipRightSymbol = pipLeftSymbol && !card.flagStyle ? pipLeftSymbol : undefined;
