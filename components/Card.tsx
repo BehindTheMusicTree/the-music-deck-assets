@@ -132,7 +132,8 @@ export default function Card({
       : "—";
   const strip = getTypeStripParts(card, derivedGenre);
   const canonicalSubgenreColor = SUBGENRE_COLOR[card.subgenre];
-  const effectiveTheme = canonicalSubgenreColor
+  const applySubgenreTheme = Boolean(canonicalSubgenreColor && !card.country);
+  const effectiveTheme = applySubgenreTheme
     ? subgenreTheme(canonicalSubgenreColor, theme)
     : theme;
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;

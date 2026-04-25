@@ -407,12 +407,20 @@ export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
 );
 
 export function themeForCountry(country: string): GenreTheme {
-  return WORLD_THEMES[country] ?? GENRE_THEMES.Rock;
+  const theme = WORLD_THEMES[country];
+  if (!theme) {
+    throw new Error(`Unknown world country theme "${country}"`);
+  }
+  return theme;
 }
 
 export function themeForCard(genre: string, country?: string): GenreTheme {
   if (country) return themeForCountry(country);
-  return GENRE_THEMES[genre as GenreName] ?? GENRE_THEMES.Rock;
+  const theme = GENRE_THEMES[genre as GenreName];
+  if (!theme) {
+    throw new Error(`Unknown canonical genre theme "${genre}"`);
+  }
+  return theme;
 }
 
 // ---------------------------------------------------------------------------
