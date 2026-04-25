@@ -2,21 +2,30 @@ import Card, { type CardData } from "@/components/Card";
 import CardSubTabs from "@/components/CardSubTabs";
 import {
   GENRE_THEMES as GT,
+  SUBGENRE_COLOR,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 
 const GENRES: Record<string, import("@/components/Card").GenreTheme> = {
   Rock: GT.Rock,
   Pop: GT.Pop,
-  Electro: GT.Electronic,
-  Reggae: GT["Reggae/Dub"],
-  HipHop: GT["Hip-Hop"],
+  Electronic: GT.Electronic,
+  Roots: GT["Reggae/Dub"],
+  "Hip-Hop": GT["Hip-Hop"],
   "Disco/Funk": GT["Disco/Funk"],
-  Classic: GT.Classical,
+  Classical: GT.Classical,
   Vintage: GT.Vintage,
 };
 
 const ART = "/cards/artworks/examples/";
+
+function canonicalGenreColor(genre: string): string {
+  return GT[genre as keyof typeof GT]?.border ?? GT.Rock.border;
+}
+
+function mixedGenreColor(subgenre: string, genreFallback: string): string {
+  return SUBGENRE_COLOR[subgenre] ?? canonicalGenreColor(genreFallback);
+}
 
 const WORLD_FLAG_CARDS: CardData[] = [
   {
@@ -42,7 +51,7 @@ const WORLD_FLAG_CARDS: CardData[] = [
     artist: "Michel Sardou",
     year: 1981,
     genre: "France",
-    subgenre: "Variété Française",
+    subgenre: "French Variety",
     typeStripPrimaryBorder: "#0055A4",
     ability: "Melancholy",
     abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
@@ -56,14 +65,13 @@ const WORLD_FLAG_CARDS: CardData[] = [
   {
     id: 26,
     title: "Tri Martolod",
-    artist: "Traditionnel",
+    artist: "Traditional",
     year: 1972,
     genre: "Bretagne",
     subgenre: "Folk Breton",
     typeStripPrimaryBorder: "#222222",
-    ability: "Marée Montante",
-    abilityDesc:
-      "Gagne +10 en puissance pour chaque carte World alliée en jeu.",
+    ability: "Rising Tide",
+    abilityDesc: "Gain +10 power for each allied World card in play.",
     power: 72,
     pop: 58,
     exp: 66,
@@ -80,12 +88,12 @@ const WORLD_MIXED_CARDS: CardData[] = [
     artist: "13 Organisé",
     year: 2020,
     genre: "France",
-    subgenre: "Hip-hop",
+    subgenre: "Hip-Hop",
     typeStripPrimaryBorder: "#0055A4",
-    typeStripSubBorder: "#c8960a",
+    typeStripSubBorder: mixedGenreColor("Hip-Hop", "Hip-Hop"),
     ability: "Street Anthem",
     abilityDesc:
-      "Allied Hip-hop cards gain +12 popularity on the turn this card is played.",
+      "Allied Hip-Hop cards gain +12 popularity on the turn this card is played.",
     power: 84,
     pop: 90,
     exp: 61,
@@ -93,7 +101,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "France",
     artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
     flagStyle: "fade",
-    fadeColor: "#c8960a",
+    fadeColor: mixedGenreColor("Hip-Hop", "Hip-Hop"),
   },
   {
     id: 21,
@@ -103,7 +111,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "USA",
     subgenre: "Religious",
     typeStripPrimaryBorder: "#B22234",
-    typeStripSubBorder: "#787878",
+    typeStripSubBorder: mixedGenreColor("Religious", "Vintage"),
     ability: "Redemption",
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     power: 74,
@@ -113,7 +121,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "USA",
     artwork: `${ART}artwork.example-amazing-grace-v1.png`,
     flagStyle: "fade",
-    fadeColor: "#787878",
+    fadeColor: mixedGenreColor("Religious", "Vintage"),
   },
   {
     id: 23,
@@ -123,7 +131,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "France",
     subgenre: "Hymne",
     typeStripPrimaryBorder: "#0055A4",
-    typeStripSubBorder: "#5c2a0a",
+    typeStripSubBorder: mixedGenreColor("Hymne", "Classical"),
     ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
@@ -133,7 +141,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "France",
     artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
     flagStyle: "fade",
-    fadeColor: "#5c2a0a",
+    fadeColor: mixedGenreColor("Hymne", "Classical"),
   },
   {
     id: 25,
@@ -143,7 +151,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     genre: "Spain",
     subgenre: "Ska Punk",
     typeStripPrimaryBorder: "#AA151B",
-    typeStripSubBorder: "#2a6e2a",
+    typeStripSubBorder: mixedGenreColor("Ska Punk", "Rock"),
     ability: "Contraband",
     abilityDesc:
       "Opponent discards one card at random when this card enters play.",
@@ -154,7 +162,7 @@ const WORLD_MIXED_CARDS: CardData[] = [
     country: "Spain",
     artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
     flagStyle: "fade",
-    fadeColor: "#8a3018",
+    fadeColor: mixedGenreColor("Ska Punk", "Rock"),
   },
 ];
 
@@ -189,12 +197,12 @@ const MOCK_CARDS: Record<string, CardData> = {
     rarity: "Legendary",
     artwork: `${ART}artwork.example-billy-jean-v2.png`,
   },
-  Electro: {
+  Electronic: {
     id: 3,
     title: "One More Time",
     artist: "Daft Punk",
     year: 2000,
-    genre: "Electro",
+    genre: "Electronic",
     subgenre: "House",
     ability: "Loop Sync",
     abilityDesc: "Repeats its effect once if experimental is above 60.",
@@ -204,12 +212,12 @@ const MOCK_CARDS: Record<string, CardData> = {
     rarity: "Epic",
     artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
   },
-  Reggae: {
+  Roots: {
     id: 4,
     title: "Is This Love",
     artist: "Bob Marley",
     year: 1978,
-    genre: "Reggae",
+    genre: "Roots",
     subgenre: "Roots",
     ability: "Roots",
     abilityDesc: "Heals 20 HP when adjacent to a World genre card.",
@@ -219,12 +227,12 @@ const MOCK_CARDS: Record<string, CardData> = {
     rarity: "Epic",
     artwork: `${ART}artwork.example-is-this-love-v1.png`,
   },
-  HipHop: {
+  "Hip-Hop": {
     id: 5,
     title: "HUMBLE.",
     artist: "Kendrick Lamar",
     year: 2017,
-    genre: "HipHop",
+    genre: "Hip-Hop",
     subgenre: "R&B Soul",
     ability: "Lyrical",
     abilityDesc:
@@ -250,12 +258,12 @@ const MOCK_CARDS: Record<string, CardData> = {
     rarity: "Rare",
     artwork: `${ART}artwork.example-night-fever-v1.png`,
   },
-  Classic: {
+  Classical: {
     id: 7,
     title: "Ride of the Valkyries",
     artist: "Wagner",
     year: 1876,
-    genre: "Classic",
+    genre: "Classical",
     subgenre: "Soul",
     ability: "Fortissimo",
     abilityDesc: "Deals damage in three separate strikes of 60% power each.",
