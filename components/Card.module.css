@@ -194,7 +194,7 @@
 /* Type strip — parchment with diamond-cut corners via clip-path */
 .typeStrip {
   position: relative;
-  background: #ede4cc;
+  background: var(--gc-parch-strip, #ede4cc);
   padding: 6px 14px;
   margin: 4;
   display: flex;
@@ -259,7 +259,7 @@
 
 /* Ability box */
 .ability {
-  background: #f4edd8;
+  background: var(--gc-parch-ability, #f4edd8);
   padding: 7px 10px;
   margin: 0 0 2px;
   flex-shrink: 0;

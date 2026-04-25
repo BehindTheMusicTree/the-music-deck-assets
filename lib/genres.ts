@@ -55,6 +55,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#180404",
     textMain: "#f04858",
     textBody: "#d02838",
+    parchStrip: parchFromBorder("#d01828").strip,
+    parchAbility: parchFromBorder("#d01828").ability,
     barPop: ["#800810", "#e82030"],
     barExp: ["#600610", "#b81828"],
     barGlowPop: "rgba(232,32,48,.85)",
@@ -66,6 +68,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#141218",
     textMain: "#fffef8",
     textBody: "#e8e6dd",
+    parchStrip: parchFromBorder("#f6f6f2").strip,
+    parchAbility: parchFromBorder("#f6f6f2").ability,
     barPop: ["#8f8d85", "#f7f6ef"],
     barExp: ["#6f6d66", "#d9d6cc"],
     barGlowPop: "rgba(247,246,239,.8)",
@@ -77,6 +81,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#060c18",
     textMain: "#6888e8",
     textBody: "#4868c8",
+    parchStrip: parchFromBorder("#2850c8").strip,
+    parchAbility: parchFromBorder("#2850c8").ability,
     barPop: ["#102060", "#3060e0"],
     barExp: ["#0c1848", "#2048b0"],
     barGlowPop: "rgba(48,96,224,.8)",
@@ -88,6 +94,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#140e00",
     textMain: "#f0b800",
     textBody: "#c89000",
+    parchStrip: parchFromBorder("#c8960a").strip,
+    parchAbility: parchFromBorder("#c8960a").ability,
     barPop: ["#7a5400", "#f0b000"],
     barExp: ["#503800", "#c08800"],
     barGlowPop: "rgba(240,176,0,.8)",
@@ -99,6 +107,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#18060e",
     textMain: "#e868a0",
     textBody: "#c84880",
+    parchStrip: parchFromBorder("#c0387a").strip,
+    parchAbility: parchFromBorder("#c0387a").ability,
     barPop: ["#701840", "#e05088"],
     barExp: ["#501030", "#b03868"],
     barGlowPop: "rgba(224,104,160,.8)",
@@ -110,6 +120,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#061404",
     textMain: "#70d058",
     textBody: "#50b038",
+    parchStrip: parchFromBorder("#3a9030").strip,
+    parchAbility: parchFromBorder("#3a9030").ability,
     barPop: ["#185010", "#48c030"],
     barExp: ["#103a08", "#309820"],
     barGlowPop: "rgba(72,192,48,.8)",
@@ -121,6 +133,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#0d0500",
     textMain: "#b86832",
     textBody: "#8a4a1a",
+    parchStrip: parchFromBorder("#5c2a0a").strip,
+    parchAbility: parchFromBorder("#5c2a0a").ability,
     barPop: ["#4a1a02", "#a85020"],
     barExp: ["#321202", "#7a3a14"],
     barGlowPop: "rgba(168,80,32,.8)",
@@ -132,6 +146,8 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     headerBg: "#0e0e0e",
     textMain: "#b0b0b0",
     textBody: "#888888",
+    parchStrip: parchFromBorder("#787878").strip,
+    parchAbility: parchFromBorder("#787878").ability,
     barPop: ["#404040", "#a0a0a0"],
     barExp: ["#282828", "#686868"],
     barGlowPop: "rgba(176,176,176,.65)",
@@ -190,12 +206,42 @@ function rgba(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+function isVeryLight(hex: string): boolean {
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
+  const [r, g, b] = hexToRgb(hex);
+  const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+  return luminance > 205;
+}
+
+function mixHex(base: string, tint: string, amount: number): string {
+  const safeAmount = Math.max(0, Math.min(1, amount));
+  const [br, bg, bb] = hexToRgb(base);
+  const [tr, tg, tb] = hexToRgb(tint);
+  return rgbToHex(
+    br * (1 - safeAmount) + tr * safeAmount,
+    bg * (1 - safeAmount) + tg * safeAmount,
+    bb * (1 - safeAmount) + tb * safeAmount,
+  );
+}
+
+function parchFromBorder(border: string): { strip: string; ability: string } {
+  const amountStrip = isVeryLight(border) ? 0.04 : 0.1;
+  const amountAbility = isVeryLight(border) ? 0.03 : 0.08;
+  return {
+    strip: mixHex("#ede4cc", border, amountStrip),
+    ability: mixHex("#f4edd8", border, amountAbility),
+  };
+}
+
 export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
+  const parch = parchFromBorder(color);
   return {
     border: color,
     headerBg: scale(color, 0.18),
     textMain: scale(color, 1.55),
     textBody: color,
+    parchStrip: parch.strip,
+    parchAbility: parch.ability,
     barPop: [scale(color, 0.55), scale(color, 1.35)],
     barExp: [scale(color, 0.4), scale(color, 0.78)],
     barGlowPop: rgba(color, 0.85),

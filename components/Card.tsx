@@ -32,6 +32,8 @@ export interface GenreTheme {
   headerBg: string;
   textMain: string;
   textBody: string;
+  parchStrip: string;
+  parchAbility: string;
   barPop: [string, string];
   barExp: [string, string];
   barGlowPop: string;
@@ -160,6 +162,8 @@ export default function Card({
     "--gc-header-bg": effectiveTheme.headerBg,
     "--gc-text-main": effectiveTheme.textMain,
     "--gc-text-body": effectiveTheme.textBody,
+    "--gc-parch-strip": effectiveTheme.parchStrip,
+    "--gc-parch-ability": effectiveTheme.parchAbility,
   } as React.CSSProperties;
 
   /** World flags other than USA (e.g. France): same shell as USA, no rotation */
