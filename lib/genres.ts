@@ -448,6 +448,14 @@ export function isGenreSubgenre(subgenre: string): boolean {
   return SUBGENRE_BY_NAME[subgenre]?.kind === "genre";
 }
 
+export function subgenreIntensity(subgenre: string): Intensity {
+  const sub = SUBGENRE_BY_NAME[subgenre];
+  if (!sub) {
+    throw new Error(`Unknown canonical subgenre "${subgenre}"`);
+  }
+  return sub.intensity;
+}
+
 export function canonicalCountryFromSubgenre(subgenre: string): string {
   const sub = SUBGENRE_BY_NAME[subgenre];
   if (!sub) {

@@ -20,7 +20,6 @@ const WORLD_FLAG_CARDS: CardData[] = [
     abilityDesc: "Restores 10 HP to all allied cards when played.",
     power: 70,
     pop: 78,
-    exp: 35,
     rarity: "Rare",
     country: "USA",
     artwork: `${ART}artwork.example-take-me-home-country-roads-v1.png`,
@@ -36,7 +35,6 @@ const WORLD_FLAG_CARDS: CardData[] = [
     abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
     power: 80,
     pop: 74,
-    exp: 48,
     rarity: "Rare",
     country: "France",
     artwork: `${ART}artwork.example-michel-sardou-les-lacs-du-connemara-v1.png`,
@@ -52,7 +50,6 @@ const WORLD_FLAG_CARDS: CardData[] = [
     abilityDesc: "Gain +10 power for each allied World card in play.",
     power: 72,
     pop: 58,
-    exp: 66,
     rarity: "Rare",
     country: "Bretagne",
     artwork: `${ART}artwork.example-tri-martolod-v1.png`,
@@ -72,7 +69,6 @@ const WORLD_MIXED_CARDS: CardData[] = [
       "Allied Hip-Hop cards gain +12 popularity on the turn this card is played.",
     power: 84,
     pop: 90,
-    exp: 61,
     rarity: "Epic",
     country: "France",
     artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
@@ -89,7 +85,6 @@ const WORLD_MIXED_CARDS: CardData[] = [
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     power: 74,
     pop: 72,
-    exp: 28,
     rarity: "Epic",
     country: "USA",
     artwork: `${ART}artwork.example-amazing-grace-v1.png`,
@@ -106,7 +101,6 @@ const WORLD_MIXED_CARDS: CardData[] = [
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     power: 88,
     pop: 68,
-    exp: 55,
     rarity: "Legendary",
     country: "France",
     artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
@@ -124,7 +118,6 @@ const WORLD_MIXED_CARDS: CardData[] = [
       "Opponent discards one card at random when this card enters play.",
     power: 76,
     pop: 62,
-    exp: 84,
     rarity: "Rare",
     country: "Spain",
     artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
@@ -143,7 +136,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Doubles momentum on any track with a guitar solo.",
     power: 95,
     pop: 92,
-    exp: 78,
     rarity: "Legendary",
     artwork: `${ART}artwork.example-bohemian-rhapsody-v2.png`,
   },
@@ -157,7 +149,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Gains +10 popularity when played after a dance track.",
     power: 91,
     pop: 97,
-    exp: 44,
     rarity: "Legendary",
     artwork: `${ART}artwork.example-billy-jean-v2.png`,
   },
@@ -171,7 +162,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Repeats its effect once if experimental is above 60.",
     power: 82,
     pop: 88,
-    exp: 75,
     rarity: "Epic",
     artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
   },
@@ -185,7 +175,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Heals 20 HP when adjacent to a World genre card.",
     power: 74,
     pop: 82,
-    exp: 40,
     rarity: "Epic",
     artwork: `${ART}artwork.example-is-this-love-v1.png`,
   },
@@ -200,7 +189,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
       "Drains 15 power from the opponent when popularity exceeds 70.",
     power: 88,
     pop: 86,
-    exp: 70,
     rarity: "Legendary",
     artwork: `${ART}artwork.example-kendrick-lamar-humble-v1.png`,
   },
@@ -214,7 +202,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Boosts all Funk cards on the field by +5 popularity.",
     power: 72,
     pop: 90,
-    exp: 50,
     rarity: "Rare",
     artwork: `${ART}artwork.example-night-fever-v1.png`,
   },
@@ -228,7 +215,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Deals damage in three separate strikes of 60% power each.",
     power: 90,
     pop: 58,
-    exp: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.example-wagner-ride-of-the-valkyries-v1.png`,
   },
@@ -242,7 +228,6 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Random multiplier between ×1 and ×3 on each use.",
     power: 77,
     pop: 55,
-    exp: 88,
     rarity: "Epic",
     artwork: `${ART}artwork.example-miles-davis-so-what-v1.png`,
   },
@@ -258,28 +243,27 @@ const RARITY_LABEL: Record<"Legendary" | "Epic" | "Rare" | "Common", string> = {
 export default function CardsPage() {
   const intensityExamples: Array<{
     level: "pop" | "soft" | "experimental" | "hardcore";
-    exp: number;
     card: CardData;
   }> = [
     {
       level: "pop",
-      exp: 20,
-      card: { ...MOCK_CARDS.Mainstream, id: 9701, title: "Intensity Pop", exp: 20 },
+      card: { ...MOCK_CARDS.Mainstream, id: 9701, title: "Intensity Pop" },
     },
     {
       level: "soft",
-      exp: 45,
-      card: { ...MOCK_CARDS.Rock, id: 9702, title: "Intensity Soft", exp: 45 },
+      card: { ...MOCK_CARDS.Rock, id: 9702, title: "Intensity Soft" },
     },
     {
       level: "experimental",
-      exp: 70,
-      card: { ...MOCK_CARDS.Electronic, id: 9703, title: "Intensity Experimental", exp: 70 },
+      card: {
+        ...MOCK_CARDS.Electronic,
+        id: 9703,
+        title: "Intensity Experimental",
+      },
     },
     {
       level: "hardcore",
-      exp: 90,
-      card: { ...MOCK_CARDS.Vintage, id: 9704, title: "Intensity Hardcore", exp: 90 },
+      card: { ...MOCK_CARDS.Vintage, id: 9704, title: "Intensity Hardcore" },
     },
   ];
 
@@ -367,7 +351,6 @@ export default function CardsPage() {
         abilityDesc: "Gain +10 popularity when played after a World card.",
         power: 83,
         pop: 94,
-        exp: 46,
         rarity: "Epic",
         artwork: `${ART}artwork.example-los-del-rio-la-macarena-v1.png`,
         country: "Spain",
@@ -582,7 +565,7 @@ export default function CardsPage() {
               <li>Hardcore (4): maximal edge and extremity.</li>
             </ul>
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {intensityExamples.map(({ level, exp, card }) => (
+              {intensityExamples.map(({ level, card }) => (
                 <div key={level} className="flex flex-col items-center gap-2">
                   <div
                     style={{
@@ -596,7 +579,7 @@ export default function CardsPage() {
                     </div>
                   </div>
                   <div className="font-mono tracking-[1px] text-muted">
-                    {level.toUpperCase()} · EXP {exp}
+                    {level.toUpperCase()}
                   </div>
                 </div>
               ))}

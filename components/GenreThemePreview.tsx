@@ -26,7 +26,6 @@ const BASE_CARD: CardData = {
   abilityDesc: "Live preview of the selected genre or subgenre theme.",
   power: 80,
   pop: 75,
-  exp: 60,
   rarity: "Epic",
   artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
 };

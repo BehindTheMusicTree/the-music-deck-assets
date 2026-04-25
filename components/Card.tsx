@@ -2,7 +2,11 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./Card.module.css";
-import { isCountrySubgenre, resolveThemeSelection } from "@/lib/genres";
+import {
+  isCountrySubgenre,
+  subgenreIntensity,
+  resolveThemeSelection,
+} from "@/lib/genres";
 
 export interface CardData {
   id: number;
@@ -16,7 +20,6 @@ export interface CardData {
   abilityDesc: string;
   power: number;
   pop: number;
-  exp: number;
   rarity: "Legendary" | "Epic" | "Rare" | "Common";
   artwork?: string;
   country?: string;
@@ -126,14 +129,6 @@ function awardSymbolSvg(tier: "gold" | "platinum" | "diamond"): string {
 
 type IntensityLevel = "pop" | "soft" | "experimental" | "hardcore";
 
-function intensityFromExp(exp: number): IntensityLevel {
-  const normalized = clamp(exp, 0, 100);
-  if (normalized <= 25) return "pop";
-  if (normalized <= 50) return "soft";
-  if (normalized <= 75) return "experimental";
-  return "hardcore";
-}
-
 function intensityIndex(level: IntensityLevel): number {
   if (level === "pop") return 1;
   if (level === "soft") return 2;
@@ -231,7 +226,6 @@ export default function Card({
   const pipRightFlagBg =
     pipLeftFlagBg && rightUsesCountryIdentity ? pipLeftFlagBg : undefined;
 
-  const country = card.country;
   const flagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
   const flagBg = resolved.frameBg ?? effectiveTheme.frameBg;
   const flagUsR90 = Boolean(
@@ -262,15 +256,12 @@ export default function Card({
   const flagFlatShell = Boolean(flagLayer && !flagUsR90);
 
   useLayoutEffect(() => {
-    setTitleScale(1);
-    titleScaleRef.current = 1;
-  }, [card.title, card.artist, small]);
-
-  useLayoutEffect(() => {
     const el = titleRef.current;
     if (!el) return;
 
     const recompute = () => {
+      el.style.fontSize = "12px";
+      el.style.letterSpacing = "0.8px";
       const available = el.clientWidth;
       if (!available) return;
 
@@ -444,38 +435,41 @@ export default function Card({
               </div>
             );
           })()}
-          <div className={styles.statRow}>
-            <span className={styles.statLabel}>Intensity</span>
-            <div
-              className={styles.statBg}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(0,0,0,0.45)",
-              }}
-            >
-              {(() => {
-                const level = intensityFromExp(card.exp);
-                return (
+          {(() => {
+            const intensitySubgenre = resolved.resolvedSubgenre ?? card.subgenre;
+            const level = intensitySubgenre
+              ? subgenreIntensity(intensitySubgenre)
+              : undefined;
+            return (
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Intensity</span>
+                <div
+                  className={styles.statBg}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "rgba(0,0,0,0.45)",
+                  }}
+                >
                   <span
                     style={{
                       fontFamily: '"Space Mono", monospace',
                       fontSize: 8,
                       letterSpacing: 0.8,
                       textTransform: "uppercase",
-                      color: intensityColor(level),
+                      color: level ? intensityColor(level) : "rgba(255,255,255,0.45)",
                     }}
                   >
-                    {level}
+                    {level ?? "—"}
                   </span>
-                );
-              })()}
-            </div>
-            <span className={styles.statVal}>
-              {intensityIndex(intensityFromExp(card.exp))}
-            </span>
-          </div>
+                </div>
+                <span className={styles.statVal}>
+                  {level ? intensityIndex(level) : "—"}
+                </span>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Footer */}
