@@ -374,6 +374,8 @@ export default function Card({
                 className={styles.pipFlag}
                 style={{
                   backgroundImage: pipLeftFlagBg,
+                  backgroundSize: "160% 160%",
+                  backgroundPosition: "center",
                   border: "1px solid rgba(20, 16, 10, 0.35)",
                 }}
               />
@@ -407,6 +409,8 @@ export default function Card({
                 className={styles.pipFlag}
                 style={{
                   backgroundImage: pipRightFlagBg,
+                  backgroundSize: "160% 160%",
+                  backgroundPosition: "center",
                   border: "1px solid rgba(20, 16, 10, 0.35)",
                 }}
               />

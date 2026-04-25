@@ -269,12 +269,12 @@
 }
 .matchupWeak {
   background:
-    linear-gradient(145deg, rgba(140, 36, 36, 0.42), rgba(90, 22, 22, 0.28)),
+    linear-gradient(145deg, rgba(186, 38, 38, 0.6), rgba(120, 18, 18, 0.42)),
     #e8dcc8;
 }
 .matchupAdv {
   background:
-    linear-gradient(145deg, rgba(32, 110, 72, 0.4), rgba(48, 130, 88, 0.28)),
+    linear-gradient(145deg, rgba(24, 154, 86, 0.56), rgba(30, 112, 68, 0.4)),
     #e8dcc8;
 }
 .matchupCluster {
