@@ -129,12 +129,12 @@ function popularityCount(note: number): number {
 
 function awardSymbolSvg(tier: "gold" | "platinum" | "diamond"): string {
   if (tier === "gold") {
-    return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#d4af37" stroke="#f7df84" stroke-width="0.8"/><circle cx="6" cy="6" r="2.5" fill="#b58a1e"/><path d="M6 3.8l.6 1.2 1.3.2-.95.92.22 1.32L6 6.78l-1.17.66.22-1.32-.95-.92 1.3-.2.6-1.2z" fill="#f7df84"/></svg>`;
+    return `<svg width="24" height="24" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#d4af37" stroke="#f7df84" stroke-width="0.8"/><circle cx="6" cy="6" r="2.5" fill="#b58a1e"/><path d="M6 3.8l.6 1.2 1.3.2-.95.92.22 1.32L6 6.78l-1.17.66.22-1.32-.95-.92 1.3-.2.6-1.2z" fill="#f7df84"/></svg>`;
   }
   if (tier === "platinum") {
-    return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.2l3.6 1.2v3.2c0 2.6-1.7 4.3-3.6 5.2-1.9-.9-3.6-2.6-3.6-5.2V2.4L6 1.2z" fill="#c7d0d9" stroke="#eff4f8" stroke-width="0.8"/><path d="M3.2 3.2l-.8.6.6.9-.9.3.35.98-1 .06.06 1.03 1-.1.14.98.98-.24.34.93.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/><path d="M8.8 3.2l.8.6-.6.9.9.3-.35.98 1 .06-.06 1.03-1-.1-.14.98-.98-.24-.34.93-.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/></svg>`;
+    return `<svg width="24" height="24" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.2l3.6 1.2v3.2c0 2.6-1.7 4.3-3.6 5.2-1.9-.9-3.6-2.6-3.6-5.2V2.4L6 1.2z" fill="#c7d0d9" stroke="#eff4f8" stroke-width="0.8"/><path d="M3.2 3.2l-.8.6.6.9-.9.3.35.98-1 .06.06 1.03 1-.1.14.98.98-.24.34.93.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/><path d="M8.8 3.2l.8.6-.6.9.9.3-.35.98 1 .06-.06 1.03-1-.1-.14.98-.98-.24-.34.93-.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/></svg>`;
   }
-  return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.2L4.2 2h3.6L10 4.2 6 10 2 4.2z" fill="#7fe3ff" stroke="#e8fbff" stroke-width="0.8"/><path d="M4.2 2L6 4.2 7.8 2M2 4.2h8M6 4.2v5.8" stroke="#dff8ff" stroke-width="0.6" fill="none"/></svg>`;
+  return `<svg width="24" height="24" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.2L4.2 2h3.6L10 4.2 6 10 2 4.2z" fill="#7fe3ff" stroke="#e8fbff" stroke-width="0.8"/><path d="M4.2 2L6 4.2 7.8 2M2 4.2h8M6 4.2v5.8" stroke="#dff8ff" stroke-width="0.6" fill="none"/></svg>`;
 }
 
 type IntensityLevel = "pop" | "soft" | "experimental" | "hardcore";
