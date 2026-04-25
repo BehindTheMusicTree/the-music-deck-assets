@@ -385,7 +385,7 @@ export default function Card({
         style={{
           ...varStyle,
           border: "10px solid transparent",
-          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 23%, ${resolvedFadeColor} 77%), ${flagBg}`,
+          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
           backgroundClip: "padding-box, border-box, border-box",
           backgroundOrigin: "padding-box, border-box, border-box",
           backgroundSize: "100% 100%, 100% 100%, 100% 100%",
@@ -402,7 +402,7 @@ export default function Card({
             {
               backgroundImage:
                 flagStyle === "fade"
-                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 40%, ${resolvedFadeColor} 60%), url("${USA_FLAG_PATH}")`
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 46%, ${resolvedFadeColor} 54%), url("${USA_FLAG_PATH}")`
                   : `linear-gradient(${"transparent"}, ${"transparent"}), url("${USA_FLAG_PATH}")`,
               backgroundSize:
                 flagStyle === "fade"

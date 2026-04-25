@@ -412,8 +412,10 @@ export const SUBGENRES: Subgenre[] = [
   },
 ];
 
+// Only genre-subgenres can drive a derived subgenre color/theme.
+// Country-subgenres always resolve to their country theme.
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
-  SUBGENRES.map((s) => [s.n, s.color]),
+  SUBGENRES.filter((s) => s.kind === "genre").map((s) => [s.n, s.color]),
 );
 const SUBGENRE_PARENT_A: Record<string, GenreName | CountryName> = Object.fromEntries(
   SUBGENRES.map((s) => [s.n, s.parentA]),
@@ -437,6 +439,17 @@ export function isCountrySubgenre(subgenre: string): boolean {
 
 export function isGenreSubgenre(subgenre: string): boolean {
   return SUBGENRE_BY_NAME[subgenre]?.kind === "genre";
+}
+
+export function canonicalCountryFromSubgenre(subgenre: string): string {
+  const sub = SUBGENRE_BY_NAME[subgenre];
+  if (!sub) {
+    throw new Error(`Unknown canonical subgenre "${subgenre}"`);
+  }
+  if (sub.kind !== "country") {
+    throw new Error(`Subgenre "${subgenre}" is not a country-native subgenre`);
+  }
+  return sub.parentA;
 }
 
 export function canonicalGenreFromSubgenre(subgenre: string): GenreName {

@@ -3,13 +3,16 @@
 import { useState } from "react";
 import {
   APP_GENRE_THEMES,
+  canonicalCountryFromSubgenre,
   GENRE_NAMES,
   GENRE_THEMES,
   SUBGENRES,
   WORLD_THEMES,
+  isCountrySubgenre,
   resolveThemeSelection,
   subgenreTheme,
 } from "@/lib/genres";
+import { FLAG_BORDERS } from "@/lib/countries";
 import type { GenreName } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 
@@ -207,10 +210,17 @@ export default function GenreThemePreview() {
                   style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                   onClick={() => {
                     setSelectedCountry(country);
-                    if (selectedSubgenre) {
+                  if (selectedSubgenre && !isCountrySubgenre(selectedSubgenre)) {
                       applyRulePreview({ subgenre: selectedSubgenre, country });
                       return;
                     }
+                  if (selectedSubgenre && isCountrySubgenre(selectedSubgenre)) {
+                    const parentCountry = canonicalCountryFromSubgenre(selectedSubgenre);
+                    if (parentCountry === country) {
+                      applyRulePreview({ subgenre: selectedSubgenre, country });
+                      return;
+                    }
+                  }
                     if (selectedGenreOnly) {
                       applyRulePreview({ genre: selectedGenreOnly, country });
                       return;
@@ -258,8 +268,8 @@ export default function GenreThemePreview() {
                         <div
                           className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
                           style={{
-                            background: s.color,
-                            border: isVeryLight(s.color)
+                            background: FLAG_BORDERS[country] ?? s.color,
+                            border: isVeryLight(t.border)
                               ? "1px solid rgba(20, 16, 10, 0.45)"
                               : "none",
                           }}
@@ -273,8 +283,8 @@ export default function GenreThemePreview() {
                         <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>
                           {s.intensity}
                         </span>
-                        <span className="font-mono text-xs" style={{ color: "#8a7050" }}>
-                          {s.color}
+                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#8a7050" }}>
+                          Uses country theme
                         </span>
                       </button>
                     ))}
