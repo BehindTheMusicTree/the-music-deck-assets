@@ -4,13 +4,13 @@ import { GENRE_THEMES, WHEEL_GENRES as GENRES, SUBGENRES } from "@/lib/genres";
 
 const CX = 620,
   CY = 620,
-  R_POP_SUBGENRES = 130,
-  R_POP_SOFT_LINE = 170,
-  R_SOFT_SUBGENRES = 230,
-  R_SOFT_EXPERIMENTAL_LINE = 340,
-  R_EXPERIMENTAL_SUBGENRES = 505,
-  R_EXPERIMENTAL_HARDCORE_LINE = 620,
-  R_HARDCORE_SUBGENRES = 720;
+  R_POP_SUBGENRES = 140,
+  R_POP_SOFT_LINE = 230,
+  R_SOFT_SUBGENRES = 320,
+  R_SOFT_EXPERIMENTAL_LINE = 440,
+  R_EXPERIMENTAL_SUBGENRES = 555,
+  R_EXPERIMENTAL_HARDCORE_LINE = 660,
+  R_HARDCORE_SUBGENRES = 760;
 
 function repeat(str: string, times: number) {
   return Array(times).fill(str).join(" · ") + " ·";
@@ -146,7 +146,6 @@ export default function GenreWheel() {
             d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
           />
         </defs>
-
 
         {/* Mainstream text */}
         <circle
@@ -300,7 +299,12 @@ export default function GenreWheel() {
           const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
           return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
         })}
-        <Rect x={CX} y={CY} label="Mainstream" hex={GENRE_THEMES.Mainstream.border} />
+        <Rect
+          x={CX}
+          y={CY}
+          label="Mainstream"
+          hex={GENRE_THEMES.Mainstream.border}
+        />
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {
