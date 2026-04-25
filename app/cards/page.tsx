@@ -249,6 +249,25 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
 };
 
 export default function CardsPage() {
+  const popularityExamples: Array<{ note: number; card: CardData }> = Array.from(
+    { length: 9 },
+    (_, i) => {
+      const note = i + 1;
+      const pop = note === 1 ? 1 : Math.floor(((note - 1) * 100) / 9) + 1;
+      return {
+        note,
+        card: {
+          ...MOCK_CARDS.Rock,
+          id: 9800 + note,
+          title: `Popularity ${note}`,
+          pop,
+          power: 70 + note,
+          rarity: note >= 8 ? "Legendary" : note >= 5 ? "Epic" : "Rare",
+        },
+      };
+    },
+  );
+
   const themeRuleExamples: Array<{
     key: string;
     title: string;
@@ -393,7 +412,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Stats",
-                  "Popularity and Experimental bars — gradient fill and glow derived from the active theme (subgenre if known, genre otherwise)",
+                  "Popularity uses a 1–9 award rating (gold/platinum/diamond). Experimental keeps a gradient bar derived from the active theme.",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
@@ -414,9 +433,9 @@ export default function CardsPage() {
           </div>
         </div>
 
-        <div id="theme-rules" className="w-full max-w-[1100px] mb-14">
+        <div id="theme" className="w-full max-w-[1100px] mb-14">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Theme Rules
+            Theme
           </div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 flex flex-col gap-4">
             <div>
@@ -472,6 +491,44 @@ export default function CardsPage() {
                   available, otherwise flag diamond.
                 </li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="popularity" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Popularity
+          </div>
+          <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
+            <p className="font-garamond text-muted leading-[1.6] mb-3">
+              Popularity is shown as a 1-9 award note instead of a bar.
+              It reflects how broadly a track connects with the audience.
+            </p>
+            <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
+              <li>1-3: gold awards (one to three symbols).</li>
+              <li>4-6: platinum awards (one to three symbols).</li>
+              <li>7-9: diamond awards (one to three symbols).</li>
+              <li>Popularity and Experimental are independent stats and can both be high.</li>
+            </ul>
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {popularityExamples.map(({ note, card }) => (
+                <div key={note} className="flex flex-col items-center gap-2">
+                  <div
+                    style={{
+                      width: 298,
+                      height: 440,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                      <Card card={card} theme={APP_GENRE_THEMES.Rock} small />
+                    </div>
+                  </div>
+                  <div className="font-mono tracking-[1px] text-muted">
+                    NOTE {note}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

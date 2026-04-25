@@ -88,6 +88,35 @@ function scoreGlowColor(power: number) {
   return `0 0 ${r}px rgba(200,160,64,${o})`;
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function popularityNote(popularity: number): number {
+  const normalized = clamp(popularity, 0, 100);
+  return clamp(Math.ceil((normalized / 100) * 9), 1, 9);
+}
+
+function popularityTier(note: number): "gold" | "platinum" | "diamond" {
+  if (note <= 3) return "gold";
+  if (note <= 6) return "platinum";
+  return "diamond";
+}
+
+function popularityCount(note: number): number {
+  return ((note - 1) % 3) + 1;
+}
+
+function awardSymbolSvg(tier: "gold" | "platinum" | "diamond"): string {
+  if (tier === "gold") {
+    return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="#d4af37" stroke="#f7df84" stroke-width="0.8"/><circle cx="6" cy="6" r="2.5" fill="#b58a1e"/><path d="M6 3.8l.6 1.2 1.3.2-.95.92.22 1.32L6 6.78l-1.17.66.22-1.32-.95-.92 1.3-.2.6-1.2z" fill="#f7df84"/></svg>`;
+  }
+  if (tier === "platinum") {
+    return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.2l3.6 1.2v3.2c0 2.6-1.7 4.3-3.6 5.2-1.9-.9-3.6-2.6-3.6-5.2V2.4L6 1.2z" fill="#c7d0d9" stroke="#eff4f8" stroke-width="0.8"/><path d="M3.2 3.2l-.8.6.6.9-.9.3.35.98-1 .06.06 1.03 1-.1.14.98.98-.24.34.93.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/><path d="M8.8 3.2l.8.6-.6.9.9.3-.35.98 1 .06-.06 1.03-1-.1-.14.98-.98-.24-.34.93-.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/></svg>`;
+  }
+  return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.2L4.2 2h3.6L10 4.2 6 10 2 4.2z" fill="#7fe3ff" stroke="#e8fbff" stroke-width="0.8"/><path d="M4.2 2L6 4.2 7.8 2M2 4.2h8M6 4.2v5.8" stroke="#dff8ff" stroke-width="0.6" fill="none"/></svg>`;
+}
+
 function isVeryLight(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
   const r = parseInt(hex.slice(1, 3), 16);
@@ -367,37 +396,39 @@ export default function Card({
 
         {/* Stats */}
         <div className={styles.stats}>
-          {[
-            {
-              lbl: "Popularity",
-              val: card.pop,
-              grad: effectiveTheme.barPop,
-              glow: effectiveTheme.barGlowPop,
-            },
-            {
-              lbl: "Experimental",
-              val: card.exp,
-              grad: effectiveTheme.barExp,
-              glow: effectiveTheme.barGlowExp,
-            },
-          ].map(({ lbl, val, grad, glow }) => (
-            <div key={lbl} className={styles.statRow}>
-              <span className={styles.statLabel}>{lbl}</span>
-              <div className={styles.statBg}>
-                <div
-                  className={styles.statFill}
-                  style={
-                    {
-                      width: `${val}%`,
-                      background: `linear-gradient(to right, ${grad[0]}, ${grad[1]})`,
-                      "--bar-glow": glow,
-                    } as React.CSSProperties
-                  }
-                />
+          {(() => {
+            const note = popularityNote(card.pop);
+            const tier = popularityTier(note);
+            const count = popularityCount(note);
+            const icon = awardSymbolSvg(tier);
+            return (
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Popularity</span>
+                <div className={styles.statBg} style={{ display: "flex", alignItems: "center", gap: 4, padding: "0 6px", background: "rgba(0,0,0,0.45)" }}>
+                  {Array.from({ length: count }).map((_, i) => (
+                    <span key={`award-${i}`} dangerouslySetInnerHTML={{ __html: icon }} />
+                  ))}
+                </div>
+                <span className={styles.statVal}>{note}</span>
               </div>
-              <span className={styles.statVal}>{val}</span>
+            );
+          })()}
+          <div className={styles.statRow}>
+            <span className={styles.statLabel}>Experimental</span>
+            <div className={styles.statBg}>
+              <div
+                className={styles.statFill}
+                style={
+                  {
+                    width: `${card.exp}%`,
+                    background: `linear-gradient(to right, ${effectiveTheme.barExp[0]}, ${effectiveTheme.barExp[1]})`,
+                    "--bar-glow": effectiveTheme.barGlowExp,
+                  } as React.CSSProperties
+                }
+              />
             </div>
-          ))}
+            <span className={styles.statVal}>{card.exp}</span>
+          </div>
         </div>
 
         {/* Footer */}
