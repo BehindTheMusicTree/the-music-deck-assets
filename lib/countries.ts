@@ -32,7 +32,7 @@ export const USA_FLAG_PATH = "/cards/artworks/examples/flag-usa.webp";
 export const COUNTRY_DATA: Record<string, CountryDef> = {
   USA: {
     theme: {
-      border: "#B22234", cardBg: "#08101e", headerBg: "#060c18",
+      border: "#B22234", headerBg: "#060c18",
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#B22234", "#e84455"], barExp: ["#3C3B6E", "#6060cc"],
       barGlowPop: "rgba(178,34,52,.85)", barGlowExp: "rgba(96,96,204,.75)",
@@ -47,7 +47,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 
   France: {
     theme: {
-      border: "#0055A4", cardBg: "#060d1e", headerBg: "#04091a",
+      border: "#0055A4", headerBg: "#04091a",
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
       barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
@@ -62,7 +62,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 
   Spain: {
     theme: {
-      border: "#AA151B", cardBg: "#1a0a0a", headerBg: "#120606",
+      border: "#AA151B", headerBg: "#120606",
       textMain: "#ffffff", textBody: "#dddddd",
       barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
       barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
@@ -81,7 +81,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
   Bretagne: {
     theme: {
-      border: "#222222", cardBg: "#0e0e0e", headerBg: "#0a0a0a",
+      border: "#222222", headerBg: "#0a0a0a",
       textMain: "#ffffff", textBody: "#cccccc",
       barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
       barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",

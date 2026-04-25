@@ -21,13 +21,12 @@ export interface CardData {
   country?: string;
   /** 'full' = flag fills entire card background; 'fade' = flag left-half fades into genre colour */
   flagStyle?: "full" | "fade";
-  /** Colour the flag fades into for flagStyle='fade' (defaults to theme.cardBg) */
+  /** Colour the flag fades into for flagStyle='fade' (defaults to "transparent") */
   fadeColor?: string;
 }
 
 export interface GenreTheme {
   border: string;
-  cardBg: string;
   headerBg: string;
   textMain: string;
   textBody: string;
@@ -239,11 +238,10 @@ export default function Card({
   const flagUsR90 = country && FLAG_ROTATE_R90.has(country) && flagLayer;
   const flagBg = country ? FLAG_BG[country] : undefined;
   const flagStyle = card.flagStyle;
-  const fadeColor = card.fadeColor ?? theme.cardBg;
+  const fadeColor = card.fadeColor;
 
   const varStyle = {
     "--gc-border": theme.border,
-    "--gc-card-bg": theme.cardBg,
     "--gc-header-bg": theme.headerBg,
     "--gc-text-main": theme.textMain,
     "--gc-text-body": theme.textBody,
@@ -388,13 +386,12 @@ export default function Card({
         {cardContent}
       </div>
     ) : flagStyle === "fade" && flagBg ? (
-      /* Flag+gradient on border only, normal cardBg inside */
       <div
         className={styles.card}
         style={{
           ...varStyle,
           border: "10px solid transparent",
-          backgroundImage: `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to right, transparent 23%, ${fadeColor} 77%), ${flagBg}`,
+          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 23%, ${fadeColor} 77%), ${flagBg}`,
           backgroundClip: "padding-box, border-box, border-box",
           backgroundOrigin: "padding-box, border-box, border-box",
           backgroundSize: "100% 100%, 100% 100%, 100% 100%",
@@ -411,8 +408,8 @@ export default function Card({
             {
               backgroundImage:
                 flagStyle === "fade"
-                  ? `linear-gradient(${theme.cardBg}, ${theme.cardBg}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
-                  : `linear-gradient(${theme.cardBg}, ${theme.cardBg}), url("${USA_FLAG_PATH}")`,
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
+                  : `linear-gradient(${"transparent"}, ${"transparent"}), url("${USA_FLAG_PATH}")`,
               backgroundSize:
                 flagStyle === "fade"
                   ? "100% 100%, 100% 100%, cover"
@@ -443,7 +440,7 @@ export default function Card({
           aria-hidden
           style={
             {
-              background: `linear-gradient(${theme.cardBg}, ${theme.cardBg}) padding-box, ${flagLayer} border-box`,
+              background: `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
               border: "10px solid transparent",
             } as React.CSSProperties
           }
