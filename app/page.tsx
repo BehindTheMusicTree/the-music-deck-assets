@@ -17,7 +17,7 @@ const sections = [
     href: "/rarities",
     index: "03",
     label: "Rarities",
-    desc: "Legendary, Epic, Rare, Common",
+    desc: "Legendary, Classic, Banger, Niche",
   },
   {
     href: "/collection",

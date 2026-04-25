@@ -237,7 +237,7 @@ const RARITY_LABEL: Record<"Legendary" | "Epic" | "Rare" | "Common", string> = {
   Legendary: "Legendary",
   Epic: "Classic",
   Rare: "Banger",
-  Common: "Gem",
+  Common: "Niche",
 };
 
 export default function CardsPage() {
@@ -590,17 +590,27 @@ export default function CardsPage() {
         {/* Rarity variants */}
         <div id="rarities" className="w-full max-w-[1100px] mb-14">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Rarity Variants — Small Size
+            Rarity Variants
           </div>
-          <div className="flex flex-wrap gap-4 items-end">
-            {(["Legendary", "Epic", "Rare", "Common"] as const).map(
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {(["Common", "Rare", "Epic", "Legendary"] as const).map(
               (rarity) => (
                 <div key={rarity} className="flex flex-col items-center gap-2">
-                  <Card
-                    card={{ ...MOCK_CARDS.Rock, rarity }}
-                    theme={APP_GENRE_THEMES.Rock}
-                    small
-                  />
+                  <div
+                    style={{
+                      width: 298,
+                      height: 440,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                      <Card
+                        card={{ ...MOCK_CARDS.Rock, rarity }}
+                        theme={APP_GENRE_THEMES.Rock}
+                        small
+                      />
+                    </div>
+                  </div>
                   <div className="font-mono tracking-[1px] text-muted">
                     {RARITY_LABEL[rarity].toUpperCase()}
                   </div>

@@ -6,22 +6,26 @@ const rarities = [
     examples: ["Iconic artists", "Milestone albums", "Limited editions"],
   },
   {
-    name: "Epic",
+    name: "Classic",
     hex: "#a070e0",
     desc: "Powerful and distinctive. Purple signals strong competitive value and special mechanics.",
     examples: ["Genre-defining albums", "Cult artists", "Era-defining tracks"],
   },
   {
-    name: "Rare",
+    name: "Banger",
     hex: "#6090e0",
     desc: "Reliable and collectible. Blue tones indicate meaningful cards worth building around.",
     examples: ["Influential tracks", "Known artists", "Acclaimed albums"],
   },
   {
-    name: "Common",
+    name: "Niche",
     hex: "#8888a0",
-    desc: "The foundation of every collection. Neutral grey — stackable, tradeable, accessible.",
-    examples: ["Deep catalogue tracks", "Emerging artists", "Everyday songs"],
+    desc: "Not mainstream, but meaningful — cult cuts, local scenes, and under-the-radar tracks. Neutral grey, accessible to collect.",
+    examples: [
+      "Cult and regional scenes",
+      "Deep catalogue cuts",
+      "Before-they-were-huge picks",
+    ],
   },
 ];
 
@@ -36,8 +40,9 @@ export default function RaritiesPage() {
         THE <em className="text-gold not-italic">RARITIES</em>
       </h2>
       <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
-        Four tiers, each with a fixed accent colour independent of genre. Rarity
-        signals both collector value and competitive power.
+        Four tiers (Niche, Banger, Classic, Legendary), each with a fixed accent
+        colour independent of genre. Rarity signals both collector value and
+        competitive power.
       </p>
 
       <div className="w-full max-w-[700px] flex flex-col gap-4">

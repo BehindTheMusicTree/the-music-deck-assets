@@ -59,7 +59,7 @@ const RARITY_LABEL: Record<string, string> = {
   Legendary: "Legendary",
   Epic: "Classic",
   Rare: "Banger",
-  Common: "Gem",
+  Common: "Niche",
 };
 
 const RARITY_ICON: Record<string, string> = {
