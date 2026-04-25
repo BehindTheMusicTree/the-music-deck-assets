@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 import styles from "./Card.module.css";
-import { SUBGENRE_COLOR, subgenreTheme } from "@/lib/genres";
+import { SUBGENRE_COLOR, appGenreFromSubgenre, subgenreTheme } from "@/lib/genres";
 
 export interface CardData {
   id: number;
   title: string;
   artist?: string;
   year: number;
-  genre: string;
   subgenre: string;
   typeStripPrimaryBorder?: string;
   typeStripSubBorder?: string;
@@ -68,8 +67,8 @@ const STRIP_NAME_FOR_GENRE: Record<string, string> = {
 };
 
 /** Always returns two parts (genre + subgenre) for a two-column type strip. */
-function getTypeStripParts(card: CardData): { left: string; right: string } {
-  const left = STRIP_NAME_FOR_GENRE[card.genre] ?? card.genre;
+function getTypeStripParts(card: CardData, leftGenre: string): { left: string; right: string } {
+  const left = STRIP_NAME_FOR_GENRE[leftGenre] ?? leftGenre;
   return { left, right: card.subgenre };
 }
 
@@ -126,7 +125,12 @@ export default function Card({
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
-  const strip = getTypeStripParts(card);
+  const derivedGenre = card.country
+    ? card.country
+    : card.subgenre
+      ? appGenreFromSubgenre(card.subgenre)
+      : "—";
+  const strip = getTypeStripParts(card, derivedGenre);
   const canonicalSubgenreColor = SUBGENRE_COLOR[card.subgenre];
   const effectiveTheme = canonicalSubgenreColor
     ? subgenreTheme(canonicalSubgenreColor, theme)

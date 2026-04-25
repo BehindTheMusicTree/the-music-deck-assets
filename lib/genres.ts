@@ -258,7 +258,7 @@ export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
 export interface Subgenre {
   n: string;
   color: string;
-  parentA: GenreName;
+  parentA: string;
   parentB?: string;
   t?: number;
   angleDelta?: number;
@@ -266,6 +266,14 @@ export interface Subgenre {
 }
 
 export const SUBGENRES: Subgenre[] = [
+  { n: "Country", color: "#b22234", parentA: "USA", intensity: "soft" },
+  {
+    n: "French Variety",
+    color: "#0055a4",
+    parentA: "France",
+    intensity: "soft",
+  },
+  { n: "Folk Breton", color: "#222222", parentA: "Bretagne", intensity: "soft" },
   {
     n: "Electropop",
     color: "#e4ebff",
@@ -377,12 +385,12 @@ export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
   if (!sub) {
     throw new Error(`Unknown canonical subgenre "${subgenre}"`);
   }
-  if (sub.parentB) {
+  if (!(sub.parentA in GENRE_THEMES)) {
     throw new Error(
-      `Subgenre "${subgenre}" has multiple canonical parent genres`,
+      `Subgenre "${subgenre}" parent "${sub.parentA}" is not a global canonical genre`,
     );
   }
-  return sub.parentA;
+  return sub.parentA as GenreName;
 }
 
 export function appGenreFromSubgenre(subgenre: string): AppGenreName {

@@ -308,6 +308,16 @@ export default function GenreWheel() {
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {
+          if (!(s.parentA in GENRE_THEMES)) {
+            throw new Error(
+              `Subgenre "${s.n}" has non-global parentA "${s.parentA}" in GenreWheel`,
+            );
+          }
+          if (s.parentB && !(s.parentB in GENRE_THEMES)) {
+            throw new Error(
+              `Subgenre "${s.n}" has non-global parentB "${s.parentB}" in GenreWheel`,
+            );
+          }
           let angle: number;
           if (s.angleDelta !== undefined) {
             angle = genreAngle(s.parentA) + s.angleDelta;

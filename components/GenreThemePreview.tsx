@@ -9,7 +9,6 @@ const BASE_CARD: CardData = {
   title: "Preview Track",
   artist: "Artist",
   year: 2024,
-  genre: "Rock",
   subgenre: "",
   ability: "Preview",
   abilityDesc: "Live preview of the selected genre or subgenre theme.",
@@ -39,7 +38,7 @@ export default function GenreThemePreview() {
       <div className="sticky top-[104px] shrink-0 flex flex-col items-center gap-2">
         <Card card={card} theme={theme} />
         <div className="font-mono text-[10px] tracking-[1px] text-muted">
-          {card.genre}{card.subgenre ? ` · ${card.subgenre}` : ""}
+          {card.subgenre || "—"}
         </div>
       </div>
 
@@ -59,7 +58,7 @@ export default function GenreThemePreview() {
                 style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                 onClick={() => {
                   setTheme(t);
-                  setCard({ ...BASE_CARD, genre: name, subgenre: "" });
+                  setCard({ ...BASE_CARD, subgenre: "" });
                 }}
               >
                 <span
@@ -94,7 +93,7 @@ export default function GenreThemePreview() {
                         style={{ background: "#f4edd8" }}
                         onClick={() => {
                           setTheme(t);
-                          setCard({ ...BASE_CARD, genre: name, subgenre: s.n });
+                          setCard({ ...BASE_CARD, subgenre: s.n });
                         }}
                       >
                         <div
