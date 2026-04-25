@@ -68,6 +68,12 @@ Genres act like Pokemon types:
 
 ## Scoring Model
 
+### Vibe
+
+- The score is represented by a single **Vibe gauge**.
+- The gauge spans from **100% on player 1's side** to **100% on player 2's side** with a progressive gradient between both ends.
+- Battles start at **0** (neutral centre), then the indicator moves toward one side as Vibe shifts.
+
 Example scoring logic:
 
 ```text

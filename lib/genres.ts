@@ -127,7 +127,16 @@ function hexToRgb(hex: string): [number, number, number] {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 function rgbToHex(r: number, g: number, b: number): string {
-  return "#" + [r, g, b].map(v => Math.min(255, Math.max(0, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  return (
+    "#" +
+    [r, g, b]
+      .map((v) =>
+        Math.min(255, Math.max(0, Math.round(v)))
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+  );
 }
 function scale(hex: string, factor: number): string {
   const [r, g, b] = hexToRgb(hex);
@@ -140,22 +149,22 @@ function rgba(hex: string, alpha: number): string {
 
 export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
   return {
-    border:     color,
-    headerBg:   scale(color, 0.18),
-    textMain:   scale(color, 1.55),
-    textBody:   color,
-    barPop:     [scale(color, 0.55), scale(color, 1.35)],
-    barExp:     [scale(color, 0.40), scale(color, 0.78)],
+    border: color,
+    headerBg: scale(color, 0.18),
+    textMain: scale(color, 1.55),
+    textBody: color,
+    barPop: [scale(color, 0.55), scale(color, 1.35)],
+    barExp: [scale(color, 0.4), scale(color, 0.78)],
     barGlowPop: rgba(color, 0.85),
-    barGlowExp: rgba(scale(color, 0.80), 0.75),
-    icon:       base.icon,
+    barGlowExp: rgba(scale(color, 0.8), 0.75),
+    icon: base.icon,
   };
 }
 
 // ---------------------------------------------------------------------------
 // Subgenres (wheel data)
 // ---------------------------------------------------------------------------
-export type Ring = "pop" | "poppy" | "experimental" | "hardcore";
+export type Ring = "pop" | "soft" | "experimental" | "hardcore";
 
 export interface Subgenre {
   n: string;
@@ -171,12 +180,12 @@ export interface Subgenre {
 export const SUBGENRES: Subgenre[] = [
   { n: "Electropop", color: "#e4ebff", parent: "Electronic", ring: "pop" },
   { n: "Disco Pop", color: "#ffd6e8", parent: "Disco/Funk", ring: "pop" },
-  { n: "Pop Rock", color: "#f07080", parent: "Rock", ring: "poppy" },
-  { n: "EDM", color: "#7090e8", parent: "Electronic", ring: "poppy" },
-  { n: "R&B Soul", color: "#ffd060", parent: "Hip-Hop", ring: "poppy" },
-  { n: "R&B", color: "#ffe94d", parent: "Hip-Hop", ring: "poppy" },
-  { n: "Roots", color: "#5ab848", parent: "Reggae/Dub", ring: "poppy" },
-  { n: "Disco", color: "#f0a0c0", parent: "Disco/Funk", ring: "poppy" },
+  { n: "Pop Rock", color: "#f07080", parent: "Rock", ring: "soft" },
+  { n: "EDM", color: "#7090e8", parent: "Electronic", ring: "soft" },
+  { n: "R&B Soul", color: "#ffd060", parent: "Hip-Hop", ring: "soft" },
+  { n: "R&B", color: "#ffe94d", parent: "Hip-Hop", ring: "soft" },
+  { n: "Roots", color: "#5ab848", parent: "Reggae/Dub", ring: "soft" },
+  { n: "Disco", color: "#f0a0c0", parent: "Disco/Funk", ring: "soft" },
   {
     n: "Ska Punk",
     color: "#8a3018",
@@ -255,58 +264,3 @@ export function themeForCard(genre: string, country?: string): GenreTheme {
 }
 
 // ---------------------------------------------------------------------------
-// Colour tokens table — genre + subgenres grouped for the Genres page
-// ---------------------------------------------------------------------------
-export const COLOUR_TOKEN_GROUPS: Array<{
-  genre: string;
-  hex: string;
-  subs: Array<{ n: string; h: string; ring: Ring }>;
-}> = [
-  {
-    genre: "Rock",
-    hex: GENRE_THEMES.Rock.border,
-    subs: SUBGENRES.filter(
-      (s) => s.parent === "Rock" || s.parentA === "Rock",
-    ).map(({ n, h, ring }) => ({ n, h, ring })),
-  },
-  {
-    genre: "Electronic",
-    hex: GENRE_THEMES.Electronic.border,
-    subs: SUBGENRES.filter(
-      (s) => s.parent === "Electronic" || s.parentA === "Electronic",
-    ).map(({ n, h, ring }) => ({ n, h, ring })),
-  },
-  {
-    genre: "Disco/Funk",
-    hex: GENRE_THEMES["Disco/Funk"].border,
-    subs: SUBGENRES.filter((s) => s.parent === "Disco/Funk").map(
-      ({ n, h, ring }) => ({ n, h, ring }),
-    ),
-  },
-  {
-    genre: "Hip-Hop",
-    hex: GENRE_THEMES["Hip-Hop"].border,
-    subs: SUBGENRES.filter((s) => s.parent === "Hip-Hop").map(
-      ({ n, h, ring }) => ({ n, h, ring }),
-    ),
-  },
-  {
-    genre: "Reggae/Dub",
-    hex: GENRE_THEMES["Reggae/Dub"].border,
-    subs: SUBGENRES.filter(
-      (s) => s.parent === "Reggae/Dub" || s.parentB === "Reggae/Dub",
-    ).map(({ n, h, ring }) => ({ n, h, ring })),
-  },
-  {
-    genre: "Classical",
-    hex: GENRE_THEMES.Classical.border,
-    subs: [],
-  },
-  {
-    genre: "Vintage",
-    hex: GENRE_THEMES.Vintage.border,
-    subs: SUBGENRES.filter((s) => s.parent === "Vintage").map(
-      ({ n, h, ring }) => ({ n, h, ring }),
-    ),
-  },
-];

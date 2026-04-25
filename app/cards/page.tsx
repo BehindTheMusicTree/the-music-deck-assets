@@ -325,10 +325,6 @@ export default function CardsPage() {
                   "Border",
                   "10px solid; colour = subgenre canonical colour if the subgenre has one, otherwise genre border colour. World cards use the country flag in landscape; mixed World/Genre cards fade from flag (left) to genre colour (right).",
                 ],
-                [
-                  "Theme resolution",
-                  "If the card's subgenre matches a canonical entry in SUBGENRES (with a colour), a full theme is derived from that colour: header background, text, stat bars, glow, and border all follow the subgenre colour. The genre icon is inherited from the parent genre. Left diamond always shows the genre colour.",
-                ],
               ].map(([name, desc]) => (
                 <div key={name} className="flex gap-3">
                   <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
@@ -339,6 +335,17 @@ export default function CardsPage() {
                   </div>
                 </div>
               ))}
+              <div className="flex gap-3">
+                <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
+                  Theme resolution
+                </div>
+                <div className="font-garamond text-muted leading-[1.5]">
+                  If the card&apos;s subgenre matches a canonical entry in SUBGENRES (with a colour), a full theme is derived from that colour: header background, text, stat bars, glow, and border all follow the subgenre colour. The genre icon is inherited from the parent genre. Left diamond always shows the genre colour.{" "}
+                  <a href="/genres#genre-themes" className="text-gold underline underline-offset-2 hover:text-white transition-colors">
+                    Genre Themes →
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

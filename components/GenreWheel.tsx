@@ -6,17 +6,18 @@ const GENRES = [
   { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
   { n: "Electronic", color: GENRE_THEMES.Electronic.border },
   { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
-  { n: "Hip-Hop",    color: GENRE_THEMES["Hip-Hop"].border },
-  { n: "Rock",       color: GENRE_THEMES.Rock.border },
-  { n: "Classical",  color: GENRE_THEMES.Classical.border },
-  { n: "Vintage",    color: GENRE_THEMES.Vintage.border },
+  { n: "Hip-Hop", color: GENRE_THEMES["Hip-Hop"].border },
+  { n: "Rock", color: GENRE_THEMES.Rock.border },
+  { n: "Classical", color: GENRE_THEMES.Classical.border },
+  { n: "Vintage", color: GENRE_THEMES.Vintage.border },
 ];
 
 const CX = 620,
   CY = 620,
   R_POP_SUBGENRES = 130,
-  R_POPPY_SUBGENRES = 230,
-  R_POP_EXPERIMENTAL_LINE = 340,
+  R_POP_SOFT_LINE = 170,
+  R_SOFT_SUBGENRES = 230,
+  R_SOFT_EXPERIMENTAL_LINE = 340,
   R_EXPERIMENTAL_SUBGENRES = 505,
   R_EXPERIMENTAL_HARDCORE_LINE = 620,
   R_HARDCORE_SUBGENRES = 720;
@@ -99,7 +100,9 @@ function isLight(hex: string) {
 }
 
 export default function GenreWheel() {
-  const popText = repeat("POP", 40);
+  const popText = repeat("POP", 20);
+  const softText1 = repeat("SOFT", 23);
+  const softText2 = repeat("SOFT", 40);
   const expText = repeat("EXPERIMENTAL", 14);
   const exp2Text = repeat("EXPERIMENTAL", 24);
   const hardText = repeat("HARDCORE", 34);
@@ -123,19 +126,27 @@ export default function GenreWheel() {
       >
         <defs>
           <path
-            id="arc-pop"
-            d={`M ${CX},${CY - (R_POP_EXPERIMENTAL_LINE - 30)} A ${R_POP_EXPERIMENTAL_LINE - 30},${R_POP_EXPERIMENTAL_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_POP_EXPERIMENTAL_LINE - 30)}`}
+            id="arc-pop-soft-inner"
+            d={`M ${CX},${CY - (R_POP_SOFT_LINE - 30)} A ${R_POP_SOFT_LINE - 30},${R_POP_SOFT_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_POP_SOFT_LINE - 30)}`}
           />
           <path
-            id="arc-exp-outer-inner"
-            d={`M ${CX},${CY - (R_POP_EXPERIMENTAL_LINE + 20)} A ${R_POP_EXPERIMENTAL_LINE + 20},${R_POP_EXPERIMENTAL_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_POP_EXPERIMENTAL_LINE + 20)}`}
+            id="arc-pop-soft-outer"
+            d={`M ${CX},${CY - (R_POP_SOFT_LINE + 20)} A ${R_POP_SOFT_LINE + 20},${R_POP_SOFT_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_POP_SOFT_LINE + 20)}`}
           />
           <path
-            id="arc-exp-inner-outer"
+            id="arc-soft-experimental-inner"
+            d={`M ${CX},${CY - (R_SOFT_EXPERIMENTAL_LINE - 30)} A ${R_SOFT_EXPERIMENTAL_LINE - 30},${R_SOFT_EXPERIMENTAL_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_SOFT_EXPERIMENTAL_LINE - 30)}`}
+          />
+          <path
+            id="arc-soft-experimental-outer"
+            d={`M ${CX},${CY - (R_SOFT_EXPERIMENTAL_LINE + 20)} A ${R_SOFT_EXPERIMENTAL_LINE + 20},${R_SOFT_EXPERIMENTAL_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_SOFT_EXPERIMENTAL_LINE + 20)}`}
+          />
+          <path
+            id="arc-experimental-hardcore-inner"
             d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE - 30},${R_EXPERIMENTAL_HARDCORE_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)}`}
           />
           <path
-            id="arc-hard"
+            id="arc-experimental-hardcore-outer"
             d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
           />
         </defs>
@@ -177,11 +188,11 @@ export default function GenreWheel() {
           </text>
         </g>
 
-        {/* Pop text — inside inner circle */}
+        {/* Pop text */}
         <circle
           cx={CX}
           cy={CY}
-          r={R_POP_EXPERIMENTAL_LINE}
+          r={R_SOFT_EXPERIMENTAL_LINE}
           fill="none"
           stroke="rgba(255,255,255,.14)"
           strokeWidth={1.5}
@@ -193,8 +204,54 @@ export default function GenreWheel() {
           fill="rgba(255,255,255,.85)"
           letterSpacing={8}
         >
-          <textPath href="#arc-pop" startOffset="0%" dy={16}>
+          <textPath href="#arc-pop-soft-inner" startOffset="0%" dy={16}>
             {popText}
+          </textPath>
+        </text>
+
+        {/* Soft text — inner */}
+        <circle
+          cx={CX}
+          cy={CY}
+          r={R_POP_SOFT_LINE}
+          fill="none"
+          stroke="rgba(255,255,255,.14)"
+          strokeWidth={1.5}
+          strokeDasharray="4 6"
+        />
+        <text
+          fontFamily="Cinzel, serif"
+          fontSize={11}
+          fill="rgba(255,255,255,.85)"
+          letterSpacing={8}
+        >
+          <textPath href="#arc-pop-soft-outer" startOffset="0%" dy={16}>
+            {softText1}
+          </textPath>
+        </text>
+
+        {/* Soft text — outer */}
+        <circle
+          cx={CX}
+          cy={CY}
+          r={R_SOFT_EXPERIMENTAL_LINE}
+          fill="none"
+          stroke="rgba(255,255,255,.14)"
+          strokeWidth={1.5}
+          strokeDasharray="4 6"
+        />
+        <text
+          fontFamily="Cinzel, serif"
+          fontSize={11}
+          fill="rgba(255,255,255,.85)"
+          letterSpacing={8}
+        >
+          <textPath
+            href="#arc-soft-experimental-inner"
+            startOffset="0%"
+            dy={16}
+          >
+            {softText2}
           </textPath>
         </text>
 
@@ -202,10 +259,14 @@ export default function GenreWheel() {
         <text
           fontFamily="Cinzel, serif"
           fontSize={10}
-          fill="rgba(255,255,255,.22)"
+          fill="rgba(255, 255, 255, 0.69)"
           letterSpacing={5}
         >
-          <textPath href="#arc-exp-outer-inner" startOffset="0%" dy={16}>
+          <textPath
+            href="#arc-soft-experimental-outer"
+            startOffset="0%"
+            dy={16}
+          >
             {expText}
           </textPath>
         </text>
@@ -213,10 +274,14 @@ export default function GenreWheel() {
         <text
           fontFamily="Cinzel, serif"
           fontSize={10}
-          fill="rgba(255,255,255,.22)"
+          fill="rgba(255, 255, 255, 0.48)"
           letterSpacing={5}
         >
-          <textPath href="#arc-exp-inner-outer" startOffset="0%" dy={-8}>
+          <textPath
+            href="#arc-experimental-hardcore-inner"
+            startOffset="0%"
+            dy={-8}
+          >
             {exp2Text}
           </textPath>
         </text>
@@ -227,17 +292,21 @@ export default function GenreWheel() {
           cy={CY}
           r={R_EXPERIMENTAL_HARDCORE_LINE}
           fill="none"
-          stroke="rgba(255,255,255,.08)"
+          stroke="rgba(255, 255, 255, 0.37)"
           strokeWidth={1.5}
           strokeDasharray="4 6"
         />
         <text
           fontFamily="Cinzel, serif"
           fontSize={10}
-          fill="rgba(255,255,255,.15)"
+          fill="rgba(255, 255, 255, 0.28)"
           letterSpacing={5}
         >
-          <textPath href="#arc-hard" startOffset="0%" dy={16}>
+          <textPath
+            href="#arc-experimental-hardcore-outer"
+            startOffset="0%"
+            dy={16}
+          >
             {hardText}
           </textPath>
         </text>
@@ -259,7 +328,7 @@ export default function GenreWheel() {
               y1={inner.y}
               x2={outer.x}
               y2={outer.y}
-              stroke="rgba(255,255,255,.18)"
+              stroke="rgba(255, 255, 255, 0.26)"
               strokeWidth={1}
             />
           );
@@ -268,11 +337,11 @@ export default function GenreWheel() {
         {/* Base genres on pop/experimental line */}
         {GENRES.map((g, i) => {
           const angle = (i / GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(CX, CY, R_POP_EXPERIMENTAL_LINE, angle);
+          const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
           return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
         })}
 
-        {/* Subgenres by intensity: pop / poppy / experimental / hardcore */}
+        {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
         {SUBGENRES.map((s) => {
           let angle: number;
           if (s.angleDelta !== undefined) {
@@ -292,8 +361,8 @@ export default function GenreWheel() {
           const r =
             s.ring === "pop"
               ? R_POP_SUBGENRES
-              : s.ring === "poppy"
-                ? R_POPPY_SUBGENRES
+              : s.ring === "SOFT"
+                ? R_SOFT_SUBGENRES
                 : s.ring === "hardcore"
                   ? R_HARDCORE_SUBGENRES
                   : R_EXPERIMENTAL_SUBGENRES;

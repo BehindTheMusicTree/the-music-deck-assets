@@ -1,7 +1,7 @@
 import GenreWheel from "@/components/GenreWheel";
 import GenreSubTabs from "@/components/GenreSubTabs";
 import GenreAssociations from "@/components/GenreAssociations";
-import { COLOUR_TOKEN_GROUPS } from "@/lib/genres";
+import GenreThemePreview from "@/components/GenreThemePreview";
 
 export default function GenresPage() {
   return (
@@ -124,59 +124,13 @@ export default function GenresPage() {
           <GenreWheel />
         </div>
 
-        {/* Colour token hierarchy */}
-        <div id="colour-tokens" className="w-full max-w-[860px] mt-4 mb-10">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">Colour Tokens</div>
+        {/* Genre themes */}
+        <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-2">Genre Themes</div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
-            Every genre and subgenre maps to a single hex token. Subgenres are ordered pop → hardcore within each genre.
+            Each genre defines a full colour theme used across the card frame. Subgenres with a canonical colour derive their own theme automatically. Click any row to preview.
           </p>
-          <div className="flex flex-col gap-6">
-            {COLOUR_TOKEN_GROUPS.map(({ genre, hex, subs }) => (
-              <div key={genre} className="border border-ui-border rounded-[6px] overflow-hidden">
-                {/* Genre header row */}
-                <div className="flex items-center gap-3 px-4 py-2.5" style={{ borderLeft: `4px solid ${hex}`, background: "#ede4cc" }}>
-                  <div className="w-4 h-4 shrink-0 rotate-45 rounded-[2px]" style={{ background: hex }} />
-                  <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>{genre}</span>
-                  <span className="font-mono text-xs ml-auto" style={{ color: "#8a7050" }}>{hex}</span>
-                </div>
-                {/* Subgenre rows */}
-                {subs.length > 0 && (
-                  <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
-                    {subs.map(({ n, h, ring }) => (
-                      <div key={n} className="flex items-center gap-3 pl-9 pr-4 py-2" style={{ background: "#f4edd8" }}>
-                        <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ background: h }} />
-                        <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{n}</span>
-                        <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>{ring}</span>
-                        <span className="font-mono text-xs" style={{ color: "#8a7050" }}>{h}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {/* World — countries/regions */}
-            <div className="border border-ui-border rounded-[6px] overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-2.5" style={{ borderLeft: "4px solid #a01818", background: "#ede4cc" }}>
-                <div className="w-4 h-4 shrink-0 rotate-45 rounded-[2px]" style={{ background: "#a01818" }} />
-                <span className="font-cinzel text-sm tracking-[2px]" style={{ color: "#2e2010" }}>World</span>
-                <span className="font-mono text-xs ml-auto" style={{ color: "#8a7050" }}>flag per country / region</span>
-              </div>
-              <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
-                {[
-                  { n: "USA",    pip: <span style={{ fontSize: 10, color: "#1a1a2e", lineHeight: 1 }}>★</span> },
-                  { n: "France", pip: <span style={{ fontSize: 13, color: "#1a2a0a", lineHeight: 1 }}>⚜</span> },
-                  { n: "Spain",  pip: <div className="w-3 h-3 shrink-0 rotate-45 rounded-[1px]" style={{ backgroundImage: "linear-gradient(135deg, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%)" }} /> },
-                ].map(({ n, pip }) => (
-                  <div key={n} className="flex items-center gap-3 pl-9 pr-4 py-2" style={{ background: "#f4edd8" }}>
-                    <div className="w-5 flex items-center justify-center shrink-0">{pip}</div>
-                    <span className="font-garamond text-sm flex-1" style={{ color: "#5a4a30" }}>{n}</span>
-                    <span className="font-mono text-[10px] tracking-wide uppercase" style={{ color: "#a89060" }}>country</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <GenreThemePreview />
         </div>
       </div>
 
