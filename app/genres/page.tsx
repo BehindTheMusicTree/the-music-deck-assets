@@ -18,20 +18,19 @@ export default function GenresPage() {
           THE <em className="text-gold not-italic">GENRES</em>
         </h2>
         <p className="font-garamond italic text-muted max-w-[600px] text-center">
-          Each genre owns a border colour that spans a spectrum from its
-          poppiest subgenre to its most extreme. World is the exception — its
-          border carries the flag of the card&apos;s country or region rather
-          than a solid colour.
+          Each genre owns a border colour scale tied to intensity. World is the
+          exception — its border carries the flag of the card&apos;s country or
+          region rather than a solid colour.
         </p>
 
         <div className="w-full max-w-[860px] mt-6 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           <div className="px-[18px] pt-4 pb-3">
             <div className="font-mono tracking-[2px] uppercase text-muted mb-1">
-              Colour variations
+              Intensity Scale
             </div>
             <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
-              Each genre spans a spectrum — light to dark — from its poppiest
-              subgenre to its most extreme.
+              Each genre spans an intensity scale — from pop intensity to
+              hardcore intensity.
             </p>
           </div>
 
@@ -58,17 +57,16 @@ export default function GenresPage() {
             </div>
             <div className="flex justify-between mt-1 px-0.5">
               <span className="font-mono  text-muted opacity-50 tracking-[1px]">
-                ← POP
+                ← POP INTENSITY
               </span>
               <span className="font-mono  text-muted opacity-50 tracking-[1px]">
-                HARDCORE →
+                HARDCORE INTENSITY →
               </span>
             </div>
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="border-t border-ui-border mx-[18px]" />
-
+        <div className="w-full max-w-[860px] mt-2 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           {/* Mix rule */}
           <div className="px-[18px] py-4">
             <div className="font-mono text-[11px] tracking-[2px] text-muted uppercase mb-3 opacity-60">
@@ -95,7 +93,7 @@ export default function GenresPage() {
                   style={{ background: "#c8960a" }}
                 />
                 <span className="font-mono  tracking-[1px] text-muted">
-                  Hip-hop
+                  Hip-Hop
                 </span>
               </div>
               <span className="font-mono text-[18px] text-muted opacity-40">

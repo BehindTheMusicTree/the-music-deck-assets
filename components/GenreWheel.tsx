@@ -110,8 +110,8 @@ export default function GenreWheel() {
         flexDirection: "column",
         alignItems: "center",
         gap: 48,
-        marginTop: 150,
-        marginBottom: 150,
+        marginTop: 240,
+        marginBottom: 240,
       }}
     >
       <svg
