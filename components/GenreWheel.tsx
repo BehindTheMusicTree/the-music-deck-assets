@@ -109,9 +109,9 @@ export default function GenreWheel() {
   const popText = repeat("POP", 20);
   const softText1 = repeat("SOFT", 23);
   const softText2 = repeat("SOFT", 40);
-  const expText = repeat("EXPERIMENTAL", 14);
-  const exp2Text = repeat("EXPERIMENTAL", 24);
-  const hardText = repeat("HARDCORE", 34);
+  const expText = repeat("EXPERIMENTAL", 19);
+  const exp2Text = repeat("EXPERIMENTAL", 26);
+  const hardText = repeat("HARDCORE", 36);
 
   return (
     <div
