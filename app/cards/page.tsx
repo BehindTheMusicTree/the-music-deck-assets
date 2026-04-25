@@ -517,39 +517,6 @@ export default function CardsPage() {
           </div>
         </div>
 
-        <div id="affinity" className="w-full max-w-[1100px] mb-14">
-          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
-            Affinity
-          </div>
-          <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
-            <p className="font-garamond text-muted leading-[1.6] mb-3">
-              Affinity describes how well a card&apos;s genre sits alongside
-              other genres in your lineup — shared scene, groove, or combo
-              hooks. It is separate from popularity and from raw power.
-            </p>
-            <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
-              <li>
-                A card&apos;s genre is derived from its subgenre (or world
-                rules); affinity follows that genre.
-              </li>
-              <li>
-                High-affinity pairings reward coherent decks; mixed decks trade
-                affinity for flexibility.
-              </li>
-              <li>
-                Per-genre affinity lists:{" "}
-                <Link
-                  href="/genres#associations"
-                  className="text-gold underline-offset-2 hover:underline"
-                >
-                  Genres — Associations
-                </Link>
-                .
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <div id="advantage-weakness" className="w-full max-w-[1100px] mb-14">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
             Advantage &amp; Weakness

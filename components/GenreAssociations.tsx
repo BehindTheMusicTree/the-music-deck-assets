@@ -8,7 +8,6 @@ type Row = {
   genre: string;
   strengths: string[];
   weaknesses: string[];
-  affinities: string[];
   advantageVs: string[];
   weakVs: string[];
 };
@@ -26,64 +25,48 @@ const ROWS: Row[] = [
     genre: "Mainstream",
     strengths: ["Early (low cost)"],
     weaknesses: ["Low power"],
-    affinities: [
-      "Rock",
-      "Electronic",
-      "Hip-Hop",
-      "Disco/Funk",
-      "Reggae/Dub",
-      "Classical",
-      "Vintage",
-    ],
     ...battleMatchupColumns("Mainstream"),
   },
   {
     genre: "Rock",
     strengths: ["High attack", "Crowd energy", "Versatile tempo"],
     weaknesses: ["Low subtlety", "Weak in solo play"],
-    affinities: ["Metal", "Vintage"],
     ...battleMatchupColumns("Rock"),
   },
   {
     genre: "Electronic",
     strengths: ["Precision timing", "Layer stacking", "Range control"],
     weaknesses: ["Low warmth", "Fragile live feel"],
-    affinities: ["Hip-Hop", "Disco/Funk"],
     ...battleMatchupColumns("Electronic"),
   },
   {
     genre: "Hip-Hop",
     strengths: ["Rhythm dominance", "Sample leverage", "Cultural reach"],
     weaknesses: ["Narrow tonal range", "Low melodic depth"],
-    affinities: ["Electronic", "Disco/Funk"],
     ...battleMatchupColumns("Hip-Hop"),
   },
   {
     genre: "Disco/Funk",
     strengths: ["Groove power", "Combo chaining", "Dance multiplier"],
     weaknesses: ["Low aggression", "Era-locked feel"],
-    affinities: ["Hip-Hop", "Electronic"],
     ...battleMatchupColumns("Disco/Funk"),
   },
   {
     genre: "Reggae/Dub",
     strengths: ["Tempo control", "Defence bonus", "Vibration depth"],
     weaknesses: ["Low burst damage", "Slow build"],
-    affinities: ["Vintage", "Disco/Funk"],
     ...battleMatchupColumns("Reggae/Dub"),
   },
   {
     genre: "Classical",
     strengths: ["Harmonic complexity", "Sustained power", "Prestige bonus"],
     weaknesses: ["Slow ramp", "Low crowd energy"],
-    affinities: ["Vintage", "Electronic"],
     ...battleMatchupColumns("Classical"),
   },
   {
     genre: "Vintage",
-    strengths: ["Nostalgia bonus", "Wide affinity pool", "Authenticity"],
+    strengths: ["Nostalgia bonus", "Wide stylistic range", "Authenticity"],
     weaknesses: ["Low tech ceiling", "Era vulnerability"],
-    affinities: ["Rock", "Classical", "Reggae/Dub"],
     ...battleMatchupColumns("Vintage"),
   },
 ];
@@ -110,8 +93,8 @@ export default function GenreAssociations() {
         Associations
       </div>
       <p className="font-garamond italic text-muted leading-[1.5] mb-6 max-w-[600px]">
-        Each genre carries inherent strengths, weaknesses, natural affinities,
-        and the genres it tends to counter.
+        Each genre carries inherent strengths, weaknesses, and the genres it
+        tends to counter.
       </p>
 
       <div className="overflow-x-auto">
@@ -123,7 +106,6 @@ export default function GenreAssociations() {
                 "Genre",
                 "Strengths",
                 "Weaknesses",
-                "Affinities",
                 "Advantage vs",
                 "Weak vs",
               ].map((h) => (
@@ -182,17 +164,6 @@ export default function GenreAssociations() {
                         </li>
                       ))}
                     </ul>
-                  </td>
-                  <td className="px-4 py-3 align-top">
-                    <div className="flex flex-wrap">
-                      {row.affinities.map((a) => (
-                        <Pill
-                          key={a}
-                          label={a}
-                          color={GENRE_COLOR[a] ?? "#888"}
-                        />
-                      ))}
-                    </div>
                   </td>
                   <td className="px-4 py-3 align-top">
                     <div className="flex flex-wrap">
