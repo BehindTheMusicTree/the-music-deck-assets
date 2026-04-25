@@ -52,6 +52,13 @@ const RARITY_COLOR: Record<string, string> = {
   Common: "#666",
 };
 
+const RARITY_LABEL: Record<string, string> = {
+  Legendary: "Legendary",
+  Epic: "Classic",
+  Rare: "Banger",
+  Common: "Gem",
+};
+
 const RARITY_ICON: Record<string, string> = {
   Legendary: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 8,3.5 10,7 5,10 0,7 2,3.5" fill="#c8a040"/></svg>`,
   Epic: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
@@ -115,6 +122,30 @@ function awardSymbolSvg(tier: "gold" | "platinum" | "diamond"): string {
     return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.2l3.6 1.2v3.2c0 2.6-1.7 4.3-3.6 5.2-1.9-.9-3.6-2.6-3.6-5.2V2.4L6 1.2z" fill="#c7d0d9" stroke="#eff4f8" stroke-width="0.8"/><path d="M3.2 3.2l-.8.6.6.9-.9.3.35.98-1 .06.06 1.03 1-.1.14.98.98-.24.34.93.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/><path d="M8.8 3.2l.8.6-.6.9.9.3-.35.98 1 .06-.06 1.03-1-.1-.14.98-.98-.24-.34.93-.9-.5" fill="none" stroke="#9ca9b6" stroke-width="0.55"/></svg>`;
   }
   return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.2L4.2 2h3.6L10 4.2 6 10 2 4.2z" fill="#7fe3ff" stroke="#e8fbff" stroke-width="0.8"/><path d="M4.2 2L6 4.2 7.8 2M2 4.2h8M6 4.2v5.8" stroke="#dff8ff" stroke-width="0.6" fill="none"/></svg>`;
+}
+
+type IntensityLevel = "pop" | "soft" | "experimental" | "hardcore";
+
+function intensityFromExp(exp: number): IntensityLevel {
+  const normalized = clamp(exp, 0, 100);
+  if (normalized <= 25) return "pop";
+  if (normalized <= 50) return "soft";
+  if (normalized <= 75) return "experimental";
+  return "hardcore";
+}
+
+function intensityIndex(level: IntensityLevel): number {
+  if (level === "pop") return 1;
+  if (level === "soft") return 2;
+  if (level === "experimental") return 3;
+  return 4;
+}
+
+function intensityColor(level: IntensityLevel): string {
+  if (level === "pop") return "#d7e8ff";
+  if (level === "soft") return "#cbecc9";
+  if (level === "experimental") return "#ffd59f";
+  return "#ff9ea3";
 }
 
 function isVeryLight(hex: string) {
@@ -414,20 +445,36 @@ export default function Card({
             );
           })()}
           <div className={styles.statRow}>
-            <span className={styles.statLabel}>Experimental</span>
-            <div className={styles.statBg}>
-              <div
-                className={styles.statFill}
-                style={
-                  {
-                    width: `${card.exp}%`,
-                    background: `linear-gradient(to right, ${effectiveTheme.barExp[0]}, ${effectiveTheme.barExp[1]})`,
-                    "--bar-glow": effectiveTheme.barGlowExp,
-                  } as React.CSSProperties
-                }
-              />
+            <span className={styles.statLabel}>Intensity</span>
+            <div
+              className={styles.statBg}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(0,0,0,0.45)",
+              }}
+            >
+              {(() => {
+                const level = intensityFromExp(card.exp);
+                return (
+                  <span
+                    style={{
+                      fontFamily: '"Space Mono", monospace',
+                      fontSize: 8,
+                      letterSpacing: 0.8,
+                      textTransform: "uppercase",
+                      color: intensityColor(level),
+                    }}
+                  >
+                    {level}
+                  </span>
+                );
+              })()}
             </div>
-            <span className={styles.statVal}>{card.exp}</span>
+            <span className={styles.statVal}>
+              {intensityIndex(intensityFromExp(card.exp))}
+            </span>
           </div>
         </div>
 
@@ -441,7 +488,7 @@ export default function Card({
               }}
             />
             <span className={styles.rarityText} style={{ color: rarColor }}>
-              {card.rarity}
+              {RARITY_LABEL[card.rarity] ?? card.rarity}
             </span>
           </div>
         </div>

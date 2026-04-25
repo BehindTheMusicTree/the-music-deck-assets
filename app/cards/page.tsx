@@ -248,7 +248,41 @@ const MOCK_CARDS: Record<AppGenreName, CardData> = {
   },
 };
 
+const RARITY_LABEL: Record<"Legendary" | "Epic" | "Rare" | "Common", string> = {
+  Legendary: "Legendary",
+  Epic: "Classic",
+  Rare: "Banger",
+  Common: "Gem",
+};
+
 export default function CardsPage() {
+  const intensityExamples: Array<{
+    level: "pop" | "soft" | "experimental" | "hardcore";
+    exp: number;
+    card: CardData;
+  }> = [
+    {
+      level: "pop",
+      exp: 20,
+      card: { ...MOCK_CARDS.Mainstream, id: 9701, title: "Intensity Pop", exp: 20 },
+    },
+    {
+      level: "soft",
+      exp: 45,
+      card: { ...MOCK_CARDS.Rock, id: 9702, title: "Intensity Soft", exp: 45 },
+    },
+    {
+      level: "experimental",
+      exp: 70,
+      card: { ...MOCK_CARDS.Electronic, id: 9703, title: "Intensity Experimental", exp: 70 },
+    },
+    {
+      level: "hardcore",
+      exp: 90,
+      card: { ...MOCK_CARDS.Vintage, id: 9704, title: "Intensity Hardcore", exp: 90 },
+    },
+  ];
+
   const popularityExamples: Array<{ note: number; card: CardData }> = Array.from(
     { length: 9 },
     (_, i) => {
@@ -412,7 +446,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Stats",
-                  "Popularity uses a 1–9 award rating (gold/platinum/diamond). Experimental keeps a gradient bar derived from the active theme.",
+                  "Popularity uses a 1–9 award rating (gold/platinum/diamond). Intensity is shown as 4 levels (pop, soft, experimental, hardcore).",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
@@ -508,7 +542,7 @@ export default function CardsPage() {
               <li>1-3: gold awards (one to three symbols).</li>
               <li>4-6: platinum awards (one to three symbols).</li>
               <li>7-9: diamond awards (one to three symbols).</li>
-              <li>Popularity and Experimental are independent stats and can both be high.</li>
+              <li>Popularity and Intensity are independent stats and can both be high.</li>
             </ul>
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {popularityExamples.map(({ note, card }) => (
@@ -533,6 +567,43 @@ export default function CardsPage() {
           </div>
         </div>
 
+        <div id="intensity" className="w-full max-w-[1100px] mb-14">
+          <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
+            Intensity
+          </div>
+          <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
+            <p className="font-garamond text-muted leading-[1.6] mb-3">
+              Intensity replaces the old experimental gauge with four canonical levels.
+            </p>
+            <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
+              <li>Pop (1): low edge, broad accessibility.</li>
+              <li>Soft (2): moderate experimentation.</li>
+              <li>Experimental (3): strong stylistic risk.</li>
+              <li>Hardcore (4): maximal edge and extremity.</li>
+            </ul>
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {intensityExamples.map(({ level, exp, card }) => (
+                <div key={level} className="flex flex-col items-center gap-2">
+                  <div
+                    style={{
+                      width: 298,
+                      height: 440,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                      <Card card={card} theme={APP_GENRE_THEMES.Rock} small />
+                    </div>
+                  </div>
+                  <div className="font-mono tracking-[1px] text-muted">
+                    {level.toUpperCase()} · EXP {exp}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Rarity variants */}
         <div id="rarities" className="w-full max-w-[1100px] mb-14">
           <div className="font-mono tracking-[2px] text-muted uppercase mb-5">
@@ -548,7 +619,7 @@ export default function CardsPage() {
                     small
                   />
                   <div className="font-mono tracking-[1px] text-muted">
-                    {rarity.toUpperCase()}
+                    {RARITY_LABEL[rarity].toUpperCase()}
                   </div>
                 </div>
               ),

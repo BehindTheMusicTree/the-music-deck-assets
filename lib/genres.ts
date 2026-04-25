@@ -622,6 +622,8 @@ export function resolveThemeSelection({
       rightLabel: subgenre,
       resolvedGenre: appGenre,
       resolvedSubgenre: subgenre,
+      typeStripPrimaryBorder:
+        def.intensity === "pop" ? GENRE_THEMES.Mainstream.border : undefined,
       typeStripSubBorder: def.color,
     };
   }
