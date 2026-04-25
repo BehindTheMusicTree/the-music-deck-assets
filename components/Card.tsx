@@ -125,8 +125,9 @@ export default function Card({
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const strip = getTypeStripParts(card);
-  const effectiveTheme = SUBGENRE_COLOR[card.subgenre]
-    ? subgenreTheme(SUBGENRE_COLOR[card.subgenre], theme)
+  const canonicalSubgenreColor = SUBGENRE_COLOR[card.subgenre];
+  const effectiveTheme = canonicalSubgenreColor
+    ? subgenreTheme(canonicalSubgenreColor, theme)
     : theme;
   const stripLeftBorder = card.typeStripPrimaryBorder ?? theme.border;
   const stripRightBorder = card.typeStripSubBorder ?? effectiveTheme.border;
@@ -146,7 +147,13 @@ export default function Card({
   const flagUsR90 = country && FLAG_ROTATE_R90.has(country) && flagLayer;
   const flagBg = country ? FLAG_BG[country] : undefined;
   const flagStyle = card.flagStyle;
-  const fadeColor = card.fadeColor;
+  const resolvedFadeColor =
+    flagStyle === "fade" ? (card.fadeColor ?? canonicalSubgenreColor) : undefined;
+  if (flagStyle === "fade" && !resolvedFadeColor) {
+    throw new Error(
+      `Missing canonical subgenre color for fade border: "${card.subgenre}"`,
+    );
+  }
 
   const varStyle = {
     "--gc-border": effectiveTheme.border,
@@ -334,7 +341,7 @@ export default function Card({
         style={{
           ...varStyle,
           border: "10px solid transparent",
-          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 23%, ${fadeColor} 77%), ${flagBg}`,
+          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 23%, ${resolvedFadeColor} 77%), ${flagBg}`,
           backgroundClip: "padding-box, border-box, border-box",
           backgroundOrigin: "padding-box, border-box, border-box",
           backgroundSize: "100% 100%, 100% 100%, 100% 100%",
@@ -351,7 +358,7 @@ export default function Card({
             {
               backgroundImage:
                 flagStyle === "fade"
-                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 40%, ${fadeColor} 60%), url("${USA_FLAG_PATH}")`
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to bottom, transparent 40%, ${resolvedFadeColor} 60%), url("${USA_FLAG_PATH}")`
                   : `linear-gradient(${"transparent"}, ${"transparent"}), url("${USA_FLAG_PATH}")`,
               backgroundSize:
                 flagStyle === "fade"

@@ -227,6 +227,7 @@ export const SUBGENRES: Subgenre[] = [
   { n: "EDM", color: "#7090e8", parent: "Electronic", ring: "soft" },
   { n: "R&B Soul", color: "#ffd060", parent: "Hip-Hop", ring: "soft" },
   { n: "R&B", color: "#ffe94d", parent: "Hip-Hop", ring: "soft" },
+  { n: "Rap", color: "#c8960a", parent: "Hip-Hop", ring: "soft" },
   { n: "Roots", color: "#5ab848", parent: "Reggae/Dub", ring: "soft" },
   { n: "Disco", color: "#f0a0c0", parent: "Disco/Funk", ring: "soft" },
   {
@@ -264,6 +265,12 @@ export const SUBGENRES: Subgenre[] = [
     color: "#888888",
     parent: "Vintage",
     angleDelta: -12,
+    ring: "experimental",
+  },
+  {
+    n: "Anthem",
+    color: "#5c2a0a",
+    parent: "Classical",
     ring: "experimental",
   },
   { n: "Jazz", color: "#7a5840", parent: "Vintage", ring: "experimental" },
