@@ -378,53 +378,91 @@
   overflow: hidden;
 }
 
-/* Stats */
+/* Stats — one row: popularity symbols (left), intensity gradient + note (right) */
 .stats {
   background: rgba(0, 0, 0, 0.28);
-  padding: 7px 8px;
+  padding: 6px 8px 5px;
   margin: 0 0 2px;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
   flex-shrink: 0;
 }
-.statRow {
+.statsPop {
   display: flex;
   align-items: center;
-  gap: 7px;
-}
-.statLabel {
-  font-family: "Space Mono", monospace;
-  font-size: 6.5px;
-  letter-spacing: 0.6px;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  width: 66px;
+  gap: 3px;
   flex-shrink: 0;
+  padding-top: 2px;
 }
-.statBg {
+.statsIntensity {
   flex: 1;
-  height: 9px;
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.55);
+  min-width: 0;
+  max-width: 148px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+.intensityTrack {
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.07);
 }
-.statFill {
+.intensityFill {
   height: 100%;
-  border-radius: 5px;
-  box-shadow:
-    0 0 8px var(--bar-glow),
-    0 0 16px var(--bar-glow);
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    #1e9a52 0%,
+    #6ab04a 22%,
+    #d4a520 52%,
+    #d94a38 78%,
+    #c41e2a 100%
+  );
+  background-size: 100% 100%;
+  transition: width 0.12s ease-out;
 }
-.statVal {
+.intensityNoteRow {
+  position: relative;
+  height: 11px;
+  margin-top: 0;
+}
+.intensityNote {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
   font-family: "Space Mono", monospace;
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  width: 20px;
-  text-align: right;
-  flex-shrink: 0;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
+  line-height: 1;
+}
+.intensityNoteMuted {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Space Mono", monospace;
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.35);
+}
+.statsSm .intensityTrack {
+  height: 7px;
+}
+.statsSm .intensityNote,
+.statsSm .intensityNoteMuted {
+  font-size: 6px;
+}
+.statsSm .statsPop {
+  gap: 2px;
+  padding-top: 1px;
 }
 
 /* Footer */

@@ -140,13 +140,6 @@ function intensityIndex(level: IntensityLevel): number {
   return 4;
 }
 
-function intensityColor(level: IntensityLevel): string {
-  if (level === "pop") return "#d7e8ff";
-  if (level === "soft") return "#cbecc9";
-  if (level === "experimental") return "#ffd59f";
-  return "#ff9ea3";
-}
-
 function isVeryLight(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
   const r = parseInt(hex.slice(1, 3), 16);
@@ -495,60 +488,67 @@ export default function Card({
           <div className={styles.abilityDesc}>{card.abilityDesc}</div>
         </div>
 
-        {/* Stats */}
-        <div className={styles.stats}>
-          {(() => {
-            const note = popularityNote(card.pop);
-            const tier = popularityTier(note);
-            const count = popularityCount(note);
-            const icon = awardSymbolSvg(tier);
-            return (
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>Popularity</span>
-                <div className={styles.statBg} style={{ display: "flex", alignItems: "center", gap: 4, padding: "0 6px", background: "rgba(0,0,0,0.45)" }}>
-                  {Array.from({ length: count }).map((_, i) => (
-                    <span key={`award-${i}`} dangerouslySetInnerHTML={{ __html: icon }} />
-                  ))}
-                </div>
-                <span className={styles.statVal}>{note}</span>
-              </div>
-            );
-          })()}
-          {(() => {
-            const intensitySubgenre = resolved.resolvedSubgenre ?? card.subgenre;
-            const level = intensitySubgenre
-              ? subgenreIntensity(intensitySubgenre)
-              : undefined;
-            return (
-              <div className={styles.statRow}>
-                <span className={styles.statLabel}>Intensity</span>
-                <div
-                  className={styles.statBg}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(0,0,0,0.45)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: '"Space Mono", monospace',
-                      fontSize: 8,
-                      letterSpacing: 0.8,
-                      textTransform: "uppercase",
-                      color: level ? intensityColor(level) : "rgba(255,255,255,0.45)",
-                    }}
-                  >
-                    {level ?? "—"}
-                  </span>
-                </div>
-                <span className={styles.statVal}>
-                  {level ? intensityIndex(level) : "—"}
-                </span>
-              </div>
-            );
-          })()}
+        {/* Stats: popularity symbols (left); intensity gradient + note under cursor (right) */}
+        <div className={`${styles.stats} ${small ? styles.statsSm : ""}`}>
+          <div
+            className={styles.statsPop}
+            aria-label={`Popularity tier ${popularityNote(card.pop)} of 9`}
+          >
+            {(() => {
+              const note = popularityNote(card.pop);
+              const tier = popularityTier(note);
+              const count = popularityCount(note);
+              const icon = awardSymbolSvg(tier);
+              return Array.from({ length: count }).map((_, i) => (
+                <span
+                  key={`award-${i}`}
+                  dangerouslySetInnerHTML={{ __html: icon }}
+                />
+              ));
+            })()}
+          </div>
+          <div className={styles.statsIntensity}>
+            {(() => {
+              const intensitySubgenre =
+                resolved.resolvedSubgenre ?? card.subgenre;
+              const level = intensitySubgenre
+                ? subgenreIntensity(intensitySubgenre)
+                : undefined;
+              const idx = level ? intensityIndex(level) : null;
+              const pct = idx ? (idx / 4) * 100 : 0;
+              return (
+                <>
+                  <div className={styles.intensityTrack}>
+                    {idx ? (
+                      <div
+                        className={styles.intensityFill}
+                        style={{ width: `${pct}%` }}
+                      />
+                    ) : null}
+                  </div>
+                  <div className={styles.intensityNoteRow}>
+                    {idx ? (
+                      <span
+                        className={styles.intensityNote}
+                        style={
+                          pct >= 99.5
+                            ? {
+                                left: "100%",
+                                transform: "translateX(-100%)",
+                              }
+                            : { left: `${pct}%`, transform: "translateX(-50%)" }
+                        }
+                      >
+                        {idx}
+                      </span>
+                    ) : (
+                      <span className={styles.intensityNoteMuted}>—</span>
+                    )}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         </div>
 
         {/* Footer */}

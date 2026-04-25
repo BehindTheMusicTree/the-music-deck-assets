@@ -434,7 +434,7 @@ export default function CardsPage() {
                 ],
                 [
                   "Stats",
-                  "Popularity uses a 1–9 award rating (gold/platinum/diamond). Intensity is shown as 4 levels (pop, soft, experimental, hardcore).",
+                  "Single row: left — popularity as award symbols only (no text label, no 1–9 number). Right — intensity as a horizontal green→red gradient fill (1–4), with the numeric level printed under the fill end (cursor).",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
