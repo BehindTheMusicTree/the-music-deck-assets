@@ -1,0 +1,21 @@
+---
+description: Subgenre colours are hue variations of parent genres (see GENRE_THEMES)
+globs: lib/genres.ts, docs/genres.md, docs/charte-graphique.md
+alwaysApply: false
+---
+
+# Subgenre and wheel colours
+
+## Genre-linked subgenres (`SUBGENRES` entries with `kind: "genre"`)
+
+- Each subgenre **`color`** must read as a **variation of the parent genre’s dominant colour** — compare to `GENRE_THEMES[parentA].border` in [`lib/genres.ts`](lib/genres.ts) (lighter, darker, more/less saturated, or slightly shifted while staying in the same family).
+- If **`parentB`** is set, the swatch may **blend** toward `GENRE_THEMES[parentB].border` (same idea as in [`docs/genres.md`](docs/genres.md) / charte).
+- Do **not** pick unrelated hues (e.g. teal for a pure Rock-only subgenre) unless there is an explicit, documented design exception.
+
+## Country-linked subgenres (`kind: "country"`)
+
+- Use the **country/region** identity (`WORLD_THEMES` / `COUNTRY_DATA`), not global genre border colours.
+
+## Where to edit
+
+- Canonical list and hex values: [`lib/genres.ts`](lib/genres.ts) (`SUBGENRES` array and the comment above it).

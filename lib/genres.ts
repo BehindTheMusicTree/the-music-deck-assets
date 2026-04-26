@@ -353,6 +353,15 @@ export interface CountrySubgenre extends BaseSubgenre {
 
 export type Subgenre = GenreSubgenre | CountrySubgenre;
 
+/**
+ * Subgenre `color` drives card borders and wheel tiles.
+ * - **Genre-linked** (`kind: "genre"`): keep each hex in the same hue family as
+ *   `GENRE_THEMES[parentA].border` (lighter/darker/more or less saturated, or a
+ *   mix toward `parentB` when set). Avoid unrelated colours unless explicitly
+ *   agreed as an exception.
+ * - **Country-linked** (`kind: "country"`): follow the country/region palette
+ *   (`WORLD_THEMES` / `COUNTRY_DATA`), not global genre hues.
+ */
 export const SUBGENRES: Subgenre[] = [
   {
     kind: "country",
@@ -483,16 +492,23 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Early Pop Rock",
-    color: "#e2d8d8",
+    color: "#e4d0d0",
     parentA: "Rock",
     intensity: "pop",
   },
   {
     kind: "genre",
     n: "Soft Rock",
-    color: "#b0a8a4",
+    color: "#c49896",
     parentA: "Rock",
     intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "Post Grunge",
+    color: "#7a2c34",
+    parentA: "Rock",
+    intensity: "experimental",
   },
   {
     kind: "genre",
@@ -510,15 +526,8 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "R&B Soul",
-    color: "#ffd060",
-    parentA: "Hip-Hop",
-    intensity: "soft",
-  },
-  {
-    kind: "genre",
     n: "R&B",
-    color: "#e8e2c8",
+    color: "#ebe0b0",
     parentA: "Hip-Hop",
     intensity: "soft",
   },
@@ -539,7 +548,28 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Ska Punk",
-    color: "#8a3018",
+    color: "#9a4024",
+    parentA: "Rock",
+    intensity: "experimental",
+  },
+  {
+    kind: "genre",
+    n: "Grunge",
+    color: "#501a22",
+    parentA: "Rock",
+    intensity: "hardcore",
+  },
+  {
+    kind: "genre",
+    n: "Alternative Rock",
+    color: "#64242c",
+    parentA: "Rock",
+    intensity: "experimental",
+  },
+  {
+    kind: "genre",
+    n: "Prog Rock",
+    color: "#843038",
     parentA: "Rock",
     intensity: "experimental",
   },
@@ -625,14 +655,14 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Metal",
-    color: "#7a0810",
+    color: "#4a060c",
     parentA: "Rock",
     intensity: "hardcore",
   },
   {
     kind: "genre",
     n: "Nu Metal",
-    color: "#821e1c",
+    color: "#8e2810",
     parentA: "Rock",
     intensity: "hardcore",
   },
@@ -667,7 +697,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Trap",
-    color: "#3a2d48",
+    color: "#6e5608",
     parentA: "Hip-Hop",
     intensity: "experimental",
   },
@@ -782,20 +812,6 @@ export const SUBGENRES: Subgenre[] = [
     color: "#e0dedc",
     parentA: "Vintage",
     intensity: "pop",
-  },
-  {
-    kind: "genre",
-    n: "Classic Rock",
-    color: "#8a8280",
-    parentA: "Rock",
-    intensity: "experimental",
-  },
-  {
-    kind: "genre",
-    n: "Arena Anthem",
-    color: "#d04020",
-    parentA: "Rock",
-    intensity: "soft",
   },
 ];
 
