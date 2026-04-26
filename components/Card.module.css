@@ -22,11 +22,12 @@
     0 32px 56px rgba(0, 0, 0, 0.9),
     0 0 0 1px var(--gc-border);
 }
-
-.cardArtworkOverBorder {
+.cardNoBorder {
   border: 0;
+  padding: 10px;
+  box-sizing: border-box;
 }
-.cardArtworkOverBorder:hover {
+.cardNoBorder:hover {
   box-shadow: 0 32px 56px rgba(0, 0, 0, 0.9);
 }
 
@@ -183,6 +184,9 @@
   justify-content: flex-end;
   overflow: hidden;
 }
+.bodyArtOverBorder {
+  overflow: visible;
+}
 
 /* Artwork area — fills entire body */
 .art {
@@ -191,6 +195,9 @@
   overflow: hidden;
   z-index: 0;
   background: #0c0c0e;
+}
+.artOverBorder {
+  inset: -10px;
 }
 /* Fill art box (no banding); keep aspect; crop overflow; top edge fixed, centred horizontally */
 .artImg {

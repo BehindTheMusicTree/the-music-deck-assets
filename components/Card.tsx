@@ -223,7 +223,6 @@ export default function Card({
   const flagStyle = resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? resolved.fadeColor : undefined;
-  const artworkOverBorder = Boolean(card.artworkOverBorder);
   if (flagStyle === "fade" && !resolvedFadeColor) {
     throw new Error(
       `Missing canonical color for fade border on "${card.title}"`,
@@ -330,8 +329,12 @@ export default function Card({
       </div>
 
       {/* Body: artwork fills this zone, panels overlay at the bottom */}
-      <div className={styles.body}>
-        <div className={styles.art}>
+      <div
+        className={`${styles.body} ${card.artworkOverBorder ? styles.bodyArtOverBorder : ""}`}
+      >
+        <div
+          className={`${styles.art} ${card.artworkOverBorder ? styles.artOverBorder : ""}`}
+        >
           <CardArtwork card={card} />
         </div>
 
@@ -541,8 +544,8 @@ export default function Card({
   );
 
   const renderInnerCard = () =>
-    artworkOverBorder ? (
-      <div className={`${styles.card} ${styles.cardArtworkOverBorder}`} style={varStyle}>
+    card.artworkOverBorder ? (
+      <div className={`${styles.card} ${styles.cardNoBorder}`} style={varStyle}>
         {cardContent}
       </div>
     ) : flagUsR90 ? (

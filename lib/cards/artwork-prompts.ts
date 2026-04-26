@@ -163,6 +163,12 @@ Magic-style illustration, vertical 2:3, upper 40% focus. A swirling crown of fal
 
   57: `Magic-style illustration, vertical 2:3, upper 40% focus. A crown of frost-covered branches and drifting snow crystals forming a cold shimmering arc. One or more violins appear sculpted from frozen wood, lightly dusted with frost, their shapes emerging from the icy branches. Subtle icy-blue dominance: soft frost glow, faint silver-blue highlights, delicate frozen mist. Cold, serene, crystalline. Lower 60% dark and atmospheric. No text, no borders.`,
 
+  59: `🎨 Magic-Style Illustration Prompt — Sandstorm — Overlook Rave
+High-detail semi-realistic fantasy illustration inspired by the overwhelming energy of a desert rave during a massive sandstorm. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third.
+High vantage point from a dune or rocky platform, with a wide panoramic view over a vast nocturnal festival. In the upper third, a colossal techno-tribal stage glows in intense midnight blue, with monumental mechanical structures and powerful light beams cutting through the sandstorm.
+Below, a crowd of dancers in post-apocalyptic desert outfits keeps moving despite violent gusts. Giant installations — totems, arches, and luminous sculptures — bend in the wind, some partially lifted by the force of the storm. A few silhouettes appear briefly suspended in swirling sand vortices.
+Atmosphere: epic, chaotic, euphoric. Dominant tones: midnight blue, steel grey accents, and desert-gold highlights. No text, no symbols, no logos, no borders.`,
+
   63: `🎨 1. Red Hot Chili Peppers — Suck My Kiss
 Couleur dominante : bleu (légère)
 Magic-style illustration, vertical 2:3, upper 40% focus. A wild explosive spirit of raw energy screaming forward, surrounded by swirling shockwaves shaped like distorted sound vibrations. Subtle blue dominance: cool electric accents, faint cobalt streaks, soft indigo glows woven into the chaos without overpowering the scene. Chaotic, visceral, rhythmic. Lower 60% dark and atmospheric. No text, no borders.`,
@@ -227,13 +233,24 @@ No text, no borders.`,
   77: `🎨 Breizh Ma Bro — Magic-style, drapeau breton au loin
 Magic-style illustration, vertical 2:3, upper 40% focus. A majestic Breton landscape at dawn: rugged cliffs, rolling moorland, ancient standing stones and a vast ocean horizon. Soft rays of light break through drifting coastal mist. Far in the distance, atop a windswept hill, a real Breton flag (Gwenn ha Du) waves proudly, its black-and-white stripes clearly visible but small, acting as a distant symbol of homeland and identity. Subtle slate-blue and pale-white dominance: slate cliffs, linen-colored mist, soft silver light. The atmosphere evokes pride, heritage, and the emotional weight of a national hymn. Lower 60% dark, misty and atmospheric. No text, no borders.`,
 
-  79: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
-(Gangsta Mad Max, désert, gold dominant)
+  78: `🎨 Magic-Style Illustration Prompt — Hakuna Matata — Realistic Human Trio (Banlieue Vibes)
+High-detail semi-realistic fantasy illustration inspired by carefree friendship and joyful relaxation. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third. In the upper third, three young adults sit together in a warm, atmospheric hookah lounge filled with soft coloured lights and drifting smoke.
+— A slim, lively Black man in a modern tracksuit, with sharp, expressive eyes and quick, mischievous gestures, evoking energetic comic relief without resembling any existing character.
+— A broad-shouldered White man in a comfy tracksuit, round face, warm smile, and a jovial, generous presence.
+— A confident Arab woman in a stylish tracksuit, relaxed posture, radiant expression, and a soft golden aura around her silhouette, conveying calm charisma and warmth.
+Their faces are realistic but stylized, with no resemblance to real people or copyrighted characters. Magical smoke from ornate hookahs rises in swirling shapes, adding a subtle fantasy glow. Lighting is warm, intimate, slightly cinematic. Dominant tones: amber, soft red, and warm neutrals. Atmosphere: friendly, humorous, relaxed. No text, no symbols, no borders.`,
 
+  79: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
 High-detail semi-realistic fantasy illustration inspired by the wild, celebratory energy of a post-apocalyptic desert party. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third.
-Dans le tiers supérieur, un groupe de rappeurs stylisés façon gangsta-wasteland se tient debout sur un véhicule blindé bricolé, mélange de muscle-car et de machine de guerre. Ils portent des vêtements streetwear renforcés, chaînes massives, lunettes futuristes, armures légères en métal récupéré.
-Autour d'eux, un campement géant façon festival post-apo s'étend dans le désert : tours de lumière, structures mécaniques, podiums, enceintes massives, drapeaux déchirés. Une foule danse malgré la poussière, silhouettes en tenues Mad Max, masques, bandanas, armures artisanales.
-Une tempête de sable dorée se lève derrière eux, illuminée par un soleil bas et brutal, créant une dominante or intense mais contrôlée. L'ambiance est épique, chaude, vibrante, mélange de chaos et de fête. Pas de texte, pas de symboles, pas de logos.`,
+In the upper third, a group of stylized gangsta-wasteland rappers stands on a rugged armored vehicle, a hybrid between muscle car and war machine. They wear reinforced streetwear, heavy chains, futuristic sunglasses, and light scrap-metal armor.
+Around them, a huge post-apocalyptic festival camp stretches across the desert: light towers, mechanical structures, raised platforms, massive speaker stacks, and torn flags. A crowd keeps dancing through the dust, with silhouettes in Mad-Max-like outfits, masks, bandanas, and handmade armor.
+A golden sandstorm rises behind them, lit by a low, brutal sun, creating an intense but controlled dominant gold palette. Mood is epic, hot, vibrant, blending chaos and celebration. No text, no symbols, no logos, no borders.`,
+
+  80: `🎨 Magic-Style Illustration Prompt — Guerrilla Radio — Urban Uprising Pulse (Orange Dark Glow)
+High-detail semi-realistic fantasy illustration inspired by the rebellious, explosive energy of "Guerrilla Radio". Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+A high-angle view of a dense futuristic city at night. In the upper third, a masked urban-rebellion crew performs a coordinated acrobatic assault on a massive armoured convoy of stylized fantasy vehicles. They leap from surrounding rooftops in dynamic, exaggerated movements, evoking disruption rather than harm.
+One central figure holds a large, ornate boombox emitting powerful waves of glowing sonic energy that ripple through the scene, distorting lights, shaking dust, and pushing back the convoy through sound force alone.
+Atmosphere is epic, electric, and symbolic: uprising through music. Dominant colour is a subtly dark orange glow, integrated into sonic wave effects, building reflections, and dust clouds. Secondary tones: deep night blue and steel grey. No text, no symbols, no realistic weapons, no harm depicted, no borders.`,
 
   81: `Magic-Style Illustration Prompt — Shaft — Pink Vice Vigilante (dominant pink, fun, comics, Vice City vibes)
 
@@ -252,6 +269,12 @@ Keep vertical composition with main action in the upper third; lower 60% stays s
 High-detail semi-realistic comic-cinematic illustration inspired by the mystical, epic mood of the song. Vertical composition: the bottom 60% will be covered on-card, so place all key visual elements in the upper third.
 In the upper third, a massive humanoid figure floats in space, facing the viewer. Face stylised and anonymous — no resemblance to any real person. The figure holds a glowing, realistic Earth, tilted so the African continent reads clearly. Background split in two cosmic halves: left, luminous sky-blue cosmic glow with soft daylight and nebula haze, as if space merged with atmosphere; right, deep space with stars, subtle purples and blacks, contemplative and mysterious. The giant is lit differently on each side — soft daylight reflections on the left, deep cosmic shadow on the right. Earth emits a gentle golden-white aura (wonder, distance, knowledge).
 Mood: mystical, celestial, contemplative, epic. Dominant tones: sky blue, deep space black, soft gold, white highlights. Mullet And moustache — stylised, anonymous; no real-person likeness. No text, no symbols, no logos.`,
+
+  88: `🎨 Magic-Style Illustration Prompt — The Next Episode — Golden Day Drive
+High-detail comic-stylized illustration inspired by West Coast street culture and daytime California energy, in a bold GTA-like comic spirit without referencing any real characters. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+In the upper third, a group of stylized gangsters stands confidently beside flashy custom cars — lowriders, muscle cars, and chrome-detailed cruisers — parked along a sunny California boulevard. Faces are stylized and anonymous, with exaggerated comic outlines and warm colour treatment. They wear West Coast-flavoured streetwear: oversized tees, baggy trousers, sunglasses, chains, and bandanas, all redesigned in a fantasy-safe way.
+Palm trees sway in the background beneath a bright blue sky with visible heat haze and distant hills. A soft golden daylight glow dominates the scene, reflecting on chrome, paintwork, and character silhouettes.
+Mood: confident, sunny, groovy, West Coast daytime swagger. Dominant tones: gold, warm yellow, sandy beige, and sky blue. No text, no symbols, no logos, no borders.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */
