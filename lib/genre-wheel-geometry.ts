@@ -1,9 +1,14 @@
 import type { Intensity } from "@/lib/genres";
 
-/** SVG square — must fit outer subgenre tiles + radial dividers around `WHEEL_CX` / `WHEEL_CY`. */
+/** SVG coordinate width (square canvas); geometry is centred at `WHEEL_CX` / `WHEEL_CY`. */
 export const WHEEL_VIEW_SIZE = 2400;
 export const WHEEL_CX = WHEEL_VIEW_SIZE / 2;
 export const WHEEL_CY = WHEEL_VIEW_SIZE / 2;
+
+/** Crop empty bands above/below the wheel in the rendered viewBox (same trim each end). */
+export const WHEEL_VIEWBOX_Y_TRIM = 220;
+export const WHEEL_VIEWBOX_HEIGHT =
+  WHEEL_VIEW_SIZE - 2 * WHEEL_VIEWBOX_Y_TRIM;
 
 /** Matches `GenreWheel` SVG layout (single source of truth for radii). */
 export const R_POP_SUBGENRES = 200;

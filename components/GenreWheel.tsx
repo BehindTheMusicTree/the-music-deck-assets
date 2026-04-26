@@ -13,6 +13,8 @@ import {
   WHEEL_RADIAL_DIVIDER_EXTRA,
   WHEEL_SMALL_TILE_H,
   WHEEL_SMALL_TILE_W,
+  WHEEL_VIEWBOX_HEIGHT,
+  WHEEL_VIEWBOX_Y_TRIM,
   WHEEL_VIEW_SIZE,
   wheelSubgenreRadius,
 } from "@/lib/genre-wheel-geometry";
@@ -351,11 +353,11 @@ export default function GenreWheel() {
   }, [subgenrePlacement, topTileId, onTilePointerEnter, onTilePointerLeave]);
 
   return (
-    <div className="flex flex-col items-center gap-12">
+    <div className="flex flex-col items-center">
       <svg
         width={WHEEL_VIEW_SIZE}
-        height={WHEEL_VIEW_SIZE}
-        viewBox={`0 0 ${WHEEL_VIEW_SIZE} ${WHEEL_VIEW_SIZE}`}
+        height={WHEEL_VIEWBOX_HEIGHT}
+        viewBox={`0 ${WHEEL_VIEWBOX_Y_TRIM} ${WHEEL_VIEW_SIZE} ${WHEEL_VIEWBOX_HEIGHT}`}
         className="shrink-0 overflow-visible"
       >
         <defs>
