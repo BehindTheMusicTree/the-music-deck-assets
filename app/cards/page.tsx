@@ -268,9 +268,8 @@ export default function CardsPage() {
     },
   ];
 
-  const popularityExamples: Array<{ note: number; card: CardData }> = Array.from(
-    { length: 9 },
-    (_, i) => {
+  const popularityExamples: Array<{ note: number; card: CardData }> =
+    Array.from({ length: 9 }, (_, i) => {
       const note = i + 1;
       const pop = note === 1 ? 1 : Math.floor(((note - 1) * 100) / 9) + 1;
       return {
@@ -284,8 +283,7 @@ export default function CardsPage() {
           rarity: note >= 8 ? "Legendary" : note >= 5 ? "Epic" : "Rare",
         },
       };
-    },
-  );
+    });
 
   const themeRuleExamples: Array<{
     key: string;
@@ -429,8 +427,12 @@ export default function CardsPage() {
                   "Parchment (#f4edd8) — ability name and flavour description",
                 ],
                 [
-                  "Stats",
-                  "Single row: left — popularity as award symbols only (no text label, no 1–9 number). Right — intensity as a right triangle (triangle rectangle) with the right angle on the right at 100% (bottom edge × right edge). The full triangle is visible in a dull (terne) grey; the filled band uses a green→red gradient for 1/4 (pop) through 4/4 (hardcore); a vertical cursor marks the fill edge, with the same fill percentage (25%–100%) under that position.",
+                  "Stats Left - Popularity",
+                  "Award symbols only (no text label, no 1–9 number).",
+                ],
+                [
+                  "Stats Right - Intensity",
+                  "Right triangle with the right angle on the right. The full triangle is visible in a dull (terne) grey; the filled band uses a green→red gradient for 1/4 (pop) through 4/4 (hardcore); a vertical cursor marks the fill edge, with the same fill percentage (25%–100%) under that position.",
                 ],
                 ["Footer", "Year · rarity (SVG shape + name)"],
                 [
@@ -474,11 +476,15 @@ export default function CardsPage() {
                       </div>
                       <ul className="font-garamond text-muted text-[16px] leading-[1.5] list-none pl-0 flex flex-col gap-0.5">
                         <li>
-                          <span className="text-white">Type strip — primary:</span>{" "}
+                          <span className="text-white">
+                            Type strip — primary:
+                          </span>{" "}
                           {item.left}
                         </li>
                         <li>
-                          <span className="text-white">Type strip — secondary:</span>{" "}
+                          <span className="text-white">
+                            Type strip — secondary:
+                          </span>{" "}
                           {item.right}
                         </li>
                         <li>
@@ -493,7 +499,9 @@ export default function CardsPage() {
             </div>
 
             <div>
-              <div className="section-label-accent mb-1.5">Display conventions</div>
+              <div className="section-label-accent mb-1.5">
+                Display conventions
+              </div>
               <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
                 <li>
                   Mainstream is displayed as Pop; pop-intensity subgenres also
@@ -514,9 +522,9 @@ export default function CardsPage() {
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-4">
               In battles, genres form a matchup layer: each archetype is strong
-              against one genre and weak against another. Your card&apos;s
-              genre (from its subgenre) determines when you gain an edge or take
-              a penalty against an opponent&apos;s card.
+              against one genre and weak against another. Your card&apos;s genre
+              (from its subgenre) determines when you gain an edge or take a
+              penalty against an opponent&apos;s card.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -560,14 +568,17 @@ export default function CardsPage() {
           <div className="section-title mb-5">Popularity</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-3">
-              Popularity is shown as a 1-9 award note instead of a bar.
-              It reflects how broadly a track connects with the audience.
+              Popularity is shown as a 1-9 award note instead of a bar. It
+              reflects how broadly a track connects with the audience.
             </p>
             <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
               <li>1-3: gold awards (one to three symbols).</li>
               <li>4-6: platinum awards (one to three symbols).</li>
               <li>7-9: diamond awards (one to three symbols).</li>
-              <li>Popularity and Intensity are independent stats and can both be high.</li>
+              <li>
+                Popularity and Intensity are independent stats and can both be
+                high.
+              </li>
             </ul>
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {popularityExamples.map(({ note, card }) => (
@@ -579,7 +590,12 @@ export default function CardsPage() {
                       overflow: "hidden",
                     }}
                   >
-                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                    <div
+                      style={{
+                        transform: "scale(2)",
+                        transformOrigin: "top left",
+                      }}
+                    >
                       <Card card={card} theme={APP_GENRE_THEMES.Rock} small />
                     </div>
                   </div>
@@ -596,13 +612,14 @@ export default function CardsPage() {
           <div className="section-title mb-5">Intensity</div>
           <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
             <p className="font-garamond text-muted leading-[1.6] mb-3">
-              Intensity replaces the old experimental gauge with four canonical levels.
-              On the card it reads as a right-triangle volume gauge (right angle at the
-              bottom-right at 100% width): the empty shape stays visible in dull grey; the
-              saturated green→red band fills
-              ¼ to 4/4 of its width (pop…hardcore), with a cursor and the matching percentage
-              (25%–100%) at the fill edge. The spectrum is always anchored: red is fixed at the
-              full 100% width, so lower levels only reveal the left (greener) part of that same ramp.
+              Intensity replaces the old experimental gauge with four canonical
+              levels. On the card it reads as a right-triangle volume gauge
+              (right angle at the bottom-right at 100% width): the empty shape
+              stays visible in dull grey; the saturated green→red band fills ¼
+              to 4/4 of its width (pop…hardcore), with a cursor and the matching
+              percentage (25%–100%) at the fill edge. The spectrum is always
+              anchored: red is fixed at the full 100% width, so lower levels
+              only reveal the left (greener) part of that same ramp.
             </p>
             <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
               <li>Pop (1): low edge, broad accessibility.</li>
@@ -620,7 +637,12 @@ export default function CardsPage() {
                       overflow: "hidden",
                     }}
                   >
-                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                    <div
+                      style={{
+                        transform: "scale(2)",
+                        transformOrigin: "top left",
+                      }}
+                    >
                       <Card card={card} theme={APP_GENRE_THEMES.Rock} small />
                     </div>
                   </div>
@@ -647,7 +669,12 @@ export default function CardsPage() {
                       overflow: "hidden",
                     }}
                   >
-                    <div style={{ transform: "scale(2)", transformOrigin: "top left" }}>
+                    <div
+                      style={{
+                        transform: "scale(2)",
+                        transformOrigin: "top left",
+                      }}
+                    >
                       <Card
                         card={{ ...MOCK_CARDS.Rock, rarity }}
                         theme={APP_GENRE_THEMES.Rock}
