@@ -478,7 +478,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Pop Rock",
     color: "#f07080",
     parentA: "Rock",
-    intensity: "soft",
+    intensity: "pop",
   },
   {
     kind: "genre",
@@ -492,7 +492,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Rap",
     color: "#c8960a",
     parentA: "Hip-Hop",
-    intensity: "pop",
+    intensity: "experimental",
   },
   {
     kind: "genre",
@@ -641,7 +641,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Cloud rap",
     color: "#c09028",
     parentA: "Hip-Hop",
-    intensity: "soft",
+    intensity: "experimental",
   },
   {
     kind: "genre",

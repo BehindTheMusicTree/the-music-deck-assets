@@ -1,7 +1,6 @@
 import type { CardRarity } from "@/lib/cards/card-rarity";
-import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 
-/** Planned catalogue rows. Optional `artworkFile` when art exists under `public/cards/artworks/deck/`. */
+/** Planned catalogue rows only (no bundled artwork — see `DECK_SPOTLIGHT_CARDS` / `examples.ts`). */
 export type WishlistCardDef = {
   rowKey: string;
   id: number;
@@ -16,19 +15,12 @@ export type WishlistCardDef = {
   pop?: number;
   ability: string;
   abilityDesc: string;
-  /** Filename under `public/cards/artworks/deck/` (e.g. artwork.foo-v1.png). */
-  artworkFile?: string;
-  /** ISO YYYY-MM-DD when the artwork asset was created (catalog / tooling). */
-  artworkCreatedAt?: string;
+  /** Optional illustration brief before the asset is shipped to `public/cards/artworks/deck/`. */
   artworkPrompt?: string;
 };
 
 const P = "Planned catalogue entry.";
 const A = "Reserve";
-
-const SHAFT_PINK_VICE_VIGILANTE_PROMPT = `Magic-Style Illustration Prompt — Shaft — Pink Vice Vigilante (dominant pink, fun, comics, Vice City vibes)
-
-High-detail semi-realistic comic-fantasy illustration inspired by funky urban nightlife and neon-soaked vigilante style. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third. In the upper third, a charismatic vigilante stands on a rooftop above a retro-futuristic Miami-like city glowing with pink and purple neon lights. He wears a long stylish coat, sunglasses, and flashy urban gear with a fun 80's flair. His face is stylized and anonymous, with no resemblance to any real or fictional character. Below him, palm trees, neon signs, and chrome buildings reflect a slightly dominant bright pink glow, giving the whole scene a Vice-City-meets-comics atmosphere. Light streaks, drifting dust, and funky sparkles add movement and groove. Mood: fun, stylish, heroic, nightlife energy. Dominant tones: pink, purple, black, and electric blue. No text, no symbols, no borders.`;
 
 /** IDs 12xxx avoid collision with shipped deck (1–33, 9101). */
 export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
@@ -70,38 +62,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 91,
     ability: A,
     abilityDesc: P,
-  },
-  {
-    rowKey: "wl-shaft-isaac",
-    id: 12008,
-    title: "Shaft",
-    artist: "Isaac Hayes",
-    year: 1971,
-    kind: "Planned",
-    genre: "Disco",
-    rarity: "Classic",
-    pop: 84,
-    ability: A,
-    abilityDesc: P,
-    artworkFile: "artwork.isaac-hays-shaft-v1.png",
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.isaac-hays-shaft-v1.png"],
-    artworkPrompt: SHAFT_PINK_VICE_VIGILANTE_PROMPT,
-  },
-  {
-    rowKey: "wl-shaft-malik",
-    id: 12009,
-    title: "Shaft",
-    artist: "Malik Adouane",
-    year: 1993,
-    kind: "Planned",
-    genre: "Techno",
-    rarity: "Banger",
-    pop: 62,
-    ability: A,
-    abilityDesc: P,
-    artworkFile: "artwork.shaft-malik-adouane-v1.png",
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shaft-malik-adouane-v1.png"],
-    artworkPrompt: SHAFT_PINK_VICE_VIGILANTE_PROMPT,
   },
   {
     rowKey: "wl-jolene",
@@ -258,28 +218,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 89,
     ability: A,
     abilityDesc: P,
-  },
-  {
-    rowKey: "wl-california-love",
-    id: 12023,
-    title: "California Love",
-    artist: "2Pac feat. Dr. Dre",
-    year: 1995,
-    kind: "Planned",
-    genre: "Rap",
-    rarity: "Legendary",
-    pop: 92,
-    ability: A,
-    abilityDesc: P,
-    artworkFile: "artwork.dr-dre-tupac-california-love-v1.png",
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.dr-dre-tupac-california-love-v1.png"],
-    artworkPrompt: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
-(Gangsta Mad Max, désert, gold dominant)
-
-High-detail semi-realistic fantasy illustration inspired by the wild, celebratory energy of a post-apocalyptic desert party. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third.
-Dans le tiers supérieur, un groupe de rappeurs stylisés façon gangsta-wasteland se tient debout sur un véhicule blindé bricolé, mélange de muscle-car et de machine de guerre. Ils portent des vêtements streetwear renforcés, chaînes massives, lunettes futuristes, armures légères en métal récupéré.
-Autour d'eux, un campement géant façon festival post-apo s'étend dans le désert : tours de lumière, structures mécaniques, podiums, enceintes massives, drapeaux déchirés. Une foule danse malgré la poussière, silhouettes en tenues Mad Max, masques, bandanas, armures artisanales.
-Une tempête de sable dorée se lève derrière eux, illuminée par un soleil bas et brutal, créant une dominante or intense mais contrôlée. L'ambiance est épique, chaude, vibrante, mélange de chaos et de fête. Pas de texte, pas de symboles, pas de logos.`,
   },
   {
     rowKey: "wl-pretender",
@@ -1056,20 +994,5 @@ Une tempête de sable dorée se lève derrière eux, illuminée par un soleil ba
     pop: 74,
     ability: A,
     abilityDesc: P,
-  },
-  {
-    rowKey: "wl-guerilla-radio",
-    id: 12110,
-    title: "Guerrilla Radio",
-    artist: "Rage Against the Machine",
-    year: 1999,
-    kind: "Planned",
-    genre: "Pop Rock",
-    rarity: "Legendary",
-    pop: 88,
-    ability: A,
-    abilityDesc: P,
-    artworkFile: "artwork.ratm-guerilla-radio-v1.png",
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ratm-guerilla-radio-v1.png"],
   },
 ];

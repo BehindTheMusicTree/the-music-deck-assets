@@ -226,4 +226,25 @@ No text, no borders.`,
 
   77: `🎨 Breizh Ma Bro — Magic-style, drapeau breton au loin
 Magic-style illustration, vertical 2:3, upper 40% focus. A majestic Breton landscape at dawn: rugged cliffs, rolling moorland, ancient standing stones and a vast ocean horizon. Soft rays of light break through drifting coastal mist. Far in the distance, atop a windswept hill, a real Breton flag (Gwenn ha Du) waves proudly, its black-and-white stripes clearly visible but small, acting as a distant symbol of homeland and identity. Subtle slate-blue and pale-white dominance: slate cliffs, linen-colored mist, soft silver light. The atmosphere evokes pride, heritage, and the emotional weight of a national hymn. Lower 60% dark, misty and atmospheric. No text, no borders.`,
+
+  79: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
+(Gangsta Mad Max, désert, gold dominant)
+
+High-detail semi-realistic fantasy illustration inspired by the wild, celebratory energy of a post-apocalyptic desert party. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third.
+Dans le tiers supérieur, un groupe de rappeurs stylisés façon gangsta-wasteland se tient debout sur un véhicule blindé bricolé, mélange de muscle-car et de machine de guerre. Ils portent des vêtements streetwear renforcés, chaînes massives, lunettes futuristes, armures légères en métal récupéré.
+Autour d'eux, un campement géant façon festival post-apo s'étend dans le désert : tours de lumière, structures mécaniques, podiums, enceintes massives, drapeaux déchirés. Une foule danse malgré la poussière, silhouettes en tenues Mad Max, masques, bandanas, armures artisanales.
+Une tempête de sable dorée se lève derrière eux, illuminée par un soleil bas et brutal, créant une dominante or intense mais contrôlée. L'ambiance est épique, chaude, vibrante, mélange de chaos et de fête. Pas de texte, pas de symboles, pas de logos.`,
+
+  81: `Magic-Style Illustration Prompt — Shaft — Pink Vice Vigilante (dominant pink, fun, comics, Vice City vibes)
+
+High-detail semi-realistic comic-fantasy illustration inspired by funky urban nightlife and neon-soaked vigilante style. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third. In the upper third, a charismatic vigilante stands on a rooftop above a retro-futuristic Miami-like city glowing with pink and purple neon lights. He wears a long stylish coat, sunglasses, and flashy urban gear with a fun 80's flair. His face is stylized and anonymous, with no resemblance to any real or fictional character. Below him, palm trees, neon signs, and chrome buildings reflect a slightly dominant bright pink glow, giving the whole scene a Vice-City-meets-comics atmosphere. Light streaks, drifting dust, and funky sparkles add movement and groove. Mood: fun, stylish, heroic, nightlife energy. Dominant tones: pink, purple, black, and electric blue. No text, no symbols, no borders.`,
+
+  82: `Magic-Style Illustration Prompt — Shaft (Malik Adouane) — Algeria day variant
+
+Start from the same overall composition and comic-fantasy "Pink Vice vigilante" energy as the Isaac Hayes Shaft artwork, then apply these edits:
+Replace the central figure with a stylized anonymous vigilante read as North-African / Arabic-presenting: generic streetwear silhouette, sunglasses, long coat — no facial detail, no resemblance to any real person.
+Replace the background with an Algeria-inspired coastal cityscape by daylight: white cubic architecture hints, Mediterranean bay, warm haze, distant hills; still generic enough to avoid flags, logos, or identifiable monuments.
+Shift the palette toward a rose-red pink dominance (warm fuchsia and dusty crimson) while keeping sunlit daytime clarity — not neon night; bright sky, soft shadows.
+Replace any baseball bat with a heavy iron bar (worn steel, blunt industrial look) held in the same heroic pose.
+Keep vertical composition with main action in the upper third; lower 60% stays simple. Mood: proud, rhythmic, sun-baked groove. No text, no symbols, no borders.`,
 };
