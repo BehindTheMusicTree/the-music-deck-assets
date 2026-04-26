@@ -54,15 +54,37 @@ function artworkBasename(artworkUrl: string | undefined): string {
 
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
 
-/** Parse `YYYY-MM-DD` (or full ISO) for sorting; invalid or missing → null. */
+/** Parse date-only or local datetime for sorting; invalid or missing → null. */
 function artworkCreatedAtSortValue(raw: string | undefined): number | null {
   const s = raw?.trim();
   if (!s) return null;
-  const iso =
-    /^\d{4}-\d{2}-\d{2}$/.test(s) ? `${s}T12:00:00Z` : /^\d{4}-\d{2}-\d{2}T/.test(s) ? s : null;
-  if (!iso) return null;
-  const t = Date.parse(iso);
+  let candidate: string | null = null;
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(s)) {
+    candidate = s.length === 16 ? `${s}:00` : s;
+  } else if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    candidate = `${s}T00:00:00`;
+  }
+  if (!candidate) return null;
+  const t = Date.parse(candidate);
   return Number.isNaN(t) ? null : t;
+}
+
+function formatArtworkCreatedAtDisplay(raw: string): string {
+  const t = artworkCreatedAtSortValue(raw);
+  if (t === null) return raw.trim();
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    }).format(new Date(t));
+  } catch {
+    return raw.trim();
+  }
 }
 
 function artworkPromptPreview(full: string): { preview: string; hasMore: boolean } {
@@ -624,7 +646,7 @@ export default function CatalogDeckTable({
                   onActivate={onActivateSort}
                 />
                 <span className="text-[9px] text-muted/75 leading-tight mt-1 block font-garamond font-normal tracking-normal">
-                  YYYY-MM-DD
+                  Local from PNG birth time
                 </span>
               </th>
               <th className={`${thWrap} min-w-[200px]`}>
@@ -819,8 +841,11 @@ export default function CatalogDeckTable({
                   </td>
                   <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
                     {card.artworkCreatedAt?.trim() ? (
-                      <span className="text-white/85" title={card.artworkCreatedAt}>
-                        {card.artworkCreatedAt.trim()}
+                      <span
+                        className="text-white/85"
+                        title={card.artworkCreatedAt.trim()}
+                      >
+                        {formatArtworkCreatedAtDisplay(card.artworkCreatedAt.trim())}
                       </span>
                     ) : (
                       <span className="text-muted/80">—</span>
