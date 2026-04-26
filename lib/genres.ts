@@ -492,14 +492,14 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Early Pop Rock",
-    color: "#e4d0d0",
+    color: "#e6c8c8",
     parentA: "Rock",
     intensity: "pop",
   },
   {
     kind: "genre",
     n: "Soft Rock",
-    color: "#c49896",
+    color: "#c8a0a4",
     parentA: "Rock",
     intensity: "soft",
   },
