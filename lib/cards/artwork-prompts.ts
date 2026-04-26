@@ -248,3 +248,13 @@ Shift the palette toward a rose-red pink dominance (warm fuchsia and dusty crims
 Replace any baseball bat with a heavy iron bar (worn steel, blunt industrial look) held in the same heroic pose.
 Keep vertical composition with main action in the upper third; lower 60% stays simple. Mood: proud, rhythmic, sun-baked groove. No text, no symbols, no borders.`,
 };
+
+/** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */
+export function resolveBundledArtworkPrompt(
+  id: number,
+  explicit?: string | null,
+): string {
+  const a = explicit?.trim();
+  if (a) return a;
+  return CARD_ARTWORK_PROMPTS[id]?.trim() ?? "";
+}

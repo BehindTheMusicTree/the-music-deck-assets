@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./Card.module.css";
 import IntensityGauge from "@/components/IntensityGauge";
@@ -34,7 +29,7 @@ export interface CardData {
   pop: number;
   rarity: CardRarity;
   artwork?: string;
-  /** Optional prompt text used to produce the artwork (charter / tooling). */
+  /** Optional illustration brief; not rendered on the card (catalog / tooling only). */
   artworkPrompt?: string;
   /** ISO-like local datetime when the bundled PNG was created (`YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss`). */
   artworkCreatedAt?: string;
@@ -194,8 +189,7 @@ export default function Card({
   );
   const stripLeftBorder =
     resolved.typeStripPrimaryBorder ?? effectiveTheme.border;
-  const stripRightBorder =
-    resolved.typeStripSubBorder ?? effectiveTheme.border;
+  const stripRightBorder = resolved.typeStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const pipLeftSymbol = card.country
@@ -483,16 +477,6 @@ export default function Card({
           <div className={styles.abilityName}>{card.ability}</div>
           <div className={styles.abilityDesc}>{card.abilityDesc}</div>
         </div>
-
-        {card.artworkPrompt ? (
-          <div
-            className={`${styles.artworkPrompt} ${small ? styles.artworkPromptSm : ""}`}
-            title={card.artworkPrompt}
-          >
-            <div className={styles.artworkPromptLabel}>Artwork prompt</div>
-            <div className={styles.artworkPromptText}>{card.artworkPrompt}</div>
-          </div>
-        ) : null}
 
         {/* Stats: popularity symbols (left); intensity gradient + note under cursor (right) */}
         <div className={`${styles.stats} ${small ? styles.statsSm : ""}`}>

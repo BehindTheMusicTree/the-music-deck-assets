@@ -87,7 +87,10 @@ function formatArtworkCreatedAtDisplay(raw: string): string {
   }
 }
 
-function artworkPromptPreview(full: string): { preview: string; hasMore: boolean } {
+function artworkPromptPreview(full: string): {
+  preview: string;
+  hasMore: boolean;
+} {
   const trimmed = full.trim();
   const words = trimmed.split(/\s+/).filter(Boolean);
   if (words.length <= ARTWORK_PROMPT_PREVIEW_WORDS) {
@@ -99,7 +102,12 @@ function artworkPromptPreview(full: string): { preview: string; hasMore: boolean
   };
 }
 
-function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolean): number {
+function compareRows(
+  a: CatalogEntry,
+  b: CatalogEntry,
+  key: SortKey,
+  asc: boolean,
+): number {
   const dir = asc ? 1 : -1;
   const cmp = (x: number, y: number) => (x < y ? -1 : x > y ? 1 : 0) * dir;
   switch (key) {
@@ -110,17 +118,25 @@ function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolea
     case "pop":
       return cmp(a.card.pop, b.card.pop);
     case "title":
-      return a.card.title.localeCompare(b.card.title, undefined, { sensitivity: "base" }) * dir;
+      return (
+        a.card.title.localeCompare(b.card.title, undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
     case "artist":
-      return (a.card.artist ?? "").localeCompare(b.card.artist ?? "", undefined, {
-        sensitivity: "base",
-      }) * dir;
+      return (
+        (a.card.artist ?? "").localeCompare(b.card.artist ?? "", undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
     case "kind":
       return a.kind.localeCompare(b.kind) * dir;
     case "country":
-      return (a.card.country ?? "").localeCompare(b.card.country ?? "", undefined, {
-        sensitivity: "base",
-      }) * dir;
+      return (
+        (a.card.country ?? "").localeCompare(b.card.country ?? "", undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
     case "rarity": {
       const ia = CARD_RARITY_ORDER.indexOf(a.card.rarity);
       const ib = CARD_RARITY_ORDER.indexOf(b.card.rarity);
@@ -133,18 +149,22 @@ function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolea
         }) * dir
       );
     case "lineGenre":
-      return (a.card.genre ?? "").localeCompare(b.card.genre ?? "", undefined, {
-        sensitivity: "base",
-      }) * dir;
+      return (
+        (a.card.genre ?? "").localeCompare(b.card.genre ?? "", undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
     case "intensity":
       return cmp(
         intensityLevelIndex(a.catalogIntensity),
         intensityLevelIndex(b.catalogIntensity),
       );
     case "era":
-      return a.catalogEra.localeCompare(b.catalogEra, undefined, {
-        sensitivity: "base",
-      }) * dir;
+      return (
+        a.catalogEra.localeCompare(b.catalogEra, undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
     case "series": {
       const s =
         a.catalogSeriesType.localeCompare(b.catalogSeriesType) * dir ||
@@ -188,9 +208,13 @@ function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolea
       const pb = b.card.artworkPrompt ? 1 : 0;
       if (pa !== pb) return cmp(pa, pb);
       return (
-        (a.card.artworkPrompt ?? "").localeCompare(b.card.artworkPrompt ?? "", undefined, {
-          sensitivity: "base",
-        }) * dir
+        (a.card.artworkPrompt ?? "").localeCompare(
+          b.card.artworkPrompt ?? "",
+          undefined,
+          {
+            sensitivity: "base",
+          },
+        ) * dir
       );
     }
     default:
@@ -250,7 +274,9 @@ export default function CatalogDeckTable({
   const [abilityQuery, setAbilityQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("id");
   const [sortAsc, setSortAsc] = useState(true);
-  const [artworkPromptModal, setArtworkPromptModal] = useState<string | null>(null);
+  const [artworkPromptModal, setArtworkPromptModal] = useState<string | null>(
+    null,
+  );
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
   const [gridDetail, setGridDetail] = useState<CatalogEntry | null>(null);
 
@@ -307,20 +333,26 @@ export default function CatalogDeckTable({
       seen.set(value, label);
     }
     return [...seen.entries()]
-      .sort(([, la], [, lb]) => la.localeCompare(lb, undefined, { sensitivity: "base" }))
+      .sort(([, la], [, lb]) =>
+        la.localeCompare(lb, undefined, { sensitivity: "base" }),
+      )
       .map(([value, label]) => ({ value, label }));
   }, []);
 
   const eraFilterOptions = useMemo(() => {
     const s = new Set<string>();
     for (const e of CATALOG_ENTRIES) s.add(e.catalogEra);
-    return [...s].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    return [...s].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" }),
+    );
   }, []);
 
   const genreFilterOptions = useMemo(() => {
     const s = new Set<string>();
     for (const e of CATALOG_ENTRIES) s.add(e.catalogGenreLabel);
-    return [...s].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    return [...s].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" }),
+    );
   }, []);
 
   const lineGenreFilterOptions = useMemo(() => {
@@ -388,7 +420,9 @@ export default function CatalogDeckTable({
     }
     const aq = artistQuery.trim().toLowerCase();
     if (aq) {
-      rows = rows.filter((r) => (r.card.artist ?? "").toLowerCase().includes(aq));
+      rows = rows.filter((r) =>
+        (r.card.artist ?? "").toLowerCase().includes(aq),
+      );
     }
     const ab = abilityQuery.trim().toLowerCase();
     if (ab) {
@@ -432,9 +466,10 @@ export default function CatalogDeckTable({
         >
           <button
             type="button"
-            className={[viewToggleBtn, viewMode === "table" ? viewToggleActive : viewToggleInactive].join(
-              " ",
-            )}
+            className={[
+              viewToggleBtn,
+              viewMode === "table" ? viewToggleActive : viewToggleInactive,
+            ].join(" ")}
             aria-pressed={viewMode === "table"}
             onClick={() => {
               setViewMode("table");
@@ -445,9 +480,10 @@ export default function CatalogDeckTable({
           </button>
           <button
             type="button"
-            className={[viewToggleBtn, viewMode === "grid" ? viewToggleActive : viewToggleInactive].join(
-              " ",
-            )}
+            className={[
+              viewToggleBtn,
+              viewMode === "grid" ? viewToggleActive : viewToggleInactive,
+            ].join(" ")}
             aria-pressed={viewMode === "grid"}
             onClick={() => setViewMode("grid")}
           >
@@ -796,148 +832,148 @@ export default function CatalogDeckTable({
             </tr>
           </thead>
           {viewMode === "table" ? (
-          <tbody className="font-garamond text-[15px] text-white/95">
-            {visibleRows.map(
-              ({
-                rowKey,
-                kind,
-                card,
-                theme,
-                catalogNumber,
-                catalogSeriesType,
-                catalogSeriesLabel,
-                catalogGenreLabel,
-                catalogIntensity,
-                catalogEra,
-              }) => (
-                <tr
-                  key={rowKey}
-                  className="border-b border-ui-border/60 last:border-0 align-top"
-                >
-                  <td className="py-2 pl-2 pr-1">
-                    {card.artwork ? (
-                      <div
-                        className="mx-auto flex justify-center"
-                        style={{
-                          width: 102,
-                          height: 150,
-                          overflow: "hidden",
-                        }}
-                      >
+            <tbody className="font-garamond text-[15px] text-white/95">
+              {visibleRows.map(
+                ({
+                  rowKey,
+                  kind,
+                  card,
+                  theme,
+                  catalogNumber,
+                  catalogSeriesType,
+                  catalogSeriesLabel,
+                  catalogGenreLabel,
+                  catalogIntensity,
+                  catalogEra,
+                }) => (
+                  <tr
+                    key={rowKey}
+                    className="border-b border-ui-border/60 last:border-0 align-top"
+                  >
+                    <td className="py-2 pl-2 pr-1">
+                      {card.artwork ? (
                         <div
+                          className="mx-auto flex justify-center"
                           style={{
-                            transform: "scale(0.58)",
-                            transformOrigin: "top center",
+                            width: 102,
+                            height: 150,
+                            overflow: "hidden",
                           }}
                         >
-                          <Card
-                            card={card}
-                            theme={theme}
-                            small
-                          />
+                          <div
+                            style={{
+                              transform: "scale(0.58)",
+                              transformOrigin: "top center",
+                            }}
+                          >
+                            <Card card={card} theme={theme} small />
+                          </div>
                         </div>
+                      ) : (
+                        <div
+                          className="mx-auto flex justify-center items-center rounded border border-dashed border-ui-border/80 bg-[#12121a]/60 text-center px-1"
+                          style={{ width: 102, height: 150 }}
+                        >
+                          <span className="font-garamond text-[11px] leading-snug text-muted">
+                            No artwork
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted max-w-[120px] align-middle">
+                      {card.country ?? "—"}
+                    </td>
+                    <td className="py-2.5 px-2 text-white/90 align-middle whitespace-nowrap">
+                      {catalogGenreLabel}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted max-w-[140px] align-middle">
+                      {card.genre ?? "—"}
+                    </td>
+                    <td className="py-2.5 px-2 text-white/90 align-middle whitespace-nowrap font-mono text-[13px] tracking-wide">
+                      {catalogEra}
+                    </td>
+                    <td className="py-2.5 px-2 font-mono text-[13px] text-gold tabular-nums align-middle">
+                      {catalogNumber}
+                    </td>
+                    <td className="py-2.5 px-2 font-mono text-[13px] text-muted tabular-nums align-middle">
+                      {card.id}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted align-middle">
+                      <div className="text-white/90">{catalogSeriesLabel}</div>
+                      <div className="text-[11px] mt-0.5 opacity-80">
+                        {catalogSeriesType === "country"
+                          ? "by country / region"
+                          : "by genre"}
                       </div>
-                    ) : (
-                      <div
-                        className="mx-auto flex justify-center items-center rounded border border-dashed border-ui-border/80 bg-[#12121a]/60 text-center px-1"
-                        style={{ width: 102, height: 150 }}
-                      >
-                        <span className="font-garamond text-[11px] leading-snug text-muted">
-                          No artwork
+                    </td>
+                    <td className="py-2.5 px-2 text-muted whitespace-nowrap align-middle">
+                      {kind}
+                    </td>
+                    <td className="py-2.5 px-2 align-middle">{card.title}</td>
+                    <td className="py-2.5 px-2 text-muted align-middle">
+                      {card.artist ?? "—"}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                      {card.artwork ? (
+                        <span
+                          className="font-mono text-[11px] leading-snug break-all text-white/85"
+                          title={card.artwork}
+                        >
+                          {artworkBasename(card.artwork)}
                         </span>
-                      </div>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted max-w-[120px] align-middle">
-                    {card.country ?? "—"}
-                  </td>
-                  <td className="py-2.5 px-2 text-white/90 align-middle whitespace-nowrap">
-                    {catalogGenreLabel}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted max-w-[140px] align-middle">
-                    {card.genre ?? "—"}
-                  </td>
-                  <td className="py-2.5 px-2 text-white/90 align-middle whitespace-nowrap font-mono text-[13px] tracking-wide">
-                    {catalogEra}
-                  </td>
-                  <td className="py-2.5 px-2 font-mono text-[13px] text-gold tabular-nums align-middle">
-                    {catalogNumber}
-                  </td>
-                  <td className="py-2.5 px-2 font-mono text-[13px] text-muted tabular-nums align-middle">
-                    {card.id}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted align-middle">
-                    <div className="text-white/90">{catalogSeriesLabel}</div>
-                    <div className="text-[11px] mt-0.5 opacity-80">
-                      {catalogSeriesType === "country"
-                        ? "by country / region"
-                        : "by genre"}
-                    </div>
-                  </td>
-                  <td className="py-2.5 px-2 text-muted whitespace-nowrap align-middle">
-                    {kind}
-                  </td>
-                  <td className="py-2.5 px-2 align-middle">{card.title}</td>
-                  <td className="py-2.5 px-2 text-muted align-middle">
-                    {card.artist ?? "—"}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                    {card.artwork ? (
-                      <span
-                        className="font-mono text-[11px] leading-snug break-all text-white/85"
-                        title={card.artwork}
-                      >
-                        {artworkBasename(card.artwork)}
-                      </span>
-                    ) : (
-                      <span className="text-muted/80">—</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
-                    {card.artworkCreatedAt?.trim() ? (
-                      <span
-                        className="text-white/85"
-                        title={card.artworkCreatedAt.trim()}
-                      >
-                        {formatArtworkCreatedAtDisplay(card.artworkCreatedAt.trim())}
-                      </span>
-                    ) : (
-                      <span className="text-muted/80">—</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                    {card.artworkPrompt?.trim() ? (
-                      <button
-                        type="button"
-                        className="block w-full max-w-[28ch] text-left font-garamond text-[11px] leading-snug text-white/80 hover:text-gold rounded border border-transparent px-0.5 py-0.5 -mx-0.5 hover:border-ui-border/50 hover:bg-white/3 transition-colors cursor-pointer"
-                        onClick={() => setArtworkPromptModal(card.artworkPrompt!.trim())}
-                        aria-label="Open full artwork prompt"
-                      >
-                        {artworkPromptPreview(card.artworkPrompt).preview}
-                      </button>
-                    ) : (
-                      <span className="text-muted/80">—</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted tabular-nums align-middle">
-                    {card.year}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted align-middle whitespace-nowrap">
-                    {formatCatalogIntensity(catalogIntensity)}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted tabular-nums align-middle">
-                    {card.pop}
-                  </td>
-                  <td className="py-2.5 px-2 text-muted whitespace-nowrap align-middle">
-                    {card.rarity}
-                  </td>
-                  <td className="py-2.5 pr-3 pl-2 text-muted min-w-0 align-middle">
-                    {card.ability}
-                  </td>
-                </tr>
-              ),
-            )}
-          </tbody>
+                      ) : (
+                        <span className="text-muted/80">—</span>
+                      )}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
+                      {card.artworkCreatedAt?.trim() ? (
+                        <span
+                          className="text-white/85"
+                          title={card.artworkCreatedAt.trim()}
+                        >
+                          {formatArtworkCreatedAtDisplay(
+                            card.artworkCreatedAt.trim(),
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-muted/80">—</span>
+                      )}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                      {card.artworkPrompt?.trim() ? (
+                        <button
+                          type="button"
+                          className="block w-full max-w-[28ch] text-left font-garamond text-[11px] leading-snug text-white/80 hover:text-gold rounded border border-transparent px-0.5 py-0.5 -mx-0.5 hover:border-ui-border/50 hover:bg-white/3 transition-colors cursor-pointer"
+                          onClick={() =>
+                            setArtworkPromptModal(card.artworkPrompt!.trim())
+                          }
+                          aria-label="Open full artwork prompt"
+                        >
+                          {artworkPromptPreview(card.artworkPrompt).preview}
+                        </button>
+                      ) : (
+                        <span className="text-muted/80">—</span>
+                      )}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle">
+                      {card.year}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted align-middle whitespace-nowrap">
+                      {formatCatalogIntensity(catalogIntensity)}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle">
+                      {card.pop}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted whitespace-nowrap align-middle">
+                      {card.rarity}
+                    </td>
+                    <td className="py-2.5 pr-3 pl-2 text-muted min-w-0 align-middle">
+                      {card.ability}
+                    </td>
+                  </tr>
+                ),
+              )}
+            </tbody>
           ) : null}
         </table>
       </div>
@@ -1009,7 +1045,9 @@ export default function CatalogDeckTable({
                     <div className="font-mono text-[9px] text-muted/90 mt-0.5 truncate w-full">
                       {catalogSeriesLabel}
                     </div>
-                    <div className="font-mono text-[9px] text-muted/70 mt-0.5">{kind}</div>
+                    <div className="font-mono text-[9px] text-muted/70 mt-0.5">
+                      {kind}
+                    </div>
                   </div>
                 </button>
               );
@@ -1080,7 +1118,10 @@ export default function CatalogDeckTable({
                         {detailLine("App genre", d.catalogGenreLabel)}
                         {detailLine("Genre line", c.genre ?? "—")}
                         {detailLine("Country / region", c.country ?? "—")}
-                        {detailLine("Intensity", formatCatalogIntensity(d.catalogIntensity))}
+                        {detailLine(
+                          "Intensity",
+                          formatCatalogIntensity(d.catalogIntensity),
+                        )}
                         {detailLine("Popularity", String(c.pop))}
                         {detailLine("Rarity", c.rarity)}
                         {detailLine(
@@ -1090,7 +1131,9 @@ export default function CatalogDeckTable({
                         {detailLine(
                           "Art created",
                           c.artworkCreatedAt?.trim()
-                            ? formatArtworkCreatedAtDisplay(c.artworkCreatedAt.trim())
+                            ? formatArtworkCreatedAtDisplay(
+                                c.artworkCreatedAt.trim(),
+                              )
                             : "—",
                         )}
                       </dl>
@@ -1098,7 +1141,9 @@ export default function CatalogDeckTable({
                         <div className="font-cinzel text-[10px] tracking-[0.14em] text-gold mb-1">
                           Ability
                         </div>
-                        <p className="font-garamond text-white/95 text-[15px] m-0">{c.ability}</p>
+                        <p className="font-garamond text-white/95 text-[15px] m-0">
+                          {c.ability}
+                        </p>
                         <p className="font-garamond text-muted text-[13px] leading-relaxed mt-2 m-0">
                           {c.abilityDesc}
                         </p>

@@ -195,10 +195,6 @@ export default function CardsPage() {
                   "Parchment (#f4edd8) — ability name and flavour description",
                 ],
                 [
-                  "Artwork prompt",
-                  "Optional strip (only when `artworkPrompt` is set on the card): uppercase label and monospace body, line-clamped; full text on hover `title`.",
-                ],
-                [
                   "Stats Left - Popularity",
                   "Award symbols only (no text label, no 1–9 number).",
                 ],
