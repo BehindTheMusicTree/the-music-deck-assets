@@ -8,6 +8,7 @@ import {
   GENRE_THEMES,
   GENRE_THEME_NAV_EVENT,
   genreThemeSectionDomId,
+  intensityLevelIndex,
   SUBGENRES,
   WORLD_THEMES,
   isCountrySubgenre,
@@ -26,6 +27,17 @@ function isVeryLight(hex: string) {
   const b = parseInt(hex.slice(5, 7), 16);
   const luminance = (r * 299 + g * 587 + b * 114) / 1000;
   return luminance > 205;
+}
+
+function subgenresForGenreSection(name: string) {
+  return SUBGENRES.filter(
+    (s) => s.parentA === name || s.parentB === name,
+  ).sort((a, b) => {
+    const d =
+      intensityLevelIndex(a.intensity) - intensityLevelIndex(b.intensity);
+    if (d !== 0) return d;
+    return a.n.localeCompare(b.n);
+  });
 }
 
 /** World card flag frame — row strip or modal hero (no country text). */
@@ -153,9 +165,7 @@ export default function GenreThemePreview() {
       const apply = applyRulePreviewRef.current;
       if (detail.kind === "genre") {
         const name = detail.genre;
-        const subs = SUBGENRES.filter(
-          (s) => s.parentA === name || s.parentB === name,
-        );
+        const subs = subgenresForGenreSection(name);
         setSelectedCountry(undefined);
         setSelectedGenreOnly(name);
         const firstSubgenre = subs[0]?.n;
@@ -204,9 +214,7 @@ export default function GenreThemePreview() {
         <div className="flex-1 flex flex-col gap-4 min-w-0">
           {orderedGenres.map((name) => {
             const t = GENRE_THEMES[name];
-            const subs = SUBGENRES.filter(
-              (s) => s.parentA === name || s.parentB === name,
-            );
+            const subs = subgenresForGenreSection(name);
 
             return (
               <div
@@ -469,7 +477,13 @@ export default function GenreThemePreview() {
                     (s) =>
                       s.kind === "country" &&
                       s.parentA === worldModalCountry,
-                  );
+                  ).sort((a, b) => {
+                    const d =
+                      intensityLevelIndex(a.intensity) -
+                      intensityLevelIndex(b.intensity);
+                    if (d !== 0) return d;
+                    return a.n.localeCompare(b.n);
+                  });
                   if (countrySubs.length === 0) {
                     return (
                       <p className="font-garamond italic text-muted text-sm m-0">

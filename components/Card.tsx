@@ -147,12 +147,7 @@ function CardArtwork({ card }: { card: CardData }) {
     <img
       src={card.artwork}
       alt=""
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "cover",
-        display: "block",
-      }}
+      className={styles.artImg}
     />
   );
 }

@@ -25,15 +25,8 @@ export const GENRE_NAMES: GenreName[] = [
   "Vintage",
 ];
 
-export type AppGenreName =
-  | "Rock"
-  | "Mainstream"
-  | "Electronic"
-  | "Hip-Hop"
-  | "Disco/Funk"
-  | "Reggae/Dub"
-  | "Classical"
-  | "Vintage";
+/** Resolved parent genre for themes, wheel, and catalog — same set as `GenreName` today. */
+export type AppGenreName = GenreName;
 
 export const APP_GENRE_NAMES: AppGenreName[] = [
   "Rock",
@@ -896,10 +889,12 @@ export function subgenreIntensity(subgenre: string): Intensity {
 /** Intensity when the card has no subgenre (genre-only); subgenre overrides when present. */
 const APP_GENRE_ONLY_INTENSITY: Partial<Record<AppGenreName, Intensity>> = {
   Electronic: "hardcore",
-  "Hip-Hop": "soft",
-  Classical: "experimental",
+  "Hip-Hop": "experimental",
+  Classical: "hardcore",
   Rock: "experimental",
-  "Reggae/Dub": "experimental",
+  "Reggae/Dub": "soft",
+  "Disco/Funk": "pop",
+  Vintage: "pop",
 };
 
 export function appGenreIntensity(genre: AppGenreName): Intensity {
@@ -957,14 +952,10 @@ export function appGenreFromSubgenre(subgenre: string): AppGenreName {
   return canonical as AppGenreName;
 }
 
-type ResolvableGenre = GenreName | AppGenreName | string;
+type ResolvableGenre = GenreName | string;
 
 function isGenreName(genre: string): genre is GenreName {
   return genre in GENRE_THEMES;
-}
-
-function isAppGenreName(genre: string): genre is AppGenreName {
-  return genre in APP_GENRE_THEMES;
 }
 
 export interface ResolvedThemeSelection {
@@ -988,7 +979,6 @@ export interface ResolvedThemeSelection {
 
 function toCanonicalGenre(genre: ResolvableGenre): GenreName {
   if (isGenreName(genre)) return genre;
-  if (isAppGenreName(genre)) return genre as GenreName;
   throw new Error(`Unknown canonical genre theme "${genre}"`);
 }
 
@@ -1092,7 +1082,7 @@ export function resolveThemeSelection({
     };
   }
 
-  if (!isAppGenreName(g)) {
+  if (!isGenreName(g)) {
     throw new Error(
       `Unknown genre or subgenre "${g}" (not a canonical subgenre and not a known app genre).`,
     );
