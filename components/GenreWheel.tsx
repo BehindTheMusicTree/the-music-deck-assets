@@ -1,15 +1,34 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import {
   GENRE_THEMES,
-  GENRE_THEME_NAV_EVENT,
-  genreThemeSectionDomId,
   WHEEL_GENRES,
   SUBGENRES,
   WORLD_THEMES,
 } from "@/lib/genres";
-import type { GenreName, GenreThemeNavigateDetail } from "@/lib/genres";
+import type { GenreName, Intensity } from "@/lib/genres";
+
+type WheelTileFocus =
+  | {
+      kind: "genre";
+      label: string;
+      hex: string;
+      genre: GenreName;
+    }
+  | {
+      kind: "subgenre";
+      label: string;
+      hex: string;
+      sectionGenre: GenreName;
+      parentB?: GenreName;
+      intensity: Intensity;
+    };
+
+function formatIntensity(i: Intensity): string {
+  return i.charAt(0).toUpperCase() + i.slice(1);
+}
 
 const CX = 620,
   CY = 620,
@@ -43,16 +62,14 @@ function Rect({
   label,
   hex,
   small,
-  navSectionGenre,
-  navDetail,
+  onActivate,
 }: {
   x: number;
   y: number;
   label: string;
   hex: string;
   small?: boolean;
-  navSectionGenre: GenreName;
-  navDetail: GenreThemeNavigateDetail;
+  onActivate: () => void;
 }) {
   const w = small ? 120 : 160;
   const h = small ? 64 : 92;
@@ -61,27 +78,14 @@ function Rect({
   const isDark = isLight(hex);
   const tc = isDark ? "rgba(10,10,10,.85)" : "rgba(255,255,255,.92)";
   const hc = isDark ? "rgba(10,10,10,.5)" : "rgba(255,255,255,.55)";
-  const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
     () => () => {
-      if (navTimer.current != null) clearTimeout(navTimer.current);
+      if (activateTimer.current != null) clearTimeout(activateTimer.current);
     },
     [],
   );
-
-  const runNavigate = () => {
-    const id = genreThemeSectionDomId(navSectionGenre);
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-    window.dispatchEvent(
-      new CustomEvent<GenreThemeNavigateDetail>(GENRE_THEME_NAV_EVENT, {
-        detail: navDetail,
-      }),
-    );
-  };
 
   return (
     <g
@@ -89,30 +93,29 @@ function Rect({
       style={{ cursor: "pointer" }}
       onClick={(e) => {
         if (e.detail !== 1) {
-          if (navTimer.current != null) {
-            clearTimeout(navTimer.current);
-            navTimer.current = null;
+          if (activateTimer.current != null) {
+            clearTimeout(activateTimer.current);
+            activateTimer.current = null;
           }
           return;
         }
-        if (navTimer.current != null) clearTimeout(navTimer.current);
-        navTimer.current = setTimeout(() => {
-          navTimer.current = null;
-          runNavigate();
+        if (activateTimer.current != null) clearTimeout(activateTimer.current);
+        activateTimer.current = setTimeout(() => {
+          activateTimer.current = null;
+          onActivate();
         }, WHEEL_TILE_SINGLE_CLICK_MS);
       }}
       onDoubleClick={(e) => {
         e.preventDefault();
-        if (navTimer.current != null) {
-          clearTimeout(navTimer.current);
-          navTimer.current = null;
+        if (activateTimer.current != null) {
+          clearTimeout(activateTimer.current);
+          activateTimer.current = null;
         }
         void navigator.clipboard.writeText(hex);
       }}
     >
       <title>
-        Click to jump to this theme in the list and update the preview. Double-click
-        to copy the hex colour.
+        Click for details. Double-click to copy the hex colour.
       </title>
       <rect
         x={-w / 2}
@@ -163,6 +166,17 @@ function genreAngle(genre?: string) {
 }
 
 export default function GenreWheel() {
+  const [wheelFocus, setWheelFocus] = useState<WheelTileFocus | null>(null);
+
+  useEffect(() => {
+    if (!wheelFocus) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setWheelFocus(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [wheelFocus]);
+
   const popText = repeat("POP", 20);
   const softText1 = repeat("SOFT", 23);
   const softText2 = repeat("SOFT", 40);
@@ -371,8 +385,14 @@ export default function GenreWheel() {
               y={y}
               label={g.n}
               hex={g.color}
-              navSectionGenre={g.n}
-              navDetail={{ kind: "genre", genre: g.n }}
+              onActivate={() =>
+                setWheelFocus({
+                  kind: "genre",
+                  label: g.n,
+                  hex: g.color,
+                  genre: g.n,
+                })
+              }
             />
           );
         })}
@@ -381,8 +401,14 @@ export default function GenreWheel() {
           y={CY}
           label="Mainstream"
           hex={GENRE_THEMES.Mainstream.border}
-          navSectionGenre="Mainstream"
-          navDetail={{ kind: "genre", genre: "Mainstream" }}
+          onActivate={() =>
+            setWheelFocus({
+              kind: "genre",
+              label: "Mainstream",
+              hex: GENRE_THEMES.Mainstream.border,
+              genre: "Mainstream",
+            })
+          }
         />
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
@@ -426,12 +452,134 @@ export default function GenreWheel() {
               label={s.n}
               hex={s.color}
               small
-              navSectionGenre={s.parentA as GenreName}
-              navDetail={{ kind: "subgenre", subgenre: s.n }}
+              onActivate={() =>
+                setWheelFocus({
+                  kind: "subgenre",
+                  label: s.n,
+                  hex: s.color,
+                  sectionGenre: s.parentA as GenreName,
+                  parentB: s.parentB,
+                  intensity: s.intensity,
+                })
+              }
             />
           );
         })}
       </svg>
+
+      {wheelFocus && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-200 flex items-center justify-center bg-black/60 p-4"
+              role="presentation"
+              onClick={() => setWheelFocus(null)}
+            >
+              {(() => {
+                const onSwatch = isLight(wheelFocus.hex);
+                const ink = onSwatch
+                  ? "rgba(10,10,10,.92)"
+                  : "rgba(255,255,255,.95)";
+                const inkMuted = onSwatch
+                  ? "rgba(10,10,10,.52)"
+                  : "rgba(255,255,255,.55)";
+                const inkBody = onSwatch
+                  ? "rgba(10,10,10,.82)"
+                  : "rgba(255,255,255,.88)";
+                return (
+                  <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="wheel-tile-modal-title"
+                    className="relative w-full max-w-md overflow-hidden rounded-lg border border-black/15 shadow-xl"
+                    style={{
+                      background: wheelFocus.hex,
+                      boxShadow: `inset 0 0 100px rgba(0,0,0,${onSwatch ? 0.06 : 0.18})`,
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      className="absolute right-3 top-3 z-10 font-mono text-lg leading-none opacity-55 transition-opacity hover:opacity-100"
+                      style={{ color: ink }}
+                      aria-label="Close"
+                      onClick={() => setWheelFocus(null)}
+                    >
+                      ×
+                    </button>
+                    <div className="px-6 pb-7 pt-11 pr-14">
+                      <h2
+                        id="wheel-tile-modal-title"
+                        className="font-cinzel text-xl tracking-[3px] m-0 mb-2"
+                        style={{ color: ink }}
+                      >
+                        {wheelFocus.label}
+                      </h2>
+                      <p
+                        className="font-mono text-sm tracking-wide m-0 mb-5"
+                        style={{ color: inkMuted }}
+                      >
+                        {wheelFocus.hex}
+                      </p>
+                      {wheelFocus.kind === "genre" ? (
+                        <p
+                          className="font-garamond text-[15px] leading-relaxed m-0"
+                          style={{ color: inkBody }}
+                        >
+                          Centre or ring genre on the wheel. Border colour is
+                          the canonical theme key for{" "}
+                          <span style={{ color: ink }}>{wheelFocus.genre}</span>
+                          .
+                        </p>
+                      ) : (
+                        <dl
+                          className="m-0 grid gap-2.5 font-garamond text-[15px] leading-relaxed"
+                          style={{ color: inkBody }}
+                        >
+                          <div className="flex flex-wrap gap-x-2 gap-y-0">
+                            <dt
+                              className="m-0 shrink-0 font-mono text-[11px] uppercase tracking-wider"
+                              style={{ color: inkMuted }}
+                            >
+                              Wheel section
+                            </dt>
+                            <dd className="m-0" style={{ color: ink }}>
+                              {wheelFocus.sectionGenre}
+                            </dd>
+                          </div>
+                          {wheelFocus.parentB ? (
+                            <div className="flex flex-wrap gap-x-2 gap-y-0">
+                              <dt
+                                className="m-0 shrink-0 font-mono text-[11px] uppercase tracking-wider"
+                                style={{ color: inkMuted }}
+                              >
+                                Blend
+                              </dt>
+                              <dd className="m-0" style={{ color: ink }}>
+                                {wheelFocus.sectionGenre} + {wheelFocus.parentB}
+                              </dd>
+                            </div>
+                          ) : null}
+                          <div className="flex flex-wrap gap-x-2 gap-y-0">
+                            <dt
+                              className="m-0 shrink-0 font-mono text-[11px] uppercase tracking-wider"
+                              style={{ color: inkMuted }}
+                            >
+                              Intensity
+                            </dt>
+                            <dd className="m-0" style={{ color: ink }}>
+                              {formatIntensity(wheelFocus.intensity)}
+                            </dd>
+                          </div>
+                        </dl>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

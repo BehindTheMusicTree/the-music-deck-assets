@@ -818,4 +818,16 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.bro-gozh-ma-zadou-v1.png`,
   },
+  {
+    id: 78,
+    title: "Hakuna Matata",
+    artist: "The Lion King cast",
+    year: 1994,
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 88,
+    rarity: "Banger",
+    artwork: `${ART}artwork.hakuna-matata-v1.png`,
+  },
 ];
