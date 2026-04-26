@@ -45,7 +45,7 @@ export default function CardsPage() {
   const popularityExamples: Array<{ note: number; card: CardData }> =
     Array.from({ length: 9 }, (_, i) => {
       const note = i + 1;
-      const pop = note === 1 ? 1 : Math.floor(((note - 1) * 100) / 9) + 1;
+      const pop = note;
       return {
         note,
         card: {
@@ -120,7 +120,7 @@ export default function CardsPage() {
         year: 1993,
         ability: "Festival Pulse",
         abilityDesc: "Gain +10 popularity when played after a World card.",
-        pop: 94,
+        pop: 9,
         rarity: "Classic",
         artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
         country: "Spain",
@@ -189,7 +189,7 @@ export default function CardsPage() {
               {[
                 [
                   "Header",
-                  "Genre icon · title · artist (optional) · popularity number in the header (glow scales with the same popularity value used for award symbols). If artist is missing, title is vertically centered.",
+                  "Genre icon · title · artist (optional) · popularity note (integer 1–9) in the header; glow scales with that same value used for award symbols. If artist is missing, title is vertically centered.",
                 ],
                 [
                   "Artwork",

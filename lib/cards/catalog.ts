@@ -171,7 +171,7 @@ const rawLaMacarena: RawCatalogRow = {
     year: 1993,
     ability: "Festival Pulse",
     abilityDesc: "Gain +10 popularity when played after a World card.",
-    pop: 94,
+    pop: 9,
     rarity: "Classic",
     artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
@@ -332,7 +332,7 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
     country: d.country,
     ability: d.ability,
     abilityDesc: d.abilityDesc,
-    pop: d.pop ?? 72,
+    pop: d.pop ?? 5,
     rarity: d.rarity,
     artworkPrompt: d.artworkPrompt,
   };

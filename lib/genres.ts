@@ -498,8 +498,15 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Soul Rock",
+    color: "#d4a090",
+    parentA: "Rock",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
     n: "Soft Rock",
-    color: "#c8a0a4",
+    color: "#d0a4aa",
     parentA: "Rock",
     intensity: "soft",
   },
@@ -527,7 +534,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "R&B",
-    color: "#ebe0b0",
+    color: "#edd4a8",
     parentA: "Hip-Hop",
     intensity: "soft",
   },
@@ -589,6 +596,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Peak Time Techno",
+    color: "#141c34",
+    parentA: "Electronic",
+    intensity: "hardcore",
+  },
+  {
+    kind: "genre",
     n: "Jungle",
     color: "#288090",
     parentA: "Electronic",
@@ -607,6 +621,13 @@ export const SUBGENRES: Subgenre[] = [
     kind: "genre",
     n: "House",
     color: "#4030a0",
+    parentA: "Electronic",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "Progressive House",
+    color: "#3848b0",
     parentA: "Electronic",
     intensity: "experimental",
   },

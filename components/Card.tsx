@@ -30,6 +30,7 @@ export interface CardData {
   genre?: string;
   ability: string;
   abilityDesc: string;
+  /** Popularity note shown in the header and used for award symbols: integer 1–9. */
   pop: number;
   rarity: CardRarity;
   artwork?: string;
@@ -96,7 +97,8 @@ function getTypeStripParts(
 }
 
 function scoreGlowColor(popularity: number) {
-  const t = Math.max(0, Math.min(1, (popularity - 40) / 60));
+  const note = clamp(Math.round(popularity), 1, 9);
+  const t = Math.max(0, Math.min(1, (note - 1) / 8));
   const r = Math.round(t * 14 + 4);
   const o = (0.25 + t * 0.65).toFixed(2);
   return `0 0 ${r}px rgba(200,160,64,${o})`;
@@ -107,8 +109,7 @@ function clamp(n: number, min: number, max: number) {
 }
 
 function popularityNote(popularity: number): number {
-  const normalized = clamp(popularity, 0, 100);
-  return clamp(Math.ceil((normalized / 100) * 9), 1, 9);
+  return clamp(Math.round(popularity), 1, 9);
 }
 
 function popularityTier(note: number): "gold" | "platinum" | "diamond" {
@@ -315,7 +316,7 @@ export default function Card({
           style={
             {
               "--score-glow-c": effectiveTheme.textMain,
-              "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (card.pop - 40) / 60)) * 14)}px`,
+              "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (popularityNote(card.pop) - 1) / 8)) * 14)}px`,
               boxShadow: scoreGlowColor(card.pop),
             } as React.CSSProperties
           }
