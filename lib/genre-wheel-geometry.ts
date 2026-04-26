@@ -7,7 +7,7 @@ export const WHEEL_CY = WHEEL_VIEW_SIZE / 2;
 
 /** Matches `GenreWheel` SVG layout (single source of truth for radii). */
 export const R_POP_SUBGENRES = 200;
-const RING_STEP = 100;
+const RING_STEP = 83;
 export const R_POP_SOFT_LINE = R_POP_SUBGENRES + RING_STEP;
 export const R_SOFT_SUBGENRES = R_POP_SOFT_LINE + RING_STEP;
 export const R_SOFT_EXPERIMENTAL_LINE = R_SOFT_SUBGENRES + RING_STEP;

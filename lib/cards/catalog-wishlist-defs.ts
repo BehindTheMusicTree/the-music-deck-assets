@@ -982,4 +982,18 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     ability: A,
     abilityDesc: P,
   },
+  {
+    rowKey: "wl-american-idiot",
+    id: 12109,
+    title: "American Idiot",
+    artist: "Green Day",
+    year: 2004,
+    kind: "Planned",
+    genre: "Punk",
+    rarity: "Legendary",
+    pop: 9,
+    ability: "USA Counter",
+    abilityDesc:
+      "When your opponent's card is a USA country (World) card, battle treats this card as countering theirs for advantage modifiers.",
+  },
 ];
