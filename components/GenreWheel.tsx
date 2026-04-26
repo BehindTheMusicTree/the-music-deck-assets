@@ -1,7 +1,16 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  R_EXPERIMENTAL_HARDCORE_LINE,
+  R_POP_SOFT_LINE,
+  R_SOFT_EXPERIMENTAL_LINE,
+  WHEEL_CX,
+  WHEEL_CY,
+  WHEEL_SMALL_TILE_W,
+  wheelSubgenreRadius,
+} from "@/lib/genre-wheel-geometry";
 import {
   GENRE_THEMES,
   WHEEL_GENRES,
@@ -9,6 +18,7 @@ import {
   WORLD_THEMES,
 } from "@/lib/genres";
 import type { GenreName, Intensity } from "@/lib/genres";
+import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
 
 type WheelTileFocus =
   | {
@@ -29,16 +39,6 @@ type WheelTileFocus =
 function formatIntensity(i: Intensity): string {
   return i.charAt(0).toUpperCase() + i.slice(1);
 }
-
-const CX = 620,
-  CY = 620,
-  R_POP_SUBGENRES = 200,
-  R_POP_SOFT_LINE = R_POP_SUBGENRES + 100,
-  R_SOFT_SUBGENRES = R_POP_SOFT_LINE + 100,
-  R_SOFT_EXPERIMENTAL_LINE = R_SOFT_SUBGENRES + 100,
-  R_EXPERIMENTAL_SUBGENRES = R_SOFT_EXPERIMENTAL_LINE + 100,
-  R_EXPERIMENTAL_HARDCORE_LINE = R_EXPERIMENTAL_SUBGENRES + 100,
-  R_HARDCORE_SUBGENRES = R_EXPERIMENTAL_HARDCORE_LINE + 100;
 
 const WHEEL_TILE_SINGLE_CLICK_MS = 300;
 
@@ -71,7 +71,7 @@ function Rect({
   small?: boolean;
   onActivate: () => void;
 }) {
-  const w = small ? 104 : 160;
+  const w = small ? WHEEL_SMALL_TILE_W : 160;
   const h = small ? 54 : 92;
   const fs = small ? 9.5 : 14;
   const fsh = small ? 7.25 : 11;
@@ -159,14 +159,12 @@ function isLight(hex: string) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128;
 }
 
-function genreAngle(genre?: string) {
-  if (genre === "Mainstream") return -90;
-  const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
-  return (idx / WHEEL_GENRES.length) * 360 - 90;
-}
-
 export default function GenreWheel() {
   const [wheelFocus, setWheelFocus] = useState<WheelTileFocus | null>(null);
+  const subgenrePlacement = useMemo(
+    () => computeWheelSubgenrePlacements(SUBGENRES),
+    [],
+  );
 
   useEffect(() => {
     if (!wheelFocus) return;
@@ -204,34 +202,34 @@ export default function GenreWheel() {
         <defs>
           <path
             id="arc-pop-soft-inner"
-            d={`M ${CX},${CY - (R_POP_SOFT_LINE - 30)} A ${R_POP_SOFT_LINE - 30},${R_POP_SOFT_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_POP_SOFT_LINE - 30)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_POP_SOFT_LINE - 30)} A ${R_POP_SOFT_LINE - 30},${R_POP_SOFT_LINE - 30} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_POP_SOFT_LINE - 30)}`}
           />
           <path
             id="arc-pop-soft-outer"
-            d={`M ${CX},${CY - (R_POP_SOFT_LINE + 20)} A ${R_POP_SOFT_LINE + 20},${R_POP_SOFT_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_POP_SOFT_LINE + 20)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_POP_SOFT_LINE + 20)} A ${R_POP_SOFT_LINE + 20},${R_POP_SOFT_LINE + 20} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_POP_SOFT_LINE + 20)}`}
           />
           <path
             id="arc-soft-experimental-inner"
-            d={`M ${CX},${CY - (R_SOFT_EXPERIMENTAL_LINE - 30)} A ${R_SOFT_EXPERIMENTAL_LINE - 30},${R_SOFT_EXPERIMENTAL_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_SOFT_EXPERIMENTAL_LINE - 30)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_SOFT_EXPERIMENTAL_LINE - 30)} A ${R_SOFT_EXPERIMENTAL_LINE - 30},${R_SOFT_EXPERIMENTAL_LINE - 30} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_SOFT_EXPERIMENTAL_LINE - 30)}`}
           />
           <path
             id="arc-soft-experimental-outer"
-            d={`M ${CX},${CY - (R_SOFT_EXPERIMENTAL_LINE + 20)} A ${R_SOFT_EXPERIMENTAL_LINE + 20},${R_SOFT_EXPERIMENTAL_LINE + 20} 0 1,1 ${CX - 0.1},${CY - (R_SOFT_EXPERIMENTAL_LINE + 20)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_SOFT_EXPERIMENTAL_LINE + 20)} A ${R_SOFT_EXPERIMENTAL_LINE + 20},${R_SOFT_EXPERIMENTAL_LINE + 20} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_SOFT_EXPERIMENTAL_LINE + 20)}`}
           />
           <path
             id="arc-experimental-hardcore-inner"
-            d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE - 30},${R_EXPERIMENTAL_HARDCORE_LINE - 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE - 30},${R_EXPERIMENTAL_HARDCORE_LINE - 30} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE - 30)}`}
           />
           <path
             id="arc-experimental-hardcore-outer"
-            d={`M ${CX},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${CX - 0.1},${CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
+            d={`M ${WHEEL_CX},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
           />
         </defs>
 
         {/* Mainstream text */}
         <circle
-          cx={CX}
-          cy={CY}
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
           r={R_SOFT_EXPERIMENTAL_LINE}
           fill="none"
           stroke="rgba(255,255,255,.14)"
@@ -251,8 +249,8 @@ export default function GenreWheel() {
 
         {/* Soft text — inner */}
         <circle
-          cx={CX}
-          cy={CY}
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
           r={R_POP_SOFT_LINE}
           fill="none"
           stroke="rgba(255,255,255,.14)"
@@ -272,8 +270,8 @@ export default function GenreWheel() {
 
         {/* Soft text — outer */}
         <circle
-          cx={CX}
-          cy={CY}
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
           r={R_SOFT_EXPERIMENTAL_LINE}
           fill="none"
           stroke="rgba(255,255,255,.14)"
@@ -328,8 +326,8 @@ export default function GenreWheel() {
 
         {/* Hardcore circle + text — outside outer circle */}
         <circle
-          cx={CX}
-          cy={CY}
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
           r={R_EXPERIMENTAL_HARDCORE_LINE}
           fill="none"
           stroke="rgba(255, 255, 255, 0.37)"
@@ -354,10 +352,10 @@ export default function GenreWheel() {
         {/* Radial dividers between genre zones */}
         {WHEEL_GENRES.map((_, i) => {
           const angle = ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
-          const inner = polarToXY(CX, CY, 0, angle);
+          const inner = polarToXY(WHEEL_CX, WHEEL_CY, 0, angle);
           const outer = polarToXY(
-            CX,
-            CY,
+            WHEEL_CX,
+            WHEEL_CY,
             R_EXPERIMENTAL_HARDCORE_LINE + 160,
             angle,
           );
@@ -377,7 +375,12 @@ export default function GenreWheel() {
         {/* Base genres on pop/experimental line */}
         {WHEEL_GENRES.map((g, i) => {
           const angle = (i / WHEEL_GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
+          const { x, y } = polarToXY(
+            WHEEL_CX,
+            WHEEL_CY,
+            R_SOFT_EXPERIMENTAL_LINE,
+            angle,
+          );
           return (
             <Rect
               key={g.n}
@@ -397,8 +400,8 @@ export default function GenreWheel() {
           );
         })}
         <Rect
-          x={CX}
-          y={CY}
+          x={WHEEL_CX}
+          y={WHEEL_CY}
           label="Mainstream"
           hex={GENRE_THEMES.Mainstream.border}
           onActivate={() =>
@@ -425,25 +428,16 @@ export default function GenreWheel() {
               `Subgenre "${s.n}" has non-global parentB "${s.parentB}" in GenreWheel`,
             );
           }
-          let angle: number;
-          if (s.angleDelta !== undefined) {
-            angle = genreAngle(s.parentA) + s.angleDelta;
-          } else if (s.parentA && s.parentB) {
-            const aA = genreAngle(s.parentA);
-            const aB = genreAngle(s.parentB);
-            angle = aA + (aB - aA) * (s.t ?? 0.5);
-          } else {
-            angle = genreAngle(s.parentA);
+          const placement = subgenrePlacement.get(s.n);
+          if (!placement) {
+            throw new Error(
+              `Missing wheel placement for subgenre "${s.n}" — update computeWheelSubgenrePlacements`,
+            );
           }
-          const r =
-            s.intensity === "pop"
-              ? R_POP_SUBGENRES
-              : s.intensity === "soft"
-                ? R_SOFT_SUBGENRES
-                : s.intensity === "hardcore"
-                  ? R_HARDCORE_SUBGENRES
-                  : R_EXPERIMENTAL_SUBGENRES;
-          const { x, y } = polarToXY(CX, CY, r, angle);
+          const angle = placement.angleDeg;
+          const rBase = wheelSubgenreRadius(s.intensity);
+          const r = rBase + placement.rOffset;
+          const { x, y } = polarToXY(WHEEL_CX, WHEEL_CY, r, angle);
           return (
             <Rect
               key={s.n}

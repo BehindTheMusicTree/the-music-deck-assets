@@ -337,7 +337,6 @@ interface BaseSubgenre {
   parentA: GenreName | CountryName;
   parentB?: NonMainstreamGenreName;
   t?: number;
-  angleDelta?: number;
   intensity: Intensity;
 }
 
@@ -458,7 +457,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Electropop",
     color: "#e4ebff",
     parentA: "Electronic",
-    angleDelta: -14,
     intensity: "pop",
   },
   {
@@ -466,7 +464,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Dance Pop",
     color: "#e8d4f0",
     parentA: "Electronic",
-    angleDelta: 14,
     intensity: "pop",
   },
   {
@@ -481,7 +478,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Pop Rock",
     color: "#f07080",
     parentA: "Rock",
-    angleDelta: -14,
     intensity: "soft",
   },
   {
@@ -503,7 +499,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "R&B Soul",
     color: "#ffd060",
     parentA: "Hip-Hop",
-    angleDelta: -22,
     intensity: "soft",
   },
   {
@@ -532,7 +527,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Ska Punk",
     color: "#8a3018",
     parentA: "Rock",
-    angleDelta: 14,
     intensity: "experimental",
   },
   {
@@ -545,9 +539,8 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Drum & Bass",
-    color: "#1a3870",
+    color: "#0c1f3c",
     parentA: "Electronic",
-    angleDelta: -12,
     intensity: "hardcore",
   },
   {
@@ -564,7 +557,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Techno",
     color: "#2a4588",
     parentA: "Electronic",
-    angleDelta: -5,
     intensity: "experimental",
   },
   {
@@ -572,7 +564,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "House",
     color: "#4030a0",
     parentA: "Electronic",
-    angleDelta: 17,
     intensity: "experimental",
   },
   {
@@ -580,7 +571,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Cantique",
     color: "#888888",
     parentA: "Vintage",
-    angleDelta: -12,
     intensity: "experimental",
   },
   {
@@ -588,13 +578,12 @@ export const SUBGENRES: Subgenre[] = [
     n: "Anthem",
     color: "#5c2a0a",
     parentA: "Classical",
-    angleDelta: -20,
     intensity: "experimental",
   },
   {
     kind: "genre",
     n: "Jazz",
-    color: "#7a5840",
+    color: "#6a5c68",
     parentA: "Vintage",
     intensity: "experimental",
   },
@@ -603,7 +592,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Soul",
     color: "#9a8f60",
     parentA: "Vintage",
-    angleDelta: 12,
     intensity: "experimental",
   },
   {
@@ -611,7 +599,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Punk",
     color: "#e02038",
     parentA: "Rock",
-    angleDelta: 8,
     intensity: "hardcore",
   },
   {
@@ -626,13 +613,12 @@ export const SUBGENRES: Subgenre[] = [
     n: "Nu Metal",
     color: "#c86010",
     parentA: "Rock",
-    angleDelta: -14,
     intensity: "hardcore",
   },
   {
     kind: "genre",
     n: "Free Jazz",
-    color: "#2a1a0e",
+    color: "#1e1a24",
     parentA: "Vintage",
     intensity: "hardcore",
   },
@@ -648,7 +634,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Minimal",
     color: "#3d5a78",
     parentA: "Electronic",
-    angleDelta: 8,
     intensity: "experimental",
   },
   {
@@ -656,7 +641,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Cloud rap",
     color: "#c09028",
     parentA: "Hip-Hop",
-    angleDelta: 22,
     intensity: "soft",
   },
   {
@@ -671,7 +655,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Christian hymn",
     color: "#a0a090",
     parentA: "Vintage",
-    angleDelta: -20,
     intensity: "soft",
   },
   {
@@ -679,7 +662,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Baroque classical",
     color: "#5a4030",
     parentA: "Classical",
-    angleDelta: -12,
     intensity: "experimental",
   },
   {
@@ -687,7 +669,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Romantic classical",
     color: "#884060",
     parentA: "Classical",
-    angleDelta: -4,
     intensity: "experimental",
   },
   {
@@ -695,7 +676,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Impressionist classical",
     color: "#7088a0",
     parentA: "Classical",
-    angleDelta: -16,
     intensity: "soft",
   },
   {
@@ -710,7 +690,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Opera",
     color: "#902040",
     parentA: "Classical",
-    angleDelta: 6,
     intensity: "experimental",
   },
   {
@@ -718,7 +697,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Ballet",
     color: "#d07090",
     parentA: "Classical",
-    angleDelta: 14,
     intensity: "experimental",
   },
   {
@@ -726,7 +704,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Waltz",
     color: "#4088c8",
     parentA: "Classical",
-    angleDelta: -5,
     intensity: "soft",
   },
   {
@@ -734,7 +711,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "March",
     color: "#c89830",
     parentA: "Classical",
-    angleDelta: 5,
     intensity: "soft",
   },
   {
@@ -742,7 +718,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Serenade",
     color: "#6880a0",
     parentA: "Classical",
-    angleDelta: 16,
     intensity: "soft",
   },
   {
@@ -750,7 +725,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Ragtime",
     color: "#4a3828",
     parentA: "Vintage",
-    angleDelta: -10,
     intensity: "soft",
   },
   {
@@ -765,7 +739,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Sacred choral",
     color: "#9a8068",
     parentA: "Classical",
-    angleDelta: 40,
     intensity: "soft",
   },
   {
@@ -773,7 +746,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Symphonic showpiece",
     color: "#284868",
     parentA: "Classical",
-    angleDelta: 22,
     intensity: "experimental",
   },
   {
@@ -781,7 +753,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Traditional song",
     color: "#757060",
     parentA: "Vintage",
-    angleDelta: -12,
     intensity: "pop",
   },
   {
@@ -789,7 +760,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Traditional pop",
     color: "#ebe9e7",
     parentA: "Vintage",
-    angleDelta: 12,
     intensity: "pop",
   },
   {
@@ -804,7 +774,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Arena anthem",
     color: "#d04020",
     parentA: "Rock",
-    angleDelta: 14,
     intensity: "soft",
   },
 ];

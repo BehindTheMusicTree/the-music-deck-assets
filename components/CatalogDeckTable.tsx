@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Card from "@/components/Card";
 import {
   type CatalogEntry,
@@ -26,7 +26,10 @@ type SortKey =
   | "series"
   | "lineGenre"
   | "intensity"
-  | "era";
+  | "era"
+  | "artwork"
+  | "artworkCreatedAt"
+  | "artworkPrompt";
 
 const thWrap =
   "align-top font-normal font-cinzel text-[10px] sm:text-[11px] tracking-[0.1em] text-gold/95 py-2 px-2";
@@ -42,6 +45,37 @@ const INTENSITY_VALUES: readonly Intensity[] = [
   "experimental",
   "hardcore",
 ];
+
+function artworkBasename(artworkUrl: string | undefined): string {
+  if (!artworkUrl) return "";
+  const parts = artworkUrl.split("/");
+  return parts[parts.length - 1] ?? artworkUrl;
+}
+
+const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
+
+/** Parse `YYYY-MM-DD` (or full ISO) for sorting; invalid or missing → null. */
+function artworkCreatedAtSortValue(raw: string | undefined): number | null {
+  const s = raw?.trim();
+  if (!s) return null;
+  const iso =
+    /^\d{4}-\d{2}-\d{2}$/.test(s) ? `${s}T12:00:00Z` : /^\d{4}-\d{2}-\d{2}T/.test(s) ? s : null;
+  if (!iso) return null;
+  const t = Date.parse(iso);
+  return Number.isNaN(t) ? null : t;
+}
+
+function artworkPromptPreview(full: string): { preview: string; hasMore: boolean } {
+  const trimmed = full.trim();
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length <= ARTWORK_PROMPT_PREVIEW_WORDS) {
+    return { preview: trimmed, hasMore: false };
+  }
+  return {
+    preview: `${words.slice(0, ARTWORK_PROMPT_PREVIEW_WORDS).join(" ")}…`,
+    hasMore: true,
+  };
+}
 
 function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolean): number {
   const dir = asc ? 1 : -1;
@@ -107,6 +141,36 @@ function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolea
         cmp(a.catalogNumber, b.catalogNumber);
       return s;
     }
+    case "artwork": {
+      const ha = a.card.artwork ? 1 : 0;
+      const hb = b.card.artwork ? 1 : 0;
+      if (ha !== hb) return cmp(ha, hb);
+      return (
+        artworkBasename(a.card.artwork).localeCompare(
+          artworkBasename(b.card.artwork),
+          undefined,
+          { sensitivity: "base" },
+        ) * dir
+      );
+    }
+    case "artworkCreatedAt": {
+      const A = artworkCreatedAtSortValue(a.card.artworkCreatedAt);
+      const B = artworkCreatedAtSortValue(b.card.artworkCreatedAt);
+      if (A === null && B === null) return 0;
+      if (A === null) return 1 * dir;
+      if (B === null) return -1 * dir;
+      return cmp(A, B);
+    }
+    case "artworkPrompt": {
+      const pa = a.card.artworkPrompt ? 1 : 0;
+      const pb = b.card.artworkPrompt ? 1 : 0;
+      if (pa !== pb) return cmp(pa, pb);
+      return (
+        (a.card.artworkPrompt ?? "").localeCompare(b.card.artworkPrompt ?? "", undefined, {
+          sensitivity: "base",
+        }) * dir
+      );
+    }
     default:
       return 0;
   }
@@ -164,6 +228,16 @@ export default function CatalogDeckTable({
   const [abilityQuery, setAbilityQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("id");
   const [sortAsc, setSortAsc] = useState(true);
+  const [artworkPromptModal, setArtworkPromptModal] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (artworkPromptModal === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setArtworkPromptModal(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [artworkPromptModal]);
 
   const onActivateSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc((a) => !a);
@@ -309,9 +383,9 @@ export default function CatalogDeckTable({
   ]);
 
   return (
-    <div className={className}>
-      <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
-        <table className="w-full min-w-[1280px] border-collapse text-left">
+    <div className={["w-full min-w-0", className].filter(Boolean).join(" ")}>
+      <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
+        <table className="w-full min-w-[1660px] border-collapse text-left">
           <thead>
             <tr className="border-b border-ui-border">
               <th className={`${thWrap} w-[120px] pl-3`}>
@@ -529,6 +603,42 @@ export default function CatalogDeckTable({
                   />
                 </div>
               </th>
+              <th className={`${thWrap} min-w-[132px]`}>
+                <SortToggle
+                  label="Artwork"
+                  sortKey="artwork"
+                  activeKey={sortKey}
+                  asc={sortAsc}
+                  onActivate={onActivateSort}
+                />
+                <span className="text-[9px] text-muted/75 leading-tight mt-1 block font-garamond font-normal tracking-normal">
+                  Bundled file name
+                </span>
+              </th>
+              <th className={`${thWrap} w-[96px]`}>
+                <SortToggle
+                  label="Art created"
+                  sortKey="artworkCreatedAt"
+                  activeKey={sortKey}
+                  asc={sortAsc}
+                  onActivate={onActivateSort}
+                />
+                <span className="text-[9px] text-muted/75 leading-tight mt-1 block font-garamond font-normal tracking-normal">
+                  YYYY-MM-DD
+                </span>
+              </th>
+              <th className={`${thWrap} min-w-[200px]`}>
+                <SortToggle
+                  label="Artwork prompt"
+                  sortKey="artworkPrompt"
+                  activeKey={sortKey}
+                  asc={sortAsc}
+                  onActivate={onActivateSort}
+                />
+                <span className="text-[9px] text-muted/75 leading-tight mt-1 block font-garamond font-normal tracking-normal">
+                  First seven words; click for full text
+                </span>
+              </th>
               <th className={`${thWrap} w-[64px]`}>
                 <SortToggle
                   label="Year"
@@ -695,6 +805,41 @@ export default function CatalogDeckTable({
                   <td className="py-2.5 px-2 text-muted align-middle">
                     {card.artist ?? "—"}
                   </td>
+                  <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                    {card.artwork ? (
+                      <span
+                        className="font-mono text-[11px] leading-snug break-all text-white/85"
+                        title={card.artwork}
+                      >
+                        {artworkBasename(card.artwork)}
+                      </span>
+                    ) : (
+                      <span className="text-muted/80">—</span>
+                    )}
+                  </td>
+                  <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
+                    {card.artworkCreatedAt?.trim() ? (
+                      <span className="text-white/85" title={card.artworkCreatedAt}>
+                        {card.artworkCreatedAt.trim()}
+                      </span>
+                    ) : (
+                      <span className="text-muted/80">—</span>
+                    )}
+                  </td>
+                  <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                    {card.artworkPrompt?.trim() ? (
+                      <button
+                        type="button"
+                        className="block w-full max-w-[28ch] text-left font-garamond text-[11px] leading-snug text-white/80 hover:text-gold rounded border border-transparent px-0.5 py-0.5 -mx-0.5 hover:border-ui-border/50 hover:bg-white/3 transition-colors cursor-pointer"
+                        onClick={() => setArtworkPromptModal(card.artworkPrompt!.trim())}
+                        aria-label="Open full artwork prompt"
+                      >
+                        {artworkPromptPreview(card.artworkPrompt).preview}
+                      </button>
+                    ) : (
+                      <span className="text-muted/80">—</span>
+                    )}
+                  </td>
                   <td className="py-2.5 px-2 text-muted tabular-nums align-middle">
                     {card.year}
                   </td>
@@ -707,7 +852,7 @@ export default function CatalogDeckTable({
                   <td className="py-2.5 px-2 text-muted whitespace-nowrap align-middle">
                     {card.rarity}
                   </td>
-                  <td className="py-2.5 pr-3 pl-2 text-muted max-w-[200px] align-middle">
+                  <td className="py-2.5 pr-3 pl-2 text-muted min-w-0 align-middle">
                     {card.ability}
                   </td>
                 </tr>
@@ -720,6 +865,38 @@ export default function CatalogDeckTable({
         <p className="font-garamond text-muted text-center mt-4 text-sm">
           No cards match the current filters.
         </p>
+      ) : null}
+
+      {artworkPromptModal !== null ? (
+        <div
+          className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="catalog-artwork-prompt-title"
+          onClick={() => setArtworkPromptModal(null)}
+        >
+          <div
+            className="max-w-2xl w-full max-h-[min(85vh,800px)] overflow-y-auto rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              id="catalog-artwork-prompt-title"
+              className="font-cinzel text-xs sm:text-sm tracking-[0.18em] text-gold mb-4"
+            >
+              Artwork prompt
+            </h2>
+            <div className="font-garamond text-[14px] sm:text-[15px] text-white/90 whitespace-pre-wrap wrap-break-word leading-relaxed">
+              {artworkPromptModal}
+            </div>
+            <button
+              type="button"
+              className="mt-6 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5"
+              onClick={() => setArtworkPromptModal(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       ) : null}
     </div>
   );

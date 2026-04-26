@@ -3,7 +3,7 @@ import CatalogDeckTable from "@/components/CatalogDeckTable";
 
 export default function CatalogPage() {
   return (
-    <div className="px-6 py-10 flex flex-col items-center min-h-screen">
+    <div className="px-6 py-10 flex flex-col items-center min-h-screen w-full max-w-none">
       <div className="page-index mb-2">05</div>
       <div className="page-eyebrow mb-4">Available cards</div>
       <h2 className="font-cinzel text-3xl tracking-[4px] text-white mb-2">
@@ -25,8 +25,11 @@ export default function CatalogPage() {
         .
       </p>
 
-      <div id="catalog" className="w-full max-w-[1200px] mb-10 scroll-mt-24">
-        <CatalogDeckTable />
+      <div
+        id="catalog"
+        className="w-full min-w-0 self-stretch mb-10 scroll-mt-24 max-w-none"
+      >
+        <CatalogDeckTable className="w-full min-w-0" />
       </div>
     </div>
   );

@@ -35,6 +35,8 @@ export interface CardData {
   artwork?: string;
   /** Optional prompt text used to produce the artwork (charter / tooling). */
   artworkPrompt?: string;
+  /** ISO calendar date (YYYY-MM-DD) when the bundled artwork was created or locked. */
+  artworkCreatedAt?: string;
   country?: string;
 }
 

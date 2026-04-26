@@ -333,6 +333,12 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
     pop: d.pop ?? 72,
     rarity: d.rarity,
     artworkPrompt: d.artworkPrompt,
+    ...(d.artworkCreatedAt?.trim()
+      ? { artworkCreatedAt: d.artworkCreatedAt.trim() }
+      : {}),
+    ...(d.artworkFile
+      ? { artwork: `${CARD_ARTWORK_BASE}${d.artworkFile}` }
+      : {}),
   };
   if (d.kind === "World") {
     return {
@@ -382,7 +388,7 @@ const rawWishlistRows: RawCatalogRow[] = WISHLIST_CARD_DEFS.filter(
 
 const rawCatalogRowsAll: RawCatalogRow[] = [...rawCatalogRows, ...rawWishlistRows];
 
-/** Full catalogue: shipped cards plus planned wishlist rows (wishlist never carries artwork). */
+/** Full catalogue: shipped cards plus planned wishlist rows (optional `artworkFile` on defs). */
 export const CATALOG_ENTRIES: CatalogEntry[] =
   withCatalogNumbering(rawCatalogRowsAll);
 

@@ -1,6 +1,6 @@
 import type { CardRarity } from "@/lib/cards/card-rarity";
 
-/** Planned catalogue rows only (no shipped artwork here — see `DECK_SPOTLIGHT_CARDS` / examples). */
+/** Planned catalogue rows. Optional `artworkFile` when art exists under `public/cards/artworks/deck/`. */
 export type WishlistCardDef = {
   rowKey: string;
   id: number;
@@ -15,6 +15,10 @@ export type WishlistCardDef = {
   pop?: number;
   ability: string;
   abilityDesc: string;
+  /** Filename under `public/cards/artworks/deck/` (e.g. artwork.foo-v1.png). */
+  artworkFile?: string;
+  /** ISO YYYY-MM-DD when the artwork asset was created (catalog / tooling). */
+  artworkCreatedAt?: string;
   artworkPrompt?: string;
 };
 
@@ -256,6 +260,14 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 92,
     ability: A,
     abilityDesc: P,
+    artworkFile: "artwork.dr-dre-tupac-california-love-v1.png",
+    artworkPrompt: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
+(Gangsta Mad Max, désert, gold dominant)
+
+High-detail semi-realistic fantasy illustration inspired by the wild, celebratory energy of a post-apocalyptic desert party. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third.
+Dans le tiers supérieur, un groupe de rappeurs stylisés façon gangsta-wasteland se tient debout sur un véhicule blindé bricolé, mélange de muscle-car et de machine de guerre. Ils portent des vêtements streetwear renforcés, chaînes massives, lunettes futuristes, armures légères en métal récupéré.
+Autour d'eux, un campement géant façon festival post-apo s'étend dans le désert : tours de lumière, structures mécaniques, podiums, enceintes massives, drapeaux déchirés. Une foule danse malgré la poussière, silhouettes en tenues Mad Max, masques, bandanas, armures artisanales.
+Une tempête de sable dorée se lève derrière eux, illuminée par un soleil bas et brutal, créant une dominante or intense mais contrôlée. L'ambiance est épique, chaude, vibrante, mélange de chaos et de fête. Pas de texte, pas de symboles, pas de logos.`,
   },
   {
     rowKey: "wl-pretender",
@@ -1032,5 +1044,19 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 74,
     ability: A,
     abilityDesc: P,
+  },
+  {
+    rowKey: "wl-guerilla-radio",
+    id: 12110,
+    title: "Guerrilla Radio",
+    artist: "Rage Against the Machine",
+    year: 1999,
+    kind: "Planned",
+    genre: "Pop Rock",
+    rarity: "Legendary",
+    pop: 88,
+    ability: A,
+    abilityDesc: P,
+    artworkFile: "artwork.ratm-guerilla-radio-v1.png",
   },
 ];
