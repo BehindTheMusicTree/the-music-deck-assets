@@ -1,3 +1,4 @@
+export { ARTWORK_CREATED_AT } from "./artwork-created-at";
 export { CARD_ARTWORK_BASE } from "./art-path";
 export {
   type CatalogEra,
