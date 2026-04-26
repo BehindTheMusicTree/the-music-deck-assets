@@ -166,10 +166,13 @@ export default function Card({
   card,
   theme,
   small,
+  enableZoom = true,
 }: {
   card: CardData;
   theme: GenreTheme;
   small?: boolean;
+  /** When false, the preview is static (no click-to-zoom). Use when a parent handles interaction. */
+  enableZoom?: boolean;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -649,6 +652,10 @@ export default function Card({
   ) : (
     renderInnerCard()
   );
+
+  if (!enableZoom) {
+    return <>{baseCard}</>;
+  }
 
   return (
     <>

@@ -438,13 +438,13 @@
 /* Stats — one row: popularity symbols (left), intensity gradient + note (right) */
 .stats {
   background: rgba(0, 0, 0, 0.28);
-  padding: 6px 8px 5px;
-  margin: 0 0 2px;
+  padding: 4px 6px 3px;
+  margin: 0 0 1px;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 .statsPop {
@@ -461,17 +461,17 @@
 .statsIntensity {
   width: 50%;
   min-width: 0;
-  padding: 0 27px;
+  padding: 0 18px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 2px;
+  gap: 1px;
 }
 /* Right triangle (triangle rectangle): right angle at bottom-right (100% width) */
 .intensityTrack {
   position: relative;
   width: 100%;
-  height: 18px;
+  height: 14px;
   overflow: hidden;
   /* Vertices: bottom-left, bottom-right, top-right — L droit en bas à droite = 100 % */
   clip-path: polygon(0% 100%, 100% 100%, 100% 0%);

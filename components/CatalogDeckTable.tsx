@@ -251,6 +251,8 @@ export default function CatalogDeckTable({
   const [sortKey, setSortKey] = useState<SortKey>("id");
   const [sortAsc, setSortAsc] = useState(true);
   const [artworkPromptModal, setArtworkPromptModal] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [gridDetail, setGridDetail] = useState<CatalogEntry | null>(null);
 
   useEffect(() => {
     if (artworkPromptModal === null) return;
@@ -260,6 +262,15 @@ export default function CatalogDeckTable({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [artworkPromptModal]);
+
+  useEffect(() => {
+    if (gridDetail === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setGridDetail(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [gridDetail]);
 
   const onActivateSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc((a) => !a);
@@ -404,8 +415,50 @@ export default function CatalogDeckTable({
     sortAsc,
   ]);
 
+  const viewToggleBtn =
+    "px-3 py-1.5 font-cinzel text-[10px] sm:text-[11px] tracking-[0.14em] rounded-[4px] transition-colors";
+  const viewToggleInactive =
+    "text-muted hover:text-white/90 hover:bg-white/5 border border-transparent";
+  const viewToggleActive =
+    "text-gold bg-gold/10 border border-gold/35 shadow-[inset_0_0_0_1px_rgba(200,160,64,0.12)]";
+
   return (
     <div className={["w-full min-w-0", className].filter(Boolean).join(" ")}>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3 min-w-0">
+        <div
+          className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5"
+          role="group"
+          aria-label="Catalog layout"
+        >
+          <button
+            type="button"
+            className={[viewToggleBtn, viewMode === "table" ? viewToggleActive : viewToggleInactive].join(
+              " ",
+            )}
+            aria-pressed={viewMode === "table"}
+            onClick={() => {
+              setViewMode("table");
+              setGridDetail(null);
+            }}
+          >
+            Table
+          </button>
+          <button
+            type="button"
+            className={[viewToggleBtn, viewMode === "grid" ? viewToggleActive : viewToggleInactive].join(
+              " ",
+            )}
+            aria-pressed={viewMode === "grid"}
+            onClick={() => setViewMode("grid")}
+          >
+            Grid
+          </button>
+        </div>
+        <span className="font-mono text-[11px] text-muted tabular-nums shrink-0">
+          {visibleRows.length} card{visibleRows.length === 1 ? "" : "s"}
+        </span>
+      </div>
+
       <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
         <table className="w-full min-w-[1660px] border-collapse text-left">
           <thead>
@@ -742,6 +795,7 @@ export default function CatalogDeckTable({
               </th>
             </tr>
           </thead>
+          {viewMode === "table" ? (
           <tbody className="font-garamond text-[15px] text-white/95">
             {visibleRows.map(
               ({
@@ -884,12 +938,197 @@ export default function CatalogDeckTable({
               ),
             )}
           </tbody>
+          ) : null}
         </table>
       </div>
+
+      {viewMode === "grid" ? (
+        <div className="mt-6 w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 p-4 sm:p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+            {visibleRows.map((entry) => {
+              const {
+                rowKey,
+                kind,
+                card,
+                theme,
+                catalogNumber,
+                catalogSeriesLabel,
+                catalogGenreLabel,
+              } = entry;
+              return (
+                <button
+                  key={rowKey}
+                  type="button"
+                  className="group flex flex-col items-center gap-2 rounded-lg border border-ui-border bg-[#12121a]/45 p-3 min-w-0 text-left transition-colors hover:border-gold/40 hover:bg-white/4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold/50"
+                  onClick={() => setGridDetail(entry)}
+                  aria-label={`Open catalogue details for ${card.title}`}
+                >
+                  <div
+                    className="mx-auto flex justify-center shrink-0"
+                    style={{
+                      width: 102,
+                      height: 150,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {card.artwork ? (
+                      <div
+                        style={{
+                          transform: "scale(0.58)",
+                          transformOrigin: "top center",
+                        }}
+                      >
+                        <Card
+                          card={card}
+                          theme={theme}
+                          small
+                          enableZoom={false}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="flex h-full w-full items-center justify-center rounded border border-dashed border-ui-border/80 bg-[#12121a]/60 px-1 text-center"
+                        style={{ width: 102, height: 150 }}
+                      >
+                        <span className="font-garamond text-[10px] leading-snug text-muted">
+                          No artwork
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full min-w-0 text-center">
+                    <div className="font-garamond text-[13px] text-white/95 leading-snug line-clamp-2 group-hover:text-gold/95 transition-colors">
+                      {card.title}
+                    </div>
+                    <div className="font-garamond text-[11px] text-muted mt-0.5 line-clamp-1">
+                      {card.artist ?? "—"}
+                    </div>
+                    <div className="font-mono text-[10px] text-gold/90 tabular-nums mt-1">
+                      № {catalogNumber} · {catalogGenreLabel}
+                    </div>
+                    <div className="font-mono text-[9px] text-muted/90 mt-0.5 truncate w-full">
+                      {catalogSeriesLabel}
+                    </div>
+                    <div className="font-mono text-[9px] text-muted/70 mt-0.5">{kind}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       {visibleRows.length === 0 ? (
         <p className="font-garamond text-muted text-center mt-4 text-sm">
           No cards match the current filters.
         </p>
+      ) : null}
+
+      {gridDetail !== null ? (
+        <div
+          className="fixed inset-0 z-100 flex items-start justify-center sm:items-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="catalog-grid-detail-title"
+          onClick={() => setGridDetail(null)}
+        >
+          <div
+            className="max-w-4xl w-full my-4 sm:my-8 rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {(() => {
+              const d = gridDetail;
+              const c = d.card;
+              const detailLine = (label: string, value: string) => (
+                <div className="grid grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] gap-x-3 gap-y-1 text-[13px] sm:text-[14px]">
+                  <dt className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.12em] text-muted uppercase shrink-0 pt-0.5">
+                    {label}
+                  </dt>
+                  <dd className="font-garamond text-white/90 min-w-0 wrap-break-word m-0">
+                    {value}
+                  </dd>
+                </div>
+              );
+              return (
+                <>
+                  <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    <div className="shrink-0 mx-auto lg:mx-0">
+                      <Card card={c} theme={d.theme} />
+                    </div>
+                    <div className="flex-1 min-w-0 w-full">
+                      <h2
+                        id="catalog-grid-detail-title"
+                        className="font-cinzel text-sm sm:text-base tracking-[0.14em] text-gold mb-1"
+                      >
+                        {c.title}
+                      </h2>
+                      <p className="font-garamond text-muted text-[15px] mb-5">
+                        {c.artist ?? "—"} · {c.year}
+                      </p>
+                      <dl className="flex flex-col gap-2.5 mb-6">
+                        {detailLine("Catalogue №", String(d.catalogNumber))}
+                        {detailLine("Card ID", String(c.id))}
+                        {detailLine("Era", d.catalogEra)}
+                        {detailLine("Series", d.catalogSeriesLabel)}
+                        {detailLine(
+                          "Series bucket",
+                          d.catalogSeriesType === "country"
+                            ? "By country / region"
+                            : "By genre",
+                        )}
+                        {detailLine("Type", d.kind)}
+                        {detailLine("App genre", d.catalogGenreLabel)}
+                        {detailLine("Genre line", c.genre ?? "—")}
+                        {detailLine("Country / region", c.country ?? "—")}
+                        {detailLine("Intensity", formatCatalogIntensity(d.catalogIntensity))}
+                        {detailLine("Popularity", String(c.pop))}
+                        {detailLine("Rarity", c.rarity)}
+                        {detailLine(
+                          "Artwork file",
+                          c.artwork ? artworkBasename(c.artwork) : "—",
+                        )}
+                        {detailLine(
+                          "Art created",
+                          c.artworkCreatedAt?.trim()
+                            ? formatArtworkCreatedAtDisplay(c.artworkCreatedAt.trim())
+                            : "—",
+                        )}
+                      </dl>
+                      <div className="rounded-md border border-ui-border/80 bg-[#0f0f14]/40 px-3 py-3">
+                        <div className="font-cinzel text-[10px] tracking-[0.14em] text-gold mb-1">
+                          Ability
+                        </div>
+                        <p className="font-garamond text-white/95 text-[15px] m-0">{c.ability}</p>
+                        <p className="font-garamond text-muted text-[13px] leading-relaxed mt-2 m-0">
+                          {c.abilityDesc}
+                        </p>
+                      </div>
+                      {c.artworkPrompt?.trim() ? (
+                        <button
+                          type="button"
+                          className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
+                          onClick={() => {
+                            setGridDetail(null);
+                            setArtworkPromptModal(c.artworkPrompt!.trim());
+                          }}
+                        >
+                          View full artwork prompt
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-8 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5 w-full sm:w-auto"
+                    onClick={() => setGridDetail(null)}
+                  >
+                    Close
+                  </button>
+                </>
+              );
+            })()}
+          </div>
+        </div>
       ) : null}
 
       {artworkPromptModal !== null ? (

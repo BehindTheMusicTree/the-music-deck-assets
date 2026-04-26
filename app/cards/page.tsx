@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Card, { type CardData } from "@/components/Card";
-import CatalogDeckTable from "@/components/CatalogDeckTable";
 import CardSubTabs from "@/components/CardSubTabs";
 import {
   type AppGenreName,
@@ -154,18 +153,6 @@ export default function CardsPage() {
           header, artwork, type strip, ability box, stats, and footer — remains
           constant across all genres and rarities.
         </p>
-
-        <div id="catalog" className="w-full max-w-[1200px] mb-14 scroll-mt-28">
-          <div className="section-title mb-5">Catalog</div>
-          <p className="font-garamond text-muted leading-[1.6] mb-4 max-w-[800px]">
-            Every shipped card with artwork, in one place. Each row has a
-            catalogue number within its series: by genre, except for
-            country-native subgenres (then by country or region). Use the filters
-            and sort buttons in each column header. Click a preview to zoom
-            (backdrop or Esc to close).
-          </p>
-          <CatalogDeckTable />
-        </div>
 
         {/* Anatomy legend */}
         <div id="anatomy" className="w-full max-w-[1100px] mb-14">

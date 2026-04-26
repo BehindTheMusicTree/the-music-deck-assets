@@ -11,16 +11,18 @@ export default function CatalogPage() {
       </h2>
       <p className="font-garamond italic text-muted max-w-[600px] text-center mb-4">
         The full set of cards with bundled artwork. Catalogue numbers are per
-        genre, or per country/region when the subgenre is country-native.
-        Filter and sort from the table headers, then click a preview to zoom.
+        genre, or per country/region when the subgenre is country-native. Use
+        the Table / Grid toggle: in table view, filter and sort from the
+        headers and click a preview to zoom; in grid view, click a card for
+        catalogue details.
       </p>
       <p className="font-garamond text-muted text-center text-sm mb-10 max-w-[520px]">
         Frame rules and anatomy:{" "}
         <Link
-          href="/cards#catalog"
+          href="/cards#anatomy"
           className="text-gold underline-offset-2 hover:underline"
         >
-          Cards — Catalog
+          Cards — Anatomy
         </Link>
         .
       </p>
