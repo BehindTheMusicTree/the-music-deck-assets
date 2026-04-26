@@ -476,9 +476,23 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Pop Rock",
-    color: "#f07080",
+    color: "#f598a3",
     parentA: "Rock",
     intensity: "pop",
+  },
+  {
+    kind: "genre",
+    n: "Early pop rock",
+    color: "#e8a090",
+    parentA: "Rock",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
+    n: "Soft rock",
+    color: "#b0a8a4",
+    parentA: "Rock",
+    intensity: "soft",
   },
   {
     kind: "genre",
@@ -596,8 +610,15 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Hard rock",
+    color: "#843028",
+    parentA: "Rock",
+    intensity: "hardcore",
+  },
+  {
+    kind: "genre",
     n: "Punk",
-    color: "#e02038",
+    color: "#8c1424",
     parentA: "Rock",
     intensity: "hardcore",
   },
@@ -611,7 +632,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Nu Metal",
-    color: "#c86010",
+    color: "#821e1c",
     parentA: "Rock",
     intensity: "hardcore",
   },
