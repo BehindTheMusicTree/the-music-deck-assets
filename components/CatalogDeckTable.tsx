@@ -39,6 +39,9 @@ const sortBtnBase =
   "shrink-0 inline-flex items-center justify-center min-w-[22px] h-[22px] rounded border border-ui-border bg-[#1a1a22] text-[10px] text-muted hover:text-gold hover:border-gold/40 transition-colors";
 const sortBtnActive = "border-gold/50 text-gold";
 
+/** Prior grid used scale(0.58) on the small card; this is 4× that preview size. */
+const CATALOG_GRID_THUMB_SCALE = 0.58 * 4;
+
 const INTENSITY_VALUES: readonly Intensity[] = [
   "pop",
   "soft",
@@ -979,8 +982,8 @@ export default function CatalogDeckTable({
       </div>
 
       {viewMode === "grid" ? (
-        <div className="mt-6 w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 p-4 sm:p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+        <div className="mt-6 w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 p-4 sm:p-6 overflow-x-auto">
+          <div className="grid grid-cols-1 min-[900px]:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5 justify-items-center">
             {visibleRows.map((entry) => {
               const {
                 rowKey,
@@ -1000,17 +1003,16 @@ export default function CatalogDeckTable({
                   aria-label={`Open catalogue details for ${card.title}`}
                 >
                   <div
-                    className="mx-auto flex justify-center shrink-0"
+                    className="mx-auto flex justify-center shrink-0 overflow-hidden"
                     style={{
-                      width: 102,
-                      height: 150,
-                      overflow: "hidden",
+                      width: 102 * 4,
+                      height: 150 * 4,
                     }}
                   >
                     {card.artwork ? (
                       <div
                         style={{
-                          transform: "scale(0.58)",
+                          transform: `scale(${CATALOG_GRID_THUMB_SCALE})`,
                           transformOrigin: "top center",
                         }}
                       >
@@ -1024,7 +1026,7 @@ export default function CatalogDeckTable({
                     ) : (
                       <div
                         className="flex h-full w-full items-center justify-center rounded border border-dashed border-ui-border/80 bg-[#12121a]/60 px-1 text-center"
-                        style={{ width: 102, height: 150 }}
+                        style={{ width: 102 * 4, height: 150 * 4 }}
                       >
                         <span className="font-garamond text-[10px] leading-snug text-muted">
                           No artwork
