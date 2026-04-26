@@ -91,6 +91,13 @@ The atmosphere is euphoric, bright, expansive — a suspended moment where every
 Lower 60%: reflective floor, suspended golden dust, soft shadows stretched by the upward light.
 No text, no borders.`,
 
+  43: `🎨 Magic-Style Illustration Prompt — My Heart Will Go On — Bow Cry
+High-detail semi-realistic fantasy illustration inspired by an emotional surge at the bow of a grand mythic ship. Vertical 2:3 composition. The bottom 60% will be covered on-card, so place the main subject and all key elements in the upper third.
+Profile view: a woman with long hair, leaning slightly forward, calling out with almost sacred intensity — face and features stylised and anonymous, no resemblance to any real person or celebrity. She occupies about one quarter of the artwork, placed very close to the right edge, leaving a wide open sweep toward the sea and sky.
+The ship's prow is massive and elegant, evoking legendary fantasy great ships (broad curves, pale wood, subtle carved motifs that stay generic and non-identifiable).
+Dominant white light, with orange and rose-gold touches from a sunset catching the spray. In the water below, a dolphin leaps in a graceful arc, catching a glint of light.
+Mood: pure, noble, emotional. No text, no symbols, no logos, no borders.`,
+
   44: `🎤 Lose Yourself — Duel de rappeurs (non identifiables)
 Magic-style illustration, vertical 2:3, upper 40% focus.
 In an underground hall lit by flickering neons, two anonymous rappers face each other at the center of a battle circle. The first, hood up, tense posture, mic gripped tight. The second, massive silhouette, shoulders forward, answers with explosive energy. No detailed faces, no resemblance to real people.

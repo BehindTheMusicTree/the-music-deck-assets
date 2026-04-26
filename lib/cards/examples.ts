@@ -478,6 +478,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     artwork: `${ART}artwork.celine-dion-my-hearth-will-go-on-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
+    ...(artworkPromptFor(43) ?? {}),
   },
   {
     id: 44,

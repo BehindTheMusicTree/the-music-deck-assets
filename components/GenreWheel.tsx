@@ -1,7 +1,8 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent, ReactNode } from "react";
 import {
   R_EXPERIMENTAL_HARDCORE_LINE,
   R_POP_SOFT_LINE,
@@ -46,6 +47,9 @@ function formatIntensity(i: Intensity): string {
 
 const WHEEL_TILE_SINGLE_CLICK_MS = 300;
 
+/** Extra scale on hover: 8× the original +14% / +10% bump (2× the previous 4× preset). */
+const HOVER_RECT_RELATIVE_BUMP = { main: 0.14 * 8, small: 0.1 * 8 } as const;
+
 function repeat(str: string, times: number) {
   return Array(times).fill(str).join(" · ") + " ·";
 }
@@ -61,23 +65,37 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
 }
 
 function Rect({
+  tileId,
   x,
   y,
   label,
   hex,
   small,
+  hovered,
+  onPointerEnter,
+  onPointerLeave,
   onActivate,
 }: {
+  tileId: string;
   x: number;
   y: number;
   label: string;
   hex: string;
   small?: boolean;
+  hovered: boolean;
+  onPointerEnter: () => void;
+  onPointerLeave: (e: PointerEvent<SVGGElement>) => void;
   onActivate: () => void;
 }) {
   const w = small ? WHEEL_SMALL_TILE_W : WHEEL_MAIN_TILE_W;
   const h = small ? WHEEL_SMALL_TILE_H : Math.round(92 * 0.7);
-  const fs = small ? 8.75 : 12;
+  const fs = 14.25;
+  const rectBump = small
+    ? HOVER_RECT_RELATIVE_BUMP.small
+    : HOVER_RECT_RELATIVE_BUMP.main;
+  const rectScale = hovered ? 1 + rectBump : 1;
+  /** Text grows 3× less than the rectangle: share one-third of the extra gain above 1. */
+  const fontScale = hovered ? 1 + rectBump / 3 : 1;
   const isDark = isLight(hex);
   const tc = isDark ? "rgba(10,10,10,.9)" : "rgba(255,255,255,.95)";
   const activateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,8 +109,12 @@ function Rect({
 
   return (
     <g
+      data-wheel-tile
+      data-tile-id={tileId}
       transform={`translate(${x},${y})`}
       style={{ cursor: "pointer" }}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
       onClick={(e) => {
         if (e.detail !== 1) {
           if (activateTimer.current != null) {
@@ -117,25 +139,38 @@ function Rect({
       }}
     >
       <title>Click for details. Double-click to copy the hex colour.</title>
-      <rect
-        x={-w / 2}
-        y={-h / 2}
-        width={w}
-        height={h}
-        rx={4}
-        fill={hex}
-        filter={`drop-shadow(0 2px 8px ${hex}88)`}
-      />
+      <g
+        style={{
+          transformBox: "fill-box" as const,
+          /* Centre of the rect, not (0,0) of the viewport, so hover scale stays centred */
+          transformOrigin: "50% 50%",
+          transition: "transform 0.16s ease-out",
+          transform: `scale(${rectScale})`,
+        }}
+      >
+        <rect
+          x={-w / 2}
+          y={-h / 2}
+          width={w}
+          height={h}
+          rx={4}
+          fill={hex}
+          filter={`drop-shadow(0 2px 8px ${hex}88)`}
+        />
+      </g>
       <text
         x={0}
         y={0}
-        dominantBaseline="middle"
+        dominantBaseline="central"
         textAnchor="middle"
         fontFamily="Cinzel, serif"
         fontWeight={700}
-        fontSize={fs}
         letterSpacing={small ? 0.6 : 1}
         fill={tc}
+        style={{
+          fontSize: fs * fontScale,
+          transition: "font-size 0.16s ease-out",
+        }}
       >
         {label}
       </text>
@@ -152,10 +187,26 @@ function isLight(hex: string) {
 
 export default function GenreWheel() {
   const [wheelFocus, setWheelFocus] = useState<WheelTileFocus | null>(null);
+  const [topTileId, setTopTileId] = useState<string | null>(null);
   const subgenrePlacement = useMemo(
     () => computeWheelSubgenrePlacements(SUBGENRES),
     [],
   );
+
+  const onTilePointerEnter = useCallback((id: string) => {
+    setTopTileId(id);
+  }, []);
+
+  const onTilePointerLeave = useCallback((e: PointerEvent<SVGGElement>) => {
+    const to = e.relatedTarget as Element | null;
+    const next = to?.closest?.("[data-wheel-tile]") as Element | null;
+    if (next) {
+      const nid = next.getAttribute("data-tile-id");
+      if (nid) setTopTileId(nid);
+    } else {
+      setTopTileId(null);
+    }
+  }, []);
 
   useEffect(() => {
     if (!wheelFocus) return;
@@ -166,29 +217,146 @@ export default function GenreWheel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [wheelFocus]);
 
-  const popText = repeat("POP", 20);
+  const popText = repeat("POP", 23);
   const softText1 = repeat("SOFT", 23);
   const softText2 = repeat("SOFT", 40);
-  const expText = repeat("EXPERIMENTAL", 19);
-  const exp2Text = repeat("EXPERIMENTAL", 26);
-  const hardText = repeat("HARDCORE", 36);
+  const expText = repeat("EXPERIMENTAL", 23);
+  const exp2Text = repeat("EXPERIMENTAL", 30);
+  const hardText = repeat("HARDCORE", 40);
+
+  const wheelRectStack = useMemo((): ReactNode[] => {
+    const tiles: { id: string; el: ReactNode }[] = [];
+
+    WHEEL_GENRES.forEach((g, i) => {
+      const angle = (i / WHEEL_GENRES.length) * 360 - 90;
+      const { x, y } = polarToXY(
+        WHEEL_CX,
+        WHEEL_CY,
+        R_SOFT_EXPERIMENTAL_LINE,
+        angle,
+      );
+      tiles.push({
+        id: g.n,
+        el: (
+          <Rect
+            key={g.n}
+            tileId={g.n}
+            x={x}
+            y={y}
+            label={g.n}
+            hex={g.color}
+            hovered={topTileId === g.n}
+            onPointerEnter={() => onTilePointerEnter(g.n)}
+            onPointerLeave={onTilePointerLeave}
+            onActivate={() =>
+              setWheelFocus({
+                kind: "genre",
+                label: g.n,
+                hex: g.color,
+                genre: g.n,
+              })
+            }
+          />
+        ),
+      });
+    });
+
+    tiles.push({
+      id: "Mainstream",
+      el: (
+        <Rect
+          key="Mainstream"
+          tileId="Mainstream"
+          x={WHEEL_CX}
+          y={WHEEL_CY}
+          label="Mainstream"
+          hex={GENRE_THEMES.Mainstream.border}
+          hovered={topTileId === "Mainstream"}
+          onPointerEnter={() => onTilePointerEnter("Mainstream")}
+          onPointerLeave={onTilePointerLeave}
+          onActivate={() =>
+            setWheelFocus({
+              kind: "genre",
+              label: "Mainstream",
+              hex: GENRE_THEMES.Mainstream.border,
+              genre: "Mainstream",
+            })
+          }
+        />
+      ),
+    });
+
+    for (const s of SUBGENRES) {
+      if (s.parentA in WORLD_THEMES) continue;
+      if (s.parentB && s.parentB in WORLD_THEMES) continue;
+      if (!(s.parentA in GENRE_THEMES)) {
+        throw new Error(
+          `Subgenre "${s.n}" has non-global parentA "${s.parentA}" in GenreWheel`,
+        );
+      }
+      if (s.parentB && !(s.parentB in GENRE_THEMES)) {
+        throw new Error(
+          `Subgenre "${s.n}" has non-global parentB "${s.parentB}" in GenreWheel`,
+        );
+      }
+      const placement = subgenrePlacement.get(s.n);
+      if (!placement) {
+        throw new Error(
+          `Missing wheel placement for subgenre "${s.n}" — update computeWheelSubgenrePlacements`,
+        );
+      }
+      const rBase = wheelSubgenreRadius(s.intensity);
+      const r = rBase + placement.rOffset;
+      const { x, y } = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
+      tiles.push({
+        id: s.n,
+        el: (
+          <Rect
+            key={s.n}
+            tileId={s.n}
+            x={x}
+            y={y}
+            label={s.n}
+            hex={s.color}
+            small
+            hovered={topTileId === s.n}
+            onPointerEnter={() => onTilePointerEnter(s.n)}
+            onPointerLeave={onTilePointerLeave}
+            onActivate={() =>
+              setWheelFocus({
+                kind: "subgenre",
+                label: s.n,
+                hex: s.color,
+                sectionGenre: s.parentA as GenreName,
+                parentB: s.parentB,
+                intensity: s.intensity,
+              })
+            }
+          />
+        ),
+      });
+    }
+
+    if (topTileId == null) {
+      return tiles.map((t) => t.el);
+    }
+    const top = tiles.find((t) => t.id === topTileId);
+    if (!top) {
+      return tiles.map((t) => t.el);
+    }
+    return [
+      ...tiles.filter((t) => t.id !== topTileId).map((t) => t.el),
+      top.el,
+    ];
+  }, [subgenrePlacement, topTileId, onTilePointerEnter, onTilePointerLeave]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 48,
-        marginTop: 240,
-        marginBottom: 240,
-      }}
-    >
+    <div className="flex flex-col items-center gap-12">
       <svg
         width={WHEEL_VIEW_SIZE}
         height={WHEEL_VIEW_SIZE}
         viewBox={`0 0 ${WHEEL_VIEW_SIZE} ${WHEEL_VIEW_SIZE}`}
-        style={{ overflow: "visible", maxWidth: "100%" }}
+        className="max-w-full overflow-visible"
       >
         <defs>
           <path
@@ -363,93 +531,8 @@ export default function GenreWheel() {
           );
         })}
 
-        {/* Base genres on pop/experimental line */}
-        {WHEEL_GENRES.map((g, i) => {
-          const angle = (i / WHEEL_GENRES.length) * 360 - 90;
-          const { x, y } = polarToXY(
-            WHEEL_CX,
-            WHEEL_CY,
-            R_SOFT_EXPERIMENTAL_LINE,
-            angle,
-          );
-          return (
-            <Rect
-              key={g.n}
-              x={x}
-              y={y}
-              label={g.n}
-              hex={g.color}
-              onActivate={() =>
-                setWheelFocus({
-                  kind: "genre",
-                  label: g.n,
-                  hex: g.color,
-                  genre: g.n,
-                })
-              }
-            />
-          );
-        })}
-        <Rect
-          x={WHEEL_CX}
-          y={WHEEL_CY}
-          label="Mainstream"
-          hex={GENRE_THEMES.Mainstream.border}
-          onActivate={() =>
-            setWheelFocus({
-              kind: "genre",
-              label: "Mainstream",
-              hex: GENRE_THEMES.Mainstream.border,
-              genre: "Mainstream",
-            })
-          }
-        />
-
-        {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
-        {SUBGENRES.map((s) => {
-          if (s.parentA in WORLD_THEMES) return null;
-          if (s.parentB && s.parentB in WORLD_THEMES) return null;
-          if (!(s.parentA in GENRE_THEMES)) {
-            throw new Error(
-              `Subgenre "${s.n}" has non-global parentA "${s.parentA}" in GenreWheel`,
-            );
-          }
-          if (s.parentB && !(s.parentB in GENRE_THEMES)) {
-            throw new Error(
-              `Subgenre "${s.n}" has non-global parentB "${s.parentB}" in GenreWheel`,
-            );
-          }
-          const placement = subgenrePlacement.get(s.n);
-          if (!placement) {
-            throw new Error(
-              `Missing wheel placement for subgenre "${s.n}" — update computeWheelSubgenrePlacements`,
-            );
-          }
-          const angle = placement.angleDeg;
-          const rBase = wheelSubgenreRadius(s.intensity);
-          const r = rBase + placement.rOffset;
-          const { x, y } = polarToXY(WHEEL_CX, WHEEL_CY, r, angle);
-          return (
-            <Rect
-              key={s.n}
-              x={x}
-              y={y}
-              label={s.n}
-              hex={s.color}
-              small
-              onActivate={() =>
-                setWheelFocus({
-                  kind: "subgenre",
-                  label: s.n,
-                  hex: s.color,
-                  sectionGenre: s.parentA as GenreName,
-                  parentB: s.parentB,
-                  intensity: s.intensity,
-                })
-              }
-            />
-          );
-        })}
+        {/* Base genres, Mainstream, subgenres (hovered tile is painted last) */}
+        {wheelRectStack}
       </svg>
 
       {wheelFocus && typeof document !== "undefined"

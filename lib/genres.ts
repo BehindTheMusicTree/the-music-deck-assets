@@ -836,13 +836,6 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "Traditional Song",
-    color: "#757060",
-    parentA: "Vintage",
-    intensity: "pop",
-  },
-  {
-    kind: "genre",
     n: "Traditional Pop",
     color: "#e0dedc",
     parentA: "Vintage",
