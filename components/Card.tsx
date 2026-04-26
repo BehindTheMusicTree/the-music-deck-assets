@@ -38,6 +38,8 @@ export interface CardData {
    * Negative values move the image up (e.g. −20 when composition sits too low in the PNG).
    */
   artworkOffsetY?: number;
+  /** When true, artwork presentation hides the frame border (full-bleed visual). */
+  artworkOverBorder?: boolean;
   country?: string;
 }
 
@@ -221,6 +223,7 @@ export default function Card({
   const flagStyle = resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? resolved.fadeColor : undefined;
+  const artworkOverBorder = Boolean(card.artworkOverBorder);
   if (flagStyle === "fade" && !resolvedFadeColor) {
     throw new Error(
       `Missing canonical color for fade border on "${card.title}"`,
@@ -538,7 +541,11 @@ export default function Card({
   );
 
   const renderInnerCard = () =>
-    flagUsR90 ? (
+    artworkOverBorder ? (
+      <div className={`${styles.card} ${styles.cardArtworkOverBorder}`} style={varStyle}>
+        {cardContent}
+      </div>
+    ) : flagUsR90 ? (
       <div className={styles.cardShell}>
         <div
           className={styles.cardFlagUsR90}

@@ -171,6 +171,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     country: "Bretagne",
     artwork: `${ART}artwork.tri-martolod-v1.png`,
     artworkOffsetY: -25,
+    artworkOverBorder: true,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.tri-martolod-v1.png"],
     ...(artworkPromptFor(26) ?? {}),
   },

@@ -23,6 +23,13 @@
     0 0 0 1px var(--gc-border);
 }
 
+.cardArtworkOverBorder {
+  border: 0;
+}
+.cardArtworkOverBorder:hover {
+  box-shadow: 0 32px 56px rgba(0, 0, 0, 0.9);
+}
+
 /* World USA: landscape flag, border motif rotated 90° counter-clockwise */
 .cardShell {
   position: relative;
