@@ -48,50 +48,38 @@ const worldBlendEntries: CatalogEntry[] = WORLD_MIXED_CARDS.map((c) => ({
   theme: themeForCountry(c.country!),
 }));
 
-function spotlightCard(id: number): CardData {
-  const c = DECK_SPOTLIGHT_CARDS.find((x) => x.id === id);
-  if (!c) throw new Error(`Missing DECK_SPOTLIGHT_CARDS id ${id}`);
-  return c;
-}
+/** How each `DECK_SPOTLIGHT_CARDS` row appears in the catalogue (theme + type strip group). */
+const SPOTLIGHT_CATALOG_META: Record<
+  number,
+  { kind: CatalogEntry["kind"]; theme: GenreTheme }
+> = (() => {
+  const fr = themeForCountry("France");
+  const es = themeForCountry("Spain");
+  const rock = APP_GENRE_THEMES.Rock;
+  return {
+    28: { kind: "Genre", theme: rock },
+    29: { kind: "Genre", theme: rock },
+    30: { kind: "World blend", theme: es },
+    31: { kind: "World", theme: fr },
+    32: { kind: "World", theme: fr },
+    33: { kind: "World blend", theme: fr },
+  };
+})();
 
-const spotlightEntries: CatalogEntry[] = [
-  {
-    rowKey: "spotlight-28",
-    kind: "Genre",
-    card: spotlightCard(28),
-    theme: APP_GENRE_THEMES.Rock,
-  },
-  {
-    rowKey: "spotlight-29",
-    kind: "Genre",
-    card: spotlightCard(29),
-    theme: APP_GENRE_THEMES.Rock,
-  },
-  {
-    rowKey: "spotlight-30",
-    kind: "World blend",
-    card: spotlightCard(30),
-    theme: themeForCountry("Spain"),
-  },
-  {
-    rowKey: "spotlight-31",
-    kind: "World",
-    card: spotlightCard(31),
-    theme: themeForCountry("France"),
-  },
-  {
-    rowKey: "spotlight-32",
-    kind: "World",
-    card: spotlightCard(32),
-    theme: themeForCountry("France"),
-  },
-  {
-    rowKey: "spotlight-33",
-    kind: "World blend",
-    card: spotlightCard(33),
-    theme: themeForCountry("France"),
-  },
-];
+const spotlightEntries: CatalogEntry[] = DECK_SPOTLIGHT_CARDS.map((card) => {
+  const meta = SPOTLIGHT_CATALOG_META[card.id];
+  if (!meta) {
+    throw new Error(
+      `Add SPOTLIGHT_CATALOG_META[${card.id}] for "${card.title}" in lib/cards/catalog.ts`,
+    );
+  }
+  return {
+    rowKey: `spotlight-${card.id}`,
+    kind: meta.kind,
+    card,
+    theme: meta.theme,
+  };
+});
 
 const laMacarena: CatalogEntry = {
   rowKey: "world-genre-9101",

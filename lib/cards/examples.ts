@@ -223,7 +223,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     title: "God Save the Queen",
     artist: "Sex Pistols",
     year: 1977,
-    subgenre: "Metal",
+    subgenre: "Punk",
     ability: "Anarchy",
     abilityDesc:
       "Opponent loses 10 popularity when you play a second Rock card this round.",
