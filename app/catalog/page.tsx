@@ -10,8 +10,9 @@ export default function CatalogPage() {
         CATA<em className="text-gold not-italic">LOG</em>
       </h2>
       <p className="font-garamond italic text-muted max-w-[600px] text-center mb-4">
-        The full set of cards with bundled artwork. Previews match the charter;
-        click a row preview to zoom.
+        The full set of cards with bundled artwork. Catalogue numbers are per
+        genre, or per country/region when the subgenre is country-native.
+        Filter and sort from the table headers, then click a preview to zoom.
       </p>
       <p className="font-garamond text-muted text-center text-sm mb-10 max-w-[520px]">
         Frame rules and anatomy:{" "}

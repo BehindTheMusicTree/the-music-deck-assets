@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import styles from "./Card.module.css";
 import IntensityGauge from "@/components/IntensityGauge";
 import {
@@ -654,20 +655,26 @@ export default function Card({
       >
         {baseCard}
       </div>
-      {isZoomed && (
-        <div
-          className={styles.zoomOverlay}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Zoomed card ${card.title}`}
-          onClick={() => setIsZoomed(false)}
-          onKeyDown={onCardKeyDown}
-        >
-          <div className={styles.zoomCard} onClick={(e) => e.stopPropagation()}>
-            {renderInnerCard()}
-          </div>
-        </div>
-      )}
+      {isZoomed
+        ? createPortal(
+            <div
+              className={styles.zoomOverlay}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Zoomed card ${card.title}`}
+              onClick={() => setIsZoomed(false)}
+              onKeyDown={onCardKeyDown}
+            >
+              <div
+                className={styles.zoomCard}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {renderInnerCard()}
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }

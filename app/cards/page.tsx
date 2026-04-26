@@ -160,8 +160,11 @@ export default function CardsPage() {
         <div id="catalog" className="w-full max-w-[1200px] mb-14 scroll-mt-28">
           <div className="section-title mb-5">Catalog</div>
           <p className="font-garamond text-muted leading-[1.6] mb-4 max-w-[800px]">
-            Every shipped card with artwork, in one place. Click a preview to
-            open a full-size zoom (close with the backdrop or Esc).
+            Every shipped card with artwork, in one place. Each row has a
+            catalogue number within its series: by genre, except for
+            country-native subgenres (then by country or region). Use the filters
+            and sort buttons in each column header. Click a preview to zoom
+            (backdrop or Esc to close).
           </p>
           <CatalogDeckTable />
         </div>

@@ -1,5 +1,13 @@
 export { CARD_ARTWORK_BASE } from "./art-path";
-export { type CatalogEntry, CATALOG_ENTRIES } from "./catalog";
+export {
+  type CatalogEra,
+  type CatalogEntry,
+  type CatalogSeriesType,
+  CATALOG_DEFAULT_ERA,
+  CATALOG_ENTRIES,
+  CATALOG_KINDS,
+  formatCatalogIntensity,
+} from "./catalog";
 export {
   DECK_SPOTLIGHT_CARDS,
   MOCK_CARDS,
