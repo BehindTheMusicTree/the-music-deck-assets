@@ -66,7 +66,6 @@ export default function CardsPage() {
     border: string;
     card: CardData;
     theme: (typeof APP_GENRE_THEMES)[AppGenreName];
-    genreName?: string;
   }> = [
     {
       key: "genre-subgenre-pop",
@@ -125,10 +124,9 @@ export default function CardsPage() {
         rarity: "Classic",
         artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
         country: "Spain",
-        subgenre: undefined,
+        genre: "Electronic",
       },
       theme: worldThemeForCountry("Spain"),
-      genreName: "Electronic",
     },
     {
       key: "country-plus-genre-subgenre",
@@ -250,7 +248,6 @@ export default function CardsPage() {
                       <Card
                         card={item.card}
                         theme={item.theme}
-                        genreName={item.genreName}
                       />
                     </div>
                     <div className="min-w-0">

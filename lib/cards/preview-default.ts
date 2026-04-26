@@ -6,7 +6,7 @@ export const DEFAULT_PREVIEW_CARD: CardData = {
   title: "Preview Track",
   artist: "Artist",
   year: 2024,
-  subgenre: "Disco Pop",
+  genre: "Disco Pop",
   ability: "Preview",
   abilityDesc: "Live preview of the selected genre or subgenre theme.",
   pop: 75,

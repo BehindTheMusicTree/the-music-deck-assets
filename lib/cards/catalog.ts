@@ -33,10 +33,7 @@ export type CatalogEntry = {
   kind: "Genre" | "World" | "World blend" | "World + genre" | "Planned";
   card: CardData;
   theme: GenreTheme;
-  genreName?: string;
-  /** Present only for genre fixture rows (`MOCK_CARDS`), for numbering when there is no `subgenre`. */
-  fixtureAppGenre?: AppGenreName;
-  /** Numbering bucket: by parent genre, except rows whose `subgenre` is country-native (then by country/region). */
+  /** Numbering bucket: by parent app genre, except country-native (then by country/region). */
   catalogSeriesType: CatalogSeriesType;
   /** Display label for the numbering bucket (genre or country/region name). */
   catalogSeriesLabel: string;
@@ -44,7 +41,7 @@ export type CatalogEntry = {
   catalogNumber: number;
   /** Parent app genre for the table (World for pure country-native strips). */
   catalogGenreLabel: string;
-  /** Same intensity as the card gauge (subgenre when present, else genre-only rule). */
+  /** Same intensity as the card gauge (from subgenre when set, else app genre). */
   catalogIntensity: Intensity;
   /** Card season (release wave); bundled deck is all Era I today. */
   catalogEra: CatalogEra;
@@ -55,8 +52,6 @@ export type RawCatalogRow = {
   kind: CatalogEntry["kind"];
   card: CardData;
   theme: GenreTheme;
-  genreName?: string;
-  fixtureAppGenre?: AppGenreName;
 };
 
 const mockGenreKeys = Object.keys(MOCK_CARDS) as AppGenreName[];
@@ -68,7 +63,6 @@ const rawGenreRows: RawCatalogRow[] = mockGenreKeys.map((g) => {
     kind: "Genre",
     card,
     theme: APP_GENRE_THEMES[g],
-    fixtureAppGenre: g,
   };
 });
 
@@ -132,21 +126,25 @@ const rawLaMacarena: RawCatalogRow = {
     rarity: "Classic",
     artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
     country: "Spain",
-    subgenre: undefined,
+    genre: "Electronic",
   },
   theme: themeForCountry("Spain"),
-  genreName: "Electronic",
 };
 
 function catalogCardIntensity(row: RawCatalogRow): Intensity {
-  const { card, genreName } = row;
+  const { card } = row;
+  if (!card.genre) {
+    throw new Error(
+      `Cannot resolve intensity for "${row.card.title}" (${row.rowKey}): missing genre`,
+    );
+  }
   const resolved = resolveThemeSelection({
-    genre: genreName,
-    subgenre: card.subgenre || undefined,
+    genre: card.genre,
     country: card.country,
   });
-  const sub = resolved.resolvedSubgenre ?? card.subgenre ?? undefined;
-  if (sub) return subgenreIntensity(sub);
+  if (resolved.resolvedSubgenre) {
+    return subgenreIntensity(resolved.resolvedSubgenre);
+  }
   if (resolved.resolvedGenre) {
     return appGenreIntensity(resolved.resolvedGenre as AppGenreName);
   }
@@ -161,37 +159,31 @@ export function formatCatalogIntensity(i: Intensity): string {
 }
 
 function catalogGenreLabel(row: RawCatalogRow): string {
-  if (row.fixtureAppGenre) return displayGenreLabel(row.fixtureAppGenre);
-  if (row.card.subgenre && isCountrySubgenre(row.card.subgenre)) {
+  const { card } = row;
+  if (card.genre && isCountrySubgenre(card.genre)) {
     return "World";
   }
+  if (!card.genre) return "—";
   return displayGenreLabel(resolvedAppGenre(row));
 }
 
 function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
-  if (row.fixtureAppGenre) return row.fixtureAppGenre;
-  const { card, genreName } = row;
-  if (card.subgenre) {
-    const r = resolveThemeSelection({
-      genre: genreName,
-      subgenre: card.subgenre,
-      country: card.country,
-    });
-    if (!r.resolvedGenre) {
-      throw new Error(
-        `Catalog row "${card.title}" has subgenre "${card.subgenre}" but no resolved genre`,
-      );
-    }
+  const { card } = row;
+  if (!card.genre) {
+    throw new Error(`Catalog row "${row.rowKey}" has no card.genre`);
+  }
+  if (isCountrySubgenre(card.genre)) {
+    throw new Error(
+      `Catalog row "${row.rowKey}": use seriesForRow for country-native "${card.genre}"`,
+    );
+  }
+  const r = resolveThemeSelection({ genre: card.genre, country: card.country });
+  if (r.resolvedGenre) {
     return r.resolvedGenre as AppGenreName;
   }
-  if (card.country && genreName) {
-    const r = resolveThemeSelection({
-      genre: genreName,
-      country: card.country,
-    });
-    return r.resolvedGenre as AppGenreName;
-  }
-  throw new Error(`Catalog row "${row.rowKey}" cannot resolve app genre`);
+  throw new Error(
+    `Catalog row "${card.title}" (genre "${card.genre}") has no resolved app genre`,
+  );
 }
 
 function seriesForRow(row: RawCatalogRow): {
@@ -200,11 +192,11 @@ function seriesForRow(row: RawCatalogRow): {
   seriesSortKey: string;
 } {
   const { card } = row;
-  if (card.subgenre && isCountrySubgenre(card.subgenre)) {
+  if (card.genre && isCountrySubgenre(card.genre)) {
     const label = card.country ?? "";
     if (!label) {
       throw new Error(
-        `Country-native subgenre "${card.subgenre}" requires card.country on "${card.title}"`,
+        `Country-native subgenre "${card.genre}" requires card.country on "${card.title}"`,
       );
     }
     return {
@@ -256,8 +248,6 @@ function withCatalogNumbering(rows: RawCatalogRow[]): CatalogEntry[] {
         kind: r.kind,
         card: r.card,
         theme: r.theme,
-        genreName: r.genreName,
-        fixtureAppGenre: r.fixtureAppGenre,
         catalogSeriesType: r.catalogSeriesType,
         catalogSeriesLabel: r.catalogSeriesLabel,
         catalogNumber: n,
@@ -288,7 +278,7 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
     title: d.title,
     artist: d.artist,
     year: d.year,
-    subgenre: d.subgenre,
+    genre: d.genre,
     country: d.country,
     ability: d.ability,
     abilityDesc: d.abilityDesc,
@@ -310,26 +300,28 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
       kind: "World blend",
       card,
       theme: themeForCountry(d.country!),
-      genreName: d.genreName,
     };
   }
   if (d.kind === "World + genre") {
+    if (!d.genre) {
+      throw new Error(`Wishlist "${d.rowKey}" (World + genre) must set genre`);
+    }
     return {
       rowKey: d.rowKey,
       kind: "World + genre",
       card,
       theme: themeForCountry(d.country!),
-      genreName: d.genreName!,
     };
   }
   const rowKind = d.kind === "Planned" ? "Planned" : "Genre";
+  if (!d.genre) {
+    throw new Error(`Wishlist "${d.rowKey}" must set genre`);
+  }
   return {
     rowKey: d.rowKey,
     kind: rowKind,
     card,
-    theme: APP_GENRE_THEMES[d.fixtureGenre!],
-    genreName: d.genreName,
-    fixtureAppGenre: d.fixtureGenre!,
+    theme: resolveThemeSelection({ genre: d.genre, country: d.country }).theme,
   };
 }
 

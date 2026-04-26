@@ -1,4 +1,5 @@
 import GenreWheel from "@/components/GenreWheel";
+import WorldSubgenreMap from "@/components/WorldSubgenreMap";
 import GenreSubTabs from "@/components/GenreSubTabs";
 import GenreAssociations from "@/components/GenreAssociations";
 import GenreThemePreview from "@/components/GenreThemePreview";
@@ -119,6 +120,10 @@ export default function GenresPage() {
 
         <div id="colour-wheel" className="w-full flex justify-center">
           <GenreWheel />
+        </div>
+
+        <div id="world-map" className="w-full flex justify-center">
+          <WorldSubgenreMap />
         </div>
 
         <div id="genre-intensity" className="w-full max-w-[1100px] mt-10 mb-10">

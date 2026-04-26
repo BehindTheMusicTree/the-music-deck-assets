@@ -359,6 +359,13 @@ export const SUBGENRES: Subgenre[] = [
     intensity: "soft",
   },
   {
+    kind: "country",
+    n: "Neapolitan song",
+    color: "#d05838",
+    parentA: "Italy",
+    intensity: "soft",
+  },
+  {
     kind: "genre",
     n: "Electropop",
     color: "#e4ebff",
@@ -421,7 +428,7 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "Religious",
+    n: "Cantique",
     color: "#888888",
     parentA: "Vintage",
     angleDelta: -12,
@@ -587,6 +594,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Mexican Folk",
+    color: "#1e6b4a",
+    parentA: "Vintage",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
     n: "Spiritual",
     color: "#505848",
     parentA: "Vintage",
@@ -594,16 +608,10 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "Neapolitan song",
-    color: "#d05838",
-    parentA: "Vintage",
-    intensity: "soft",
-  },
-  {
-    kind: "genre",
     n: "Sacred choral",
-    color: "#6a8888",
+    color: "#9a8068",
     parentA: "Classical",
+    angleDelta: 40,
     intensity: "soft",
   },
   {
@@ -623,7 +631,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Classic rock",
-    color: "#b02828",
+    color: "#8a8280",
     parentA: "Rock",
     intensity: "experimental",
   },
@@ -787,32 +795,30 @@ export function displayGenreLabel(genre: AppGenreName): string {
   return genre === "Mainstream" ? "Pop" : genre;
 }
 
+/**
+ * @param g Canonical subgenre from `SUBGENRE_BY_NAME`, or an app-level genre
+ *   (e.g. "Electronic" for World+genre, or a genre-only track with no subgenre name).
+ * @param country For World, World blend, and World+genre.
+ */
 export function resolveThemeSelection({
-  genre,
-  subgenre,
+  genre: g,
   country,
 }: {
-  genre?: ResolvableGenre;
-  subgenre?: string;
+  genre: string;
   country?: string;
 }): ResolvedThemeSelection {
   const countryTheme = country ? WORLD_THEMES[country] : undefined;
   if (country && !countryTheme) throw new Error(`Unknown world country theme "${country}"`);
-  if (!subgenre && !genre) throw new Error("Card must provide a subgenre or a genre");
+  if (!g?.trim()) {
+    throw new Error("Card must set genre (a subgenre name, or an app-level genre).");
+  }
 
-  if (subgenre) {
-    const def = SUBGENRE_BY_NAME[subgenre];
-    if (!def) throw new Error(`Unknown canonical subgenre "${subgenre}"`);
-
+  const def = SUBGENRE_BY_NAME[g];
+  if (def) {
     if (def.kind === "country") {
-      if (genre) {
-        throw new Error(
-          `Country-native subgenre "${subgenre}" cannot be combined with explicit genre "${genre}"`,
-        );
-      }
       if (country && country !== def.parentA) {
         throw new Error(
-          `Country-native subgenre "${subgenre}" belongs to "${def.parentA}", not "${country}"`,
+          `Country-native subgenre "${g}" belongs to "${def.parentA}", not "${country}"`,
         );
       }
       const resolvedCountry = def.parentA;
@@ -821,27 +827,19 @@ export function resolveThemeSelection({
         theme: resolvedTheme,
         displayGenre: resolvedCountry,
         leftLabel: resolvedCountry,
-        rightLabel: subgenre,
+        rightLabel: g,
         frameBorder: resolvedTheme.frameBorder,
         frameBg: resolvedTheme.frameBg,
         frameRotateR90: resolvedTheme.frameRotateR90,
         frameFilter: resolvedTheme.frameFilter,
         frameOpacity: resolvedTheme.frameOpacity,
         resolvedCountry,
-        resolvedSubgenre: subgenre,
+        resolvedSubgenre: g,
         typeStripPrimaryBorder: resolvedTheme.border,
       };
     }
 
-    const appGenre = appGenreFromSubgenre(subgenre);
-    if (genre) {
-      const canonicalFromGenre = toCanonicalGenre(genre);
-      if (canonicalFromGenre !== def.parentA) {
-        throw new Error(
-          `Subgenre "${subgenre}" belongs to "${def.parentA}" and cannot be combined with genre "${genre}"`,
-        );
-      }
-    }
+    const appGenre = appGenreFromSubgenre(g);
     const resolvedTheme = subgenreTheme(def.color, APP_GENRE_THEMES[appGenre]);
 
     if (country) {
@@ -857,7 +855,7 @@ export function resolveThemeSelection({
         },
         displayGenre: country,
         leftLabel: country,
-        rightLabel: subgenre,
+        rightLabel: g,
         frameBorder: countryFrameTheme.frameBorder,
         frameBg: countryFrameTheme.frameBg,
         frameRotateR90: countryFrameTheme.frameRotateR90,
@@ -865,7 +863,7 @@ export function resolveThemeSelection({
         frameOpacity: countryFrameTheme.frameOpacity,
         resolvedCountry: country,
         resolvedGenre: appGenre,
-        resolvedSubgenre: subgenre,
+        resolvedSubgenre: g,
         flagStyle: "fade",
         fadeColor: def.color,
         typeStripPrimaryBorder: countryTheme!.border,
@@ -877,44 +875,56 @@ export function resolveThemeSelection({
       theme: resolvedTheme,
       displayGenre: appGenre,
       leftLabel: def.intensity === "pop" ? "Pop" : displayGenreLabel(appGenre),
-      rightLabel: subgenre,
+      rightLabel: g,
       resolvedGenre: appGenre,
-      resolvedSubgenre: subgenre,
+      resolvedSubgenre: g,
       typeStripPrimaryBorder:
         def.intensity === "pop" ? GENRE_THEMES.Mainstream.border : undefined,
       typeStripSubBorder: def.color,
     };
   }
 
-  if (!country) {
-    throw new Error(`Genre-only card "${genre}" requires an explicit country`);
+  if (!isAppGenreName(g)) {
+    throw new Error(`Unknown genre or subgenre "${g}" (not a canonical subgenre and not a known app genre).`);
   }
-
-  const appGenre = toAppGenre(genre!);
-  const resolvedTheme = APP_GENRE_THEMES[appGenre];
-  const countryFrameTheme = countryTheme!;
-  return {
-    theme: {
-      ...resolvedTheme,
+  const appGenre = toAppGenre(g);
+  if (country) {
+    const resolvedTheme = APP_GENRE_THEMES[appGenre];
+    const countryFrameTheme = countryTheme!;
+    return {
+      theme: {
+        ...resolvedTheme,
+        frameBorder: countryFrameTheme.frameBorder,
+        frameBg: countryFrameTheme.frameBg,
+        frameRotateR90: countryFrameTheme.frameRotateR90,
+        frameFilter: countryFrameTheme.frameFilter,
+        frameOpacity: countryFrameTheme.frameOpacity,
+      },
+      displayGenre: country,
+      leftLabel: country,
+      rightLabel: displayGenreLabel(appGenre),
       frameBorder: countryFrameTheme.frameBorder,
       frameBg: countryFrameTheme.frameBg,
       frameRotateR90: countryFrameTheme.frameRotateR90,
       frameFilter: countryFrameTheme.frameFilter,
       frameOpacity: countryFrameTheme.frameOpacity,
-    },
-    displayGenre: country,
-    leftLabel: country,
-    rightLabel: displayGenreLabel(appGenre),
-    frameBorder: countryFrameTheme.frameBorder,
-    frameBg: countryFrameTheme.frameBg,
-    frameRotateR90: countryFrameTheme.frameRotateR90,
-    frameFilter: countryFrameTheme.frameFilter,
-    frameOpacity: countryFrameTheme.frameOpacity,
-    resolvedCountry: country,
+      resolvedCountry: country,
+      resolvedGenre: appGenre,
+      flagStyle: "fade",
+      fadeColor: resolvedTheme.border,
+      typeStripPrimaryBorder: countryTheme!.border,
+      typeStripSubBorder: resolvedTheme.border,
+    };
+  }
+
+  const resolvedTheme = APP_GENRE_THEMES[appGenre];
+  return {
+    theme: resolvedTheme,
+    displayGenre: displayGenreLabel(appGenre),
+    leftLabel: displayGenreLabel(appGenre),
+    rightLabel: "—",
     resolvedGenre: appGenre,
-    flagStyle: "fade",
-    fadeColor: resolvedTheme.border,
-    typeStripPrimaryBorder: countryTheme!.border,
+    typeStripPrimaryBorder: resolvedTheme.border,
     typeStripSubBorder: resolvedTheme.border,
   };
 }

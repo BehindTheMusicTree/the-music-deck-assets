@@ -90,6 +90,33 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  Italy: {
+    theme: {
+      border: "#009246",
+      headerBg: "#0a1014",
+      textMain: "#f0f2ee",
+      textBody: "#cfd4d0",
+      parchStrip: "#dce5de",
+      parchAbility: "#e8efe9",
+      barPop: ["#009246", "#2eb86e"],
+      barExp: ["#CE2B37", "#e85858"],
+      barGlowPop: "rgba(0,146,70,.85)",
+      barGlowExp: "rgba(206,43,55,.75)",
+      frameBorder:
+        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+      frameBg:
+        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+      frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+      bg: "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+    },
+  },
+
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
   Bretagne: {
     theme: {
@@ -115,6 +142,23 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
   },
 
 };
+
+// ---------------------------------------------------------------------------
+// Map placement (plate carrée: x = lon + 180°, y = 90° − lat in SVG space)
+// ---------------------------------------------------------------------------
+
+/** Representative WGS-84 point for each registered country / region. */
+export const COUNTRY_MAP_POINT = {
+  USA: { lon: -98.35, lat: 39.5 },
+  France: { lon: 2.35, lat: 46.8 },
+  Spain: { lon: -3.7, lat: 40.2 },
+  Italy: { lon: 12.5, lat: 42.5 },
+  Bretagne: { lon: -3.2, lat: 48.15 },
+} as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
+
+export function countryToMapSvg(lon: number, lat: number): { x: number; y: number } {
+  return { x: lon + 180, y: 90 - lat };
+}
 
 // ---------------------------------------------------------------------------
 // Derived helpers — consumed by Card.tsx and genres.ts

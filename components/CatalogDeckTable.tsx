@@ -24,7 +24,7 @@ type SortKey =
   | "rarity"
   | "catalogNo"
   | "series"
-  | "subgenre"
+  | "lineGenre"
   | "intensity"
   | "era";
 
@@ -76,8 +76,8 @@ function compareRows(a: CatalogEntry, b: CatalogEntry, key: SortKey, asc: boolea
           sensitivity: "base",
         }) * dir
       );
-    case "subgenre":
-      return (a.card.subgenre ?? "").localeCompare(b.card.subgenre ?? "", undefined, {
+    case "lineGenre":
+      return (a.card.genre ?? "").localeCompare(b.card.genre ?? "", undefined, {
         sensitivity: "base",
       }) * dir;
     case "intensity":
@@ -154,11 +154,12 @@ export default function CatalogDeckTable({
   const [filterKind, setFilterKind] = useState<string>("all");
   const [filterSeries, setFilterSeries] = useState<string>("all");
   const [filterGenre, setFilterGenre] = useState<string>("all");
-  const [filterSubgenre, setFilterSubgenre] = useState<string>("all");
+  const [filterLineGenre, setFilterLineGenre] = useState<string>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [filterRarity, setFilterRarity] = useState<string>("all");
   const [filterIntensity, setFilterIntensity] = useState<string>("all");
   const [filterEra, setFilterEra] = useState<string>("all");
+  const [titleQuery, setTitleQuery] = useState("");
   const [artistQuery, setArtistQuery] = useState("");
   const [abilityQuery, setAbilityQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("id");
@@ -176,11 +177,12 @@ export default function CatalogDeckTable({
     setFilterKind("all");
     setFilterSeries("all");
     setFilterGenre("all");
-    setFilterSubgenre("all");
+    setFilterLineGenre("all");
     setFilterCountry("all");
     setFilterRarity("all");
     setFilterIntensity("all");
     setFilterEra("all");
+    setTitleQuery("");
     setArtistQuery("");
     setAbilityQuery("");
     setSortKey("id");
@@ -214,10 +216,10 @@ export default function CatalogDeckTable({
     return [...s].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
   }, []);
 
-  const subgenreFilterOptions = useMemo(() => {
+  const lineGenreFilterOptions = useMemo(() => {
     const s = new Set<string>();
     for (const e of CATALOG_ENTRIES) {
-      s.add(e.card.subgenre ?? "__empty__");
+      s.add(e.card.genre ?? "__empty__");
     }
     return [...s].sort((a, b) => {
       if (a === "__empty__") return -1;
@@ -250,11 +252,11 @@ export default function CatalogDeckTable({
     if (filterGenre !== "all") {
       rows = rows.filter((r) => r.catalogGenreLabel === filterGenre);
     }
-    if (filterSubgenre !== "all") {
+    if (filterLineGenre !== "all") {
       rows = rows.filter((r) =>
-        filterSubgenre === "__empty__"
-          ? !r.card.subgenre
-          : r.card.subgenre === filterSubgenre,
+        filterLineGenre === "__empty__"
+          ? !r.card.genre
+          : r.card.genre === filterLineGenre,
       );
     }
     if (filterCountry !== "all") {
@@ -273,6 +275,10 @@ export default function CatalogDeckTable({
     if (filterEra !== "all") {
       rows = rows.filter((r) => r.catalogEra === filterEra);
     }
+    const tq = titleQuery.trim().toLowerCase();
+    if (tq) {
+      rows = rows.filter((r) => r.card.title.toLowerCase().includes(tq));
+    }
     const aq = artistQuery.trim().toLowerCase();
     if (aq) {
       rows = rows.filter((r) => (r.card.artist ?? "").toLowerCase().includes(aq));
@@ -290,11 +296,12 @@ export default function CatalogDeckTable({
     filterKind,
     filterSeries,
     filterGenre,
-    filterSubgenre,
+    filterLineGenre,
     filterCountry,
     filterRarity,
     filterIntensity,
     filterEra,
+    titleQuery,
     artistQuery,
     abilityQuery,
     sortKey,
@@ -346,7 +353,7 @@ export default function CatalogDeckTable({
               <th className={`${thWrap} min-w-[96px]`}>
                 <div className="flex flex-col gap-1">
                   <SortToggle
-                    label="Genre"
+                    label="App genre"
                     sortKey="genre"
                     activeKey={sortKey}
                     asc={sortAsc}
@@ -356,9 +363,9 @@ export default function CatalogDeckTable({
                     className={selectBase}
                     value={filterGenre}
                     onChange={(e) => setFilterGenre(e.target.value)}
-                    aria-label="Filter by genre"
+                    aria-label="Filter by app / table genre"
                   >
-                    <option value="all">All genres</option>
+                    <option value="all">All app genres</option>
                     {genreFilterOptions.map((g) => (
                       <option key={g} value={g}>
                         {g}
@@ -370,20 +377,20 @@ export default function CatalogDeckTable({
               <th className={`${thWrap} min-w-[100px]`}>
                 <div className="flex flex-col gap-1">
                   <SortToggle
-                    label="Subgenre"
-                    sortKey="subgenre"
+                    label="Genre"
+                    sortKey="lineGenre"
                     activeKey={sortKey}
                     asc={sortAsc}
                     onActivate={onActivateSort}
                   />
                   <select
                     className={selectBase}
-                    value={filterSubgenre}
-                    onChange={(e) => setFilterSubgenre(e.target.value)}
-                    aria-label="Filter by subgenre"
+                    value={filterLineGenre}
+                    onChange={(e) => setFilterLineGenre(e.target.value)}
+                    aria-label="Filter by card genre line (subgenre or app genre)"
                   >
-                    <option value="all">All subgenres</option>
-                    {subgenreFilterOptions.map((sg) => (
+                    <option value="all">All</option>
+                    {lineGenreFilterOptions.map((sg) => (
                       <option key={sg} value={sg}>
                         {sg === "__empty__" ? "— (none)" : sg}
                       </option>
@@ -485,13 +492,23 @@ export default function CatalogDeckTable({
                 </div>
               </th>
               <th className={`${thWrap} min-w-[100px]`}>
-                <SortToggle
-                  label="Title"
-                  sortKey="title"
-                  activeKey={sortKey}
-                  asc={sortAsc}
-                  onActivate={onActivateSort}
-                />
+                <div className="flex flex-col gap-1">
+                  <SortToggle
+                    label="Title"
+                    sortKey="title"
+                    activeKey={sortKey}
+                    asc={sortAsc}
+                    onActivate={onActivateSort}
+                  />
+                  <input
+                    type="search"
+                    placeholder="Contains…"
+                    className={`${selectBase} placeholder:text-muted/70`}
+                    value={titleQuery}
+                    onChange={(e) => setTitleQuery(e.target.value)}
+                    aria-label="Filter by title"
+                  />
+                </div>
               </th>
               <th className={`${thWrap} min-w-[100px]`}>
                 <div className="flex flex-col gap-1">
@@ -600,7 +617,6 @@ export default function CatalogDeckTable({
                 kind,
                 card,
                 theme,
-                genreName,
                 catalogNumber,
                 catalogSeriesType,
                 catalogSeriesLabel,
@@ -631,7 +647,6 @@ export default function CatalogDeckTable({
                           <Card
                             card={card}
                             theme={theme}
-                            genreName={genreName}
                             small
                           />
                         </div>
@@ -654,7 +669,7 @@ export default function CatalogDeckTable({
                     {catalogGenreLabel}
                   </td>
                   <td className="py-2.5 px-2 text-muted max-w-[140px] align-middle">
-                    {card.subgenre ?? "—"}
+                    {card.genre ?? "—"}
                   </td>
                   <td className="py-2.5 px-2 text-white/90 align-middle whitespace-nowrap font-mono text-[13px] tracking-wide">
                     {catalogEra}

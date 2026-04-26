@@ -26,7 +26,8 @@ export interface CardData {
   title: string;
   artist?: string;
   year: number;
-  subgenre?: string;
+  /** Subgenre, or a parent app genre (e.g. "Electronic" on World+genre) when not a subgenre name. */
+  genre?: string;
   ability: string;
   abilityDesc: string;
   pop: number;
@@ -160,31 +161,24 @@ export default function Card({
   card,
   theme,
   small,
-  genreName,
 }: {
   card: CardData;
   theme: GenreTheme;
   small?: boolean;
-  genreName?: string;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleScaleRef = useRef(1);
-  const resolved =
-    card.country || card.subgenre || genreName
-      ? resolveThemeSelection({
-          genre: genreName,
-          subgenre: card.subgenre || undefined,
-          country: card.country,
-        })
-      : {
-          theme,
-          displayGenre: "—",
-          leftLabel: "—",
-          rightLabel: card.subgenre ?? "—",
-        };
+  const resolved = card.genre
+    ? resolveThemeSelection({ genre: card.genre, country: card.country })
+    : {
+        theme,
+        displayGenre: "—",
+        leftLabel: "—",
+        rightLabel: "—",
+      };
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
   const matchup = matchupTargetsForAppGenre(
@@ -505,10 +499,8 @@ export default function Card({
             <IntensityGauge
               small={Boolean(small)}
               intensity={(() => {
-                const intensitySubgenre =
-                  resolved.resolvedSubgenre ?? card.subgenre;
-                if (intensitySubgenre) {
-                  return subgenreIntensity(intensitySubgenre);
+                if (resolved.resolvedSubgenre) {
+                  return subgenreIntensity(resolved.resolvedSubgenre);
                 }
                 if (resolved.resolvedGenre) {
                   return appGenreIntensity(

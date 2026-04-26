@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  APP_GENRE_THEMES,
   appGenreIntensity,
   canonicalCountryFromSubgenre,
   GENRE_NAMES,
@@ -67,9 +66,6 @@ export default function GenreThemePreview() {
     useState<string>("Mainstream");
   const [selectedRightLabel, setSelectedRightLabel] =
     useState<string>("Disco Pop");
-  const [selectedGenreForCard, setSelectedGenreForCard] = useState<
-    string | undefined
-  >(undefined);
   const [selectedGenreOnly, setSelectedGenreOnly] = useState<
     GenreName | undefined
   >("Mainstream");
@@ -83,26 +79,22 @@ export default function GenreThemePreview() {
     "Mainstream",
     ...GENRE_NAMES.filter((name) => name !== "Mainstream"),
   ];
-  const worldCountries = Object.keys(WORLD_THEMES);
-
+  /** `genre` is a canonical subgenre name or an app-level genre (e.g. World+genre). */
   const applyRulePreview = ({
-    subgenre,
-    country,
     genre,
+    country,
   }: {
-    subgenre?: string;
+    genre: string;
     country?: string;
-    genre?: GenreName;
   }) => {
-    const resolved = resolveThemeSelection({ genre, subgenre, country });
+    const resolved = resolveThemeSelection({ genre, country });
     setTheme(resolved.theme);
     setSelectedGenreLabel(resolved.leftLabel);
     setSelectedRightLabel(resolved.rightLabel);
-    setSelectedGenreForCard(resolved.resolvedGenre);
     setCard({
       ...DEFAULT_PREVIEW_CARD,
       country: resolved.resolvedCountry,
-      subgenre: resolved.resolvedSubgenre,
+      genre,
     });
   };
 
@@ -116,11 +108,10 @@ export default function GenreThemePreview() {
               card={card}
               theme={theme}
               small
-              genreName={selectedGenreForCard}
             />
           </div>
           <div className="hidden sm:block">
-            <Card card={card} theme={theme} genreName={selectedGenreForCard} />
+            <Card card={card} theme={theme} />
           </div>
           <div className="font-mono text-[10px] tracking-[1px] text-muted">
             {`${selectedGenreLabel} · ${selectedRightLabel}`}
@@ -164,7 +155,7 @@ export default function GenreThemePreview() {
                           : subs[0]?.n;
                       if (!sg) return;
                       setSelectedSubgenre(sg);
-                      applyRulePreview({ subgenre: sg });
+                      applyRulePreview({ genre: sg });
                       return;
                     }
                     setSelectedGenreOnly(name);
@@ -172,7 +163,7 @@ export default function GenreThemePreview() {
                     const firstSubgenre = subs[0]?.n;
                     if (!firstSubgenre) return;
                     setSelectedSubgenre(firstSubgenre);
-                    applyRulePreview({ subgenre: firstSubgenre });
+                    applyRulePreview({ genre: firstSubgenre });
                   }}
                 >
                   <span
@@ -257,13 +248,12 @@ export default function GenreThemePreview() {
                               setSelectedCountry(undefined);
                               setSelectedGenreOnly(undefined);
                               setSelectedSubgenre(s.n);
-                              applyRulePreview({ subgenre: s.n });
+                              applyRulePreview({ genre: s.n });
                               return;
                             }
                             setSelectedGenreOnly(undefined);
                             setSelectedSubgenre(s.n);
-                            applyRulePreview({
-                              subgenre: s.n,
+                            applyRulePreview({ genre: s.n,
                               country: selectedCountry,
                             });
                           }}
@@ -352,8 +342,7 @@ export default function GenreThemePreview() {
                       const firstCountrySubgenre = countrySubs[0]?.n;
                       if (!firstCountrySubgenre) return;
                       setSelectedSubgenre(firstCountrySubgenre);
-                      applyRulePreview({
-                        subgenre: firstCountrySubgenre,
+                      applyRulePreview({ genre: firstCountrySubgenre,
                         country,
                       });
                       return;
@@ -363,7 +352,7 @@ export default function GenreThemePreview() {
                       selectedSubgenre &&
                       !isCountrySubgenre(selectedSubgenre)
                     ) {
-                      applyRulePreview({ subgenre: selectedSubgenre, country });
+                      applyRulePreview({ genre: selectedSubgenre, country });
                       return;
                     }
                     if (
@@ -373,8 +362,7 @@ export default function GenreThemePreview() {
                       const parentCountry =
                         canonicalCountryFromSubgenre(selectedSubgenre);
                       if (parentCountry === country) {
-                        applyRulePreview({
-                          subgenre: selectedSubgenre,
+                        applyRulePreview({ genre: selectedSubgenre,
                           country,
                         });
                         return;
@@ -387,8 +375,7 @@ export default function GenreThemePreview() {
                     const firstCountrySubgenre = countrySubs[0]?.n;
                     if (!firstCountrySubgenre) return;
                     setSelectedSubgenre(firstCountrySubgenre);
-                    applyRulePreview({
-                      subgenre: firstCountrySubgenre,
+                    applyRulePreview({ genre: firstCountrySubgenre,
                       country,
                     });
                   }}
@@ -428,13 +415,13 @@ export default function GenreThemePreview() {
                             setSelectedCountry(undefined);
                             setSelectedGenreOnly(undefined);
                             setSelectedSubgenre(s.n);
-                            applyRulePreview({ subgenre: s.n });
+                            applyRulePreview({ genre: s.n });
                             return;
                           }
                           setSelectedCountry(country);
                           setSelectedGenreOnly(undefined);
                           setSelectedSubgenre(s.n);
-                          applyRulePreview({ subgenre: s.n, country });
+                          applyRulePreview({ genre: s.n, country });
                         }}
                       >
                         <CountryDiamond country={country} />
