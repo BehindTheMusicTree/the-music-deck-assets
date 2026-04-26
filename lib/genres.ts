@@ -562,7 +562,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Techno",
-    color: "#1a2e6a",
+    color: "#2a4588",
     parentA: "Electronic",
     angleDelta: -5,
     intensity: "experimental",

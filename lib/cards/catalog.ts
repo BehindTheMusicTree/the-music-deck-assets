@@ -332,6 +332,7 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
     abilityDesc: d.abilityDesc,
     pop: d.pop ?? 72,
     rarity: d.rarity,
+    artworkPrompt: d.artworkPrompt,
   };
   if (d.kind === "World") {
     return {

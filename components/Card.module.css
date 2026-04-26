@@ -194,6 +194,7 @@
 .typeStrip,
 .matchupStrip,
 .ability,
+.artworkPrompt,
 .stats,
 .footer {
   position: relative;
@@ -388,6 +389,50 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Optional artwork prompt — meta strip under ability */
+.artworkPrompt {
+  margin: 0 4px 4px;
+  padding: 5px 8px 6px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 237, 216, 0.92) 0%,
+    rgba(228, 218, 198, 0.96) 100%
+  );
+  border: 1px solid rgba(46, 32, 16, 0.12);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+.artworkPromptLabel {
+  font-family: "Space Mono", monospace;
+  font-size: 6px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: rgba(46, 32, 16, 0.48);
+  margin-bottom: 3px;
+}
+.artworkPromptText {
+  font-family: "Space Mono", monospace;
+  font-size: 7px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: #2a2218;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.artworkPromptSm .artworkPromptLabel {
+  font-size: 5.5px;
+  margin-bottom: 2px;
+}
+.artworkPromptSm .artworkPromptText {
+  font-size: 6px;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* Stats — one row: popularity symbols (left), intensity gradient + note (right) */

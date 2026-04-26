@@ -15,6 +15,7 @@ export type WishlistCardDef = {
   pop?: number;
   ability: string;
   abilityDesc: string;
+  artworkPrompt?: string;
 };
 
 const P = "Planned catalogue entry.";

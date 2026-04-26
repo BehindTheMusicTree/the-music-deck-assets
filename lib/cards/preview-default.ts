@@ -12,4 +12,6 @@ export const DEFAULT_PREVIEW_CARD: CardData = {
   pop: 75,
   rarity: "Classic",
   artwork: "/cards/artworks/deck/artwork.bohemian-rhapsody-v2.png",
+  artworkPrompt:
+    "1970s rock opera single cover, dramatic stage lighting, vinyl-era palette.",
 };

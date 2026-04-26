@@ -33,6 +33,8 @@ export interface CardData {
   pop: number;
   rarity: CardRarity;
   artwork?: string;
+  /** Optional prompt text used to produce the artwork (charter / tooling). */
+  artworkPrompt?: string;
   country?: string;
 }
 
@@ -475,6 +477,16 @@ export default function Card({
           <div className={styles.abilityName}>{card.ability}</div>
           <div className={styles.abilityDesc}>{card.abilityDesc}</div>
         </div>
+
+        {card.artworkPrompt ? (
+          <div
+            className={`${styles.artworkPrompt} ${small ? styles.artworkPromptSm : ""}`}
+            title={card.artworkPrompt}
+          >
+            <div className={styles.artworkPromptLabel}>Artwork prompt</div>
+            <div className={styles.artworkPromptText}>{card.artworkPrompt}</div>
+          </div>
+        ) : null}
 
         {/* Stats: popularity symbols (left); intensity gradient + note under cursor (right) */}
         <div className={`${styles.stats} ${small ? styles.statsSm : ""}`}>
