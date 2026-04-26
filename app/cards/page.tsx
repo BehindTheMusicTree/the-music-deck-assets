@@ -11,7 +11,7 @@ import {
   MOCK_CARDS,
   WORLD_FLAG_CARDS,
   WORLD_MIXED_CARDS,
-  CARD_EXAMPLE_ART_BASE,
+  CARD_ARTWORK_BASE,
   CARD_RARITY_ORDER,
 } from "@/lib/cards";
 
@@ -123,7 +123,7 @@ export default function CardsPage() {
         abilityDesc: "Gain +10 popularity when played after a World card.",
         pop: 94,
         rarity: "Classic",
-        artwork: `${CARD_EXAMPLE_ART_BASE}artwork.example-los-del-rio-la-macarena-v1.png`,
+        artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
         country: "Spain",
         subgenre: undefined,
       },
