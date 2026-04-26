@@ -1,0 +1,15 @@
+import type { CardData } from "@/components/Card";
+
+/** Default card for genre / theme preview tooling. */
+export const DEFAULT_PREVIEW_CARD: CardData = {
+  id: 9000,
+  title: "Preview Track",
+  artist: "Artist",
+  year: 2024,
+  subgenre: "Disco Pop",
+  ability: "Preview",
+  abilityDesc: "Live preview of the selected genre or subgenre theme.",
+  pop: 75,
+  rarity: "Classic",
+  artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
+};

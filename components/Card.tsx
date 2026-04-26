@@ -18,6 +18,7 @@ import {
   resolveThemeSelection,
   subgenreIntensity,
 } from "@/lib/genres";
+import type { CardRarity } from "@/lib/cards/card-rarity";
 
 export interface CardData {
   id: number;
@@ -25,19 +26,12 @@ export interface CardData {
   artist?: string;
   year: number;
   subgenre?: string;
-  typeStripPrimaryBorder?: string;
-  typeStripSubBorder?: string;
   ability: string;
   abilityDesc: string;
-  power: number;
   pop: number;
-  rarity: "Legendary" | "Epic" | "Rare" | "Common";
+  rarity: CardRarity;
   artwork?: string;
   country?: string;
-  /** 'full' = flag fills entire card background; 'fade' = flag left-half fades into genre colour */
-  flagStyle?: "full" | "fade";
-  /** Colour the flag fades into for flagStyle='fade' (defaults to "transparent") */
-  fadeColor?: string;
 }
 
 export interface GenreTheme {
@@ -59,25 +53,18 @@ export interface GenreTheme {
   icon: string;
 }
 
-const RARITY_COLOR: Record<string, string> = {
+const RARITY_COLOR: Record<CardRarity, string> = {
   Legendary: "#c8a040",
-  Epic: "#a060c8",
-  Rare: "#4a7aaa",
-  Common: "#666",
+  Classic: "#a060c8",
+  Banger: "#4a7aaa",
+  Niche: "#666",
 };
 
-const RARITY_LABEL: Record<string, string> = {
-  Legendary: "Legendary",
-  Epic: "Classic",
-  Rare: "Banger",
-  Common: "Niche",
-};
-
-const RARITY_ICON: Record<string, string> = {
+const RARITY_ICON: Record<CardRarity, string> = {
   Legendary: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 8,3.5 10,7 5,10 0,7 2,3.5" fill="#c8a040"/></svg>`,
-  Epic: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
-  Rare: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
-  Common: `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
+  Classic: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
+  Banger: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
+  Niche: `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
 };
 
 const STRIP_NAME_FOR_GENRE: Record<string, string> = {
@@ -102,8 +89,8 @@ function getTypeStripParts(
   return { left, right: rightLabel };
 }
 
-function scoreGlowColor(power: number) {
-  const t = Math.max(0, Math.min(1, (power - 40) / 60));
+function scoreGlowColor(popularity: number) {
+  const t = Math.max(0, Math.min(1, (popularity - 40) / 60));
   const r = Math.round(t * 14 + 4);
   const o = (0.25 + t * 0.65).toFixed(2);
   return `0 0 ${r}px rgba(200,160,64,${o})`;
@@ -203,13 +190,9 @@ export default function Card({
     resolved.resolvedGenre as AppGenreName | undefined,
   );
   const stripLeftBorder =
-    card.typeStripPrimaryBorder ??
-    resolved.typeStripPrimaryBorder ??
-    effectiveTheme.border;
+    resolved.typeStripPrimaryBorder ?? effectiveTheme.border;
   const stripRightBorder =
-    card.typeStripSubBorder ??
-    resolved.typeStripSubBorder ??
-    effectiveTheme.border;
+    resolved.typeStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const pipLeftSymbol = card.country
@@ -234,9 +217,9 @@ export default function Card({
   const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
   const worldFrameOpacity =
     resolved.frameOpacity ?? effectiveTheme.frameOpacity;
-  const flagStyle = card.flagStyle ?? resolved.flagStyle;
+  const flagStyle = resolved.flagStyle;
   const resolvedFadeColor =
-    flagStyle === "fade" ? (card.fadeColor ?? resolved.fadeColor) : undefined;
+    flagStyle === "fade" ? resolved.fadeColor : undefined;
   if (flagStyle === "fade" && !resolvedFadeColor) {
     throw new Error(
       `Missing canonical color for fade border on "${card.title}"`,
@@ -333,12 +316,12 @@ export default function Card({
           style={
             {
               "--score-glow-c": effectiveTheme.textMain,
-              "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (card.power - 40) / 60)) * 14)}px`,
-              boxShadow: scoreGlowColor(card.power),
+              "--score-glow-r": `${4 + Math.round(Math.max(0, Math.min(1, (card.pop - 40) / 60)) * 14)}px`,
+              boxShadow: scoreGlowColor(card.pop),
             } as React.CSSProperties
           }
         >
-          {card.power}
+          {card.pop}
         </div>
       </div>
 
@@ -547,7 +530,7 @@ export default function Card({
               }}
             />
             <span className={styles.rarityText} style={{ color: rarColor }}>
-              {RARITY_LABEL[card.rarity] ?? card.rarity}
+              {card.rarity}
             </span>
           </div>
         </div>
@@ -556,12 +539,7 @@ export default function Card({
   );
 
   const renderInnerCard = () =>
-    flagStyle === "full" && flagBg ? (
-      /* Full-bleed flag covers the entire card background */
-      <div className={styles.card} style={{ ...varStyle, background: flagBg }}>
-        {cardContent}
-      </div>
-    ) : flagUsR90 ? (
+    flagUsR90 ? (
       <div className={styles.cardShell}>
         <div
           className={styles.cardFlagUsR90}

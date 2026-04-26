@@ -17,20 +17,7 @@ import { FLAG_PIP_BG, FLAG_PIP_SYMBOL } from "@/lib/countries";
 import type { GenreName } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 import IntensityGauge from "@/components/IntensityGauge";
-
-const BASE_CARD: CardData = {
-  id: 9000,
-  title: "Preview Track",
-  artist: "Artist",
-  year: 2024,
-  subgenre: "Disco Pop",
-  ability: "Preview",
-  abilityDesc: "Live preview of the selected genre or subgenre theme.",
-  power: 80,
-  pop: 75,
-  rarity: "Epic",
-  artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
-};
+import { DEFAULT_PREVIEW_CARD } from "@/lib/cards";
 
 function isVeryLight(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
@@ -74,7 +61,7 @@ function CountryDiamond({ country }: { country: string }) {
 }
 
 export default function GenreThemePreview() {
-  const [card, setCard] = useState<CardData>({ ...BASE_CARD });
+  const [card, setCard] = useState<CardData>({ ...DEFAULT_PREVIEW_CARD });
   const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Mainstream);
   const [selectedGenreLabel, setSelectedGenreLabel] =
     useState<string>("Mainstream");
@@ -113,13 +100,9 @@ export default function GenreThemePreview() {
     setSelectedRightLabel(resolved.rightLabel);
     setSelectedGenreForCard(resolved.resolvedGenre);
     setCard({
-      ...BASE_CARD,
+      ...DEFAULT_PREVIEW_CARD,
       country: resolved.resolvedCountry,
       subgenre: resolved.resolvedSubgenre,
-      flagStyle: resolved.flagStyle,
-      fadeColor: resolved.fadeColor,
-      typeStripPrimaryBorder: resolved.typeStripPrimaryBorder,
-      typeStripSubBorder: resolved.typeStripSubBorder,
     });
   };
 

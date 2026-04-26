@@ -6,240 +6,13 @@ import {
   APP_GENRE_THEMES,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
-
-const ART = "/cards/artworks/examples/";
-
-const WORLD_FLAG_CARDS: CardData[] = [
-  {
-    id: 20,
-    title: "Take Me Home, Country Roads",
-    artist: "John Denver",
-    year: 1971,
-    subgenre: "Country",
-    typeStripPrimaryBorder: "#B22234",
-    ability: "Heartland",
-    abilityDesc: "Restores 10 HP to all allied cards when played.",
-    power: 70,
-    pop: 78,
-    rarity: "Rare",
-    country: "USA",
-    artwork: `${ART}artwork.example-take-me-home-country-roads-v1.png`,
-  },
-  {
-    id: 24,
-    title: "Les Lacs du Connemara",
-    artist: "Michel Sardou",
-    year: 1981,
-    subgenre: "French Variety",
-    typeStripPrimaryBorder: "#0055A4",
-    ability: "Melancholy",
-    abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
-    power: 80,
-    pop: 74,
-    rarity: "Rare",
-    country: "France",
-    artwork: `${ART}artwork.example-michel-sardou-les-lacs-du-connemara-v1.png`,
-  },
-  {
-    id: 26,
-    title: "Tri Martolod",
-    artist: "Traditional",
-    year: 1972,
-    subgenre: "Folk Breton",
-    typeStripPrimaryBorder: "#222222",
-    ability: "Rising Tide",
-    abilityDesc: "Gain +10 power for each allied World card in play.",
-    power: 72,
-    pop: 58,
-    rarity: "Rare",
-    country: "Bretagne",
-    artwork: `${ART}artwork.example-tri-martolod-v1.png`,
-  },
-];
-
-const WORLD_MIXED_CARDS: CardData[] = [
-  {
-    id: 27,
-    title: "Bande Organisée",
-    artist: "13 Organisé",
-    year: 2020,
-    subgenre: "Rap",
-    typeStripPrimaryBorder: "#0055A4",
-    ability: "Street Anthem",
-    abilityDesc:
-      "Allied Hip-Hop cards gain +12 popularity on the turn this card is played.",
-    power: 84,
-    pop: 90,
-    rarity: "Epic",
-    country: "France",
-    artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
-    flagStyle: "fade",
-  },
-  {
-    id: 21,
-    title: "Amazing Grace",
-    artist: "Traditional",
-    year: 1779,
-    subgenre: "Religious",
-    typeStripPrimaryBorder: "#B22234",
-    ability: "Redemption",
-    abilityDesc: "Revives one defeated allied card with 30 HP.",
-    power: 74,
-    pop: 72,
-    rarity: "Epic",
-    country: "USA",
-    artwork: `${ART}artwork.example-amazing-grace-v1.png`,
-    flagStyle: "fade",
-  },
-  {
-    id: 23,
-    title: "La Marseillaise",
-    artist: "Rouget de Lisle",
-    year: 1792,
-    subgenre: "Anthem",
-    typeStripPrimaryBorder: "#0055A4",
-    ability: "Liberty",
-    abilityDesc: "Grants +15 power to all allied cards on the next turn.",
-    power: 88,
-    pop: 68,
-    rarity: "Legendary",
-    country: "France",
-    artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
-    flagStyle: "fade",
-  },
-  {
-    id: 25,
-    title: "Cannabis",
-    artist: "Ska-P",
-    year: 1998,
-    subgenre: "Ska Punk",
-    typeStripPrimaryBorder: "#AA151B",
-    ability: "Contraband",
-    abilityDesc:
-      "Opponent discards one card at random when this card enters play.",
-    power: 76,
-    pop: 62,
-    rarity: "Rare",
-    country: "Spain",
-    artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
-    flagStyle: "fade",
-  },
-];
-
-const MOCK_CARDS: Record<AppGenreName, CardData> = {
-  Rock: {
-    id: 1,
-    title: "Bohemian Rhapsody",
-    artist: "Queen",
-    year: 1975,
-    subgenre: "Pop Rock",
-    ability: "Anthemic",
-    abilityDesc: "Doubles momentum on any track with a guitar solo.",
-    power: 95,
-    pop: 92,
-    rarity: "Legendary",
-    artwork: `${ART}artwork.example-bohemian-rhapsody-v2.png`,
-  },
-  Mainstream: {
-    id: 2,
-    title: "Billie Jean",
-    artist: "Michael Jackson",
-    year: 1982,
-    subgenre: "Disco Pop",
-    ability: "Crossover",
-    abilityDesc: "Gains +10 popularity when played after a dance track.",
-    power: 91,
-    pop: 97,
-    rarity: "Legendary",
-    artwork: `${ART}artwork.example-billy-jean-v2.png`,
-  },
-  Electronic: {
-    id: 3,
-    title: "One More Time",
-    artist: "Daft Punk",
-    year: 2000,
-    subgenre: "House",
-    ability: "Loop Sync",
-    abilityDesc: "Repeats its effect once if experimental is above 60.",
-    power: 82,
-    pop: 88,
-    rarity: "Epic",
-    artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
-  },
-  "Reggae/Dub": {
-    id: 4,
-    title: "Is This Love",
-    artist: "Bob Marley",
-    year: 1978,
-    subgenre: "Roots",
-    ability: "Roots",
-    abilityDesc: "Heals 20 HP when adjacent to a World genre card.",
-    power: 74,
-    pop: 82,
-    rarity: "Epic",
-    artwork: `${ART}artwork.example-is-this-love-v1.png`,
-  },
-  "Hip-Hop": {
-    id: 5,
-    title: "HUMBLE.",
-    artist: "Kendrick Lamar",
-    year: 2017,
-    subgenre: "R&B Soul",
-    ability: "Lyrical",
-    abilityDesc:
-      "Drains 15 power from the opponent when popularity exceeds 70.",
-    power: 88,
-    pop: 86,
-    rarity: "Legendary",
-    artwork: `${ART}artwork.example-kendrick-lamar-humble-v1.png`,
-  },
-  "Disco/Funk": {
-    id: 6,
-    title: "Night Fever",
-    artist: "Bee Gees",
-    year: 1977,
-    subgenre: "Disco",
-    ability: "Groove",
-    abilityDesc: "Boosts all Funk cards on the field by +5 popularity.",
-    power: 72,
-    pop: 90,
-    rarity: "Rare",
-    artwork: `${ART}artwork.example-night-fever-v1.png`,
-  },
-  Classical: {
-    id: 7,
-    title: "Ride of the Valkyries",
-    artist: "Wagner",
-    year: 1876,
-    subgenre: "Soul",
-    ability: "Fortissimo",
-    abilityDesc: "Deals damage in three separate strikes of 60% power each.",
-    power: 90,
-    pop: 58,
-    rarity: "Legendary",
-    artwork: `${ART}artwork.example-wagner-ride-of-the-valkyries-v1.png`,
-  },
-  Vintage: {
-    id: 8,
-    title: "So What",
-    artist: "Miles Davis",
-    year: 1959,
-    subgenre: "Jazz",
-    ability: "Modal",
-    abilityDesc: "Random multiplier between ×1 and ×3 on each use.",
-    power: 77,
-    pop: 55,
-    rarity: "Epic",
-    artwork: `${ART}artwork.example-miles-davis-so-what-v1.png`,
-  },
-};
-
-const RARITY_LABEL: Record<"Legendary" | "Epic" | "Rare" | "Common", string> = {
-  Legendary: "Legendary",
-  Epic: "Classic",
-  Rare: "Banger",
-  Common: "Niche",
-};
+import {
+  MOCK_CARDS,
+  WORLD_FLAG_CARDS,
+  WORLD_MIXED_CARDS,
+  CARD_EXAMPLE_ART_BASE,
+  CARD_RARITY_ORDER,
+} from "@/lib/cards";
 
 export default function CardsPage() {
   const intensityExamples: Array<{
@@ -279,8 +52,7 @@ export default function CardsPage() {
           id: 9800 + note,
           title: `Popularity ${note}`,
           pop,
-          power: 70 + note,
-          rarity: note >= 8 ? "Legendary" : note >= 5 ? "Epic" : "Rare",
+          rarity: note >= 8 ? "Legendary" : note >= 5 ? "Classic" : "Banger",
         },
       };
     });
@@ -348,13 +120,11 @@ export default function CardsPage() {
         year: 1993,
         ability: "Festival Pulse",
         abilityDesc: "Gain +10 popularity when played after a World card.",
-        power: 83,
         pop: 94,
-        rarity: "Epic",
-        artwork: `${ART}artwork.example-los-del-rio-la-macarena-v1.png`,
+        rarity: "Classic",
+        artwork: `${CARD_EXAMPLE_ART_BASE}artwork.example-los-del-rio-la-macarena-v1.png`,
         country: "Spain",
         subgenre: undefined,
-        flagStyle: undefined,
       },
       theme: worldThemeForCountry("Spain"),
       genreName: "Electronic",
@@ -408,7 +178,7 @@ export default function CardsPage() {
               {[
                 [
                   "Header",
-                  "Genre icon · title · artist (optional) · power score (glow scales with power). If artist is missing, title is vertically centered.",
+                  "Genre icon · title · artist (optional) · popularity number in the header (glow scales with the same popularity value used for award symbols). If artist is missing, title is vertically centered.",
                 ],
                 [
                   "Artwork",
@@ -659,35 +429,33 @@ export default function CardsPage() {
         <div id="rarities" className="w-full max-w-[1100px] mb-14">
           <div className="section-title mb-5">Rarity Variants</div>
           <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(["Common", "Rare", "Epic", "Legendary"] as const).map(
-              (rarity) => (
-                <div key={rarity} className="flex flex-col items-center gap-2">
+            {CARD_RARITY_ORDER.map((rarity) => (
+              <div key={rarity} className="flex flex-col items-center gap-2">
+                <div
+                  style={{
+                    width: 298,
+                    height: 440,
+                    overflow: "hidden",
+                  }}
+                >
                   <div
                     style={{
-                      width: 298,
-                      height: 440,
-                      overflow: "hidden",
+                      transform: "scale(2)",
+                      transformOrigin: "top left",
                     }}
                   >
-                    <div
-                      style={{
-                        transform: "scale(2)",
-                        transformOrigin: "top left",
-                      }}
-                    >
-                      <Card
-                        card={{ ...MOCK_CARDS.Rock, rarity }}
-                        theme={APP_GENRE_THEMES.Rock}
-                        small
-                      />
-                    </div>
-                  </div>
-                  <div className="font-mono tracking-[1px] text-muted">
-                    {RARITY_LABEL[rarity].toUpperCase()}
+                    <Card
+                      card={{ ...MOCK_CARDS.Rock, rarity }}
+                      theme={APP_GENRE_THEMES.Rock}
+                      small
+                    />
                   </div>
                 </div>
-              ),
-            )}
+                <div className="font-mono tracking-[1px] text-muted">
+                  {rarity.toUpperCase()}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
