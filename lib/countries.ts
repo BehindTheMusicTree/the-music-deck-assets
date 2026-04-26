@@ -19,6 +19,8 @@ export interface CountryDef {
     sym: string;
     color: string;
     size?: number;
+    /** Optional custom SVG mark (uses `currentColor`). */
+    svg?: string;
     /** Overrides the default pip background (solid theme.border). */
     bg?: string;
   };
@@ -304,6 +306,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
     pip: {
       sym: "✦", color: "#222222", size: 17,
+      svg: '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.1c.55 1.75 1.2 2.46 2.8 3.02-1.6.56-2.25 1.27-2.8 3.02-.55-1.75-1.2-2.46-2.8-3.02 1.6-.56 2.25-1.27 2.8-3.02zm0 6.65c.26.8.56 1.13 1.3 1.39-.74.26-1.04.59-1.3 1.39-.26-.8-.56-1.13-1.3-1.39.74-.26 1.04-.59 1.3-1.39z" fill="currentColor"/><circle cx="3.15" cy="8.95" r=".78" fill="currentColor"/><circle cx="8.85" cy="8.95" r=".78" fill="currentColor"/></svg>',
       bg: "repeating-linear-gradient(to bottom, #000000 0%, #000000 50%, #ffffff 50%, #ffffff 100%)",
     },
   },
@@ -351,10 +354,10 @@ export const FLAG_BG: Record<string, string> = Object.fromEntries(
     .map(([k, v]) => [k, v.flag.bg!]),
 );
 
-export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?: number }> = Object.fromEntries(
+export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?: number; svg?: string }> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
     .filter(([, v]) => v.pip)
-    .map(([k, v]) => [k, { sym: v.pip!.sym, color: v.pip!.color, size: v.pip!.size }]),
+    .map(([k, v]) => [k, { sym: v.pip!.sym, color: v.pip!.color, size: v.pip!.size, svg: v.pip!.svg }]),
 );
 
 export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(

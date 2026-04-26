@@ -569,10 +569,11 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     title: "La Tribu de Dana",
     artist: "Manau",
     year: 1998,
+    country: "Bretagne",
     genre: "Rap",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
-    pop: 8,
+    pop: 2,
     rarity: "Banger",
     artwork: `${ART}artwork.danau-latribu-de-dana-v1.png`,
     artworkCreatedAt:
@@ -1109,7 +1110,8 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 8,
     rarity: "Classic",
     artwork: `${ART}artwork.david-mccallum-the-edge-v1.png`,
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
     artworkOffsetY: -20,
   },
 ];

@@ -1118,12 +1118,11 @@ export default function CatalogDeckTable({
                 <>
                   <div className="flex flex-col lg:flex-row gap-8 items-start">
                     <div
-                      className="shrink-0 mx-auto lg:mx-0"
+                      className="shrink-0 mx-auto lg:mx-0 overflow-hidden rounded-[32px] bg-[#0a0a0e]"
                       style={{
                         width: CATALOG_DETAIL_CARD_BOX_W,
                         height: CATALOG_DETAIL_CARD_BOX_H,
                         position: "relative",
-                        overflow: "hidden",
                       }}
                     >
                       <div
@@ -1141,6 +1140,7 @@ export default function CatalogDeckTable({
                           card={c}
                           theme={d.theme}
                           enableZoom={false}
+                          hoverLift={false}
                         />
                       </div>
                     </div>

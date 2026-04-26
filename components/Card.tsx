@@ -168,12 +168,17 @@ export default function Card({
   theme,
   small,
   enableZoom = true,
+  hoverLift = true,
 }: {
   card: CardData;
   theme: GenreTheme;
   small?: boolean;
   /** When false, the preview is static (no click-to-zoom). Use when a parent handles interaction. */
   enableZoom?: boolean;
+  /**
+   * When false, the card does not lift or change shadow on hover (e.g. catalog detail preview).
+   */
+  hoverLift?: boolean;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -342,15 +347,26 @@ export default function Card({
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
             {pipLeftSymbol ? (
-              <span
-                className={styles.pipSymbol}
-                style={{
-                  color: pipLeftSymbol.color,
-                  fontSize: pipLeftSymbol.size,
-                }}
-              >
-                {pipLeftSymbol.sym}
-              </span>
+              pipLeftSymbol.svg ? (
+                <span
+                  className={styles.pipSymbol}
+                  style={{
+                    color: pipLeftSymbol.color,
+                    fontSize: pipLeftSymbol.size,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: pipLeftSymbol.svg }}
+                />
+              ) : (
+                <span
+                  className={styles.pipSymbol}
+                  style={{
+                    color: pipLeftSymbol.color,
+                    fontSize: pipLeftSymbol.size,
+                  }}
+                >
+                  {pipLeftSymbol.sym}
+                </span>
+              )
             ) : pipLeftFlagBg ? (
               <div
                 className={styles.pipFlag}
@@ -377,15 +393,26 @@ export default function Card({
           <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
             <span className={styles.typeText}>{strip.right}</span>
             {pipRightSymbol ? (
-              <span
-                className={styles.pipSymbol}
-                style={{
-                  color: pipRightSymbol.color,
-                  fontSize: pipRightSymbol.size,
-                }}
-              >
-                {pipRightSymbol.sym}
-              </span>
+              pipRightSymbol.svg ? (
+                <span
+                  className={styles.pipSymbol}
+                  style={{
+                    color: pipRightSymbol.color,
+                    fontSize: pipRightSymbol.size,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: pipRightSymbol.svg }}
+                />
+              ) : (
+                <span
+                  className={styles.pipSymbol}
+                  style={{
+                    color: pipRightSymbol.color,
+                    fontSize: pipRightSymbol.size,
+                  }}
+                >
+                  {pipRightSymbol.sym}
+                </span>
+              )
             ) : pipRightFlagBg ? (
               <div
                 className={styles.pipFlag}
@@ -543,13 +570,18 @@ export default function Card({
     </>
   );
 
+  const staticClass = hoverLift ? "" : ` ${styles.cardStatic}`;
+
   const renderInnerCard = () =>
     card.artworkOverBorder ? (
-      <div className={`${styles.card} ${styles.cardNoBorder}`} style={varStyle}>
+      <div
+        className={`${styles.card} ${styles.cardNoBorder}${staticClass}`}
+        style={varStyle}
+      >
         {cardContent}
       </div>
     ) : flagUsR90 ? (
-      <div className={styles.cardShell}>
+      <div className={`${styles.cardShell}${staticClass}`}>
         <div
           className={styles.cardFlagUsR90}
           aria-hidden
@@ -585,7 +617,7 @@ export default function Card({
         </div>
       </div>
     ) : flagFlatShell ? (
-      <div className={styles.cardShell}>
+      <div className={`${styles.cardShell}${staticClass}`}>
         <div
           className={styles.cardFlagFlat}
           aria-hidden
@@ -607,7 +639,7 @@ export default function Card({
       </div>
     ) : flagStyle === "fade" && flagBg ? (
       <div
-        className={styles.card}
+        className={`${styles.card}${staticClass}`}
         style={{
           ...varStyle,
           border: "10px solid transparent",
@@ -620,7 +652,7 @@ export default function Card({
         {cardContent}
       </div>
     ) : (
-      <div className={styles.card} style={varStyle}>
+      <div className={`${styles.card}${staticClass}`} style={varStyle}>
         {cardContent}
       </div>
     );
