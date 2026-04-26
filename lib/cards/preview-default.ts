@@ -11,5 +11,5 @@ export const DEFAULT_PREVIEW_CARD: CardData = {
   abilityDesc: "Live preview of the selected genre or subgenre theme.",
   pop: 75,
   rarity: "Classic",
-  artwork: "/cards/artworks/examples/artwork.example-bohemian-rhapsody-v2.png",
+  artwork: "/cards/artworks/deck/artwork.bohemian-rhapsody-v2.png",
 };
