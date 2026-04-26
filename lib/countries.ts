@@ -58,15 +58,18 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       parchStrip: "#d7dde0", parchAbility: "#e3e8ea",
       barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
       barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
-      frameBorder: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-      frameBg: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
+      frameBorder:
+        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
+      frameBg:
+        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
     flag: {
-      border: "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
-      bg:     "linear-gradient(to bottom, #EF4135 0%, #EF4135 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #0055A4 66.66%, #0055A4 100%)",
+      border:
+        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
+      bg: "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
     },
     pip: { sym: "⚜", color: "#1a2a0a", size: 19 },
   },
@@ -117,6 +120,60 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  Japan: {
+    theme: {
+      border: "#BC002D",
+      headerBg: "#0c0a0c",
+      textMain: "#f5f3f0",
+      textBody: "#d8d4d0",
+      parchStrip: "#e8e4e0",
+      parchAbility: "#f0ece8",
+      barPop: ["#BC002D", "#e02840"],
+      barExp: ["#1a1a28", "#404058"],
+      barGlowPop: "rgba(188,0,45,.85)",
+      barGlowExp: "rgba(40,40,72,.75)",
+      frameBorder:
+        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+      frameBg:
+        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+      frameFilter: "saturate(0.8) brightness(0.97) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+      bg: "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+    },
+  },
+
+  England: {
+    theme: {
+      border: "#C8102E",
+      headerBg: "#0c0a0a",
+      textMain: "#f4f2ee",
+      textBody: "#d6d2cc",
+      parchStrip: "#e6e2dc",
+      parchAbility: "#eeebe5",
+      barPop: ["#C8102E", "#e83040"],
+      barExp: ["#1a2a48", "#3a5088"],
+      barGlowPop: "rgba(200,16,46,.85)",
+      barGlowExp: "rgba(26,42,72,.75)",
+      frameBorder:
+        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+      frameBg:
+        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+      frameFilter: "saturate(0.82) brightness(0.96) contrast(1.02)",
+      frameOpacity: 0.72,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+      bg: "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+    },
+  },
+
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
   Bretagne: {
     theme: {
@@ -153,6 +210,8 @@ export const COUNTRY_MAP_POINT = {
   France: { lon: 2.35, lat: 46.8 },
   Spain: { lon: -3.7, lat: 40.2 },
   Italy: { lon: 12.5, lat: 42.5 },
+  Japan: { lon: 138.25, lat: 36.2 },
+  England: { lon: -1.5, lat: 52.5 },
   Bretagne: { lon: -3.2, lat: 48.15 },
 } as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
 

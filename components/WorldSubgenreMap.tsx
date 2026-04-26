@@ -1,40 +1,135 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   SUBGENRES,
   type CountrySubgenre,
   WORLD_THEMES,
 } from "@/lib/genres";
-import { COUNTRY_MAP_POINT, countryToMapSvg } from "@/lib/countries";
+import { COUNTRY_MAP_POINT } from "@/lib/countries";
+import type {
+  Map as MaplibreMap,
+  MapLayerMouseEvent,
+  StyleSpecification,
+} from "maplibre-gl";
 import type { GenreTheme } from "@/components/Card";
+import type { Feature, FeatureCollection } from "geojson";
 
-const WORLD_W = 360;
-const WORLD_H = 180;
-const MIN_VIEW_W = 48;
-const ZOOM_SENS = 0.00135;
-
-type ViewBoxRect = {
-  minX: number;
-  minY: number;
-  width: number;
-  height: number;
+const OSM_RASTER_STYLE: StyleSpecification = {
+  version: 8,
+  name: "osm-tiles",
+  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  sources: {
+    osm: {
+      type: "raster",
+      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      maxzoom: 19,
+      attribution:
+        "© <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noreferrer\">OpenStreetMap</a> contributors",
+    },
+  },
+  layers: [
+    { id: "osm", type: "raster", source: "osm" },
+  ],
 };
 
-function clampViewBox(vb: ViewBoxRect): ViewBoxRect {
-  const width = Math.min(WORLD_W, Math.max(MIN_VIEW_W, vb.width));
-  const height = width * (WORLD_H / WORLD_W);
-  const minX = Math.min(WORLD_W - width, Math.max(0, vb.minX));
-  const minY = Math.min(WORLD_H - height, Math.max(0, vb.minY));
-  return { minX, minY, width, height };
+/** SW then NE (lng, lat) for `fitBounds`. */
+const WORLD_FIT: [[number, number], [number, number]] = [
+  [-175, -58],
+  [175, 70],
+];
+
+const MIN_MAP_PX = 80;
+
+function fitWorldInView(
+  map: MaplibreMap,
+  container: HTMLElement,
+): boolean {
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  if (w < MIN_MAP_PX || h < MIN_MAP_PX) return false;
+  map.resize();
+  map.fitBounds(WORLD_FIT, {
+    padding: 32,
+    duration: 0,
+    maxZoom: 6,
+  });
+  return true;
 }
 
-const INITIAL_VB: ViewBoxRect = {
-  minX: 0,
-  minY: 0,
-  width: WORLD_W,
-  height: WORLD_H,
+const SUBGENRE_SOURCE_ID = "subgenres";
+const CLUSTER_LAYER_ID = "subgenre-clusters";
+const CLUSTER_COUNT_LAYER_ID = "subgenre-cluster-count";
+const POINT_LAYER_ID = "subgenre-point";
+
+type ClusterGeoSource = {
+  type: "geojson";
+  getClusterExpansionZoom: (clusterId: number) => Promise<number>;
+  getClusterLeaves: (
+    clusterId: number,
+    limit: number,
+    offset: number,
+  ) => Promise<GeoJSON.Feature[]>;
 };
+
+function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
+  const features: Feature[] = [];
+  for (const s of subs) {
+    const geo = COUNTRY_MAP_POINT[s.parentA as keyof typeof COUNTRY_MAP_POINT];
+    if (!geo) continue;
+    features.push({
+      type: "Feature",
+      id: s.n,
+      properties: {
+        subgenre: s.n,
+        country: s.parentA,
+        hex: s.color,
+      },
+      geometry: {
+        type: "Point",
+        coordinates: [geo.lon, geo.lat],
+      },
+    });
+  }
+  return { type: "FeatureCollection", features };
+}
+
+function ClusterLeavesPopup({ leaves }: { leaves: Feature[] }) {
+  return (
+    <div
+      className="max-h-[min(50vh,280px)] overflow-y-auto py-1 font-mono text-[11px] text-white/90"
+      style={{ minWidth: 220 }}
+    >
+      {leaves.map((leaf, i) => {
+        const p = leaf.properties as {
+          subgenre?: string;
+          country?: string;
+          hex?: string;
+        } | null;
+        if (!p?.subgenre) return null;
+        return (
+          <button
+            key={`${p.subgenre}-${i}`}
+            type="button"
+            className="block w-full border-0 bg-transparent px-2 py-1.5 text-left text-white/90 hover:bg-white/10 cursor-pointer rounded"
+            onClick={() => {
+              if (p.hex) void navigator.clipboard.writeText(p.hex);
+            }}
+          >
+            <span className="text-gold/90">{p.subgenre}</span>
+            <span className="text-muted"> · </span>
+            <span className="text-white/70">{p.country}</span>
+            <span className="block font-mono text-[10px] text-muted mt-0.5">
+              {p.hex} — click row to copy hex
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function isLightHex(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
@@ -44,11 +139,10 @@ function isLightHex(hex: string) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128;
 }
 
-const MAP_LABEL_B = 2.2;
+const MAP_LABEL_B = 2;
 
 /**
- * Renders the same country-flag border treatment as `Card` world shells
- * (`frameBorder` / `frameBg`, rotate for USA) inside a map chip, behind text.
+ * Renders the same country-flag border treatment as `Card` world shells, for the OSM marker chip.
  */
 function MapMarkerFlagBorder({ theme }: { theme: GenreTheme }) {
   const flagLayer = theme.frameBorder;
@@ -135,430 +229,504 @@ function MapMarkerFlagBorder({ theme }: { theme: GenreTheme }) {
   return null;
 }
 
+const LABEL_W = 118;
+const LABEL_H = 38;
+
 /**
- * Renders a marker at the origin; parent `g` must apply translate(worldX, worldY) and
- * an inverse map zoom scale so pin/label stay a constant screen size.
+ * MapLibre `Marker` `element` — geographic point is the bottom centre of the small dot.
  */
-function MapMarker({
+function OsmMapMarkerChip({
   subgenre,
   region,
   hex,
   country,
+  titleId,
 }: {
   subgenre: string;
   region: string;
   hex: string;
   country: string;
+  titleId: string;
 }) {
-  const w = 78;
-  const h = 22;
   const light = isLightHex(hex);
   const theme = WORLD_THEMES[country];
   const hasCardBorder = Boolean(
-    theme &&
-    (theme.frameBorder ?? (theme.frameRotateR90 && theme.frameBg)),
+    theme && (theme.frameBorder ?? (theme.frameRotateR90 && theme.frameBg)),
   );
-  const labelLine = subgenre.length > 22 ? `${subgenre.slice(0, 20)}…` : subgenre;
+  const labelLine =
+    subgenre.length > 20 ? `${subgenre.slice(0, 18)}…` : subgenre;
+
   return (
-    <g>
-      <line
-        x1={0}
-        y1={0}
-        x2={0}
-        y2={10}
-        stroke="rgba(255,255,255,.35)"
-        strokeWidth={0.6}
-      />
-      <circle
-        cx={0}
-        cy={0}
-        r={2.8}
-        fill={hex}
-        stroke="rgba(255,255,255,.45)"
-        strokeWidth={0.45}
-        filter={`drop-shadow(0 1px 3px ${hex}99)`}
-      />
-      <g
-        data-map-label
-        transform={`translate(0,${-(h + 14)})`}
-        style={{ cursor: "pointer" }}
-        onClick={() => navigator.clipboard.writeText(hex)}
+    <div
+      className="flex flex-col items-center"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => {
+          void navigator.clipboard.writeText(hex);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            void navigator.clipboard.writeText(hex);
+          }
+        }}
+        className="cursor-pointer"
+        style={{ maxWidth: LABEL_W }}
       >
-        <title>{`${subgenre} — ${region} (${hex}) — click to copy hex`}</title>
-        <foreignObject x={-w / 2} y={-h / 2} width={w} height={h}>
+        <span id={titleId} className="sr-only">
+          {`${subgenre} — ${region} — ${hex}. Activate to copy hex colour.`}
+        </span>
+        <div
+          className="relative"
+          style={{
+            width: Math.min(LABEL_W, 132),
+            height: LABEL_H,
+            boxSizing: "border-box",
+            boxShadow: hasCardBorder
+              ? `0 0 0 0.4px ${hex}99, 0 2px 7px rgba(0,0,0,.5)`
+              : `0 2px 6px ${hex}88, 0 0 0 0.35px ${hex}66`,
+            borderRadius: 3,
+            overflow: "hidden",
+          }}
+          aria-labelledby={titleId}
+        >
+          {hasCardBorder && theme ? (
+            <MapMarkerFlagBorder theme={theme} />
+          ) : !hasCardBorder ? (
+            <div
+              className="absolute inset-0 rounded-[3px]"
+              style={{
+                background: hex,
+                boxShadow: `0 0 0 0.3px ${hex}cc, inset 0 0 10px ${hex}44`,
+              }}
+            />
+          ) : null}
           <div
+            className="absolute inset-0 z-1 flex flex-col items-center justify-center text-center px-0.5"
             style={{
-              position: "relative",
-              width: w,
-              height: h,
-              boxSizing: "border-box",
-              boxShadow: hasCardBorder
-                ? `0 0 0 0.4px ${hex}99, 0 2px 7px rgba(0,0,0,.5)`
-                : `0 2px 6px ${hex}88, 0 0 0 0.35px ${hex}66`,
-              borderRadius: 3,
+              lineHeight: 1.1,
+              pointerEvents: "none",
             }}
           >
-            {hasCardBorder && theme ? (
-              <MapMarkerFlagBorder theme={theme} />
-            ) : !hasCardBorder ? (
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: 3,
-                  background: hex,
-                  boxShadow: `0 0 0 0.3px ${hex}cc, inset 0 0 10px ${hex}44`,
-                }}
-              />
-            ) : null}
-            <div
+            <span
+              className="font-bold"
               style={{
-                position: "relative",
-                zIndex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                height: "100%",
-                padding: "0 2px",
-                lineHeight: 1.1,
-                pointerEvents: "none",
+                fontFamily: "var(--font-cinzel, 'Cinzel', serif)",
+                fontSize: 11.5,
+                letterSpacing: 0.3,
+                color: hex,
+                textShadow: light
+                  ? "0 0 1px #000,0 0.5px 2px rgba(0,0,0,0.85),0 1px 2px #000a"
+                  : "0 0.5px 1.5px rgba(0,0,0,0.5)",
               }}
             >
-              <span
-                style={{
-                  fontFamily: "Cinzel, serif",
-                  fontWeight: 700,
-                  fontSize: 5.2,
-                  letterSpacing: 0.4,
-                  color: hex,
-                  textShadow: light
-                    ? "0 0 1px #000,0 0.5px 2px rgba(0,0,0,0.85),0 1px 2px #000a"
-                    : "0 0.5px 1.5px rgba(0,0,0,0.5)",
-                }}
-              >
-                {labelLine}
-              </span>
-              <span
-                style={{
-                  fontFamily: "ui-monospace, monospace",
-                  fontSize: 4.2,
-                  color: "rgba(255,255,255,0.82)",
-                  textShadow: "0 0 2px #000,0 1px 1px #0006",
-                }}
-              >
-                {region}
-              </span>
-            </div>
+              {labelLine}
+            </span>
+            <span
+              className="font-mono text-white/80"
+              style={{ fontSize: 9, textShadow: "0 0 2px #000,0 1px 1px #0006" }}
+            >
+              {region}
+            </span>
           </div>
-        </foreignObject>
-      </g>
-    </g>
+        </div>
+      </div>
+      <div
+        className="h-2.5 w-px shrink-0"
+        style={{ background: "rgba(255,255,255,.4)" }}
+        aria-hidden
+      />
+      <div
+        className="h-2 w-2 shrink-0 rounded-full"
+        style={{
+          background: hex,
+          boxShadow: `0 0 0 0.4px rgba(255,255,255,.4),0 0 4px ${hex}99`,
+        }}
+        aria-hidden
+      />
+    </div>
   );
 }
 
-function clientToSvg(
-  clientX: number,
-  clientY: number,
-  rect: DOMRect,
-  vb: ViewBoxRect,
-): { x: number; y: number } {
-  const u = (clientX - rect.left) / rect.width;
-  const v = (clientY - rect.top) / rect.height;
-  return {
-    x: vb.minX + u * vb.width,
-    y: vb.minY + v * vb.height,
-  };
+type MaplibreModule = typeof import("maplibre-gl");
+let maplibreRef: MaplibreModule | null = null;
+async function loadMaplibre(): Promise<MaplibreModule> {
+  if (!maplibreRef) {
+    maplibreRef = await import("maplibre-gl");
+  }
+  return maplibreRef;
 }
 
 export default function WorldSubgenreMap() {
-  const countrySubs = SUBGENRES.filter(
-    (s): s is CountrySubgenre => s.kind === "country",
+  const idPrefix = useId();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const onResetRef = useRef<(() => void) | null>(null);
+
+  const countrySubs = useMemo(
+    () =>
+      SUBGENRES.filter(
+        (s): s is CountrySubgenre => s.kind === "country",
+      ),
+    [],
   );
 
-  const [viewBox, setViewBox] = useState<ViewBoxRect>(INITIAL_VB);
-  const vbRef = useRef(viewBox);
-  vbRef.current = viewBox;
-
-  const svgRef = useRef<SVGSVGElement>(null);
-  const panRef = useRef<{
-    active: boolean;
-    pointerId: number;
-    lastClientX: number;
-    lastClientY: number;
-  } | null>(null);
-
   useEffect(() => {
-    const el = svgRef.current;
-    if (!el) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const rect = el.getBoundingClientRect();
-      const vb = vbRef.current;
-      const pt = clientToSvg(e.clientX, e.clientY, rect, vb);
-      const scale = Math.exp(-e.deltaY * ZOOM_SENS);
-      const newW = vb.width * scale;
-      const newH = newW * (WORLD_H / WORLD_W);
-      const next = clampViewBox({
-        minX: pt.x - (pt.x - vb.minX) * (newW / vb.width),
-        minY: pt.y - (pt.y - vb.minY) * (newH / vb.height),
-        width: newW,
-        height: newH,
-      });
-      setViewBox(next);
-    };
+    let mapInstance: MaplibreMap | null = null;
+    let activePopup: import("maplibre-gl").Popup | null = null;
+    let activeRoot: Root | null = null;
+    let resizeObserver: ResizeObserver | null = null;
 
-    let pinchLastD = 0;
-    let pinchMid = { x: 0, y: 0 };
-
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        const [a, b] = [e.touches[0]!, e.touches[1]!];
-        pinchLastD = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-        pinchMid = {
-          x: (a.clientX + b.clientX) / 2,
-          y: (a.clientY + b.clientY) / 2,
-        };
-      }
-    };
-
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length !== 2 || pinchLastD <= 0) return;
-      e.preventDefault();
-      const [a, b] = [e.touches[0]!, e.touches[1]!];
-      const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-      const ratio = d / pinchLastD;
-      pinchLastD = d;
-      const rect = el.getBoundingClientRect();
-      const vb = vbRef.current;
-      const pt = clientToSvg(pinchMid.x, pinchMid.y, rect, vb);
-      const newW = vb.width / ratio;
-      const newH = newW * (WORLD_H / WORLD_W);
-      setViewBox(
-        clampViewBox({
-          minX: pt.x - (pt.x - vb.minX) * (newW / vb.width),
-          minY: pt.y - (pt.y - vb.minY) * (newH / vb.height),
-          width: newW,
-          height: newH,
-        }),
-      );
-    };
-
-    const onTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) pinchLastD = 0;
-    };
-
-    el.addEventListener("wheel", onWheel, { passive: false });
-    el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    el.addEventListener("touchend", onTouchEnd);
-    el.addEventListener("touchcancel", onTouchEnd);
-    return () => {
-      el.removeEventListener("wheel", onWheel);
-      el.removeEventListener("touchstart", onTouchStart);
-      el.removeEventListener("touchmove", onTouchMove);
-      el.removeEventListener("touchend", onTouchEnd);
-      el.removeEventListener("touchcancel", onTouchEnd);
-    };
-  }, []);
-
-  const onPointerDown = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    if (e.button !== 0 && e.button !== 1) return;
-    const target = e.target as Element | null;
-    if (target?.closest?.("[data-map-label]")) return;
-
-    panRef.current = {
-      active: true,
-      pointerId: e.pointerId,
-      lastClientX: e.clientX,
-      lastClientY: e.clientY,
-    };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  }, []);
-
-  const onPointerMove = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    const pan = panRef.current;
-    if (!pan?.active || e.pointerId !== pan.pointerId) return;
-
-    const el = svgRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const vb = vbRef.current;
-
-    const dxPx = e.clientX - pan.lastClientX;
-    const dyPx = e.clientY - pan.lastClientY;
-    pan.lastClientX = e.clientX;
-    pan.lastClientY = e.clientY;
-
-    const dxSvg = (-dxPx / rect.width) * vb.width;
-    const dySvg = (-dyPx / rect.height) * vb.height;
-
-    setViewBox(
-      clampViewBox({
-        minX: vb.minX + dxSvg,
-        minY: vb.minY + dySvg,
-        width: vb.width,
-        height: vb.height,
-      }),
-    );
-  }, []);
-
-  const endPan = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    const pan = panRef.current;
-    if (pan && e.pointerId === pan.pointerId) {
-      panRef.current = null;
+    const closeActivePopup = () => {
+      activeRoot?.unmount();
+      activeRoot = null;
       try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
+        activePopup?.remove();
       } catch {
-        /* already released */
+        /* already removed */
       }
-    }
-  }, []);
+      activePopup = null;
+    };
+    let cancelled = false;
 
-  const onDoubleClick = useCallback((e: React.MouseEvent<SVGSVGElement>) => {
-    const t = e.target as Element | null;
-    if (t?.closest?.("[data-map-label]")) return;
-    setViewBox(INITIAL_VB);
-  }, []);
+    void (async () => {
+      try {
+        const M = await loadMaplibre();
+        if (cancelled) return;
+        const map = new M.Map({
+          container,
+          style: OSM_RASTER_STYLE,
+          center: [0, 15],
+          zoom: 0,
+          minZoom: 0,
+          maxZoom: 18,
+        });
+        if (cancelled) {
+          map.remove();
+          return;
+        }
+        mapInstance = map;
 
-  /** Maps world (equirectangular) coords to root 0..360/0..180, same as the old viewBox zoom. */
-  const sMap = WORLD_W / viewBox.width;
-  const mapGroupTransform = `matrix(${sMap} 0 0 ${sMap} ${-sMap * viewBox.minX} ${-sMap * viewBox.minY})`;
-  const markerSizeScale = viewBox.width / WORLD_W;
+        map.addControl(
+          new M.NavigationControl({ showCompass: true }),
+          "top-right",
+        );
+
+        const scheduleWorldFit = () => {
+          if (cancelled) return;
+          fitWorldInView(map, container);
+          requestAnimationFrame(() => {
+            if (cancelled) return;
+            fitWorldInView(map, container);
+          });
+          window.setTimeout(() => {
+            if (cancelled) return;
+            fitWorldInView(map, container);
+          }, 120);
+          window.setTimeout(() => {
+            if (cancelled) return;
+            fitWorldInView(map, container);
+          }, 400);
+        };
+
+        map.once("load", () => {
+          if (cancelled) return;
+          map.scrollZoom.enable();
+          map.doubleClickZoom.disable();
+          scheduleWorldFit();
+
+          const geojson = countrySubsToGeoJson(countrySubs);
+          map.addSource(SUBGENRE_SOURCE_ID, {
+            type: "geojson",
+            data: geojson,
+            cluster: true,
+            clusterMaxZoom: 15,
+            clusterRadius: 52,
+          });
+
+          map.addLayer({
+            id: CLUSTER_LAYER_ID,
+            type: "circle",
+            source: SUBGENRE_SOURCE_ID,
+            filter: ["has", "point_count"],
+            paint: {
+              "circle-color": "rgba(52, 86, 132, 0.92)",
+              "circle-radius": [
+                "step",
+                ["get", "point_count"],
+                15,
+                3,
+                18,
+                6,
+                22,
+                12,
+                28,
+              ],
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#e8eef8",
+            },
+          });
+
+          map.addLayer({
+            id: CLUSTER_COUNT_LAYER_ID,
+            type: "symbol",
+            source: SUBGENRE_SOURCE_ID,
+            filter: ["has", "point_count"],
+            layout: {
+              "text-field": "{point_count}",
+              "text-font": ["Open Sans Bold"],
+              "text-size": 12,
+            },
+            paint: {
+              "text-color": "#f4f7fc",
+            },
+          });
+
+          map.addLayer({
+            id: POINT_LAYER_ID,
+            type: "circle",
+            source: SUBGENRE_SOURCE_ID,
+            filter: ["!", ["has", "point_count"]],
+            paint: {
+              "circle-color": ["get", "hex"],
+              "circle-radius": 8,
+              "circle-stroke-width": 1.5,
+              "circle-stroke-color": "rgba(255,255,255,0.88)",
+            },
+          });
+
+          const clusterLayers = [CLUSTER_LAYER_ID, CLUSTER_COUNT_LAYER_ID];
+          for (const lid of [...clusterLayers, POINT_LAYER_ID]) {
+            map.on("mouseenter", lid, () => {
+              map.getCanvas().style.cursor = "pointer";
+            });
+            map.on("mouseleave", lid, () => {
+              map.getCanvas().style.cursor = "";
+            });
+          }
+
+          const geoSource = map.getSource(SUBGENRE_SOURCE_ID) as unknown as ClusterGeoSource;
+
+          const openClusterLeavesPopup = (
+            clusterId: number,
+            coords: [number, number],
+          ) => {
+            void (async () => {
+              try {
+                const leaves = await geoSource.getClusterLeaves(
+                  clusterId,
+                  120,
+                  0,
+                );
+                if (cancelled) return;
+                closeActivePopup();
+                const el = document.createElement("div");
+                activeRoot = createRoot(el);
+                activeRoot.render(<ClusterLeavesPopup leaves={leaves} />);
+                activePopup = new M.Popup({
+                  maxWidth: "320px",
+                  closeButton: true,
+                  closeOnClick: true,
+                })
+                  .setLngLat(coords)
+                  .setDOMContent(el)
+                  .addTo(map);
+                activePopup.on("close", () => {
+                  activeRoot?.unmount();
+                  activeRoot = null;
+                });
+              } catch {
+                /* ignore */
+              }
+            })();
+          };
+
+          const onClusterClick = (e: MapLayerMouseEvent) => {
+            const feats = map.queryRenderedFeatures(e.point, {
+              layers: clusterLayers,
+            });
+            const f = feats[0];
+            if (!f?.properties || f.properties.cluster_id === undefined) return;
+            const clusterId = f.properties.cluster_id as number;
+            const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
+              .coordinates;
+            void (async () => {
+              try {
+                const expansionZoom =
+                  await geoSource.getClusterExpansionZoom(clusterId);
+                if (cancelled) return;
+                if (expansionZoom > map.getZoom() + 0.05) {
+                  closeActivePopup();
+                  map.easeTo({
+                    center: coords,
+                    zoom: Math.min(
+                      expansionZoom,
+                      map.getMaxZoom() ?? 18,
+                    ),
+                  });
+                } else {
+                  openClusterLeavesPopup(clusterId, coords);
+                }
+              } catch {
+                /* ignore */
+              }
+            })();
+          };
+
+          map.on("click", CLUSTER_LAYER_ID, onClusterClick);
+          map.on("click", CLUSTER_COUNT_LAYER_ID, onClusterClick);
+
+          map.on("click", POINT_LAYER_ID, (e) => {
+            const feats = map.queryRenderedFeatures(e.point, {
+              layers: [POINT_LAYER_ID],
+            });
+            const f = feats[0];
+            if (!f?.properties) return;
+            const p = f.properties as {
+              subgenre: string;
+              country: string;
+              hex: string;
+            };
+            const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
+              .coordinates;
+            closeActivePopup();
+            const el = document.createElement("div");
+            activeRoot = createRoot(el);
+            const titleId = `${idPrefix}-p-${p.subgenre}`.replace(/\s/g, "-");
+            activeRoot.render(
+              <OsmMapMarkerChip
+                subgenre={p.subgenre}
+                region={p.country}
+                country={p.country}
+                hex={p.hex}
+                titleId={titleId}
+              />,
+            );
+            activePopup = new M.Popup({
+              maxWidth: "240px",
+              closeButton: true,
+              closeOnClick: true,
+              offset: 14,
+            })
+              .setLngLat(coords)
+              .setDOMContent(el)
+              .addTo(map);
+            activePopup.on("close", () => {
+              activeRoot?.unmount();
+              activeRoot = null;
+            });
+          });
+
+          map.on("click", (e) => {
+            const hit = map.queryRenderedFeatures(e.point, {
+              layers: [...clusterLayers, POINT_LAYER_ID],
+            });
+            if (!hit.length) closeActivePopup();
+          });
+        });
+
+        onResetRef.current = () => {
+          if (!mapInstance) return;
+          mapInstance.resize();
+          mapInstance.fitBounds(WORLD_FIT, {
+            padding: 32,
+            maxZoom: 6,
+            duration: 450,
+          });
+        };
+
+        map.on("dblclick", (e) => {
+          e.preventDefault();
+          onResetRef.current?.();
+        });
+
+        resizeObserver = new ResizeObserver(() => {
+          if (cancelled || !mapInstance) return;
+          mapInstance.resize();
+        });
+        resizeObserver.observe(container);
+      } catch (e) {
+        if (!cancelled) {
+          setLoadError(
+            e instanceof Error ? e.message : "The map could not be loaded",
+          );
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      onResetRef.current = null;
+      resizeObserver?.disconnect();
+      activeRoot?.unmount();
+      activeRoot = null;
+      try {
+        activePopup?.remove();
+      } catch {
+        /* */
+      }
+      activePopup = null;
+      if (mapInstance) {
+        mapInstance.remove();
+        mapInstance = null;
+      }
+    };
+  }, [countrySubs, idPrefix]);
 
   return (
     <div className="w-full max-w-[min(100%,1400px)] mx-auto flex flex-col items-center gap-5 mt-14 mb-6 px-3 sm:px-4">
       <div className="text-center max-w-[720px]">
         <div className="section-title mb-1.5">World map</div>
         <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
-          Country-native subgenres are placed at an approximate geographic point
-          for their country or region (equirectangular projection). Unlike the
-          colour wheel, only geography is encoded — intensity rings do not apply
-          here.
+          Country-native subgenres are placed at an approximate representative
+          point in each country. The base map uses{" "}
+          <span className="not-italic text-white/75">OpenStreetMap</span>{" "}
+          (standard tiles, Web Mercator). Unlike the colour wheel, only geography
+          is encoded — intensity rings do not apply here.
         </p>
       </div>
 
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${WORLD_W} ${WORLD_H}`}
-        className="w-full h-auto rounded-[6px] border border-ui-border bg-[#060910] shadow-[inset_0_0_80px_rgba(0,0,0,.45)] select-none"
-        style={{ touchAction: "none" }}
-        role="img"
-        aria-label="World map with country-native subgenre markers. Scroll to zoom, drag to pan, double-click background to reset."
-        preserveAspectRatio="xMidYMid meet"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endPan}
-        onPointerCancel={endPan}
-        onDoubleClick={onDoubleClick}
+      {loadError ? (
+        <p
+          className="font-mono text-sm text-red-300/90"
+          role="alert"
+        >
+          {loadError}
+        </p>
+      ) : null}
+
+      <div
+        className="w-full min-w-0 min-h-0"
+        style={{ aspectRatio: "2.2 / 1" }}
       >
-        <defs>
-          <linearGradient id="worldMapOcean" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0a1428" />
-            <stop offset="100%" stopColor="#05080e" />
-          </linearGradient>
-        </defs>
+        <div
+          ref={containerRef}
+          className="h-full w-full min-w-0 min-h-[280px] sm:min-h-[360px] overflow-hidden rounded-[6px] border border-ui-border bg-[#0b1220] shadow-[inset_0_0_80px_rgba(0,0,0,.4)]"
+        />
+        <p className="mt-1.5 font-mono text-[9px] tracking-wide text-muted/50 text-right pr-0.5 m-0">
+          Map data © OpenStreetMap contributors (ODbL) · use per{" "}
+          <a
+            className="text-white/50 underline offset-1 hover:text-white/70"
+            href="https://wiki.openstreetmap.org/wiki/Tile_usage_policy"
+            target="_blank"
+            rel="noreferrer"
+          >
+            OpenStreetMap tile policy
+          </a>
+        </p>
+      </div>
 
-        {/* Map (ocean, land, graticule) is inside the zoom group; outside: fixed screen-size lon labels. */}
-        <g transform={mapGroupTransform} style={{ pointerEvents: "auto" }}>
-          <rect width={WORLD_W} height={WORLD_H} fill="url(#worldMapOcean)" />
-
-          {/* Landmasses: plate carrée 360×180, simplified from Natural Earth–style country polygons */}
-          <image
-            href="/world-land-equirect.svg"
-            x={0}
-            y={0}
-            width={WORLD_W}
-            height={WORLD_H}
-            preserveAspectRatio="none"
-            opacity={0.78}
-            style={{ pointerEvents: "none" }}
-          />
-
-          {[-120, -60, 0, 60, 120].map((lon) => (
-            <line
-              key={lon}
-              x1={lon + 180}
-              y1={0}
-              x2={lon + 180}
-              y2={WORLD_H}
-              stroke="rgba(255,255,255,.05)"
-              strokeWidth={0.4}
-            />
-          ))}
-          {[60, 30, 0, -30, -60].map((lat) => {
-            const y = 90 - lat;
-            return (
-              <line
-                key={lat}
-                x1={0}
-                y1={y}
-                x2={WORLD_W}
-                y2={y}
-                stroke="rgba(255,255,255,.05)"
-                strokeWidth={0.4}
-              />
-            );
-          })}
-
-          {countrySubs.map((s) => {
-            const geo = COUNTRY_MAP_POINT[s.parentA as keyof typeof COUNTRY_MAP_POINT];
-            if (!geo) return null;
-            const { x, y } = countryToMapSvg(geo.lon, geo.lat);
-            return (
-              <g
-                key={s.n}
-                transform={`translate(${x} ${y}) scale(${markerSizeScale})`}
-              >
-                <MapMarker
-                  subgenre={s.n}
-                  region={s.parentA}
-                  country={s.parentA}
-                  hex={s.color}
-                />
-              </g>
-            );
-          })}
-        </g>
-
-        <text
-          x={8}
-          y={172}
-          fill="rgba(255,255,255,.28)"
-          fontFamily="ui-monospace, monospace"
-          fontSize={4.5}
-        >
-          180°W
-        </text>
-        <text
-          x={176}
-          y={172}
-          fill="rgba(255,255,255,.28)"
-          fontFamily="ui-monospace, monospace"
-          fontSize={4.5}
-        >
-          0°
-        </text>
-        <text
-          x={332}
-          y={172}
-          fill="rgba(255,255,255,.28)"
-          fontFamily="ui-monospace, monospace"
-          fontSize={4.5}
-        >
-          180°E
-        </text>
-
-      </svg>
       <p className="font-mono text-[10px] tracking-wide text-muted/80 m-0 text-center">
-        Scroll or pinch to zoom toward the cursor · drag the map to pan · double-click
-        empty ocean to reset · click a label to copy its hex colour.
-      </p>
-      <p className="font-mono text-[9px] tracking-wide text-muted/50 m-0 text-center max-w-[560px]">
-        Coastlines are simplified land polygons (decimated) in the same equirectangular
-        space as the graticule — not a political boundary product.
+        Scroll to zoom, drag to pan, double-click empty space to fit the world again.
+        Overlapping pins cluster — click a cluster to zoom in, or a single pin for the
+        full label (click the label to copy hex). Click empty map to close popups.
       </p>
     </div>
   );

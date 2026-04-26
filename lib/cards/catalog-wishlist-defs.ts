@@ -1,6 +1,6 @@
 import type { CardRarity } from "@/lib/cards/card-rarity";
-import { CARD_ARTWORK_BASE } from "@/lib/cards/art-path";
-/** Source rows for planned / wishlist catalogue lines (many ship without artwork). */
+
+/** Planned catalogue rows only (no shipped artwork here — see `DECK_SPOTLIGHT_CARDS` / examples). */
 export type WishlistCardDef = {
   rowKey: string;
   id: number;
@@ -15,7 +15,6 @@ export type WishlistCardDef = {
   pop?: number;
   ability: string;
   abilityDesc: string;
-  artwork?: string;
 };
 
 const P = "Planned catalogue entry.";
@@ -200,19 +199,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     genre: "Metal",
     rarity: "Classic",
     pop: 82,
-    ability: A,
-    abilityDesc: P,
-  },
-  {
-    rowKey: "wl-asereje",
-    id: 12015,
-    title: "Aserejé",
-    artist: "Las Ketchup",
-    year: 2002,
-    kind: "Planned",
-    genre: "Latin crossover",
-    rarity: "Banger",
-    pop: 88,
     ability: A,
     abilityDesc: P,
   },
@@ -432,7 +418,7 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     artist: "Bobby Darin",
     year: 1960,
     kind: "Planned",
-    genre: "Traditional song",
+    genre: "Traditional pop",
     rarity: "Classic",
     pop: 86,
     ability: A,
@@ -536,7 +522,7 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     artist: "Rachid Taha, Khaled, Faudel",
     year: 1998,
     kind: "Planned",
-    genre: "Latin crossover",
+    genre: "Raï",
     rarity: "Classic",
     pop: 80,
     ability: A,
@@ -689,10 +675,10 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     rowKey: "wl-bella-ciao-original",
     id: 12056,
     title: "Bella Ciao",
-    artist: "Traditional (Italy)",
     year: 1880,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "Italy",
+    genre: "Italian folk",
     rarity: "Banger",
     pop: 72,
     ability: A,
@@ -977,8 +963,9 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     title: "Greensleeves",
     artist: "Traditional (England)",
     year: 1580,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "England",
+    genre: "English folk",
     rarity: "Banger",
     pop: 70,
     ability: A,
@@ -1016,8 +1003,9 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     title: "Frère Jacques",
     artist: "Traditional (France)",
     year: 1780,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "France",
+    genre: "French folk",
     rarity: "Banger",
     pop: 65,
     ability: A,
@@ -1160,8 +1148,9 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     title: "Oh! Susanna",
     artist: "Stephen Foster",
     year: 1848,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "USA",
+    genre: "American folk",
     rarity: "Banger",
     pop: 68,
     ability: A,
@@ -1173,8 +1162,9 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     title: "Yankee Doodle",
     artist: "Traditional (USA)",
     year: 1755,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "USA",
+    genre: "American folk",
     rarity: "Banger",
     pop: 62,
     ability: A,
@@ -1230,7 +1220,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 72,
     ability: A,
     abilityDesc: P,
-    artwork: `${CARD_ARTWORK_BASE}artwork.la-cucaracha-v1.png`,
   },
   {
     rowKey: "wl-sakura-sakura",
@@ -1238,8 +1227,9 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     title: "Sakura Sakura",
     artist: "Traditional (Japan)",
     year: 1888,
-    kind: "Planned",
-    genre: "Traditional song",
+    kind: "World",
+    country: "Japan",
+    genre: "Japanese folk",
     rarity: "Banger",
     pop: 66,
     ability: A,

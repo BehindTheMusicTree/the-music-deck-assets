@@ -1,0 +1,11 @@
+---
+description: Wishlist vs shipped cards — no artwork on wishlist rows
+globs: lib/cards/catalog-wishlist-defs.ts
+alwaysApply: false
+---
+
+# Catalogue wishlist (`catalog-wishlist-defs.ts`)
+
+- **`WISHLIST_CARD_DEFS` is for planned rows only.** Do not add `artwork` to wishlist entries.
+- **When a track gets shipped artwork**, remove it from the wishlist and add the card to the shipped deck (e.g. [`lib/cards/examples.ts`](lib/cards/examples.ts) `DECK_SPOTLIGHT_CARDS` or another canonical list already merged in [`lib/cards/catalog.ts`](lib/cards/catalog.ts)), then register `SPOTLIGHT_CATALOG_META[id]` (or the appropriate row builder) so the catalogue still lists it.
+- Wishlist rows use placeholder ability copy (`Reserve` / `Planned catalogue entry.`) unless you intentionally ship richer copy with the card.

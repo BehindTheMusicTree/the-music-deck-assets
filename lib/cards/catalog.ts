@@ -87,6 +87,7 @@ const SPOTLIGHT_CATALOG_META: Record<
   const fr = themeForCountry("France");
   const es = themeForCountry("Spain");
   const rock = APP_GENRE_THEMES.Rock;
+  const vintage = APP_GENRE_THEMES.Vintage;
   return {
     28: { kind: "Genre", theme: rock },
     29: { kind: "Genre", theme: rock },
@@ -94,6 +95,7 @@ const SPOTLIGHT_CATALOG_META: Record<
     31: { kind: "World", theme: fr },
     32: { kind: "World", theme: fr },
     33: { kind: "World blend", theme: fr },
+    34: { kind: "Genre", theme: vintage },
   };
 })();
 
@@ -284,7 +286,6 @@ function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
     abilityDesc: d.abilityDesc,
     pop: d.pop ?? 72,
     rarity: d.rarity,
-    artwork: d.artwork,
   };
   if (d.kind === "World") {
     return {
@@ -334,7 +335,7 @@ const rawWishlistRows: RawCatalogRow[] = WISHLIST_CARD_DEFS.filter(
 
 const rawCatalogRowsAll: RawCatalogRow[] = [...rawCatalogRows, ...rawWishlistRows];
 
-/** Full catalogue: shipped cards plus planned rows (some without artwork). */
+/** Full catalogue: shipped cards plus planned wishlist rows (wishlist never carries artwork). */
 export const CATALOG_ENTRIES: CatalogEntry[] =
   withCatalogNumbering(rawCatalogRowsAll);
 

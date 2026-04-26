@@ -285,4 +285,16 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.zaho-mc-solar-caroline-v1.png`,
   },
+  {
+    id: 34,
+    title: "La Cucaracha",
+    artist: "Traditional (Mexico)",
+    year: 1880,
+    genre: "Mexican Folk",
+    ability: "Reserve",
+    abilityDesc: "Planned catalogue entry.",
+    pop: 72,
+    rarity: "Banger",
+    artwork: `${ART}artwork.la-cucaracha-v1.png`,
+  },
 ];

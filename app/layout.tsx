@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cinzel, Cormorant_Garamond, Space_Mono } from "next/font/google";
 import CharterTabs from "@/components/CharterTabs";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 const cinzel = Cinzel({ subsets: ["latin"], weight: ["400", "600", "700", "900"], variable: "--font-cinzel" });
