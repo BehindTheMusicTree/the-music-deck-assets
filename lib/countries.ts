@@ -174,6 +174,33 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  Algeria: {
+    theme: {
+      border: "#006233",
+      headerBg: "#0a100c",
+      textMain: "#f2f4f2",
+      textBody: "#cfd6d0",
+      parchStrip: "#dce4dc",
+      parchAbility: "#e8f0e8",
+      barPop: ["#006233", "#2a9860"],
+      barExp: ["#D21034", "#e83850"],
+      barGlowPop: "rgba(0,98,51,.85)",
+      barGlowExp: "rgba(210,16,52,.75)",
+      frameBorder:
+        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+      frameBg:
+        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+      frameFilter: "saturate(0.82) brightness(0.95) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+      bg: "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+    },
+  },
+
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
   Bretagne: {
     theme: {
@@ -212,6 +239,7 @@ export const COUNTRY_MAP_POINT = {
   Italy: { lon: 12.5, lat: 42.5 },
   Japan: { lon: 138.25, lat: 36.2 },
   England: { lon: -1.5, lat: 52.5 },
+  Algeria: { lon: 2.65, lat: 28.35 },
   Bretagne: { lon: -3.2, lat: 48.15 },
 } as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
 

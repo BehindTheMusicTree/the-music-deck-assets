@@ -297,4 +297,18 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
   },
+  {
+    id: 35,
+    title: "Abdel Kader",
+    artist: "Rachid Taha, Khaled, Faudel",
+    year: 1998,
+    genre: "Raï",
+    country: "Algeria",
+    ability: "Caravan",
+    abilityDesc:
+      "Allied World cards gain +4 popularity when this card enters play.",
+    pop: 80,
+    rarity: "Classic",
+    artwork: `${ART}artwork.un-deux-trois-soleil-abdel-kader-v1.png`,
+  },
 ];

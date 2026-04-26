@@ -401,6 +401,13 @@ export const SUBGENRES: Subgenre[] = [
     intensity: "soft",
   },
   {
+    kind: "country",
+    n: "Raï",
+    color: "#9a2848",
+    parentA: "Algeria",
+    intensity: "soft",
+  },
+  {
     kind: "genre",
     n: "Electropop",
     color: "#e4ebff",

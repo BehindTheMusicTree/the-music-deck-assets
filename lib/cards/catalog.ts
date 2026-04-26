@@ -86,6 +86,7 @@ const SPOTLIGHT_CATALOG_META: Record<
 > = (() => {
   const fr = themeForCountry("France");
   const es = themeForCountry("Spain");
+  const dz = themeForCountry("Algeria");
   const rock = APP_GENRE_THEMES.Rock;
   const vintage = APP_GENRE_THEMES.Vintage;
   return {
@@ -96,6 +97,7 @@ const SPOTLIGHT_CATALOG_META: Record<
     32: { kind: "World", theme: fr },
     33: { kind: "World blend", theme: fr },
     34: { kind: "Genre", theme: vintage },
+    35: { kind: "World", theme: dz },
   };
 })();
 
