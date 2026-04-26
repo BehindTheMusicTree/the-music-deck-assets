@@ -1,8 +1,8 @@
 import type { CardData } from "@/components/Card";
 import type { AppGenreName } from "@/lib/genres";
-import { CARD_EXAMPLE_ART_BASE as ART } from "./art-path";
+import { CARD_ARTWORK_BASE as ART } from "./art-path";
 
-/** One example card per app genre (demos, anatomy, rarity grid). */
+/** One fixture card per app genre (charter anatomy, rarity grid). */
 export const MOCK_CARDS: Record<AppGenreName, CardData> = {
   Rock: {
     id: 1,
@@ -14,7 +14,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Doubles momentum on any track with a guitar solo.",
     pop: 92,
     rarity: "Legendary",
-    artwork: `${ART}artwork.example-bohemian-rhapsody-v2.png`,
+    artwork: `${ART}artwork.bohemian-rhapsody-v2.png`,
   },
   Mainstream: {
     id: 2,
@@ -26,7 +26,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Gains +10 popularity when played after a dance track.",
     pop: 97,
     rarity: "Legendary",
-    artwork: `${ART}artwork.example-billy-jean-v2.png`,
+    artwork: `${ART}artwork.billy-jean-v2.png`,
   },
   Electronic: {
     id: 3,
@@ -38,7 +38,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Repeats its effect once if experimental is above 60.",
     pop: 88,
     rarity: "Classic",
-    artwork: `${ART}artwork.example-daft-punk-one-more-time-v1.png`,
+    artwork: `${ART}artwork.daft-punk-one-more-time-v1.png`,
   },
   "Reggae/Dub": {
     id: 4,
@@ -50,7 +50,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Heals 20 HP when adjacent to a World genre card.",
     pop: 82,
     rarity: "Classic",
-    artwork: `${ART}artwork.example-is-this-love-v1.png`,
+    artwork: `${ART}artwork.is-this-love-v1.png`,
   },
   "Hip-Hop": {
     id: 5,
@@ -63,7 +63,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
       "Drains 15 power from the opponent when popularity exceeds 70.",
     pop: 86,
     rarity: "Legendary",
-    artwork: `${ART}artwork.example-kendrick-lamar-humble-v1.png`,
+    artwork: `${ART}artwork.kendrick-lamar-humble-v1.png`,
   },
   "Disco/Funk": {
     id: 6,
@@ -75,7 +75,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Boosts all Funk cards on the field by +5 popularity.",
     pop: 90,
     rarity: "Banger",
-    artwork: `${ART}artwork.example-night-fever-v1.png`,
+    artwork: `${ART}artwork.night-fever-v1.png`,
   },
   Classical: {
     id: 7,
@@ -87,7 +87,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Deals damage in three separate strikes of 60% power each.",
     pop: 58,
     rarity: "Legendary",
-    artwork: `${ART}artwork.example-wagner-ride-of-the-valkyries-v1.png`,
+    artwork: `${ART}artwork.wagner-ride-of-the-valkyries-v1.png`,
   },
   Vintage: {
     id: 8,
@@ -99,7 +99,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     abilityDesc: "Random multiplier between ×1 and ×3 on each use.",
     pop: 55,
     rarity: "Classic",
-    artwork: `${ART}artwork.example-miles-davis-so-what-v1.png`,
+    artwork: `${ART}artwork.miles-davis-so-what-v1.png`,
   },
 };
 
@@ -116,7 +116,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     pop: 78,
     rarity: "Banger",
     country: "USA",
-    artwork: `${ART}artwork.example-take-me-home-country-roads-v1.png`,
+    artwork: `${ART}artwork.take-me-home-country-roads-v1.png`,
   },
   {
     id: 24,
@@ -129,7 +129,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     pop: 74,
     rarity: "Banger",
     country: "France",
-    artwork: `${ART}artwork.example-michel-sardou-les-lacs-du-connemara-v1.png`,
+    artwork: `${ART}artwork.michel-sardou-les-lacs-du-connemara-v1.png`,
   },
   {
     id: 26,
@@ -142,7 +142,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     pop: 58,
     rarity: "Banger",
     country: "Bretagne",
-    artwork: `${ART}artwork.example-tri-martolod-v1.png`,
+    artwork: `${ART}artwork.tri-martolod-v1.png`,
   },
 ];
 
@@ -160,7 +160,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     pop: 90,
     rarity: "Classic",
     country: "France",
-    artwork: `${ART}artwork.example-13-organises-bande-organisee-v1.png`,
+    artwork: `${ART}artwork.13-organises-bande-organisee-v1.png`,
   },
   {
     id: 21,
@@ -173,7 +173,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     pop: 72,
     rarity: "Classic",
     country: "USA",
-    artwork: `${ART}artwork.example-amazing-grace-v1.png`,
+    artwork: `${ART}artwork.amazing-grace-v1.png`,
   },
   {
     id: 23,
@@ -186,7 +186,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     pop: 68,
     rarity: "Legendary",
     country: "France",
-    artwork: `${ART}artwork.example-rouget-de-lisle-la-marseillaise-v1.png`,
+    artwork: `${ART}artwork.rouget-de-lisle-la-marseillaise-v1.png`,
   },
   {
     id: 25,
@@ -200,6 +200,89 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     pop: 62,
     rarity: "Banger",
     country: "Spain",
-    artwork: `${ART}artwork.example-ska-p-cannabis-v1.png`,
+    artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
+  },
+];
+
+/** Additional shipped tracks with artwork (catalogue beyond genre fixtures and world sets). */
+export const DECK_SPOTLIGHT_CARDS: CardData[] = [
+  {
+    id: 28,
+    title: "Hey Jude",
+    artist: "The Beatles",
+    year: 1968,
+    subgenre: "Pop Rock",
+    ability: "Coda",
+    abilityDesc: "Draws a second card if popularity is 90 or higher.",
+    pop: 95,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.beatles-v1.png`,
+  },
+  {
+    id: 29,
+    title: "God Save the Queen",
+    artist: "Sex Pistols",
+    year: 1977,
+    subgenre: "Metal",
+    ability: "Anarchy",
+    abilityDesc:
+      "Opponent loses 10 popularity when you play a second Rock card this round.",
+    pop: 87,
+    rarity: "Classic",
+    artwork: `${ART}artwork.the-sex-pistols-god-saves-the-queen-v1.png`,
+  },
+  {
+    id: 30,
+    title: "The Ketchup Song (Aserejé)",
+    artist: "Las Ketchup",
+    year: 2002,
+    subgenre: "Disco Pop",
+    country: "Spain",
+    ability: "Choreography",
+    abilityDesc: "+8 popularity when played after another dance track.",
+    pop: 89,
+    rarity: "Banger",
+    artwork: `${ART}artwork.las-ketchup-the-ketchup-song-v1.png`,
+  },
+  {
+    id: 31,
+    title: "Les Corons",
+    artist: "Pierre Bachelet",
+    year: 1982,
+    subgenre: "French Variety",
+    country: "France",
+    ability: "Terril",
+    abilityDesc:
+      "French World cards gain +5 power while this card remains in play.",
+    pop: 76,
+    rarity: "Classic",
+    artwork: `${ART}artwork.les-corons-lens-v1.png`,
+  },
+  {
+    id: 32,
+    title: "C'est magnifique",
+    artist: "Luis Mariano",
+    year: 1951,
+    subgenre: "French Variety",
+    country: "France",
+    ability: "Encore",
+    abilityDesc: "Heal 15 HP when played after a Classical or Vintage card.",
+    pop: 71,
+    rarity: "Classic",
+    artwork: `${ART}artwork.luis-mariano-cest-magnifique-v1.png`,
+  },
+  {
+    id: 33,
+    title: "Caroline",
+    artist: "Zaho feat. MC Solaar",
+    year: 2008,
+    subgenre: "R&B Soul",
+    country: "France",
+    ability: "Duettiste",
+    abilityDesc:
+      "If another French card is on the field, draw one card from the deck.",
+    pop: 84,
+    rarity: "Banger",
+    artwork: `${ART}artwork.zaho-mc-solar-caroline-v1.png`,
   },
 ];
