@@ -44,6 +44,7 @@ export default function GenresPage() {
             <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
               {[
                 { label: "Electropop", color: "#b8d4f0", text: "#0a1020" },
+                { label: "New Wave", color: "#c8d8f0", text: "#0a1020" },
                 { label: "EDM", color: "#5070d0" },
                 { label: "Techno", color: "#2850c8" },
                 { label: "Psytrance", color: "#080f2a" },

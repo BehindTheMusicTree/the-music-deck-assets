@@ -996,4 +996,18 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc:
       "When your opponent's card is a USA country (World) card, battle treats this card as countering theirs for advantage modifiers.",
   },
+  {
+    rowKey: "wl-the-metal",
+    id: 12110,
+    title: "The Metal",
+    artist: "Tenacious D",
+    year: 2006,
+    kind: "Planned",
+    genre: "Metal",
+    rarity: "Legendary",
+    pop: 8,
+    ability: "Four-Genre Counter",
+    abilityDesc:
+      "When your opponent's card is Punk, Techno, Grunge, or New Wave, battle treats this card as countering theirs for advantage modifiers.",
+  },
 ];

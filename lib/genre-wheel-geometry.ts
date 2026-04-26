@@ -7,7 +7,7 @@ export const WHEEL_CY = WHEEL_VIEW_SIZE / 2;
 
 /** Matches `GenreWheel` SVG layout (single source of truth for radii). */
 export const R_POP_SUBGENRES = 200;
-const RING_STEP = 83;
+const RING_STEP = 80;
 export const R_POP_SOFT_LINE = R_POP_SUBGENRES + RING_STEP;
 export const R_SOFT_SUBGENRES = R_POP_SOFT_LINE + RING_STEP;
 export const R_SOFT_EXPERIMENTAL_LINE = R_SOFT_SUBGENRES + RING_STEP;
@@ -24,7 +24,7 @@ export const WHEEL_MAIN_TILE_W = 120;
 
 /** Small subgenre tile size in `GenreWheel` (tighter pack reduces overlap). */
 export const WHEEL_SMALL_TILE_W = Math.round(76 * 1.2);
-export const WHEEL_SMALL_TILE_H = Math.round(54 * (1 - 1 / 3));
+export const WHEEL_SMALL_TILE_H = Math.round(54 * (1 - 1 / 3) * 0.6);
 export const WHEEL_SMALL_TILE_HALF_W = WHEEL_SMALL_TILE_W / 2;
 
 export function wheelSubgenreRadius(intensity: Intensity): number {

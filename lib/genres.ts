@@ -477,6 +477,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "New Wave",
+    color: "#d8e4fc",
+    parentA: "Electronic",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
     n: "Disco Pop",
     color: "#ffd6e8",
     parentA: "Disco/Funk",
