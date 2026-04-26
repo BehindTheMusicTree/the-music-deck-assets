@@ -462,6 +462,13 @@ export const SUBGENRES: Subgenre[] = [
     intensity: "soft",
   },
   {
+    kind: "country",
+    n: "Peruvian Cumbia",
+    color: "#c4363a",
+    parentA: "Peru",
+    intensity: "pop",
+  },
+  {
     kind: "genre",
     n: "Electropop",
     color: "#e4ebff",

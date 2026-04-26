@@ -247,6 +247,14 @@ Replace the background with an Algeria-inspired coastal cityscape by daylight: w
 Shift the palette toward a rose-red pink dominance (warm fuchsia and dusty crimson) while keeping sunlit daytime clarity — not neon night; bright sky, soft shadows.
 Replace any baseball bat with a heavy iron bar (worn steel, blunt industrial look) held in the same heroic pose.
 Keep vertical composition with main action in the upper third; lower 60% stays simple. Mood: proud, rhythmic, sun-baked groove. No text, no symbols, no borders.`,
+
+  87: `🌍 Africa — Savanna chorus (anonymous)
+Magic-style illustration, vertical 2:3, upper 40% focus.
+A wide golden savanna at late afternoon: distant stylised volcanic peaks on the horizon, acacia silhouettes, heat shimmer. A loose line of anonymous singers and percussionists stands on a low ridge — no facial detail, no resemblance to any real person — arms raised as if answering a call-and-response, marimba and drum shapes suggested as abstract geometry.
+Warm rain begins in streaks from a single dark cloud while sunlight still cuts through, catching dust and spray.
+Dominant colours: amber gold, burnt orange, deep teal shadow, soft ivory highlights on rain.
+Atmosphere: communal joy, journey, and epic scale without portraiture.
+Lower 60%: tall grass, wet earth sheen, simplified horizon. No text, no borders.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

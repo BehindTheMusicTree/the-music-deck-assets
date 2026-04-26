@@ -25,19 +25,6 @@ const A = "Reserve";
 /** IDs 12xxx avoid collision with shipped deck (1–33, 9101). */
 export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
   {
-    rowKey: "wl-africa",
-    id: 12002,
-    title: "Africa",
-    artist: "Toto",
-    year: 1982,
-    kind: "Planned",
-    genre: "Soft Rock",
-    rarity: "Classic",
-    pop: 9,
-    ability: A,
-    abilityDesc: P,
-  },
-  {
     rowKey: "wl-sous-les-sunlights",
     id: 12006,
     title: "Sous les sunlights des tropiques",
@@ -1009,5 +996,21 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     ability: "Four-Genre Counter",
     abilityDesc:
       "When your opponent's card is Punk Rock, Techno, Grunge, or New Wave, battle treats this card as countering theirs for advantage modifiers.",
+  },
+  {
+    rowKey: "wl-la-colegiala",
+    id: 12111,
+    title: "La Colegiala",
+    artist: "Los Ilusionistas",
+    year: 1977,
+    kind: "World",
+    country: "Peru",
+    genre: "Peruvian Cumbia",
+    rarity: "Classic",
+    pop: 8,
+    ability: A,
+    abilityDesc: P,
+    artworkPrompt:
+      "Magic-style illustration, vertical 2:3, upper 40% focus. Amazon-Andean cumbia energy: electric guitar silhouette, timbales and congas as abstract shapes, warm festival crowd as anonymous silhouettes — no facial detail, no likeness to any real person. Red-and-cream palette echoing Peruvian stripes, golden late sun, dust in the air. Lower 60% simple jungle edge and stage haze. No text, no borders.",
   },
 ];

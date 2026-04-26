@@ -1068,4 +1068,19 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     artwork: `${ART}artwork.lunatic-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lunatic-opus-v1.png"],
   },
+  {
+    id: 87,
+    title: "Africa",
+    artist: "Toto",
+    year: 1982,
+    genre: "Pop Rock",
+    ability: "Savanna stack",
+    abilityDesc:
+      "Reads as pop on the strip but smuggles hardcore weight: massed percussion, marimba layers, and session-musician polyphony under an immovable chorus.",
+    pop: 9,
+    rarity: "Classic",
+    artwork: `${ART}artwork.toto-africa-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.toto-africa-v1.png"],
+    ...(artworkPromptFor(87) ?? {}),
+  },
 ];

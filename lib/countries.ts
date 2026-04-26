@@ -79,6 +79,34 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     pip: { sym: "◆", color: "#006847", size: 15 },
   },
 
+  Peru: {
+    theme: {
+      border: "#D91023",
+      headerBg: "#0a0c10",
+      textMain: "#f4f2f2",
+      textBody: "#ded8d8",
+      parchStrip: "#e8dede",
+      parchAbility: "#efe8e8",
+      barPop: ["#D91023", "#e84850"],
+      barExp: ["#9a1420", "#c42030"],
+      barGlowPop: "rgba(217,16,35,.85)",
+      barGlowExp: "rgba(154,20,32,.75)",
+      frameBorder:
+        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+      frameBg:
+        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+      frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+      bg: "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+    },
+    pip: { sym: "◆", color: "#D91023", size: 15 },
+  },
+
   France: {
     theme: {
       border: "#0055A4", headerBg: "#04091a",
@@ -290,6 +318,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 export const COUNTRY_MAP_POINT = {
   USA: { lon: -98.35, lat: 39.5 },
   Mexico: { lon: -99.13, lat: 19.43 },
+  Peru: { lon: -77.04, lat: -12.05 },
   France: { lon: 2.35, lat: 46.8 },
   Spain: { lon: -3.7, lat: 40.2 },
   Italy: { lon: 12.5, lat: 42.5 },

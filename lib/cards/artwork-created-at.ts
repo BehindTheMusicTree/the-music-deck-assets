@@ -69,6 +69,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.the-sex-pistols-god-saves-the-queen-v1.png": "2026-04-26T09:24:55",
   "artwork.these-boots-are-made-for-walkin-v1.png": "2026-04-23T13:45:18",
   "artwork.these-boots-are-made-for-walkin-v2.png": "2026-04-23T13:45:17",
+  "artwork.toto-africa-v1.png": "2026-04-26T19:31:35",
   "artwork.tri-martolod-v1.png": "2026-04-23T13:45:17",
   "artwork.un-deux-trois-soleil-abdel-kader-v1.png": "2026-04-23T13:45:17",
   "artwork.verdi-dies-irae-v1.png": "2026-04-23T13:45:17",
