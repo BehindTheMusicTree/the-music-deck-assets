@@ -26,6 +26,9 @@
   border: 0;
   padding: 10px;
   box-sizing: border-box;
+  /* Keep the outer shape consistently clipped (bleed art + footer band) */
+  border-radius: 16px;
+  overflow: hidden;
 }
 .cardNoBorder:hover {
   box-shadow: 0 32px 56px rgba(0, 0, 0, 0.9);
@@ -40,9 +43,14 @@
   margin-left: 4px;
   margin-right: 4px;
 }
+/* Last row: full width so bottom curve reads cleanly; text stays padded inside */
 .cardNoBorder .footer {
-  margin-left: 4px;
-  margin-right: 4px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  background: rgba(0, 0, 0, 0.88);
+  border-bottom-left-radius: max(0px, calc(16px - 10px));
+  border-bottom-right-radius: max(0px, calc(16px - 10px));
 }
 
 /* World USA: landscape flag, border motif rotated 90° counter-clockwise */
