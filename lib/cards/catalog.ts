@@ -4,8 +4,13 @@ import {
   type AppGenreName,
   themeForCountry,
 } from "@/lib/genres";
-import { CARD_EXAMPLE_ART_BASE } from "./art-path";
-import { MOCK_CARDS, WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./examples";
+import { CARD_ARTWORK_BASE } from "./art-path";
+import {
+  DECK_SPOTLIGHT_CARDS,
+  MOCK_CARDS,
+  WORLD_FLAG_CARDS,
+  WORLD_MIXED_CARDS,
+} from "./examples";
 
 export type CatalogEntry = {
   /** Stable row key for React lists */
@@ -43,6 +48,51 @@ const worldBlendEntries: CatalogEntry[] = WORLD_MIXED_CARDS.map((c) => ({
   theme: themeForCountry(c.country!),
 }));
 
+function spotlightCard(id: number): CardData {
+  const c = DECK_SPOTLIGHT_CARDS.find((x) => x.id === id);
+  if (!c) throw new Error(`Missing DECK_SPOTLIGHT_CARDS id ${id}`);
+  return c;
+}
+
+const spotlightEntries: CatalogEntry[] = [
+  {
+    rowKey: "spotlight-28",
+    kind: "Genre",
+    card: spotlightCard(28),
+    theme: APP_GENRE_THEMES.Rock,
+  },
+  {
+    rowKey: "spotlight-29",
+    kind: "Genre",
+    card: spotlightCard(29),
+    theme: APP_GENRE_THEMES.Rock,
+  },
+  {
+    rowKey: "spotlight-30",
+    kind: "World blend",
+    card: spotlightCard(30),
+    theme: themeForCountry("Spain"),
+  },
+  {
+    rowKey: "spotlight-31",
+    kind: "World",
+    card: spotlightCard(31),
+    theme: themeForCountry("France"),
+  },
+  {
+    rowKey: "spotlight-32",
+    kind: "World",
+    card: spotlightCard(32),
+    theme: themeForCountry("France"),
+  },
+  {
+    rowKey: "spotlight-33",
+    kind: "World blend",
+    card: spotlightCard(33),
+    theme: themeForCountry("France"),
+  },
+];
+
 const laMacarena: CatalogEntry = {
   rowKey: "world-genre-9101",
   kind: "World + genre",
@@ -55,7 +105,7 @@ const laMacarena: CatalogEntry = {
     abilityDesc: "Gain +10 popularity when played after a World card.",
     pop: 94,
     rarity: "Classic",
-    artwork: `${CARD_EXAMPLE_ART_BASE}artwork.example-los-del-rio-la-macarena-v1.png`,
+    artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
     country: "Spain",
     subgenre: undefined,
   },
@@ -63,10 +113,11 @@ const laMacarena: CatalogEntry = {
   genreName: "Electronic",
 };
 
-/** All example cards shipped for previews and the cards charter, for catalog listing. */
+/** All shipped cards with artwork (charter, previews, catalogue). */
 export const CATALOG_ENTRIES: CatalogEntry[] = [
   ...genreEntries,
   ...worldEntries,
   ...worldBlendEntries,
+  ...spotlightEntries,
   laMacarena,
 ].sort((a, b) => a.card.id - b.card.id);
