@@ -150,6 +150,25 @@ export default function GenreThemePreview() {
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
                   style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                   onClick={() => {
+                    const inThisGenre =
+                      selectedGenreOnly === name ||
+                      Boolean(
+                        selectedSubgenre &&
+                          subs.some((x) => x.n === selectedSubgenre),
+                      );
+                    if (selectedCountry && inThisGenre) {
+                      setSelectedCountry(undefined);
+                      setSelectedGenreOnly(name);
+                      const sg =
+                        selectedSubgenre &&
+                        subs.some((x) => x.n === selectedSubgenre)
+                          ? selectedSubgenre
+                          : subs[0]?.n;
+                      if (!sg) return;
+                      setSelectedSubgenre(sg);
+                      applyRulePreview({ subgenre: sg });
+                      return;
+                    }
                     setSelectedGenreOnly(name);
                     setSelectedCountry(undefined);
                     const firstSubgenre = subs[0]?.n;
@@ -193,9 +212,23 @@ export default function GenreThemePreview() {
                           className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
                           style={{ background: "#f4edd8" }}
                           onClick={() => {
+                            if (
+                              selectedSubgenre === s.n &&
+                              selectedCountry &&
+                              !isCountrySubgenre(s.n)
+                            ) {
+                              setSelectedCountry(undefined);
+                              setSelectedGenreOnly(undefined);
+                              setSelectedSubgenre(s.n);
+                              applyRulePreview({ subgenre: s.n });
+                              return;
+                            }
                             setSelectedGenreOnly(undefined);
                             setSelectedSubgenre(s.n);
-                            applyRulePreview({ subgenre: s.n, country: selectedCountry });
+                            applyRulePreview({
+                              subgenre: s.n,
+                              country: selectedCountry,
+                            });
                           }}
                         >
                           <div
@@ -242,26 +275,53 @@ export default function GenreThemePreview() {
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
                   style={{ borderLeft: `4px solid ${t.border}`, background: "#ede4cc" }}
                   onClick={() => {
+                    const hasGlobalGenreMix =
+                      selectedGenreOnly !== undefined ||
+                      Boolean(
+                        selectedSubgenre &&
+                          !isCountrySubgenre(selectedSubgenre),
+                      );
+                    if (
+                      selectedCountry === country &&
+                      hasGlobalGenreMix
+                    ) {
+                      setSelectedGenreOnly(undefined);
+                      const firstCountrySubgenre = countrySubs[0]?.n;
+                      if (!firstCountrySubgenre) return;
+                      setSelectedSubgenre(firstCountrySubgenre);
+                      applyRulePreview({
+                        subgenre: firstCountrySubgenre,
+                        country,
+                      });
+                      return;
+                    }
                     setSelectedCountry(country);
-                  if (selectedSubgenre && !isCountrySubgenre(selectedSubgenre)) {
+                    if (
+                      selectedSubgenre &&
+                      !isCountrySubgenre(selectedSubgenre)
+                    ) {
                       applyRulePreview({ subgenre: selectedSubgenre, country });
                       return;
                     }
-                  if (selectedSubgenre && isCountrySubgenre(selectedSubgenre)) {
-                    const parentCountry = canonicalCountryFromSubgenre(selectedSubgenre);
-                    if (parentCountry === country) {
-                      applyRulePreview({ subgenre: selectedSubgenre, country });
+                    if (selectedSubgenre && isCountrySubgenre(selectedSubgenre)) {
+                      const parentCountry =
+                        canonicalCountryFromSubgenre(selectedSubgenre);
+                      if (parentCountry === country) {
+                        applyRulePreview({ subgenre: selectedSubgenre, country });
+                        return;
+                      }
+                    }
+                    if (selectedGenreOnly) {
+                      applyRulePreview({ genre: selectedGenreOnly, country });
                       return;
                     }
-                  }
-                  if (selectedGenreOnly) {
-                    applyRulePreview({ genre: selectedGenreOnly, country });
-                    return;
-                  }
                     const firstCountrySubgenre = countrySubs[0]?.n;
                     if (!firstCountrySubgenre) return;
                     setSelectedSubgenre(firstCountrySubgenre);
-                    applyRulePreview({ subgenre: firstCountrySubgenre, country });
+                    applyRulePreview({
+                      subgenre: firstCountrySubgenre,
+                      country,
+                    });
                   }}
                 >
                   <span
@@ -292,6 +352,16 @@ export default function GenreThemePreview() {
                         className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
                         style={{ background: "#f4edd8" }}
                         onClick={() => {
+                          if (
+                            selectedSubgenre === s.n &&
+                            selectedCountry === country
+                          ) {
+                            setSelectedCountry(undefined);
+                            setSelectedGenreOnly(undefined);
+                            setSelectedSubgenre(s.n);
+                            applyRulePreview({ subgenre: s.n });
+                            return;
+                          }
                           setSelectedCountry(country);
                           setSelectedGenreOnly(undefined);
                           setSelectedSubgenre(s.n);

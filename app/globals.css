@@ -52,12 +52,12 @@ html, body {
     @apply font-mono text-sm tracking-[2px] text-muted;
   }
   .section-title {
-    @apply font-mono text-xs tracking-[2px] text-muted uppercase;
+    @apply font-mono text-sm tracking-[2px] text-muted uppercase;
   }
   .section-title-sub {
-    @apply font-mono text-[11px] tracking-[2px] text-muted uppercase opacity-60;
+    @apply font-mono text-xs tracking-[2px] text-muted uppercase opacity-60;
   }
   .section-label-accent {
-    @apply font-mono text-[11px] tracking-[2px] text-gold uppercase;
+    @apply font-mono text-xs tracking-[2px] text-gold uppercase;
   }
 }
