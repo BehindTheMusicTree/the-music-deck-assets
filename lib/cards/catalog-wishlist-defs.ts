@@ -1223,7 +1223,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     rowKey: "wl-la-cucaracha",
     id: 12097,
     title: "La Cucaracha",
-    artist: "Traditional",
     year: 1880,
     kind: "Planned",
     genre: "Mexican Folk",
