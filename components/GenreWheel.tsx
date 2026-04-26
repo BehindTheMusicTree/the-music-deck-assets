@@ -8,7 +8,11 @@ import {
   R_SOFT_EXPERIMENTAL_LINE,
   WHEEL_CX,
   WHEEL_CY,
+  WHEEL_MAIN_TILE_W,
+  WHEEL_RADIAL_DIVIDER_EXTRA,
+  WHEEL_SMALL_TILE_H,
   WHEEL_SMALL_TILE_W,
+  WHEEL_VIEW_SIZE,
   wheelSubgenreRadius,
 } from "@/lib/genre-wheel-geometry";
 import {
@@ -71,13 +75,11 @@ function Rect({
   small?: boolean;
   onActivate: () => void;
 }) {
-  const w = small ? WHEEL_SMALL_TILE_W : 160;
-  const h = small ? 54 : 92;
-  const fs = small ? 9.5 : 14;
-  const fsh = small ? 7.25 : 11;
+  const w = small ? WHEEL_SMALL_TILE_W : WHEEL_MAIN_TILE_W;
+  const h = small ? WHEEL_SMALL_TILE_H : Math.round(92 * 0.7);
+  const fs = small ? 8.75 : 12;
   const isDark = isLight(hex);
-  const tc = isDark ? "rgba(10,10,10,.85)" : "rgba(255,255,255,.92)";
-  const hc = isDark ? "rgba(10,10,10,.5)" : "rgba(255,255,255,.55)";
+  const tc = isDark ? "rgba(10,10,10,.9)" : "rgba(255,255,255,.95)";
   const activateTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
@@ -126,7 +128,8 @@ function Rect({
       />
       <text
         x={0}
-        y={small ? -6 : -8}
+        y={0}
+        dominantBaseline="middle"
         textAnchor="middle"
         fontFamily="Cinzel, serif"
         fontWeight={700}
@@ -135,16 +138,6 @@ function Rect({
         fill={tc}
       >
         {label}
-      </text>
-      <text
-        x={0}
-        y={small ? 9 : 10}
-        textAnchor="middle"
-        fontFamily="Space Mono, monospace"
-        fontSize={fsh}
-        fill={hc}
-      >
-        {hex}
       </text>
     </g>
   );
@@ -192,9 +185,9 @@ export default function GenreWheel() {
       }}
     >
       <svg
-        width={1240}
-        height={1240}
-        viewBox="0 0 1240 1240"
+        width={WHEEL_VIEW_SIZE}
+        height={WHEEL_VIEW_SIZE}
+        viewBox={`0 0 ${WHEEL_VIEW_SIZE} ${WHEEL_VIEW_SIZE}`}
         style={{ overflow: "visible", maxWidth: "100%" }}
       >
         <defs>
@@ -354,7 +347,7 @@ export default function GenreWheel() {
           const outer = polarToXY(
             WHEEL_CX,
             WHEEL_CY,
-            R_EXPERIMENTAL_HARDCORE_LINE + 160,
+            R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
             angle,
           );
           return (

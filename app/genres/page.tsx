@@ -118,7 +118,7 @@ export default function GenresPage() {
           </div>
         </div>
 
-        <div id="colour-wheel" className="w-full flex justify-center">
+        <div id="genre-wheel" className="w-full flex justify-center">
           <GenreWheel />
         </div>
 
