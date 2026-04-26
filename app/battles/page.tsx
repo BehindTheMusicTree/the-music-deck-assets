@@ -20,28 +20,66 @@ export default function BattlesPage() {
             Every playable card surfaces four values on the frame. Battle rules and
             card text refer to them when applying modifiers, checks, and resolution.
           </p>
-          <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
+          <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-3">
             <li>
               <span className="text-white">Popularity</span> — Shown as 1–9 award
               symbols on the stat row (gold, platinum, then diamond tiers). It
               measures how broadly the track lands with an audience and is
               independent of intensity.
+              <div className="mt-2 h-9 max-w-[280px] rounded-[4px] border border-ui-border/60 bg-bg px-3 flex items-center gap-2">
+                <span className="text-[16px] leading-none">🏆</span>
+                <span className="text-[16px] leading-none">🏆</span>
+                <span className="text-[16px] leading-none">🏆</span>
+                <span className="font-mono text-[10px] text-muted ml-auto">
+                  NOTE 9
+                </span>
+              </div>
             </li>
             <li>
               <span className="text-white">Intensity</span> — The triangle gauge
               encodes one of four levels: pop, soft, experimental, or hardcore.
               With a subgenre, intensity follows that subgenre; on a genre-only card
               it follows the parent genre mapping.
+              <div className="mt-2 h-9 max-w-[280px] rounded-[4px] border border-ui-border/60 bg-bg px-3 flex items-center">
+                <div
+                  className="relative w-full h-4 overflow-hidden"
+                  style={{
+                    clipPath: "polygon(0% 100%, 100% 100%, 100% 0%)",
+                    background: "rgba(255,255,255,0.12)",
+                  }}
+                >
+                  <div
+                    className="absolute inset-y-0 left-0 w-3/4"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #58b85a 0%, #c9b03f 55%, #c55a44 100%)",
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-[10px] text-white ml-2">75%</span>
+              </div>
             </li>
             <li>
               <span className="text-white">Advantage</span> — The matchup strip
               (green side) names genres this card is strong against, each with a
               colour diamond taken from the genre palette.
+              <div className="mt-2 h-9 max-w-[280px] rounded-[4px] border border-ui-border/60 bg-bg px-3 flex items-center gap-2">
+                <span className="w-2 h-2 rotate-45 bg-[#c8960a] block" />
+                <span className="font-mono text-[10px] text-muted">Hip-Hop</span>
+                <span className="w-2 h-2 rotate-45 bg-[#7a0810] block ml-2" />
+                <span className="font-mono text-[10px] text-muted">Metal</span>
+              </div>
             </li>
             <li>
               <span className="text-white">Weakness</span> — The same strip (red
               side) names genres this card is weak against, again with matching
               diamonds.
+              <div className="mt-2 h-9 max-w-[280px] rounded-[4px] border border-ui-border/60 bg-bg px-3 flex items-center gap-2">
+                <span className="w-2 h-2 rotate-45 bg-[#c0387a] block" />
+                <span className="font-mono text-[10px] text-muted">Disco/Funk</span>
+                <span className="w-2 h-2 rotate-45 bg-[#787878] block ml-2" />
+                <span className="font-mono text-[10px] text-muted">Vintage</span>
+              </div>
             </li>
           </ul>
           <p className="font-garamond text-muted text-sm leading-normal mt-3 mb-0">
