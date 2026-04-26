@@ -71,10 +71,10 @@ function Rect({
   small?: boolean;
   onActivate: () => void;
 }) {
-  const w = small ? 120 : 160;
-  const h = small ? 64 : 92;
-  const fs = small ? 10.5 : 14;
-  const fsh = small ? 8.5 : 11;
+  const w = small ? 104 : 160;
+  const h = small ? 54 : 92;
+  const fs = small ? 9.5 : 14;
+  const fsh = small ? 7.25 : 11;
   const isDark = isLight(hex);
   const tc = isDark ? "rgba(10,10,10,.85)" : "rgba(255,255,255,.92)";
   const hc = isDark ? "rgba(10,10,10,.5)" : "rgba(255,255,255,.55)";
@@ -128,19 +128,19 @@ function Rect({
       />
       <text
         x={0}
-        y={-8}
+        y={small ? -6 : -8}
         textAnchor="middle"
         fontFamily="Cinzel, serif"
         fontWeight={700}
         fontSize={fs}
-        letterSpacing={1}
+        letterSpacing={small ? 0.6 : 1}
         fill={tc}
       >
         {label}
       </text>
       <text
         x={0}
-        y={10}
+        y={small ? 9 : 10}
         textAnchor="middle"
         fontFamily="Space Mono, monospace"
         fontSize={fsh}

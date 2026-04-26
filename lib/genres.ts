@@ -533,7 +533,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Drum & Bass",
     color: "#3070c8",
     parentA: "Electronic",
-    angleDelta: -16,
+    angleDelta: -12,
     intensity: "experimental",
   },
   {
@@ -542,7 +542,7 @@ export const SUBGENRES: Subgenre[] = [
     color: "#288090",
     parentA: "Electronic",
     parentB: "Reggae/Dub",
-    t: 0.34,
+    t: 0.42,
     intensity: "experimental",
   },
   {
