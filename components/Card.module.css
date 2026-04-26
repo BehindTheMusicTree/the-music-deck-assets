@@ -526,7 +526,7 @@
 }
 .intensityNoteRow {
   position: relative;
-  height: 11px;
+  height: 9px;
   margin-top: 0;
 }
 .intensityNote {
@@ -550,11 +550,11 @@
   color: rgba(255, 255, 255, 0.35);
 }
 .statsSm .intensityTrack {
-  height: 10px;
+  height: 8px;
 }
 .statsSm .intensityNote,
 .statsSm .intensityNoteMuted {
-  font-size: 6px;
+  font-size: 5.5px;
 }
 .statsSm .statsPop {
   gap: 2px;
