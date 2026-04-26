@@ -42,6 +42,13 @@ const sortBtnActive = "border-gold/50 text-gold";
 /** Prior grid used scale(0.58) on the small card; this is 4× that preview size. */
 const CATALOG_GRID_THUMB_SCALE = 0.58 * 4;
 
+/** Full card is 272×400; detail modal uses 2×. */
+const CATALOG_CARD_NATIVE_W = 272;
+const CATALOG_CARD_NATIVE_H = 400;
+const CATALOG_DETAIL_CARD_SCALE = 2;
+const CATALOG_DETAIL_CARD_BOX_W = CATALOG_CARD_NATIVE_W * CATALOG_DETAIL_CARD_SCALE;
+const CATALOG_DETAIL_CARD_BOX_H = CATALOG_CARD_NATIVE_H * CATALOG_DETAIL_CARD_SCALE;
+
 const INTENSITY_VALUES: readonly Intensity[] = [
   "pop",
   "soft",
@@ -281,7 +288,8 @@ export default function CatalogDeckTable({
     null,
   );
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
-  const [gridDetail, setGridDetail] = useState<CatalogEntry | null>(null);
+  const [catalogEntryDetail, setCatalogEntryDetail] =
+    useState<CatalogEntry | null>(null);
 
   useEffect(() => {
     if (artworkPromptModal === null) return;
@@ -293,13 +301,13 @@ export default function CatalogDeckTable({
   }, [artworkPromptModal]);
 
   useEffect(() => {
-    if (gridDetail === null) return;
+    if (catalogEntryDetail === null) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setGridDetail(null);
+      if (e.key === "Escape") setCatalogEntryDetail(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [gridDetail]);
+  }, [catalogEntryDetail]);
 
   const onActivateSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc((a) => !a);
@@ -476,7 +484,7 @@ export default function CatalogDeckTable({
             aria-pressed={viewMode === "table"}
             onClick={() => {
               setViewMode("table");
-              setGridDetail(null);
+              setCatalogEntryDetail(null);
             }}
           >
             Table
@@ -836,8 +844,8 @@ export default function CatalogDeckTable({
           </thead>
           {viewMode === "table" ? (
             <tbody className="font-garamond text-[15px] text-white/95">
-              {visibleRows.map(
-                ({
+              {visibleRows.map((entry) => {
+                const {
                   rowKey,
                   kind,
                   card,
@@ -848,10 +856,21 @@ export default function CatalogDeckTable({
                   catalogGenreLabel,
                   catalogIntensity,
                   catalogEra,
-                }) => (
+                } = entry;
+                return (
                   <tr
                     key={rowKey}
-                    className="border-b border-ui-border/60 last:border-0 align-top"
+                    className="border-b border-ui-border/60 last:border-0 align-top cursor-pointer hover:bg-white/[0.03] transition-colors"
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Open catalogue details for ${card.title}`}
+                    onClick={() => setCatalogEntryDetail(entry)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setCatalogEntryDetail(entry);
+                      }
+                    }}
                   >
                     <td className="py-2 pl-2 pr-1">
                       {card.artwork ? (
@@ -869,7 +888,12 @@ export default function CatalogDeckTable({
                               transformOrigin: "top center",
                             }}
                           >
-                            <Card card={card} theme={theme} small />
+                            <Card
+                              card={card}
+                              theme={theme}
+                              small
+                              enableZoom={false}
+                            />
                           </div>
                         </div>
                       ) : (
@@ -947,9 +971,10 @@ export default function CatalogDeckTable({
                         <button
                           type="button"
                           className="block w-full max-w-[28ch] text-left font-garamond text-[11px] leading-snug text-white/80 hover:text-gold rounded border border-transparent px-0.5 py-0.5 -mx-0.5 hover:border-ui-border/50 hover:bg-white/3 transition-colors cursor-pointer"
-                          onClick={() =>
-                            setArtworkPromptModal(card.artworkPrompt!.trim())
-                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setArtworkPromptModal(card.artworkPrompt!.trim());
+                          }}
                           aria-label="Open full artwork prompt"
                         >
                           {artworkPromptPreview(card.artworkPrompt).preview}
@@ -974,8 +999,8 @@ export default function CatalogDeckTable({
                       {card.ability}
                     </td>
                   </tr>
-                ),
-              )}
+                );
+              })}
             </tbody>
           ) : null}
         </table>
@@ -999,7 +1024,7 @@ export default function CatalogDeckTable({
                   key={rowKey}
                   type="button"
                   className="group flex flex-col items-center gap-2 rounded-lg border border-ui-border bg-[#12121a]/45 p-3 min-w-0 text-left transition-colors hover:border-gold/40 hover:bg-white/4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold/50"
-                  onClick={() => setGridDetail(entry)}
+                  onClick={() => setCatalogEntryDetail(entry)}
                   aria-label={`Open catalogue details for ${card.title}`}
                 >
                   <div
@@ -1064,20 +1089,20 @@ export default function CatalogDeckTable({
         </p>
       ) : null}
 
-      {gridDetail !== null ? (
+      {catalogEntryDetail !== null ? (
         <div
           className="fixed inset-0 z-100 flex items-start justify-center sm:items-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm overflow-y-auto"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="catalog-grid-detail-title"
-          onClick={() => setGridDetail(null)}
+          aria-labelledby="catalog-entry-detail-title"
+          onClick={() => setCatalogEntryDetail(null)}
         >
           <div
-            className="max-w-4xl w-full my-4 sm:my-8 rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
+            className="max-w-5xl w-full my-4 sm:my-8 rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
             onClick={(e) => e.stopPropagation()}
           >
             {(() => {
-              const d = gridDetail;
+              const d = catalogEntryDetail;
               const c = d.card;
               const detailLine = (label: string, value: string) => (
                 <div className="grid grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] gap-x-3 gap-y-1 text-[13px] sm:text-[14px]">
@@ -1092,12 +1117,36 @@ export default function CatalogDeckTable({
               return (
                 <>
                   <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    <div className="shrink-0 mx-auto lg:mx-0">
-                      <Card card={c} theme={d.theme} />
+                    <div
+                      className="shrink-0 mx-auto lg:mx-0"
+                      style={{
+                        width: CATALOG_DETAIL_CARD_BOX_W,
+                        height: CATALOG_DETAIL_CARD_BOX_H,
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          top: 0,
+                          width: CATALOG_CARD_NATIVE_W,
+                          height: CATALOG_CARD_NATIVE_H,
+                          transform: "translateX(-50%) scale(2)",
+                          transformOrigin: "top center",
+                        }}
+                      >
+                        <Card
+                          card={c}
+                          theme={d.theme}
+                          enableZoom={false}
+                        />
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0 w-full">
                       <h2
-                        id="catalog-grid-detail-title"
+                        id="catalog-entry-detail-title"
                         className="font-cinzel text-sm sm:text-base tracking-[0.14em] text-gold mb-1"
                       >
                         {c.title}
@@ -1155,7 +1204,7 @@ export default function CatalogDeckTable({
                           type="button"
                           className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
                           onClick={() => {
-                            setGridDetail(null);
+                            setCatalogEntryDetail(null);
                             setArtworkPromptModal(c.artworkPrompt!.trim());
                           }}
                         >
@@ -1167,7 +1216,7 @@ export default function CatalogDeckTable({
                   <button
                     type="button"
                     className="mt-8 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5 w-full sm:w-auto"
-                    onClick={() => setGridDetail(null)}
+                    onClick={() => setCatalogEntryDetail(null)}
                   >
                     Close
                   </button>

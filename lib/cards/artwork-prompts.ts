@@ -248,13 +248,10 @@ Shift the palette toward a rose-red pink dominance (warm fuchsia and dusty crims
 Replace any baseball bat with a heavy iron bar (worn steel, blunt industrial look) held in the same heroic pose.
 Keep vertical composition with main action in the upper third; lower 60% stays simple. Mood: proud, rhythmic, sun-baked groove. No text, no symbols, no borders.`,
 
-  87: `🌍 Africa — Savanna chorus (anonymous)
-Magic-style illustration, vertical 2:3, upper 40% focus.
-A wide golden savanna at late afternoon: distant stylised volcanic peaks on the horizon, acacia silhouettes, heat shimmer. A loose line of anonymous singers and percussionists stands on a low ridge — no facial detail, no resemblance to any real person — arms raised as if answering a call-and-response, marimba and drum shapes suggested as abstract geometry.
-Warm rain begins in streaks from a single dark cloud while sunlight still cuts through, catching dust and spray.
-Dominant colours: amber gold, burnt orange, deep teal shadow, soft ivory highlights on rain.
-Atmosphere: communal joy, journey, and epic scale without portraiture.
-Lower 60%: tall grass, wet earth sheen, simplified horizon. No text, no borders.`,
+  87: `🌍 Africa — Celestial Watcher (anonymous)
+High-detail semi-realistic comic-cinematic illustration inspired by the mystical, epic mood of the song. Vertical composition: the bottom 60% will be covered on-card, so place all key visual elements in the upper third.
+In the upper third, a massive humanoid figure floats in space, facing the viewer. Face stylised and anonymous — no resemblance to any real person. The figure holds a glowing, realistic Earth, tilted so the African continent reads clearly. Background split in two cosmic halves: left, luminous sky-blue cosmic glow with soft daylight and nebula haze, as if space merged with atmosphere; right, deep space with stars, subtle purples and blacks, contemplative and mysterious. The giant is lit differently on each side — soft daylight reflections on the left, deep cosmic shadow on the right. Earth emits a gentle golden-white aura (wonder, distance, knowledge).
+Mood: mystical, celestial, contemplative, epic. Dominant tones: sky blue, deep space black, soft gold, white highlights. Mullet And moustache — stylised, anonymous; no real-person likeness. No text, no symbols, no logos.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

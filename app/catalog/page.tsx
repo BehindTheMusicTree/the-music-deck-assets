@@ -13,8 +13,8 @@ export default function CatalogPage() {
         The full set of cards with bundled artwork. Catalogue numbers are per
         genre, or per country/region when the subgenre is country-native. Use
         the Table / Grid toggle: in table view, filter and sort from the
-        headers and click a preview to zoom; in grid view, click a card for
-        catalogue details.
+        headers, then click a row to open the full catalogue details and a
+        2×-size card; in grid view, click a card for the same details.
       </p>
       <p className="font-garamond text-muted text-center text-sm mb-10 max-w-[520px]">
         Frame rules and anatomy:{" "}

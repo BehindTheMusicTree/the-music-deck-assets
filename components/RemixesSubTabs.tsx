@@ -5,18 +5,14 @@ import { useEffect, useState } from "react";
 import { scrollToCardsSection } from "@/lib/cards-nav-scroll";
 
 const SECTIONS = [
-  { id: "anatomy", label: "Anatomy" },
-  { id: "theme", label: "Theme" },
-  { id: "advantage-weakness", label: "Advantage & Weakness" },
-  { id: "popularity", label: "Popularity" },
-  { id: "intensity", label: "Intensity" },
-  { id: "rarities", label: "Rarities" },
+  { id: "remix-anatomy", label: "Anatomy" },
+  { id: "remix-by-genre", label: "By Genre" },
 ] as const;
 
 type Props = { stickToTop?: boolean };
 
-export default function CardSubTabs({ stickToTop = true }: Props) {
-  const [active, setActive] = useState("anatomy");
+export default function RemixesSubTabs({ stickToTop = true }: Props) {
+  const [active, setActive] = useState("remix-anatomy");
 
   useEffect(() => {
     const observers = SECTIONS.map(({ id }) => {

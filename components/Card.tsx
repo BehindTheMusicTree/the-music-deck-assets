@@ -33,6 +33,11 @@ export interface CardData {
   artworkPrompt?: string;
   /** ISO-like local datetime when the bundled PNG was created (`YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss`). */
   artworkCreatedAt?: string;
+  /**
+   * Vertical shift of the artwork in CSS pixels (inside the art frame, `object-fit: cover`).
+   * Negative values move the image up (e.g. −20 when composition sits too low in the PNG).
+   */
+  artworkOffsetY?: number;
   country?: string;
 }
 
@@ -142,12 +147,16 @@ import { FLAG_PIP_SYMBOL, FLAG_PIP_BG } from "@/lib/countries";
 
 function CardArtwork({ card }: { card: CardData }) {
   if (!card.artwork) return null;
+  const dy = card.artworkOffsetY;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={card.artwork}
       alt=""
       className={styles.artImg}
+      style={
+        dy != null && dy !== 0 ? { transform: `translateY(${dy}px)` } : undefined
+      }
     />
   );
 }
