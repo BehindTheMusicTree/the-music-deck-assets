@@ -356,7 +356,7 @@ export default function GenreWheel() {
         width={WHEEL_VIEW_SIZE}
         height={WHEEL_VIEW_SIZE}
         viewBox={`0 0 ${WHEEL_VIEW_SIZE} ${WHEEL_VIEW_SIZE}`}
-        className="max-w-full overflow-visible"
+        className="shrink-0 overflow-visible"
       >
         <defs>
           <path
