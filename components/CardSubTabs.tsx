@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const SECTIONS = [
+  { id: "catalog", label: "Catalog" },
   { id: "anatomy", label: "Anatomy" },
   { id: "theme", label: "Theme" },
   { id: "advantage-weakness", label: "Advantage & Weakness" },
@@ -12,7 +13,7 @@ const SECTIONS = [
 ] as const;
 
 export default function CardSubTabs() {
-  const [active, setActive] = useState("anatomy");
+  const [active, setActive] = useState("catalog");
 
   useEffect(() => {
     const observers = SECTIONS.map(({ id }) => {
