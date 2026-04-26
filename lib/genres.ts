@@ -485,7 +485,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Pop Rock",
-    color: "#f8b0b8",
+    color: "#f7b4ba",
     parentA: "Rock",
     intensity: "pop",
   },
@@ -725,7 +725,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Impressionist Classical",
-    color: "#d4c6b6",
+    color: "#c8b898",
     parentA: "Classical",
     intensity: "soft",
   },
@@ -753,21 +753,21 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Waltz",
-    color: "#cdbdae",
+    color: "#c4b098",
     parentA: "Classical",
     intensity: "soft",
   },
   {
     kind: "genre",
     n: "March",
-    color: "#e0d0bc",
+    color: "#d9ccb0",
     parentA: "Classical",
     intensity: "soft",
   },
   {
     kind: "genre",
     n: "Serenade",
-    color: "#c4b5a4",
+    color: "#baa490",
     parentA: "Classical",
     intensity: "soft",
   },
@@ -788,7 +788,7 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Sacred Choral",
-    color: "#b8a892",
+    color: "#ae9a7e",
     parentA: "Classical",
     intensity: "soft",
   },
