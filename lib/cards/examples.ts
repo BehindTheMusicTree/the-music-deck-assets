@@ -1,6 +1,7 @@
 import type { CardData } from "@/components/Card";
 import type { AppGenreName } from "@/lib/genres";
 import { CARD_ARTWORK_PROMPTS } from "./artwork-prompts";
+import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE as ART } from "./art-path";
 
 function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
@@ -21,6 +22,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.bohemian-rhapsody-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bohemian-rhapsody-v2.png"],
   },
   Mainstream: {
     id: 2,
@@ -33,6 +35,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 97,
     rarity: "Legendary",
     artwork: `${ART}artwork.billy-jean-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.billy-jean-v2.png"],
   },
   Electronic: {
     id: 3,
@@ -45,6 +48,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 88,
     rarity: "Classic",
     artwork: `${ART}artwork.daft-punk-one-more-time-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.daft-punk-one-more-time-v1.png"],
     ...(artworkPromptFor(3) ?? {}),
   },
   "Reggae/Dub": {
@@ -58,6 +62,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 82,
     rarity: "Classic",
     artwork: `${ART}artwork.is-this-love-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.is-this-love-v1.png"],
   },
   "Hip-Hop": {
     id: 5,
@@ -71,6 +76,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 86,
     rarity: "Legendary",
     artwork: `${ART}artwork.kendrick-lamar-humble-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.kendrick-lamar-humble-v1.png"],
     ...(artworkPromptFor(5) ?? {}),
   },
   "Disco/Funk": {
@@ -84,6 +90,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 90,
     rarity: "Banger",
     artwork: `${ART}artwork.night-fever-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.night-fever-v1.png"],
   },
   Classical: {
     id: 7,
@@ -96,6 +103,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 58,
     rarity: "Legendary",
     artwork: `${ART}artwork.wagner-ride-of-the-valkyries-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.wagner-ride-of-the-valkyries-v1.png"],
     ...(artworkPromptFor(7) ?? {}),
   },
   Vintage: {
@@ -109,6 +117,7 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
     pop: 55,
     rarity: "Classic",
     artwork: `${ART}artwork.miles-davis-so-what-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.miles-davis-so-what-v1.png"],
     ...(artworkPromptFor(8) ?? {}),
   },
 };
@@ -127,6 +136,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     rarity: "Banger",
     country: "USA",
     artwork: `${ART}artwork.take-me-home-country-roads-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.take-me-home-country-roads-v1.png"],
   },
   {
     id: 24,
@@ -140,6 +150,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     rarity: "Banger",
     country: "France",
     artwork: `${ART}artwork.michel-sardou-les-lacs-du-connemara-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.michel-sardou-les-lacs-du-connemara-v1.png"],
     ...(artworkPromptFor(24) ?? {}),
   },
   {
@@ -154,6 +165,7 @@ export const WORLD_FLAG_CARDS: CardData[] = [
     rarity: "Banger",
     country: "Bretagne",
     artwork: `${ART}artwork.tri-martolod-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.tri-martolod-v1.png"],
     ...(artworkPromptFor(26) ?? {}),
   },
 ];
@@ -173,6 +185,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     rarity: "Classic",
     country: "France",
     artwork: `${ART}artwork.13-organises-bande-organisee-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.13-organises-bande-organisee-v1.png"],
     ...(artworkPromptFor(27) ?? {}),
   },
   {
@@ -187,6 +200,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     rarity: "Classic",
     country: "USA",
     artwork: `${ART}artwork.amazing-grace-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.amazing-grace-v1.png"],
     ...(artworkPromptFor(21) ?? {}),
   },
   {
@@ -201,6 +215,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     rarity: "Legendary",
     country: "France",
     artwork: `${ART}artwork.rouget-de-lisle-la-marseillaise-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.rouget-de-lisle-la-marseillaise-v1.png"],
     ...(artworkPromptFor(23) ?? {}),
   },
   {
@@ -216,6 +231,7 @@ export const WORLD_MIXED_CARDS: CardData[] = [
     rarity: "Banger",
     country: "Spain",
     artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ska-p-cannabis-v1.png"],
   },
 ];
 
@@ -232,6 +248,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 95,
     rarity: "Legendary",
     artwork: `${ART}artwork.beatles-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.beatles-v1.png"],
   },
   {
     id: 29,
@@ -245,6 +262,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 87,
     rarity: "Classic",
     artwork: `${ART}artwork.the-sex-pistols-god-saves-the-queen-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.the-sex-pistols-god-saves-the-queen-v1.png"],
   },
   {
     id: 30,
@@ -258,6 +276,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 89,
     rarity: "Banger",
     artwork: `${ART}artwork.las-ketchup-the-ketchup-song-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.las-ketchup-the-ketchup-song-v1.png"],
   },
   {
     id: 31,
@@ -272,6 +291,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 76,
     rarity: "Classic",
     artwork: `${ART}artwork.les-corons-lens-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.les-corons-lens-v1.png"],
   },
   {
     id: 32,
@@ -285,6 +305,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 71,
     rarity: "Classic",
     artwork: `${ART}artwork.luis-mariano-cest-magnifique-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luis-mariano-cest-magnifique-v1.png"],
   },
   {
     id: 33,
@@ -299,6 +320,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 84,
     rarity: "Banger",
     artwork: `${ART}artwork.zaho-mc-solar-caroline-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.zaho-mc-solar-caroline-v1.png"],
   },
   {
     id: 34,
@@ -312,6 +334,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 72,
     rarity: "Banger",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.la-cucaracha-v1.png"],
   },
   {
     id: 35,
@@ -326,6 +349,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 80,
     rarity: "Classic",
     artwork: `${ART}artwork.un-deux-trois-soleil-abdel-kader-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.un-deux-trois-soleil-abdel-kader-v1.png"],
     ...(artworkPromptFor(35) ?? {}),
   },
   {
@@ -341,6 +365,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 96,
     rarity: "Legendary",
     artwork: `${ART}artwork.luiz-fonzi-despacito-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luiz-fonzi-despacito-v1.png"],
     ...(artworkPromptFor(36) ?? {}),
   },
   {
@@ -354,6 +379,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 78,
     rarity: "Classic",
     artwork: `${ART}artwork.paul-karlkbrenner-sky-and-sand-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.paul-karlkbrenner-sky-and-sand-v1.png"],
     ...(artworkPromptFor(37) ?? {}),
   },
   {
@@ -366,6 +392,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 55,
     rarity: "Banger",
     artwork: `${ART}artwork.god-saves-the-king-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-saves-the-king-v1.png"],
     ...(artworkPromptFor(38) ?? {}),
   },
   {
@@ -378,6 +405,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 55,
     rarity: "Banger",
     artwork: `${ART}artwork.god-saves-the-queen-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-saves-the-queen-v1.png"],
     ...(artworkPromptFor(39) ?? {}),
   },
   {
@@ -391,6 +419,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 88,
     rarity: "Banger",
     artwork: `${ART}artwork.pnl-au-dd-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.pnl-au-dd-v1.png"],
   },
   {
     id: 41,
@@ -403,6 +432,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 87,
     rarity: "Classic",
     artwork: `${ART}artwork.carlos-santana-maria-maria-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.carlos-santana-maria-maria-v1.png"],
     ...(artworkPromptFor(41) ?? {}),
   },
   {
@@ -416,6 +446,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 91,
     rarity: "Legendary",
     artwork: `${ART}artwork.avicii-levels-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.avicii-levels-v1.png"],
     ...(artworkPromptFor(42) ?? {}),
   },
   {
@@ -429,6 +460,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 94,
     rarity: "Legendary",
     artwork: `${ART}artwork.celine-dion-my-hearth-will-go-on-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
   },
   {
     id: 44,
@@ -441,6 +473,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 93,
     rarity: "Legendary",
     artwork: `${ART}artwork.eminem-loge-yourself-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eminem-loge-yourself-v1.png"],
     ...(artworkPromptFor(44) ?? {}),
   },
   {
@@ -454,6 +487,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 95,
     rarity: "Legendary",
     artwork: `${ART}artwork.psy-gagnam-style-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.psy-gagnam-style-v1.png"],
     ...(artworkPromptFor(45) ?? {}),
   },
   {
@@ -467,6 +501,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.lady-gaga-poker-face-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lady-gaga-poker-face-v1.png"],
     ...(artworkPromptFor(46) ?? {}),
   },
   {
@@ -480,6 +515,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 95,
     rarity: "Legendary",
     artwork: `${ART}artwork.michael-jackson-thriller-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.michael-jackson-thriller-v1.png"],
     ...(artworkPromptFor(47) ?? {}),
   },
   {
@@ -493,6 +529,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 89,
     rarity: "Classic",
     artwork: `${ART}artwork.sicko-mode-travis-scott-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.sicko-mode-travis-scott-v1.png"],
     ...(artworkPromptFor(48) ?? {}),
   },
   {
@@ -506,6 +543,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 95,
     rarity: "Legendary",
     artwork: `${ART}artwork.shape-of-you-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shape-of-you-v1.png"],
   },
   {
     id: 50,
@@ -518,6 +556,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 84,
     rarity: "Banger",
     artwork: `${ART}artwork.danau-latribu-de-dana-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.danau-latribu-de-dana-v1.png"],
     ...(artworkPromptFor(50) ?? {}),
   },
   {
@@ -531,6 +570,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 94,
     rarity: "Legendary",
     artwork: `${ART}artwork.led-zeppelin-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.led-zeppelin-v1.png"],
     ...(artworkPromptFor(51) ?? {}),
   },
   {
@@ -544,6 +584,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 72,
     rarity: "Banger",
     artwork: `${ART}artwork.bella-ciao-original-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bella-ciao-original-v1.png"],
     ...(artworkPromptFor(52) ?? {}),
   },
   {
@@ -557,6 +598,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 86,
     rarity: "Banger",
     artwork: `${ART}artwork.bella-ciao-casa-de-papel-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bella-ciao-casa-de-papel-v1.png"],
     ...(artworkPromptFor(53) ?? {}),
   },
   {
@@ -570,6 +612,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 68,
     rarity: "Banger",
     artwork: `${ART}artwork.vivaldi-spring-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-spring-v1.png"],
     ...(artworkPromptFor(54) ?? {}),
   },
   {
@@ -583,6 +626,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 68,
     rarity: "Banger",
     artwork: `${ART}artwork.vivaldi-summer-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-summer-v1.png"],
     ...(artworkPromptFor(55) ?? {}),
   },
   {
@@ -596,6 +640,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 68,
     rarity: "Banger",
     artwork: `${ART}artwork.vivaldi-autumn-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-autumn-v1.png"],
     ...(artworkPromptFor(56) ?? {}),
   },
   {
@@ -609,6 +654,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 70,
     rarity: "Banger",
     artwork: `${ART}artwork.vivaldi-winter-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-winter-v1.png"],
     ...(artworkPromptFor(57) ?? {}),
   },
   {
@@ -622,6 +668,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.taylor-swift-shake-it-off-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.taylor-swift-shake-it-off-v1.png"],
   },
   {
     id: 59,
@@ -634,6 +681,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 90,
     rarity: "Legendary",
     artwork: `${ART}artwork.darude-sandstorm-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.darude-sandstorm-v1.png"],
   },
   {
     id: 61,
@@ -646,6 +694,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 82,
     rarity: "Classic",
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v1.png"],
   },
   {
     id: 62,
@@ -658,6 +707,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 82,
     rarity: "Classic",
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v2.png"],
   },
   {
     id: 63,
@@ -670,6 +720,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 86,
     rarity: "Classic",
     artwork: `${ART}artwork.red-hot-chili-peppers-suck-my-kiss-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.red-hot-chili-peppers-suck-my-kiss-v1.png"],
     ...(artworkPromptFor(63) ?? {}),
   },
   {
@@ -684,6 +735,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 88,
     rarity: "Banger",
     artwork: `${ART}artwork.me-gustas-tu-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.me-gustas-tu-v1.png"],
   },
   {
     id: 65,
@@ -696,6 +748,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 78,
     rarity: "Legendary",
     artwork: `${ART}artwork.mozart-requiem-lacrimosa-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.mozart-requiem-lacrimosa-v1.png"],
   },
   {
     id: 66,
@@ -708,6 +761,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 80,
     rarity: "Legendary",
     artwork: `${ART}artwork.verdi-dies-irae-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.verdi-dies-irae-v1.png"],
     ...(artworkPromptFor(66) ?? {}),
   },
   {
@@ -721,6 +775,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 85,
     rarity: "Classic",
     artwork: `${ART}artwork.justin-timberlake-cry-me-a-river-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.justin-timberlake-cry-me-a-river-v1.png"],
     ...(artworkPromptFor(67) ?? {}),
   },
   {
@@ -734,6 +789,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 88,
     rarity: "Legendary",
     artwork: `${ART}artwork.white-stripes-seven-nation-army-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.white-stripes-seven-nation-army-v1.png"],
     ...(artworkPromptFor(68) ?? {}),
   },
   {
@@ -748,6 +804,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 86,
     rarity: "Banger",
     artwork: `${ART}artwork.eiffel-65-blue-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eiffel-65-blue-v1.png"],
     ...(artworkPromptFor(69) ?? {}),
   },
   {
@@ -761,6 +818,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.without-me-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.without-me-v1.png"],
   },
   {
     id: 71,
@@ -773,6 +831,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 88,
     rarity: "Legendary",
     artwork: `${ART}artwork.metallica-enter-sandman-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.metallica-enter-sandman-v1.png"],
     ...(artworkPromptFor(71) ?? {}),
   },
   {
@@ -786,6 +845,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 86,
     rarity: "Legendary",
     artwork: `${ART}artwork.beethoven-symphony-no-5-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.beethoven-symphony-no-5-v1.png"],
   },
   {
     id: 73,
@@ -798,6 +858,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 84,
     rarity: "Classic",
     artwork: `${ART}artwork.carmina-burana-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.carmina-burana-v1.png"],
   },
   {
     id: 74,
@@ -810,6 +871,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 92,
     rarity: "Legendary",
     artwork: `${ART}artwork.smells-like-teen-spirit-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.smells-like-teen-spirit-v2.png"],
   },
   {
     id: 75,
@@ -822,6 +884,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 90,
     rarity: "Legendary",
     artwork: `${ART}artwork.money-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.money-v2.png"],
   },
   {
     id: 76,
@@ -835,6 +898,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 70,
     rarity: "Classic",
     artwork: `${ART}artwork.golden-gate-quartet-take-five-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.golden-gate-quartet-take-five-v1.png"],
     ...(artworkPromptFor(76) ?? {}),
   },
   {
@@ -849,6 +913,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 65,
     rarity: "Banger",
     artwork: `${ART}artwork.bro-gozh-ma-zadou-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bro-gozh-ma-zadou-v1.png"],
     ...(artworkPromptFor(77) ?? {}),
   },
   {
@@ -862,5 +927,6 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     pop: 88,
     rarity: "Banger",
     artwork: `${ART}artwork.hakuna-matata-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.hakuna-matata-v1.png"],
   },
 ];

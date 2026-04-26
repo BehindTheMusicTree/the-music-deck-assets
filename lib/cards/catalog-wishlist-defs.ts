@@ -1,4 +1,5 @@
 import type { CardRarity } from "@/lib/cards/card-rarity";
+import { ARTWORK_CREATED_AT } from "@/lib/cards/artwork-created-at";
 
 /** Planned catalogue rows. Optional `artworkFile` when art exists under `public/cards/artworks/deck/`. */
 export type WishlistCardDef = {

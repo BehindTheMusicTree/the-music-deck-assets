@@ -12,6 +12,7 @@ import {
   subgenreIntensity,
   themeForCountry,
 } from "@/lib/genres";
+import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE } from "./art-path";
 import {
   DECK_SPOTLIGHT_CARDS,
@@ -173,6 +174,7 @@ const rawLaMacarena: RawCatalogRow = {
     pop: 94,
     rarity: "Classic",
     artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
     country: "Spain",
     genre: "Electronic",
   },

@@ -9,7 +9,6 @@ export type WheelSubgenrePlacement = {
   rOffset: number;
 };
 
-const SECTOR_DEG = 360 / WHEEL_GENRES.length;
 /** Tiny inset from radial dividers so tiles do not sit on the lines. */
 const SECTOR_EDGE_INSET_DEG = 1.25;
 /**
@@ -20,10 +19,25 @@ const SECTOR_EDGE_INSET_DEG = 1.25;
  */
 const DUAL_LANE_MIN = 7;
 
-function genreSectorStart(parentA: GenreName): number {
+/** Same azimuth as the ring genre tile (`GenreWheel` base genres). */
+function genreHubAngle(parentA: GenreName): number {
   const idx = WHEEL_GENRES.findIndex((g) => g.n === parentA);
   if (idx < 0) return NaN;
   return (idx / WHEEL_GENRES.length) * 360 - 90;
+}
+
+/**
+ * Angular arc between the two radial lines that bound this genre — matches
+ * `GenreWheel` dividers at `((i + 0.5) / n) * 360 - 90`.
+ */
+function genreSectorArc(parentA: GenreName): { arcStart: number; arcEnd: number } {
+  const idx = WHEEL_GENRES.findIndex((g) => g.n === parentA);
+  if (idx < 0) return { arcStart: NaN, arcEnd: NaN };
+  const n = WHEEL_GENRES.length;
+  return {
+    arcStart: ((idx - 0.5) / n) * 360 - 90,
+    arcEnd: ((idx + 0.5) / n) * 360 - 90,
+  };
 }
 
 function isWheelGenreSubgenre(s: Subgenre): s is GenreSubgenre {
@@ -36,8 +50,8 @@ function isWheelGenreSubgenre(s: Subgenre): s is GenreSubgenre {
 }
 
 function blendAngle(s: GenreSubgenre): number {
-  const aA = genreSectorStart(s.parentA as GenreName);
-  const aB = genreSectorStart(s.parentB!);
+  const aA = genreHubAngle(s.parentA as GenreName);
+  const aB = genreHubAngle(s.parentB!);
   let delta = aB - aA;
   if (delta > 180) delta -= 360;
   if (delta < -180) delta += 360;
@@ -95,17 +109,17 @@ export function computeWheelSubgenrePlacements(
   for (const [, items] of groups) {
     items.sort((a, b) => a.n.localeCompare(b.n));
     const parentA = items[0]!.parentA as GenreName;
-    const sector0 = genreSectorStart(parentA);
-    if (Number.isNaN(sector0)) continue;
-    const inner = sector0 + SECTOR_EDGE_INSET_DEG;
-    const outer = sector0 + SECTOR_DEG - SECTOR_EDGE_INSET_DEG;
+    const { arcStart, arcEnd } = genreSectorArc(parentA);
+    if (Number.isNaN(arcStart)) continue;
+    const inner = arcStart + SECTOR_EDGE_INSET_DEG;
+    const outer = arcEnd - SECTOR_EDGE_INSET_DEG;
     const n = items.length;
 
     if (n < DUAL_LANE_MIN) {
       if (n === 1) {
         /* Same azimuth as the parent genre tile — ray from centre through the ring label. */
         out.set(items[0]!.n, {
-          angleDeg: genreSectorStart(parentA),
+          angleDeg: genreHubAngle(parentA),
           rOffset: 0,
         });
       } else {
