@@ -1,5 +1,5 @@
 import type { CardRarity } from "@/lib/cards/card-rarity";
-import { ARTWORK_CREATED_AT } from "@/lib/cards/artwork-created-at";
+import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 
 /** Planned catalogue rows. Optional `artworkFile` when art exists under `public/cards/artworks/deck/`. */
 export type WishlistCardDef = {
@@ -262,6 +262,7 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     ability: A,
     abilityDesc: P,
     artworkFile: "artwork.dr-dre-tupac-california-love-v1.png",
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.dr-dre-tupac-california-love-v1.png"],
     artworkPrompt: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove
 (Gangsta Mad Max, désert, gold dominant)
 
@@ -1059,5 +1060,6 @@ Une tempête de sable dorée se lève derrière eux, illuminée par un soleil ba
     ability: A,
     abilityDesc: P,
     artworkFile: "artwork.ratm-guerilla-radio-v1.png",
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ratm-guerilla-radio-v1.png"],
   },
 ];

@@ -1,4 +1,5 @@
 import type { CardData } from "@/components/Card";
+import { ARTWORK_CREATED_AT } from "@/lib/cards/artwork-created-at";
 
 /** Default card for genre / theme preview tooling. */
 export const DEFAULT_PREVIEW_CARD: CardData = {
@@ -12,6 +13,7 @@ export const DEFAULT_PREVIEW_CARD: CardData = {
   pop: 75,
   rarity: "Classic",
   artwork: "/cards/artworks/deck/artwork.bohemian-rhapsody-v2.png",
+  artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bohemian-rhapsody-v2.png"],
   artworkPrompt:
     "1970s rock opera single cover, dramatic stage lighting, vinyl-era palette.",
 };
