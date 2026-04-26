@@ -51,6 +51,34 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     pip: { sym: "★", color: "#1a1a2e" },
   },
 
+  Mexico: {
+    theme: {
+      border: "#006847",
+      headerBg: "#0a0c10",
+      textMain: "#f2f4f2",
+      textBody: "#cfd4d0",
+      parchStrip: "#dce4dd",
+      parchAbility: "#e8efe8",
+      barPop: ["#006847", "#2a9868"],
+      barExp: ["#CE1126", "#e83040"],
+      barGlowPop: "rgba(0,104,71,.85)",
+      barGlowExp: "rgba(206,17,38,.75)",
+      frameBorder:
+        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+      frameBg:
+        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+      frameFilter: "saturate(0.8) brightness(0.95) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+      bg: "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+    },
+    pip: { sym: "◆", color: "#006847", size: 15 },
+  },
+
   France: {
     theme: {
       border: "#0055A4", headerBg: "#04091a",
@@ -261,6 +289,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 /** Representative WGS-84 point for each registered country / region. */
 export const COUNTRY_MAP_POINT = {
   USA: { lon: -98.35, lat: 39.5 },
+  Mexico: { lon: -99.13, lat: 19.43 },
   France: { lon: 2.35, lat: 46.8 },
   Spain: { lon: -3.7, lat: 40.2 },
   Italy: { lon: 12.5, lat: 42.5 },

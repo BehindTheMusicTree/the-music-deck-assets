@@ -371,6 +371,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "country",
+    n: "Spiritual",
+    color: "#505848",
+    parentA: "USA",
+    intensity: "soft",
+  },
+  {
+    kind: "country",
     n: "French Variety",
     color: "#0055a4",
     parentA: "France",
@@ -438,6 +445,13 @@ export const SUBGENRES: Subgenre[] = [
     color: "#d05038",
     parentA: "Puerto Rico",
     intensity: "pop",
+  },
+  {
+    kind: "country",
+    n: "Mexican Folk",
+    color: "#1e6b4a",
+    parentA: "Mexico",
+    intensity: "soft",
   },
   {
     kind: "genre",
@@ -531,10 +545,10 @@ export const SUBGENRES: Subgenre[] = [
   {
     kind: "genre",
     n: "Drum & Bass",
-    color: "#3070c8",
+    color: "#1a3870",
     parentA: "Electronic",
     angleDelta: -12,
-    intensity: "experimental",
+    intensity: "hardcore",
   },
   {
     kind: "genre",
@@ -744,22 +758,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Folk ballad",
     color: "#6a6050",
     parentA: "Vintage",
-    intensity: "soft",
-  },
-  {
-    kind: "genre",
-    n: "Mexican Folk",
-    color: "#1e6b4a",
-    parentA: "Vintage",
-    angleDelta: 10,
-    intensity: "soft",
-  },
-  {
-    kind: "genre",
-    n: "Spiritual",
-    color: "#505848",
-    parentA: "Vintage",
-    angleDelta: 20,
     intensity: "soft",
   },
   {

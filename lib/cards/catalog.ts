@@ -124,8 +124,8 @@ const SPOTLIGHT_CATALOG_META: Record<
   const es = themeForCountry("Spain");
   const dz = themeForCountry("Algeria");
   const pr = themeForCountry("Puerto Rico");
+  const mx = themeForCountry("Mexico");
   const rock = APP_GENRE_THEMES.Rock;
-  const vintage = APP_GENRE_THEMES.Vintage;
   const base: Record<number, { kind: CatalogEntry["kind"]; theme: GenreTheme }> = {
     28: { kind: "Genre", theme: rock },
     29: { kind: "Genre", theme: rock },
@@ -133,7 +133,7 @@ const SPOTLIGHT_CATALOG_META: Record<
     31: { kind: "World", theme: fr },
     32: { kind: "World", theme: fr },
     33: { kind: "World blend", theme: fr },
-    34: { kind: "Genre", theme: vintage },
+    34: { kind: "World", theme: mx },
     35: { kind: "World", theme: dz },
     36: { kind: "World", theme: pr },
   };
