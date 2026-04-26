@@ -230,6 +230,18 @@ export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   { n: "Vintage", color: GENRE_THEMES.Vintage.border },
 ];
 
+/** DOM `id` for each genre block under #genre-themes (`GenreThemePreview`). */
+export function genreThemeSectionDomId(genreName: string): string {
+  return `genre-theme-${genreName.replace(/[^a-zA-Z0-9]+/g, "-")}`;
+}
+
+/** `window` event: wheel / deep-link navigates to a genre theme row + preview. */
+export const GENRE_THEME_NAV_EVENT = "musicdeck:genre-theme-navigate";
+
+export type GenreThemeNavigateDetail =
+  | { kind: "genre"; genre: GenreName }
+  | { kind: "subgenre"; subgenre: string };
+
 // ---------------------------------------------------------------------------
 // Color utilities (no external deps)
 // ---------------------------------------------------------------------------

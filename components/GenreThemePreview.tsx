@@ -1,18 +1,20 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   appGenreIntensity,
   GENRE_NAMES,
   GENRE_THEMES,
+  GENRE_THEME_NAV_EVENT,
+  genreThemeSectionDomId,
   SUBGENRES,
   WORLD_THEMES,
   isCountrySubgenre,
   resolveThemeSelection,
   subgenreTheme,
 } from "@/lib/genres";
-import type { GenreName } from "@/lib/genres";
+import type { GenreName, GenreThemeNavigateDetail } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 import IntensityGauge from "@/components/IntensityGauge";
 import { DEFAULT_PREVIEW_CARD } from "@/lib/cards";
@@ -139,6 +141,45 @@ export default function GenreThemePreview() {
     });
   };
 
+  const applyRulePreviewRef = useRef(applyRulePreview);
+  useEffect(() => {
+    applyRulePreviewRef.current = applyRulePreview;
+  });
+
+  useEffect(() => {
+    const onWheelNavigate = (e: Event) => {
+      const detail = (e as CustomEvent<GenreThemeNavigateDetail>).detail;
+      if (!detail) return;
+      const apply = applyRulePreviewRef.current;
+      if (detail.kind === "genre") {
+        const name = detail.genre;
+        const subs = SUBGENRES.filter(
+          (s) => s.parentA === name || s.parentB === name,
+        );
+        setSelectedCountry(undefined);
+        setSelectedGenreOnly(name);
+        const firstSubgenre = subs[0]?.n;
+        if (!firstSubgenre) {
+          setSelectedSubgenre(undefined);
+          apply({ genre: name });
+          return;
+        }
+        setSelectedSubgenre(firstSubgenre);
+        apply({ genre: firstSubgenre });
+        return;
+      }
+      const sub = SUBGENRES.find((s) => s.n === detail.subgenre);
+      if (!sub) return;
+      setSelectedCountry(undefined);
+      setSelectedGenreOnly(undefined);
+      setSelectedSubgenre(sub.n);
+      apply({ genre: sub.n });
+    };
+    window.addEventListener(GENRE_THEME_NAV_EVENT, onWheelNavigate);
+    return () =>
+      window.removeEventListener(GENRE_THEME_NAV_EVENT, onWheelNavigate);
+  }, []);
+
   return (
     <div className="w-full overflow-x-auto md:overflow-visible pb-2">
       <div className="flex gap-8 items-start min-w-[980px] md:min-w-0">
@@ -170,7 +211,8 @@ export default function GenreThemePreview() {
             return (
               <div
                 key={name}
-                className="border border-ui-border rounded-[6px] overflow-hidden"
+                id={genreThemeSectionDomId(name)}
+                className="border border-ui-border rounded-[6px] overflow-hidden scroll-mt-28"
               >
                 {/* Genre header — clickable */}
                 <button

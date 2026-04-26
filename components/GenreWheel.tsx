@@ -1,11 +1,15 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   GENRE_THEMES,
-  WHEEL_GENRES as GENRES,
+  GENRE_THEME_NAV_EVENT,
+  genreThemeSectionDomId,
+  WHEEL_GENRES,
   SUBGENRES,
   WORLD_THEMES,
 } from "@/lib/genres";
+import type { GenreName, GenreThemeNavigateDetail } from "@/lib/genres";
 
 const CX = 620,
   CY = 620,
@@ -16,6 +20,8 @@ const CX = 620,
   R_EXPERIMENTAL_SUBGENRES = R_SOFT_EXPERIMENTAL_LINE + 100,
   R_EXPERIMENTAL_HARDCORE_LINE = R_EXPERIMENTAL_SUBGENRES + 100,
   R_HARDCORE_SUBGENRES = R_EXPERIMENTAL_HARDCORE_LINE + 100;
+
+const WHEEL_TILE_SINGLE_CLICK_MS = 300;
 
 function repeat(str: string, times: number) {
   return Array(times).fill(str).join(" · ") + " ·";
@@ -37,12 +43,16 @@ function Rect({
   label,
   hex,
   small,
+  navSectionGenre,
+  navDetail,
 }: {
   x: number;
   y: number;
   label: string;
   hex: string;
   small?: boolean;
+  navSectionGenre: GenreName;
+  navDetail: GenreThemeNavigateDetail;
 }) {
   const w = small ? 120 : 160;
   const h = small ? 64 : 92;
@@ -51,12 +61,59 @@ function Rect({
   const isDark = isLight(hex);
   const tc = isDark ? "rgba(10,10,10,.85)" : "rgba(255,255,255,.92)";
   const hc = isDark ? "rgba(10,10,10,.5)" : "rgba(255,255,255,.55)";
+  const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (navTimer.current != null) clearTimeout(navTimer.current);
+    },
+    [],
+  );
+
+  const runNavigate = () => {
+    const id = genreThemeSectionDomId(navSectionGenre);
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+    window.dispatchEvent(
+      new CustomEvent<GenreThemeNavigateDetail>(GENRE_THEME_NAV_EVENT, {
+        detail: navDetail,
+      }),
+    );
+  };
+
   return (
     <g
       transform={`translate(${x},${y})`}
       style={{ cursor: "pointer" }}
-      onClick={() => navigator.clipboard.writeText(hex)}
+      onClick={(e) => {
+        if (e.detail !== 1) {
+          if (navTimer.current != null) {
+            clearTimeout(navTimer.current);
+            navTimer.current = null;
+          }
+          return;
+        }
+        if (navTimer.current != null) clearTimeout(navTimer.current);
+        navTimer.current = setTimeout(() => {
+          navTimer.current = null;
+          runNavigate();
+        }, WHEEL_TILE_SINGLE_CLICK_MS);
+      }}
+      onDoubleClick={(e) => {
+        e.preventDefault();
+        if (navTimer.current != null) {
+          clearTimeout(navTimer.current);
+          navTimer.current = null;
+        }
+        void navigator.clipboard.writeText(hex);
+      }}
     >
+      <title>
+        Click to jump to this theme in the list and update the preview. Double-click
+        to copy the hex colour.
+      </title>
       <rect
         x={-w / 2}
         y={-h / 2}
@@ -101,8 +158,8 @@ function isLight(hex: string) {
 
 function genreAngle(genre?: string) {
   if (genre === "Mainstream") return -90;
-  const idx = GENRES.findIndex((g) => g.n === genre);
-  return (idx / GENRES.length) * 360 - 90;
+  const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
+  return (idx / WHEEL_GENRES.length) * 360 - 90;
 }
 
 export default function GenreWheel() {
@@ -281,8 +338,8 @@ export default function GenreWheel() {
         </text>
 
         {/* Radial dividers between genre zones */}
-        {GENRES.map((_, i) => {
-          const angle = ((i + 0.5) / GENRES.length) * 360 - 90;
+        {WHEEL_GENRES.map((_, i) => {
+          const angle = ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
           const inner = polarToXY(CX, CY, 0, angle);
           const outer = polarToXY(
             CX,
@@ -304,16 +361,28 @@ export default function GenreWheel() {
         })}
 
         {/* Base genres on pop/experimental line */}
-        {GENRES.map((g, i) => {
-          const angle = (i / GENRES.length) * 360 - 90;
+        {WHEEL_GENRES.map((g, i) => {
+          const angle = (i / WHEEL_GENRES.length) * 360 - 90;
           const { x, y } = polarToXY(CX, CY, R_SOFT_EXPERIMENTAL_LINE, angle);
-          return <Rect key={g.n} x={x} y={y} label={g.n} hex={g.color} />;
+          return (
+            <Rect
+              key={g.n}
+              x={x}
+              y={y}
+              label={g.n}
+              hex={g.color}
+              navSectionGenre={g.n}
+              navDetail={{ kind: "genre", genre: g.n }}
+            />
+          );
         })}
         <Rect
           x={CX}
           y={CY}
           label="Mainstream"
           hex={GENRE_THEMES.Mainstream.border}
+          navSectionGenre="Mainstream"
+          navDetail={{ kind: "genre", genre: "Mainstream" }}
         />
 
         {/* Subgenres by intensity: pop / soft / experimental / hardcore */}
@@ -349,7 +418,18 @@ export default function GenreWheel() {
                   ? R_HARDCORE_SUBGENRES
                   : R_EXPERIMENTAL_SUBGENRES;
           const { x, y } = polarToXY(CX, CY, r, angle);
-          return <Rect key={s.n} x={x} y={y} label={s.n} hex={s.color} small />;
+          return (
+            <Rect
+              key={s.n}
+              x={x}
+              y={y}
+              label={s.n}
+              hex={s.color}
+              small
+              navSectionGenre={s.parentA as GenreName}
+              navDetail={{ kind: "subgenre", subgenre: s.n }}
+            />
+          );
         })}
       </svg>
     </div>

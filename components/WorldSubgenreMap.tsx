@@ -74,23 +74,30 @@ type ClusterGeoSource = {
   ) => Promise<Feature[]>;
 };
 
-function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
-  const features: Feature[] = [];
+/** One map point per country/region that has at least one listed country-native subgenre. */
+function countryRegionsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
+  const byCountry = new Map<string, CountrySubgenre[]>();
   for (const s of subs) {
-    const geo = COUNTRY_MAP_POINT[s.parentA as keyof typeof COUNTRY_MAP_POINT];
+    const country = s.parentA;
+    const geo = COUNTRY_MAP_POINT[country as keyof typeof COUNTRY_MAP_POINT];
     if (!geo) continue;
-    const theme = WORLD_THEMES[s.parentA];
+    if (!byCountry.has(country)) byCountry.set(country, []);
+    byCountry.get(country)!.push(s);
+  }
+
+  const features: Feature[] = [];
+  for (const [country, list] of byCountry) {
+    const geo = COUNTRY_MAP_POINT[country as keyof typeof COUNTRY_MAP_POINT]!;
+    const theme = WORLD_THEMES[country as keyof typeof WORLD_THEMES];
     const pinColor =
       theme?.border && /^#[0-9a-fA-F]{6}$/.test(theme.border)
         ? theme.border
-        : s.color;
+        : list[0]!.color;
     features.push({
       type: "Feature",
-      id: s.n,
+      id: country,
       properties: {
-        subgenre: s.n,
-        country: s.parentA,
-        hex: s.color,
+        country,
         pinColor,
       },
       geometry: {
@@ -100,6 +107,16 @@ function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
     });
   }
   return { type: "FeatureCollection", features };
+}
+
+function subgenreNamesForCountry(
+  country: string,
+  allCountrySubs: CountrySubgenre[],
+): string[] {
+  return allCountrySubs
+    .filter((s) => s.parentA === country)
+    .map((s) => s.n)
+    .sort((a, b) => a.localeCompare(b));
 }
 
 /** Flag ribbon matching card shells — preview (no dimming filters). */
@@ -184,24 +201,53 @@ function CountryPopupBody({
   );
 }
 
-function CountryPopupFromLeaves({ leaves }: { leaves: Feature[] }) {
-  const rows = leaves
-    .map((leaf) => leaf.properties as { country?: string; subgenre?: string } | null)
-    .filter((p): p is { country: string; subgenre: string } =>
-      Boolean(p?.country && p?.subgenre),
-    );
-  if (!rows.length) {
+function CountryPopupFromLeaves({
+  leaves,
+  allCountrySubs,
+}: {
+  leaves: Feature[];
+  allCountrySubs: CountrySubgenre[];
+}) {
+  const countries = [
+    ...new Set(
+      leaves
+        .map(
+          (leaf) =>
+            (leaf.properties as { country?: string } | null | undefined)?.country,
+        )
+        .filter((c): c is string => Boolean(c)),
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+
+  if (!countries.length) {
     return (
       <p className="font-garamond text-sm text-muted m-0 px-1 py-2">
-        No subgenres in this cluster.
+        No regions in this cluster.
       </p>
     );
   }
-  const country = rows[0]!.country;
-  const subgenres = [...new Set(rows.map((r) => r.subgenre))].sort((a, b) =>
-    a.localeCompare(b),
+
+  if (countries.length === 1) {
+    const country = countries[0]!;
+    return (
+      <CountryPopupBody
+        country={country}
+        subgenres={subgenreNamesForCountry(country, allCountrySubs)}
+      />
+    );
+  }
+
+  return (
+    <div className="max-h-[min(52vh,320px)] overflow-y-auto space-y-5 pr-1">
+      {countries.map((country) => (
+        <CountryPopupBody
+          key={country}
+          country={country}
+          subgenres={subgenreNamesForCountry(country, allCountrySubs)}
+        />
+      ))}
+    </div>
   );
-  return <CountryPopupBody country={country} subgenres={subgenres} />;
 }
 
 type MaplibreModule = typeof import("maplibre-gl");
@@ -293,7 +339,7 @@ export default function WorldSubgenreMap() {
           map.doubleClickZoom.disable();
           scheduleWorldFit();
 
-          const geojson = countrySubsToGeoJson(countrySubs);
+          const geojson = countryRegionsToGeoJson(countrySubs);
           map.addSource(SUBGENRE_SOURCE_ID, {
             type: "geojson",
             data: geojson,
@@ -380,7 +426,12 @@ export default function WorldSubgenreMap() {
                 closeActivePopup();
                 const el = document.createElement("div");
                 activeRoot = createRoot(el);
-                activeRoot.render(<CountryPopupFromLeaves leaves={leaves} />);
+                activeRoot.render(
+                  <CountryPopupFromLeaves
+                    leaves={leaves}
+                    allCountrySubs={countrySubs}
+                  />,
+                );
                 activePopup = new M.Popup({
                   maxWidth: "320px",
                   closeButton: true,
@@ -439,10 +490,8 @@ export default function WorldSubgenreMap() {
             });
             const f = feats[0];
             if (!f?.properties) return;
-            const p = f.properties as {
-              subgenre: string;
-              country: string;
-            };
+            const p = f.properties as { country: string };
+            if (!p.country) return;
             const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
               .coordinates;
             closeActivePopup();
@@ -451,7 +500,7 @@ export default function WorldSubgenreMap() {
             activeRoot.render(
               <CountryPopupBody
                 country={p.country}
-                subgenres={[p.subgenre]}
+                subgenres={subgenreNamesForCountry(p.country, countrySubs)}
               />,
             );
             activePopup = new M.Popup({
@@ -530,8 +579,9 @@ export default function WorldSubgenreMap() {
       <div className="text-center max-w-[720px]">
         <div className="section-title mb-1.5">World map</div>
         <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
-          Country-native subgenres are placed at an approximate representative
-          point in each country. The base map uses{" "}
+          Each country or region has a single pin at an approximate representative
+          point; opening the pin lists every country-native subgenre defined for
+          that place. The base map uses{" "}
           <span className="not-italic text-white/75">OpenStreetMap</span>{" "}
           (standard tiles, Web Mercator). Unlike the colour wheel, only geography
           is encoded — intensity rings do not apply here.
@@ -570,9 +620,9 @@ export default function WorldSubgenreMap() {
 
       <p className="font-mono text-[10px] tracking-wide text-muted/80 m-0 text-center">
         Scroll to zoom, drag to pan, double-click empty space to fit the world again.
-        Pin colour follows the country flag border. Overlapping pins cluster — click a
-        cluster to zoom to the level where it splits; when it cannot split further, a list
-        opens. Click a pin for country / region and its subgenres. Click empty map to close
+        Pin colour follows the country flag border. Nearby regions cluster — click a
+        cluster to zoom until it splits; when it cannot split further, a summary opens.
+        Click a pin for that country or region and its subgenres. Click empty map to close
         popups.
       </p>
     </div>
