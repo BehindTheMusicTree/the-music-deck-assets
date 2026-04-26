@@ -31,6 +31,20 @@
   box-shadow: 0 32px 56px rgba(0, 0, 0, 0.9);
 }
 
+/* Bleed layout: art goes edge-to-edge; keep UI bands inset like the 10px border case */
+.cardNoBorder .ability {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.cardNoBorder .stats {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.cardNoBorder .footer {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
 /* World USA: landscape flag, border motif rotated 90° counter-clockwise */
 .cardShell {
   position: relative;
@@ -94,6 +108,8 @@
 
 /* Header */
 .header {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -185,6 +201,9 @@
   overflow: hidden;
 }
 .bodyArtOverBorder {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   overflow: visible;
 }
 
@@ -228,7 +247,7 @@
   position: relative;
   background: var(--gc-parch-strip, #ede4cc);
   padding: 6px 14px;
-  margin: 4;
+  margin: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
