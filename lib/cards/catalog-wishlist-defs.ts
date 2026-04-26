@@ -1008,6 +1008,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     pop: 8,
     ability: "Four-Genre Counter",
     abilityDesc:
-      "When your opponent's card is Punk, Techno, Grunge, or New Wave, battle treats this card as countering theirs for advantage modifiers.",
+      "When your opponent's card is Punk Rock, Techno, Grunge, or New Wave, battle treats this card as countering theirs for advantage modifiers.",
   },
 ];
