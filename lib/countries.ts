@@ -174,6 +174,33 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  "Puerto Rico": {
+    theme: {
+      border: "#002B7C",
+      headerBg: "#0a0c18",
+      textMain: "#f4f4f8",
+      textBody: "#d0d4e0",
+      parchStrip: "#dce0ea",
+      parchAbility: "#e8ecf4",
+      barPop: ["#EF3340", "#ff5060"],
+      barExp: ["#002B7C", "#4068c0"],
+      barGlowPop: "rgba(239,51,64,.85)",
+      barGlowExp: "rgba(0,43,124,.75)",
+      frameBorder:
+        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+      frameBg:
+        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+      frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+      bg: "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+    },
+  },
+
   Algeria: {
     theme: {
       border: "#006233",
@@ -240,6 +267,7 @@ export const COUNTRY_MAP_POINT = {
   Japan: { lon: 138.25, lat: 36.2 },
   England: { lon: -1.5, lat: 52.5 },
   Algeria: { lon: 2.65, lat: 28.35 },
+  "Puerto Rico": { lon: -66.45, lat: 18.22 },
   Bretagne: { lon: -3.2, lat: 48.15 },
 } as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
 

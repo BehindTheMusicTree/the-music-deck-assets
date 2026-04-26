@@ -1,7 +1,7 @@
 "use client";
 
 import { createRoot, type Root } from "react-dom/client";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   SUBGENRES,
   type CountrySubgenre,
@@ -71,7 +71,7 @@ type ClusterGeoSource = {
     clusterId: number,
     limit: number,
     offset: number,
-  ) => Promise<GeoJSON.Feature[]>;
+  ) => Promise<Feature[]>;
 };
 
 function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
@@ -79,6 +79,11 @@ function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
   for (const s of subs) {
     const geo = COUNTRY_MAP_POINT[s.parentA as keyof typeof COUNTRY_MAP_POINT];
     if (!geo) continue;
+    const theme = WORLD_THEMES[s.parentA];
+    const pinColor =
+      theme?.border && /^#[0-9a-fA-F]{6}$/.test(theme.border)
+        ? theme.border
+        : s.color;
     features.push({
       type: "Feature",
       id: s.n,
@@ -86,6 +91,7 @@ function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
         subgenre: s.n,
         country: s.parentA,
         hex: s.color,
+        pinColor,
       },
       geometry: {
         type: "Point",
@@ -96,260 +102,106 @@ function countrySubsToGeoJson(subs: CountrySubgenre[]): FeatureCollection {
   return { type: "FeatureCollection", features };
 }
 
-function ClusterLeavesPopup({ leaves }: { leaves: Feature[] }) {
-  return (
-    <div
-      className="max-h-[min(50vh,280px)] overflow-y-auto py-1 font-mono text-[11px] text-white/90"
-      style={{ minWidth: 220 }}
-    >
-      {leaves.map((leaf, i) => {
-        const p = leaf.properties as {
-          subgenre?: string;
-          country?: string;
-          hex?: string;
-        } | null;
-        if (!p?.subgenre) return null;
-        return (
-          <button
-            key={`${p.subgenre}-${i}`}
-            type="button"
-            className="block w-full border-0 bg-transparent px-2 py-1.5 text-left text-white/90 hover:bg-white/10 cursor-pointer rounded"
-            onClick={() => {
-              if (p.hex) void navigator.clipboard.writeText(p.hex);
-            }}
-          >
-            <span className="text-gold/90">{p.subgenre}</span>
-            <span className="text-muted"> · </span>
-            <span className="text-white/70">{p.country}</span>
-            <span className="block font-mono text-[10px] text-muted mt-0.5">
-              {p.hex} — click row to copy hex
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function isLightHex(hex: string) {
-  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 > 128;
-}
-
-const MAP_LABEL_B = 2;
-
-/**
- * Renders the same country-flag border treatment as `Card` world shells, for the OSM marker chip.
- */
-function MapMarkerFlagBorder({ theme }: { theme: GenreTheme }) {
+/** Flag ribbon matching card shells — preview (no dimming filters). */
+function PopupFlagSwatch({ theme }: { theme: GenreTheme }) {
   const flagLayer = theme.frameBorder;
   const flagBg = theme.frameBg;
-  const worldFrameFilter = theme.frameFilter;
-  const worldFrameOpacity = theme.frameOpacity;
-  const flagUsR90 = Boolean(
-    theme.frameRotateR90 && (flagLayer || flagBg),
-  );
+  const rot = Boolean(theme.frameRotateR90 && (flagLayer || flagBg));
 
-  if (flagUsR90 && (flagBg ?? flagLayer)) {
+  if (rot && (flagBg ?? flagLayer)) {
     const src = (flagBg ?? flagLayer) as string;
     return (
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 3,
-          background: "rgba(4,6,9,0.9)",
-          overflow: "hidden",
-        }}
+        className="relative shrink-0 overflow-hidden rounded-md border border-black/25 bg-[rgba(4,6,9,0.92)]"
+        style={{ width: 64, height: 40 }}
+        aria-hidden
       >
         <div
+          className="absolute left-1/2 top-1/2"
           style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            width: 160,
-            height: 100,
+            width: 140,
+            height: 88,
             transform: "translate(-50%,-50%) rotate(-90deg)",
-            borderRadius: 2,
-            backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), ${src}`,
+            backgroundImage: `linear-gradient(transparent,transparent), ${src}`,
             backgroundSize: "100% 100%, cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            backgroundClip: "padding-box, border-box",
-            backgroundOrigin: "padding-box, border-box",
-            border: `${MAP_LABEL_B}px solid transparent`,
-            boxSizing: "border-box",
-            filter: worldFrameFilter,
-            opacity: worldFrameOpacity,
           }}
         />
       </div>
     );
   }
 
-  if (flagLayer) {
-    return (
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 3,
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "rgba(4,5,9,0.92)",
-            borderRadius: 3,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: 3,
-            background: `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
-            backgroundClip: "padding-box, border-box",
-            backgroundOrigin: "padding-box, border-box",
-            border: `${MAP_LABEL_B}px solid transparent`,
-            boxSizing: "border-box",
-            filter: worldFrameFilter,
-            opacity: worldFrameOpacity,
-          }}
-        />
-      </div>
-    );
-  }
+  if (!flagLayer) return null;
 
-  return null;
-}
-
-const LABEL_W = 118;
-const LABEL_H = 38;
-
-/**
- * MapLibre `Marker` `element` — geographic point is the bottom centre of the small dot.
- */
-function OsmMapMarkerChip({
-  subgenre,
-  region,
-  hex,
-  country,
-  titleId,
-}: {
-  subgenre: string;
-  region: string;
-  hex: string;
-  country: string;
-  titleId: string;
-}) {
-  const light = isLightHex(hex);
-  const theme = WORLD_THEMES[country];
-  const hasCardBorder = Boolean(
-    theme && (theme.frameBorder ?? (theme.frameRotateR90 && theme.frameBg)),
-  );
-  const labelLine =
-    subgenre.length > 20 ? `${subgenre.slice(0, 18)}…` : subgenre;
-
+  const bw = 6;
   return (
     <div
-      className="flex flex-col items-center"
-      onPointerDown={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => {
-          void navigator.clipboard.writeText(hex);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            void navigator.clipboard.writeText(hex);
-          }
-        }}
-        className="cursor-pointer"
-        style={{ maxWidth: LABEL_W }}
-      >
-        <span id={titleId} className="sr-only">
-          {`${subgenre} — ${region} — ${hex}. Activate to copy hex colour.`}
-        </span>
-        <div
-          className="relative"
-          style={{
-            width: Math.min(LABEL_W, 132),
-            height: LABEL_H,
-            boxSizing: "border-box",
-            boxShadow: hasCardBorder
-              ? `0 0 0 0.4px ${hex}99, 0 2px 7px rgba(0,0,0,.5)`
-              : `0 2px 6px ${hex}88, 0 0 0 0.35px ${hex}66`,
-            borderRadius: 3,
-            overflow: "hidden",
-          }}
-          aria-labelledby={titleId}
-        >
-          {hasCardBorder && theme ? (
-            <MapMarkerFlagBorder theme={theme} />
-          ) : !hasCardBorder ? (
-            <div
-              className="absolute inset-0 rounded-[3px]"
-              style={{
-                background: hex,
-                boxShadow: `0 0 0 0.3px ${hex}cc, inset 0 0 10px ${hex}44`,
-              }}
-            />
-          ) : null}
-          <div
-            className="absolute inset-0 z-1 flex flex-col items-center justify-center text-center px-0.5"
-            style={{
-              lineHeight: 1.1,
-              pointerEvents: "none",
-            }}
-          >
-            <span
-              className="font-bold"
-              style={{
-                fontFamily: "var(--font-cinzel, 'Cinzel', serif)",
-                fontSize: 11.5,
-                letterSpacing: 0.3,
-                color: hex,
-                textShadow: light
-                  ? "0 0 1px #000,0 0.5px 2px rgba(0,0,0,0.85),0 1px 2px #000a"
-                  : "0 0.5px 1.5px rgba(0,0,0,0.5)",
-              }}
-            >
-              {labelLine}
-            </span>
-            <span
-              className="font-mono text-white/80"
-              style={{ fontSize: 9, textShadow: "0 0 2px #000,0 1px 1px #0006" }}
-            >
-              {region}
-            </span>
-          </div>
+      className="shrink-0 rounded-md border border-black/25 shadow-sm"
+      style={{
+        width: 64,
+        height: 38,
+        background: `linear-gradient(transparent, transparent) padding-box, ${flagLayer} border-box`,
+        border: `${bw}px solid transparent`,
+        backgroundClip: "padding-box, border-box",
+        backgroundOrigin: "padding-box, border-box",
+      }}
+      aria-hidden
+    />
+  );
+}
+
+function CountryPopupBody({
+  country,
+  subgenres,
+}: {
+  country: string;
+  subgenres: string[];
+}) {
+  const theme = WORLD_THEMES[country];
+  return (
+    <div className="px-1 py-0.5 text-white" style={{ minWidth: 200 }}>
+      <div className="flex items-center gap-3 mb-3">
+        {theme ? <PopupFlagSwatch theme={theme} /> : null}
+        <div className="font-cinzel text-[17px] leading-tight tracking-[2px] text-white min-w-0 flex-1">
+          {country}
         </div>
       </div>
-      <div
-        className="h-2.5 w-px shrink-0"
-        style={{ background: "rgba(255,255,255,.4)" }}
-        aria-hidden
-      />
-      <div
-        className="h-2 w-2 shrink-0 rounded-full"
-        style={{
-          background: hex,
-          boxShadow: `0 0 0 0.4px rgba(255,255,255,.4),0 0 4px ${hex}99`,
-        }}
-        aria-hidden
-      />
+      <div className="font-mono text-[9px] tracking-wide text-muted uppercase mb-1.5">
+        Country-native subgenres
+      </div>
+      <ul className="m-0 list-none p-0 max-h-[min(48vh,260px)] overflow-y-auto space-y-1.5">
+        {subgenres.map((name) => (
+          <li
+            key={name}
+            className="font-garamond text-[15px] leading-snug text-white/90 border-b border-white/10 pb-1.5 last:border-0"
+          >
+            {name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
+}
+
+function CountryPopupFromLeaves({ leaves }: { leaves: Feature[] }) {
+  const rows = leaves
+    .map((leaf) => leaf.properties as { country?: string; subgenre?: string } | null)
+    .filter((p): p is { country: string; subgenre: string } =>
+      Boolean(p?.country && p?.subgenre),
+    );
+  if (!rows.length) {
+    return (
+      <p className="font-garamond text-sm text-muted m-0 px-1 py-2">
+        No subgenres in this cluster.
+      </p>
+    );
+  }
+  const country = rows[0]!.country;
+  const subgenres = [...new Set(rows.map((r) => r.subgenre))].sort((a, b) =>
+    a.localeCompare(b),
+  );
+  return <CountryPopupBody country={country} subgenres={subgenres} />;
 }
 
 type MaplibreModule = typeof import("maplibre-gl");
@@ -362,7 +214,6 @@ async function loadMaplibre(): Promise<MaplibreModule> {
 }
 
 export default function WorldSubgenreMap() {
-  const idPrefix = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const onResetRef = useRef<(() => void) | null>(null);
@@ -495,7 +346,7 @@ export default function WorldSubgenreMap() {
             source: SUBGENRE_SOURCE_ID,
             filter: ["!", ["has", "point_count"]],
             paint: {
-              "circle-color": ["get", "hex"],
+              "circle-color": ["get", "pinColor"],
               "circle-radius": 8,
               "circle-stroke-width": 1.5,
               "circle-stroke-color": "rgba(255,255,255,0.88)",
@@ -529,7 +380,7 @@ export default function WorldSubgenreMap() {
                 closeActivePopup();
                 const el = document.createElement("div");
                 activeRoot = createRoot(el);
-                activeRoot.render(<ClusterLeavesPopup leaves={leaves} />);
+                activeRoot.render(<CountryPopupFromLeaves leaves={leaves} />);
                 activePopup = new M.Popup({
                   maxWidth: "320px",
                   closeButton: true,
@@ -562,18 +413,17 @@ export default function WorldSubgenreMap() {
                 const expansionZoom =
                   await geoSource.getClusterExpansionZoom(clusterId);
                 if (cancelled) return;
-                if (expansionZoom > map.getZoom() + 0.05) {
-                  closeActivePopup();
-                  map.easeTo({
-                    center: coords,
-                    zoom: Math.min(
-                      expansionZoom,
-                      map.getMaxZoom() ?? 18,
-                    ),
-                  });
-                } else {
+                const z = map.getZoom();
+                if (expansionZoom <= z + 0.05) {
                   openClusterLeavesPopup(clusterId, coords);
+                  return;
                 }
+                closeActivePopup();
+                map.easeTo({
+                  center: coords,
+                  zoom: Math.min(expansionZoom, map.getMaxZoom() ?? 18),
+                  duration: 580,
+                });
               } catch {
                 /* ignore */
               }
@@ -592,21 +442,16 @@ export default function WorldSubgenreMap() {
             const p = f.properties as {
               subgenre: string;
               country: string;
-              hex: string;
             };
             const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
               .coordinates;
             closeActivePopup();
             const el = document.createElement("div");
             activeRoot = createRoot(el);
-            const titleId = `${idPrefix}-p-${p.subgenre}`.replace(/\s/g, "-");
             activeRoot.render(
-              <OsmMapMarkerChip
-                subgenre={p.subgenre}
-                region={p.country}
+              <CountryPopupBody
                 country={p.country}
-                hex={p.hex}
-                titleId={titleId}
+                subgenres={[p.subgenre]}
               />,
             );
             activePopup = new M.Popup({
@@ -678,7 +523,7 @@ export default function WorldSubgenreMap() {
         mapInstance = null;
       }
     };
-  }, [countrySubs, idPrefix]);
+  }, [countrySubs]);
 
   return (
     <div className="w-full max-w-[min(100%,1400px)] mx-auto flex flex-col items-center gap-5 mt-14 mb-6 px-3 sm:px-4">
@@ -725,8 +570,10 @@ export default function WorldSubgenreMap() {
 
       <p className="font-mono text-[10px] tracking-wide text-muted/80 m-0 text-center">
         Scroll to zoom, drag to pan, double-click empty space to fit the world again.
-        Overlapping pins cluster — click a cluster to zoom in, or a single pin for the
-        full label (click the label to copy hex). Click empty map to close popups.
+        Pin colour follows the country flag border. Overlapping pins cluster — click a
+        cluster to zoom to the level where it splits; when it cannot split further, a list
+        opens. Click a pin for country / region and its subgenres. Click empty map to close
+        popups.
       </p>
     </div>
   );

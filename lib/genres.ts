@@ -170,7 +170,10 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
 /** Weak vs / Advantage vs targets (canonical; aligns with Genres — Associations). */
 export const GENRE_BATTLE_MATCHUP: Record<
   GenreName,
-  { readonly advantageVs: readonly string[]; readonly weakVs: readonly string[] }
+  {
+    readonly advantageVs: readonly string[];
+    readonly weakVs: readonly string[];
+  }
 > = {
   Mainstream: { advantageVs: [], weakVs: [] },
   Rock: {
@@ -203,9 +206,10 @@ export const GENRE_BATTLE_MATCHUP: Record<
   },
 };
 
-export function matchupTargetsForAppGenre(
-  genre: AppGenreName | undefined,
-): { advantageVs: string[]; weakVs: string[] } {
+export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
+  advantageVs: string[];
+  weakVs: string[];
+} {
   if (!genre) return { advantageVs: [], weakVs: [] };
   const row = GENRE_BATTLE_MATCHUP[genre as GenreName];
   if (!row) return { advantageVs: [], weakVs: [] };
@@ -312,11 +316,14 @@ export function intensityLevelIndex(level: Intensity): number {
 
 type CountryName = keyof typeof COUNTRY_DATA;
 
+/** Wheel / theme parent for genre subgenres — never Mainstream (hub centre only). */
+export type NonMainstreamGenreName = Exclude<GenreName, "Mainstream">;
+
 interface BaseSubgenre {
   n: string;
   color: string;
   parentA: GenreName | CountryName;
-  parentB?: GenreName;
+  parentB?: NonMainstreamGenreName;
   t?: number;
   angleDelta?: number;
   intensity: Intensity;
@@ -324,7 +331,7 @@ interface BaseSubgenre {
 
 export interface GenreSubgenre extends BaseSubgenre {
   kind: "genre";
-  parentA: GenreName;
+  parentA: NonMainstreamGenreName;
 }
 
 export interface CountrySubgenre extends BaseSubgenre {
@@ -336,7 +343,13 @@ export interface CountrySubgenre extends BaseSubgenre {
 export type Subgenre = GenreSubgenre | CountrySubgenre;
 
 export const SUBGENRES: Subgenre[] = [
-  { kind: "country", n: "Country", color: "#b22234", parentA: "USA", intensity: "soft" },
+  {
+    kind: "country",
+    n: "Country",
+    color: "#b22234",
+    parentA: "USA",
+    intensity: "soft",
+  },
   {
     kind: "country",
     n: "American folk",
@@ -408,20 +421,86 @@ export const SUBGENRES: Subgenre[] = [
     intensity: "soft",
   },
   {
+    kind: "country",
+    n: "Reggaeton",
+    color: "#d05038",
+    parentA: "Puerto Rico",
+    intensity: "pop",
+  },
+  {
     kind: "genre",
     n: "Electropop",
     color: "#e4ebff",
     parentA: "Electronic",
+    angleDelta: -14,
     intensity: "pop",
   },
-  { kind: "genre", n: "Disco Pop", color: "#ffd6e8", parentA: "Disco/Funk", intensity: "pop" },
-  { kind: "genre", n: "Pop Rock", color: "#f07080", parentA: "Rock", intensity: "soft" },
-  { kind: "genre", n: "EDM", color: "#7090e8", parentA: "Electronic", intensity: "soft" },
-  { kind: "genre", n: "R&B Soul", color: "#ffd060", parentA: "Hip-Hop", intensity: "soft" },
-  { kind: "genre", n: "R&B", color: "#ffe94d", parentA: "Hip-Hop", intensity: "soft" },
-  { kind: "genre", n: "Rap", color: "#c8960a", parentA: "Hip-Hop", intensity: "soft" },
-  { kind: "genre", n: "Roots", color: "#5ab848", parentA: "Reggae/Dub", intensity: "soft" },
-  { kind: "genre", n: "Disco", color: "#f0a0c0", parentA: "Disco/Funk", intensity: "soft" },
+  {
+    kind: "genre",
+    n: "Dance Pop",
+    color: "#e8d4f0",
+    parentA: "Electronic",
+    angleDelta: 14,
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
+    n: "Disco Pop",
+    color: "#ffd6e8",
+    parentA: "Disco/Funk",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
+    n: "Pop Rock",
+    color: "#f07080",
+    parentA: "Rock",
+    angleDelta: -14,
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "EDM",
+    color: "#7090e8",
+    parentA: "Electronic",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "Rap",
+    color: "#c8960a",
+    parentA: "Hip-Hop",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
+    n: "R&B Soul",
+    color: "#ffd060",
+    parentA: "Hip-Hop",
+    angleDelta: -22,
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "R&B",
+    color: "#e8e2c8",
+    parentA: "Hip-Hop",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "Roots",
+    color: "#5ab848",
+    parentA: "Reggae/Dub",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
+    n: "Disco",
+    color: "#f0a0c0",
+    parentA: "Disco/Funk",
+    intensity: "soft",
+  },
   {
     kind: "genre",
     n: "Ska Punk",
@@ -442,6 +521,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Drum & Bass",
     color: "#3070c8",
     parentA: "Electronic",
+    angleDelta: -16,
     intensity: "experimental",
   },
   {
@@ -458,6 +538,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Techno",
     color: "#1a2e6a",
     parentA: "Electronic",
+    angleDelta: -5,
     intensity: "experimental",
   },
   {
@@ -465,7 +546,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "House",
     color: "#4030a0",
     parentA: "Electronic",
-    angleDelta: 12,
+    angleDelta: 17,
     intensity: "experimental",
   },
   {
@@ -481,6 +562,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Anthem",
     color: "#5c2a0a",
     parentA: "Classical",
+    angleDelta: -20,
     intensity: "experimental",
   },
   {
@@ -506,7 +588,13 @@ export const SUBGENRES: Subgenre[] = [
     angleDelta: 8,
     intensity: "hardcore",
   },
-  { kind: "genre", n: "Metal", color: "#7a0810", parentA: "Rock", intensity: "hardcore" },
+  {
+    kind: "genre",
+    n: "Metal",
+    color: "#7a0810",
+    parentA: "Rock",
+    intensity: "hardcore",
+  },
   {
     kind: "genre",
     n: "Nu Metal",
@@ -534,6 +622,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Minimal",
     color: "#3d5a78",
     parentA: "Electronic",
+    angleDelta: 8,
     intensity: "experimental",
   },
   {
@@ -541,20 +630,22 @@ export const SUBGENRES: Subgenre[] = [
     n: "Cloud rap",
     color: "#c09028",
     parentA: "Hip-Hop",
+    angleDelta: 22,
     intensity: "soft",
   },
   {
     kind: "genre",
-    n: "Movie",
-    color: "#8868b0",
-    parentA: "Mainstream",
-    intensity: "pop",
+    n: "Trap",
+    color: "#3a2d48",
+    parentA: "Hip-Hop",
+    intensity: "experimental",
   },
   {
     kind: "genre",
     n: "Christian hymn",
     color: "#a0a090",
     parentA: "Vintage",
+    angleDelta: -20,
     intensity: "soft",
   },
   {
@@ -562,6 +653,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Baroque classical",
     color: "#5a4030",
     parentA: "Classical",
+    angleDelta: -12,
     intensity: "experimental",
   },
   {
@@ -569,6 +661,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Romantic classical",
     color: "#884060",
     parentA: "Classical",
+    angleDelta: -4,
     intensity: "experimental",
   },
   {
@@ -576,6 +669,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Impressionist classical",
     color: "#7088a0",
     parentA: "Classical",
+    angleDelta: -16,
     intensity: "soft",
   },
   {
@@ -590,6 +684,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Opera",
     color: "#902040",
     parentA: "Classical",
+    angleDelta: 6,
     intensity: "experimental",
   },
   {
@@ -597,6 +692,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Ballet",
     color: "#d07090",
     parentA: "Classical",
+    angleDelta: 14,
     intensity: "experimental",
   },
   {
@@ -604,6 +700,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Waltz",
     color: "#4088c8",
     parentA: "Classical",
+    angleDelta: -5,
     intensity: "soft",
   },
   {
@@ -611,6 +708,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "March",
     color: "#c89830",
     parentA: "Classical",
+    angleDelta: 5,
     intensity: "soft",
   },
   {
@@ -618,6 +716,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Serenade",
     color: "#6880a0",
     parentA: "Classical",
+    angleDelta: 16,
     intensity: "soft",
   },
   {
@@ -625,6 +724,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Ragtime",
     color: "#4a3828",
     parentA: "Vintage",
+    angleDelta: -10,
     intensity: "soft",
   },
   {
@@ -639,6 +739,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Mexican Folk",
     color: "#1e6b4a",
     parentA: "Vintage",
+    angleDelta: 10,
     intensity: "soft",
   },
   {
@@ -646,6 +747,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Spiritual",
     color: "#505848",
     parentA: "Vintage",
+    angleDelta: 20,
     intensity: "soft",
   },
   {
@@ -661,6 +763,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Symphonic showpiece",
     color: "#284868",
     parentA: "Classical",
+    angleDelta: 22,
     intensity: "experimental",
   },
   {
@@ -668,6 +771,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Traditional song",
     color: "#757060",
     parentA: "Vintage",
+    angleDelta: -12,
     intensity: "pop",
   },
   {
@@ -675,6 +779,7 @@ export const SUBGENRES: Subgenre[] = [
     n: "Traditional pop",
     color: "#ebe9e7",
     parentA: "Vintage",
+    angleDelta: 12,
     intensity: "pop",
   },
   {
@@ -686,16 +791,10 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "Latin crossover",
-    color: "#e86840",
-    parentA: "Mainstream",
-    intensity: "pop",
-  },
-  {
-    kind: "genre",
     n: "Arena anthem",
     color: "#d04020",
     parentA: "Rock",
+    angleDelta: 14,
     intensity: "soft",
   },
 ];
@@ -705,9 +804,8 @@ export const SUBGENRES: Subgenre[] = [
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
   SUBGENRES.filter((s) => s.kind === "genre").map((s) => [s.n, s.color]),
 );
-const SUBGENRE_PARENT_A: Record<string, GenreName | CountryName> = Object.fromEntries(
-  SUBGENRES.map((s) => [s.n, s.parentA]),
-);
+const SUBGENRE_PARENT_A: Record<string, GenreName | CountryName> =
+  Object.fromEntries(SUBGENRES.map((s) => [s.n, s.parentA]));
 const SUBGENRE_BY_NAME: Record<string, Subgenre> = Object.fromEntries(
   SUBGENRES.map((s) => [s.n, s]),
 );
@@ -857,9 +955,12 @@ export function resolveThemeSelection({
   country?: string;
 }): ResolvedThemeSelection {
   const countryTheme = country ? WORLD_THEMES[country] : undefined;
-  if (country && !countryTheme) throw new Error(`Unknown world country theme "${country}"`);
+  if (country && !countryTheme)
+    throw new Error(`Unknown world country theme "${country}"`);
   if (!g?.trim()) {
-    throw new Error("Card must set genre (a subgenre name, or an app-level genre).");
+    throw new Error(
+      "Card must set genre (a subgenre name, or an app-level genre).",
+    );
   }
 
   const def = SUBGENRE_BY_NAME[g];
@@ -934,7 +1035,9 @@ export function resolveThemeSelection({
   }
 
   if (!isAppGenreName(g)) {
-    throw new Error(`Unknown genre or subgenre "${g}" (not a canonical subgenre and not a known app genre).`);
+    throw new Error(
+      `Unknown genre or subgenre "${g}" (not a canonical subgenre and not a known app genre).`,
+    );
   }
   const appGenre = toAppGenre(g);
   if (country) {

@@ -4,8 +4,10 @@ import {
   type AppGenreName,
   type Intensity,
   appGenreIntensity,
+  canonicalCountryFromSubgenre,
   displayGenreLabel,
   isCountrySubgenre,
+  isGenreSubgenre,
   resolveThemeSelection,
   subgenreIntensity,
   themeForCountry,
@@ -80,6 +82,40 @@ const rawBlendRows: RawCatalogRow[] = WORLD_MIXED_CARDS.map((c) => ({
   theme: themeForCountry(c.country!),
 }));
 
+function spotlightMetaForCard(card: CardData): {
+  kind: CatalogEntry["kind"];
+  theme: GenreTheme;
+} {
+  const g = card.genre;
+  if (!g) {
+    throw new Error(`Spotlight card "${card.title}" (${card.id}) must set genre`);
+  }
+  if (isCountrySubgenre(g)) {
+    const expected = canonicalCountryFromSubgenre(g);
+    const ctry = card.country ?? expected;
+    if (ctry !== expected) {
+      throw new Error(
+        `Spotlight "${card.title}": country-native "${g}" expects country "${expected}", got "${card.country}"`,
+      );
+    }
+    return { kind: "World", theme: themeForCountry(ctry) };
+  }
+  if (card.country) {
+    if (isGenreSubgenre(g)) {
+      return { kind: "World blend", theme: themeForCountry(card.country) };
+    }
+    return { kind: "World + genre", theme: themeForCountry(card.country) };
+  }
+  const r = resolveThemeSelection({ genre: g });
+  if (!r.resolvedGenre) {
+    throw new Error(`Spotlight "${card.title}": no resolved app genre for "${g}"`);
+  }
+  return {
+    kind: "Genre",
+    theme: APP_GENRE_THEMES[r.resolvedGenre as AppGenreName],
+  };
+}
+
 const SPOTLIGHT_CATALOG_META: Record<
   number,
   { kind: CatalogEntry["kind"]; theme: GenreTheme }
@@ -87,9 +123,10 @@ const SPOTLIGHT_CATALOG_META: Record<
   const fr = themeForCountry("France");
   const es = themeForCountry("Spain");
   const dz = themeForCountry("Algeria");
+  const pr = themeForCountry("Puerto Rico");
   const rock = APP_GENRE_THEMES.Rock;
   const vintage = APP_GENRE_THEMES.Vintage;
-  return {
+  const base: Record<number, { kind: CatalogEntry["kind"]; theme: GenreTheme }> = {
     28: { kind: "Genre", theme: rock },
     29: { kind: "Genre", theme: rock },
     30: { kind: "World blend", theme: es },
@@ -98,7 +135,14 @@ const SPOTLIGHT_CATALOG_META: Record<
     33: { kind: "World blend", theme: fr },
     34: { kind: "Genre", theme: vintage },
     35: { kind: "World", theme: dz },
+    36: { kind: "World", theme: pr },
   };
+  for (const c of DECK_SPOTLIGHT_CARDS) {
+    if (c.id > 36) {
+      base[c.id] = spotlightMetaForCard(c);
+    }
+  }
+  return base;
 })();
 
 const rawSpotlightRows: RawCatalogRow[] = DECK_SPOTLIGHT_CARDS.map((card) => {

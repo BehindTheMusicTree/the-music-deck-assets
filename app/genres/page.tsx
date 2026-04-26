@@ -141,6 +141,15 @@ export default function GenresPage() {
             <span className="text-white/80">experimental</span>, and all other
             genres are <span className="text-white/80">pop</span>.
           </p>
+          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[680px]">
+            <span className="text-white/80">Mainstream</span> (shown as{" "}
+            <span className="text-white/80">Pop</span> on cards) is only the
+            centre of the colour wheel — it is{" "}
+            <span className="text-white/80">never</span> the parent of a
+            subgenre. Chart-pop and catalogue hits use a musical family parent
+            (for example <span className="text-white/80">Vintage</span> or{" "}
+            <span className="text-white/80">Disco/Funk</span>) instead.
+          </p>
           <div className="border border-ui-border rounded-[6px] overflow-hidden">
             <table className="w-full border-collapse text-left">
               <thead>
