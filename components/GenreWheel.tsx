@@ -114,9 +114,7 @@ function Rect({
         void navigator.clipboard.writeText(hex);
       }}
     >
-      <title>
-        Click for details. Double-click to copy the hex colour.
-      </title>
+      <title>Click for details. Double-click to copy the hex colour.</title>
       <rect
         x={-w / 2}
         y={-h / 2}

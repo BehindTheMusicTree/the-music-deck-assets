@@ -1,5 +1,10 @@
-import { GENRE_THEMES, SUBGENRES, WHEEL_GENRES, WORLD_THEMES } from "@/lib/genres";
-import type { GenreName, GenreSubgenre, Intensity, Subgenre } from "@/lib/genres";
+import { GENRE_THEMES, WHEEL_GENRES, WORLD_THEMES } from "@/lib/genres";
+import type {
+  GenreName,
+  GenreSubgenre,
+  Intensity,
+  Subgenre,
+} from "@/lib/genres";
 import { WHEEL_SUBGENRE_RADIAL_STAGGER } from "@/lib/genre-wheel-geometry";
 
 export type WheelSubgenrePlacement = {
@@ -30,7 +35,10 @@ function genreHubAngle(parentA: GenreName): number {
  * Angular arc between the two radial lines that bound this genre — matches
  * `GenreWheel` dividers at `((i + 0.5) / n) * 360 - 90`.
  */
-function genreSectorArc(parentA: GenreName): { arcStart: number; arcEnd: number } {
+function genreSectorArc(parentA: GenreName): {
+  arcStart: number;
+  arcEnd: number;
+} {
   const idx = WHEEL_GENRES.findIndex((g) => g.n === parentA);
   if (idx < 0) return { arcStart: NaN, arcEnd: NaN };
   const n = WHEEL_GENRES.length;
