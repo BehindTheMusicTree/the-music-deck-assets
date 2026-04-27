@@ -282,6 +282,29 @@ High-detail comic-stylized illustration inspired by West Coast street culture an
 In the upper third, a group of stylized gangsters stands confidently beside flashy custom cars — lowriders, muscle cars, and chrome-detailed cruisers — parked along a sunny California boulevard. Faces are stylized and anonymous, with exaggerated comic outlines and warm colour treatment. They wear West Coast-flavoured streetwear: oversized tees, baggy trousers, sunglasses, chains, and bandanas, all redesigned in a fantasy-safe way.
 Palm trees sway in the background beneath a bright blue sky with visible heat haze and distant hills. A soft golden daylight glow dominates the scene, reflecting on chrome, paintwork, and character silhouettes.
 Mood: confident, sunny, groovy, West Coast daytime swagger. Dominant tones: gold, warm yellow, sandy beige, and sky blue. No text, no symbols, no logos, no borders.`,
+  90: `🎨 Magic-Style Illustration Prompt — “Vois sur ton chemin — 1950’s Faded Classroom”
+High-detail semi-realistic illustration designed to look like an old, faded color photograph from the 1950s. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+In the upper third, depict a group of schoolchildren posing for a class photo. Their clothing, hairstyles, and posture reflect the 1950s: wool sweaters, simple dresses, short trousers, tidy haircuts. Their faces are stylized and anonymous, with no resemblance to any real person.
+The image is colorized but heavily aged: washed-out tones, soft pastel colors, slight yellowing, subtle film grain, faint scratches, and gentle vignetting. The colors feel muted, nostalgic, almost sacred.
+The children stand or sit in rows in front of a simple classroom background: chalkboard, wooden furniture, soft natural light.
+Mood: nostalgic, tender, solemn, slightly mystical. Dominant tones: faded pastels, washed-out beige, soft pale blue, gentle warm highlights. No text, no symbols, no logos.`,
+  91: `🎨 Magic-Style Illustration Prompt — Superstition — Mystic Neon Pianist
+High-detail semi-realistic comic illustration inspired by the mystical, hypnotic energy of "Superstition". Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+In the upper third, depict a pianist seated at a glowing electric piano, shown in a dramatic, charismatic pose. His silhouette is stylized and anonymous, with no resemblance to any real person. His hands hover above the keys as if channeling supernatural energy.
+Around him, instead of literal zodiac signs, create abstract mystical motifs inspired by astrology: circular halos, arcane geometric curves, constellation-like dotted lines, swirling cosmic arcs, and faint star-patterns. These shapes glow in neon violet and pulse like magical sound waves.
+Behind him, a Vice City-style crowd appears in simplified silhouettes, bathed in violet and magenta neon, visibly enchanted: bodies swaying, arms raised, faces lit by the pianist's aura.
+The environment feels like a retro-futuristic nightclub: clean comic shading, sharp outlines, neon reflections, fog, and shimmering particles.
+Mood: mystical, funky, hypnotic, supernatural. Dominant tones: violet, neon magenta, electric blue, soft white. No text, no symbols, no logos.`,
+  92: `🎛️ Modification Prompt — Superstition — Infernal Red Guitarist Recast
+Modify the original artwork while keeping the exact same composition, framing, number of characters, and their precise positions and postures.
+Transform the neon-mystical nightclub scene into a red infernal underworld.
+The central musician becomes a white male guitarist, stylized and anonymous, with no resemblance to any real person.
+Replace the piano with a glowing, angular electric guitar, keeping the same hand positions and gesture dynamics as in the original.
+All mystical elements become demonic, infernal motifs: swirling red smoke, sharp arcane shapes, fiery halos, distorted constellation-like patterns, and ember-like particles rising from the ground.
+The crowd remains in the exact same positions, but now appears illuminated by hellish red light, surrounded by flames, shadows, and molten reflections. Men and women in the crowd.
+The environment becomes a vast cavernous hell-stage, with dark rock formations, cracks of glowing magma, and red laser-like beams cutting through the smoke.
+Color palette shifts entirely to deep red, crimson, black, ember orange, and glowing white sparks.
+Mood: demonic, powerful, ritualistic, overwhelming. No text, no symbols, no logos.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

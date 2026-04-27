@@ -1129,5 +1129,36 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     artwork: `${ART}artwork.bennet-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
+    ...(artworkPromptFor(90) ?? {}),
+  },
+  {
+    id: 91,
+    title: "Superstition",
+    artist: "Stevie Wonder",
+    year: 1972,
+    genre: "Funk",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.stevie-wonder-superstition-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.stevie-wonder-superstition-v1.png"],
+    ...(artworkPromptFor(91) ?? {}),
+  },
+  {
+    id: 92,
+    title: "Superstition",
+    artist: "Jeff Beck",
+    year: 1972,
+    genre: "Hard Rock",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.jeff-beck-superstition-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.jeff-beck-superstition-v1.png"],
+    ...(artworkPromptFor(92) ?? {}),
   },
 ];

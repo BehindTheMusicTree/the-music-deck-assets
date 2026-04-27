@@ -580,6 +580,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Funk",
+    color: "#c06098",
+    parentA: "Disco/Funk",
+    intensity: "experimental",
+  },
+  {
+    kind: "genre",
     n: "Ska Punk",
     color: "#9a4024",
     parentA: "Rock",
