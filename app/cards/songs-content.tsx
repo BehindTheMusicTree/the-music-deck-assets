@@ -156,8 +156,7 @@ export function CardsSongsContent() {
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
           <p className="font-garamond text-muted leading-[1.6] m-0">
             Remix cards are documented separately, with their own anatomy and
-            genre-specific layer:
-            {" "}
+            genre-specific layer:{" "}
             <Link
               href="/cards/remixes#remix-anatomy"
               className="text-gold underline-offset-2 hover:underline"
@@ -191,11 +190,11 @@ export function CardsSongsContent() {
             {[
               [
                 "Header",
-                "Genre icon · title · artist (optional) · popularity note (integer 1–9) in the header; glow scales with that same value used for award symbols. If artist is missing, title is vertically centered.",
+                "Icon: Genre icon.\nTitle: Song title.\nArtist: Optional artist name.\nPop: Integer 1-9.\nGlow: Scales with pop (same value used for award symbols).\nAlignment: If artist is missing, title is vertically centered.",
               ],
               [
                 "Artwork",
-                "Real asset image (always required); no procedural fallback.",
+                "Image: Required real asset image.\nPrompt: Required if AI-generated.\nDominant palette: Prefer genre colour (e.g. white/pink for Disco Pop).\nMood: Mystical.\nRights safety: Avoid copyrighted or overly identifiable elements when rights are not cleared (faces, brands, logos, signature items such as Michael Jackson's gold glove).",
               ],
               [
                 "Type strip",
@@ -228,7 +227,19 @@ export function CardsSongsContent() {
                   {name}
                 </div>
                 <div className="font-garamond text-muted leading-[1.5]">
-                  {desc}
+                  {desc.split("\n").map((line, idx) => {
+                    if (!line.trim()) return <div key={idx} className="h-2" />;
+                    const colonIndex = line.indexOf(":");
+                    if (colonIndex <= 0) return <div key={idx}>{line}</div>;
+                    const label = line.slice(0, colonIndex + 1);
+                    const value = line.slice(colonIndex + 1).trimStart();
+                    return (
+                      <div key={idx}>
+                        <span className="text-white">{label}</span>{" "}
+                        {value}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -247,10 +258,7 @@ export function CardsSongsContent() {
                   className="rounded-[6px] border border-ui-border bg-[#12121a]/45 p-3 flex gap-3 items-start"
                 >
                   <div className="shrink-0">
-                    <Card
-                      card={item.card}
-                      theme={item.theme}
-                    />
+                    <Card card={item.card} theme={item.theme} />
                   </div>
                   <div className="min-w-0">
                     <div className="font-cinzel text-[15px] tracking-[1px] text-white mb-1">
@@ -320,8 +328,8 @@ export function CardsSongsContent() {
               <div className="section-label-accent mb-1.5">Weakness</div>
               <p className="font-garamond text-muted leading-[1.6] m-0">
                 When your genre is weak against the opponent&apos;s genre, you
-                take the corresponding penalty — plan sideboard and tempo
-                around bad matchups.
+                take the corresponding penalty — plan sideboard and tempo around
+                bad matchups.
               </p>
             </div>
           </div>
@@ -395,13 +403,13 @@ export function CardsSongsContent() {
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
           <p className="font-garamond text-muted leading-[1.6] mb-3">
             Intensity replaces the old experimental gauge with four canonical
-            levels. On the card it reads as a right-triangle volume gauge
-            (right angle at the bottom-right at 100% width): the empty shape
-            stays visible in dull grey; the saturated green→red band fills ¼
-            to 4/4 of its width (pop…hardcore), with a cursor and the matching
-            percentage (25%–100%) at the fill edge. The spectrum is always
-            anchored: red is fixed at the full 100% width, so lower levels
-            only reveal the left (greener) part of that same ramp.
+            levels. On the card it reads as a right-triangle volume gauge (right
+            angle at the bottom-right at 100% width): the empty shape stays
+            visible in dull grey; the saturated green→red band fills ¼ to 4/4 of
+            its width (pop…hardcore), with a cursor and the matching percentage
+            (25%–100%) at the fill edge. The spectrum is always anchored: red is
+            fixed at the full 100% width, so lower levels only reveal the left
+            (greener) part of that same ramp.
           </p>
           <ul className="font-garamond text-muted leading-[1.6] list-disc pl-5 flex flex-col gap-1">
             <li>Pop (1): low edge, broad accessibility.</li>
