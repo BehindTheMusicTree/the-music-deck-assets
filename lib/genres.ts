@@ -559,6 +559,17 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Turntablism",
+    color: "#3d6ca0",
+    parentA: "Electronic",
+    intensity: "experimental",
+    influence: {
+      genre: "Hip-Hop",
+      intensity: "experimental",
+    },
+  },
+  {
+    kind: "genre",
     n: "R&B",
     color: "#edd4a8",
     parentA: "Hip-Hop",

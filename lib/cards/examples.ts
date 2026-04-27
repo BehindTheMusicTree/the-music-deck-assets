@@ -1161,4 +1161,18 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.jeff-beck-superstition-v1.png"],
     ...(artworkPromptFor(92) ?? {}),
   },
+  {
+    id: 93,
+    title: "Superstition",
+    artist: "C2C",
+    year: 2012,
+    genre: "Turntablism",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Banger",
+    artwork: `${ART}artwork.c2c-superstition-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.c2c-superstition-v1.png"],
+    ...(artworkPromptFor(93) ?? {}),
+  },
 ];

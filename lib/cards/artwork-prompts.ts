@@ -305,6 +305,16 @@ The crowd remains in the exact same positions, but now appears illuminated by he
 The environment becomes a vast cavernous hell-stage, with dark rock formations, cracks of glowing magma, and red laser-like beams cutting through the smoke.
 Color palette shifts entirely to deep red, crimson, black, ember orange, and glowing white sparks.
 Mood: demonic, powerful, ritualistic, overwhelming. No text, no symbols, no logos.`,
+  93: `🎛️ Modification Prompt — Superstition — Matrix Scratch DJ Recast
+Modify the original artwork while keeping the exact same composition, framing, number of characters, and their precise positions and postures.
+Transform the mystical nightclub scene into a Matrix-inspired digital world with a dominant blue and green code-matrix glow.
+The central musician becomes a woman DJ performing scratch, stylized and anonymous, with no resemblance to any real person. Replace the instrument with a glowing digital turntable, keeping the same hand positions and gesture dynamics as in the original.
+She wears a long black leather coat and dark sunglasses, with subtle neon reflections.
+The crowd remains in the exact same positions, but now every person also wears sunglasses and Matrix-style leather or dark futuristic clothing, illuminated by cascading green code.
+All mystical elements become digital-occult motifs: falling green characters, glitching arcs, holographic distortions, and swirling streams of matrix-code particles.
+The environment becomes a vast digital hangar, with floating code columns, blue-green laser beams, and fog lit by neon circuitry.
+Color palette shifts to deep blue, matrix green, black, and glowing cyan highlights.
+Mood: futuristic, hypnotic, cyber-mystical, electrifying. No text, no symbols, no logos.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */
