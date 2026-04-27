@@ -62,6 +62,11 @@ function artworkBasename(artworkUrl: string | undefined): string {
   return parts[parts.length - 1] ?? artworkUrl;
 }
 
+function trackIdsLabel(ids: number[] | undefined): string {
+  if (!ids || ids.length === 0) return "—";
+  return ids.join(", ");
+}
+
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
 
 /** Parse date-only or local datetime for sorting; invalid or missing → null. */
@@ -507,7 +512,7 @@ export default function CatalogDeckTable({
       </div>
 
       <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
-        <table className="w-full min-w-[1660px] border-collapse text-left">
+        <table className="w-full min-w-[1820px] border-collapse text-left">
           <thead>
             <tr className="border-b border-ui-border">
               <th className={`${thWrap} w-[120px] pl-3`}>
@@ -725,6 +730,12 @@ export default function CatalogDeckTable({
                   />
                 </div>
               </th>
+              <th className={`${thWrap} min-w-[92px]`}>
+                <span className="leading-snug">Tracks in</span>
+              </th>
+              <th className={`${thWrap} min-w-[92px]`}>
+                <span className="leading-snug">Tracks out</span>
+              </th>
               <th className={`${thWrap} min-w-[132px]`}>
                 <SortToggle
                   label="Artwork"
@@ -939,6 +950,12 @@ export default function CatalogDeckTable({
                     <td className="py-2.5 px-2 align-middle">{card.title}</td>
                     <td className="py-2.5 px-2 text-muted align-middle">
                       {card.artist ?? "—"}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
+                      {trackIdsLabel(card.tracksIn)}
+                    </td>
+                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
+                      {trackIdsLabel(card.tracksOut)}
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                       {card.artwork ? (
@@ -1169,6 +1186,8 @@ export default function CatalogDeckTable({
                         {detailLine("App genre", d.catalogGenreLabel)}
                         {detailLine("Genre line", c.genre ?? "—")}
                         {detailLine("Country / region", c.country ?? "—")}
+                        {detailLine("Tracks in", trackIdsLabel(c.tracksIn))}
+                        {detailLine("Tracks out", trackIdsLabel(c.tracksOut))}
                         {detailLine(
                           "Intensity",
                           formatCatalogIntensity(d.catalogIntensity),
