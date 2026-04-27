@@ -407,7 +407,7 @@
   border-radius: 1px;
   box-sizing: border-box;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  transform: rotate(-90deg) translateY(1px);
+  transform: translateY(1px);
   flex-shrink: 0;
   align-self: center;
   opacity: 0.95;
