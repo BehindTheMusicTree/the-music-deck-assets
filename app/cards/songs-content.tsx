@@ -15,11 +15,17 @@ import {
 } from "@/lib/cards";
 
 export function CardsSongsContent() {
+  const trackIndex = Object.fromEntries(
+    DECK_SPOTLIGHT_CARDS.map((c) => [
+      c.id,
+      { id: c.id, title: c.title, artist: c.artist, genre: c.genre },
+    ]),
+  );
   const fourTetOpusBase = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 85)!;
   const anatomyCard = {
     ...fourTetOpusBase,
-    transitionIn: { title: "Opus", artist: "Eric Prydz", themeColor: "#7090e8" },
-    transitionOut: { title: "Opus", artist: "Lunatic", themeColor: "#141c34" },
+    tracksIn: [84],
+    tracksOut: [86],
   };
 
   const intensityExamples: Array<{
@@ -192,6 +198,7 @@ export function CardsSongsContent() {
             <Card
               card={anatomyCard}
               theme={APP_GENRE_THEMES.Electronic}
+              trackIndex={trackIndex}
             />
           </div>
           <div className="flex flex-col gap-3 pt-2 flex-1">

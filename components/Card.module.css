@@ -133,10 +133,12 @@
 .header {
   position: relative;
   z-index: 2;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 11px;
+  padding: 8px 20px;
+  height: 44px;
   min-height: 44px;
   background: var(--gc-header-bg);
   border-bottom: 1px solid color-mix(in srgb, var(--gc-border) 40%, transparent);
@@ -639,11 +641,11 @@
 }
 
 /* Transition strips: siblings of header+body, positioned relative to the card/face frame.
-   top: 38px = header min-height(44) - half strip(6) → straddles the header/artwork boundary. */
+   Align strip vertical midpoint with the header bottom border (44px). */
 .transitionStrip {
   position: absolute;
-  top: 38px;
-  width: calc(44% + 10px);
+  top: calc(44px - (13px / 2));
+  width: calc(37% + 10px);
   height: 13px;
   display: flex;
   align-items: center;
@@ -651,17 +653,31 @@
   z-index: 20;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
-/* In strip (left): flat left edge, right-pointing arrow tip */
+/* In strip (left): hollow left arrow, right-pointing arrow tip */
 .transitionStripIn {
   left: -10px;
-  padding: 0 10px 0 3px;
-  clip-path: polygon(0% 0%, calc(100% - 7px) 0%, 100% 50%, calc(100% - 7px) 100%, 0% 100%);
+  padding: 0 10px 0 12px;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 7px) 0%,
+    100% 50%,
+    calc(100% - 7px) 100%,
+    0% 100%,
+    8px 50%
+  );
 }
 /* Out strip (right): hollow left arrow (flèche creuse), right-pointing arrow tip */
 .transitionStripOut {
   right: -10px;
   padding: 0 10px 0 12px;
-  clip-path: polygon(8px 0%, calc(100% - 7px) 0%, 100% 50%, calc(100% - 7px) 100%, 8px 100%, 0% 50%);
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 7px) 0%,
+    100% 50%,
+    calc(100% - 7px) 100%,
+    0% 100%,
+    8px 50%
+  );
 }
 .transitionStripText {
   font-family: "Space Mono", monospace;

@@ -49,10 +49,10 @@ export interface CardData {
   /** When true, artwork presentation hides the frame border (full-bleed visual). */
   artworkOverBorder?: boolean;
   country?: string;
-  /** Track that mixes into this card (predecessor in a DJ transition). */
-  transitionIn?: TransitionTrack;
-  /** Track this card transitions into (successor in a DJ transition). */
-  transitionOut?: TransitionTrack;
+  /** Track ids that mix into this card (predecessors in a DJ transition). */
+  tracksIn?: number[];
+  /** Track ids this card transitions into (successors in a DJ transition). */
+  tracksOut?: number[];
 }
 
 export interface CardTypePipSymbol {
@@ -192,6 +192,7 @@ export default function Card({
   small,
   enableZoom = true,
   hoverLift = true,
+  trackIndex,
 }: {
   card: CardData;
   theme: GenreTheme;
@@ -202,6 +203,8 @@ export default function Card({
    * When false, the card does not lift or change shadow on hover (e.g. catalog detail preview).
    */
   hoverLift?: boolean;
+  /** Optional card lookup by id for transition strips (`tracksIn` / `tracksOut`). */
+  trackIndex?: Record<number, Pick<CardData, "id" | "title" | "artist" | "genre">>;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -273,6 +276,24 @@ export default function Card({
 
   /** USA and Bretagne stay flat; other world flags are rotated 90deg for portrait cards. */
   const flagFlatShell = Boolean(flagLayer && !flagRotateR90);
+
+  const resolveTransitionTrack = (
+    id: number | undefined,
+  ): TransitionTrack | undefined => {
+    if (id == null || !trackIndex) return undefined;
+    const ref = trackIndex[id];
+    if (!ref) return undefined;
+    const resolvedRefTheme = ref.genre
+      ? resolveThemeSelection({ genre: ref.genre }).theme
+      : theme;
+    return {
+      title: ref.title,
+      artist: ref.artist,
+      themeColor: resolvedRefTheme.border,
+    };
+  };
+  const transitionIn = resolveTransitionTrack(card.tracksIn?.[0]);
+  const transitionOut = resolveTransitionTrack(card.tracksOut?.[0]);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -597,20 +618,20 @@ export default function Card({
       </div>
 
       {/* Transition strips — positioned relative to the card/face, straddle header/artwork boundary */}
-      {card.transitionIn && (
+      {transitionIn && (
         <div
           className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-          style={{ background: card.transitionIn.themeColor }}
+          style={{ background: transitionIn.themeColor }}
         >
-          <span className={styles.transitionStripText}>{card.transitionIn.title}</span>
+          <span className={styles.transitionStripText}>{transitionIn.title}</span>
         </div>
       )}
-      {card.transitionOut && (
+      {transitionOut && (
         <div
           className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-          style={{ background: card.transitionOut.themeColor }}
+          style={{ background: transitionOut.themeColor }}
         >
-          <span className={styles.transitionStripText}>{card.transitionOut.title}</span>
+          <span className={styles.transitionStripText}>{transitionOut.title}</span>
         </div>
       )}
     </>
