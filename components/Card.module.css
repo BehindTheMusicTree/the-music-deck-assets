@@ -303,6 +303,20 @@
   align-items: center;
   gap: 5px;
 }
+/* World + fade: same rectangular flag as genre-theme “World Themes” list rows, right of the country name */
+.typeStripWorldFlagRow {
+  width: 44px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  border: 1px solid rgba(20, 16, 10, 0.18);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+}
+.typeStripWorldFlagRowSm {
+  width: 32px;
+  height: 20px;
+  border-radius: 3px;
+}
 /* Right column: subgenre text to the left of its diamond; cluster aligned to strip end */
 .typeStripSubSide {
   flex: 1;

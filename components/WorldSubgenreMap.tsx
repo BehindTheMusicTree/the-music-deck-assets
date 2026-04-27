@@ -13,7 +13,8 @@ import type {
   MapLayerMouseEvent,
   StyleSpecification,
 } from "maplibre-gl";
-import type { GenreTheme } from "@/components/Card";
+import type { GenreTheme } from "@/lib/card-theme-types";
+import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import type { Feature, FeatureCollection } from "geojson";
 
 const OSM_RASTER_STYLE: StyleSpecification = {
@@ -151,6 +152,7 @@ function PopupFlagSwatch({ theme }: { theme: GenreTheme }) {
 
   if (!flagLayer) return null;
 
+  const borderFlagSize = flatShellFlagBackgroundSize(flagLayer);
   const bw = 6;
   return (
     <div
@@ -162,6 +164,9 @@ function PopupFlagSwatch({ theme }: { theme: GenreTheme }) {
         border: `${bw}px solid transparent`,
         backgroundClip: "padding-box, border-box",
         backgroundOrigin: "padding-box, border-box",
+        backgroundSize: `100% 100%, ${borderFlagSize}`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
       }}
       aria-hidden
     />

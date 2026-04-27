@@ -1,4 +1,4 @@
-import type { GenreTheme } from "@/components/Card";
+import type { GenreTheme } from "@/lib/card-theme-types";
 
 // ---------------------------------------------------------------------------
 // Canonical country definitions — single source of truth for World cards.
@@ -30,10 +30,14 @@ const GLOBE_ICON =
   '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>';
 
 export const USA_FLAG_PATH = "/cards/artworks/deck/flag-usa.webp";
-const PUERTO_RICO_FLAG_DATA_URI =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23fff'/%3E%3Crect y='0' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='80' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='160' width='300' height='40' fill='%23EF3340'/%3E%3Cpolygon points='0,0 150,100 0,200' fill='%23002B7C'/%3E%3Cpolygon points='52,74 58,90 75,90 61,100 66,116 52,106 38,116 43,100 29,90 46,90' fill='%23fff'/%3E%3C/svg%3E\")";
+const PUERTO_RICO_FLAG_PATH = "/cards/artworks/deck/flag-puerto-rico.svg";
+const PUERTO_RICO_FLAG_URL = `url('${PUERTO_RICO_FLAG_PATH}')`;
 const ENGLAND_FLAG_DATA_URI =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23FFFFFF'/%3E%3Crect x='120' y='0' width='60' height='200' fill='%23C8102E'/%3E%3Crect x='0' y='70' width='300' height='60' fill='%23C8102E'/%3E%3C/svg%3E\")";
+/** White Greek cross on red (civil / state flag style 3:2 for cards). */
+/** Greek cross inset from edges (federal / civil flag style, not edge-to-edge). */
+const SWITZERLAND_FLAG_DATA_URI =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23DA0208'/%3E%3Crect x='13' y='4' width='4' height='12' fill='%23fff'/%3E%3Crect x='5' y='8' width='20' height='4' fill='%23fff'/%3E%3C/svg%3E\")";
 
 export const COUNTRY_DATA: Record<string, CountryDef> = {
   USA: {
@@ -143,14 +147,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
       barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
       frameBorder: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-      frameBg: "linear-gradient(to right,  #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+      frameBg:
+        "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
     flag: {
-      border: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-      bg:     "linear-gradient(to right,  #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+      border:
+        "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+      bg: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
     },
   },
 
@@ -286,6 +292,57 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  Switzerland: {
+    theme: {
+      border: "#DA0208",
+      headerBg: "#14080a",
+      textMain: "#f4f2f2",
+      textBody: "#d8d4d4",
+      parchStrip: "#e8dede",
+      parchAbility: "#f0e8e8",
+      barPop: ["#DA0208", "#f03840"],
+      barExp: ["#1a1a1e", "#48485c"],
+      barGlowPop: "rgba(218,2,8,.85)",
+      barGlowExp: "rgba(50,50,64,.75)",
+      frameBorder: SWITZERLAND_FLAG_DATA_URI,
+      frameBg: SWITZERLAND_FLAG_DATA_URI,
+      frameFilter: "saturate(0.9) brightness(0.95) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border: SWITZERLAND_FLAG_DATA_URI,
+      bg: SWITZERLAND_FLAG_DATA_URI,
+    },
+  },
+
+  Russia: {
+    theme: {
+      border: "#0039A6",
+      headerBg: "#0a0c12",
+      textMain: "#e8ecfa",
+      textBody: "#c8cadc",
+      parchStrip: "#dce0e8",
+      parchAbility: "#e6eaf2",
+      barPop: ["#D52B1E", "#e84840"],
+      barExp: ["#0039A6", "#4068c8"],
+      barGlowPop: "rgba(213,43,30,.85)",
+      barGlowExp: "rgba(0,57,166,.75)",
+      frameBorder:
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+      frameBg:
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+      frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+      bg: "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+    },
+  },
+
   "Puerto Rico": {
     theme: {
       border: "#002B7C",
@@ -298,15 +355,17 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#002B7C", "#4068c0"],
       barGlowPop: "rgba(239,51,64,.85)",
       barGlowExp: "rgba(0,43,124,.75)",
-      frameBorder: PUERTO_RICO_FLAG_DATA_URI,
-      frameBg: PUERTO_RICO_FLAG_DATA_URI,
+      frameBorder: PUERTO_RICO_FLAG_URL,
+      frameBg: PUERTO_RICO_FLAG_URL,
+      /** Hoist-anchored: border ring and pips show the blue field + star, not only stripes. */
+      frameBackgroundPosition: "left center",
       frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
     flag: {
-      border: PUERTO_RICO_FLAG_DATA_URI,
-      bg: PUERTO_RICO_FLAG_DATA_URI,
+      border: PUERTO_RICO_FLAG_URL,
+      bg: PUERTO_RICO_FLAG_URL,
     },
   },
 
@@ -380,8 +439,10 @@ export const COUNTRY_MAP_POINT = {
   England: { lon: -1.5, lat: 52.5 },
   Netherlands: { lon: 5.29, lat: 52.13 },
   Germany: { lon: 10.45, lat: 51.17 },
+  Switzerland: { lon: 8.23, lat: 46.82 },
   Algeria: { lon: 2.65, lat: 28.35 },
   "Puerto Rico": { lon: -66.45, lat: 18.22 },
+  Russia: { lon: 37.62, lat: 55.75 },
   Bretagne: { lon: -3.2, lat: 48.15 },
 } as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
 
@@ -422,3 +483,23 @@ export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
 export const FLAG_ROTATE_R90 = new Set(
   Object.entries(COUNTRY_DATA).filter(([, v]) => v.flag.rotateR90).map(([k]) => k),
 );
+
+/** Card shell uses flat border painting (not R90) — must match `components/Card` frame logic. */
+export const COUNTRY_CARD_FRAME_FLAT_SHELL = new Set<string>([
+  "USA",
+  "Bretagne",
+  "Netherlands",
+  "Germany",
+  "Spain",
+  "Japan",
+  "England",
+  "Switzerland",
+  "Puerto Rico",
+  "Russia",
+]);
+
+export function countryUsesCardFrameFlatShell(
+  country: string | undefined,
+): boolean {
+  return Boolean(country && COUNTRY_CARD_FRAME_FLAT_SHELL.has(country));
+}

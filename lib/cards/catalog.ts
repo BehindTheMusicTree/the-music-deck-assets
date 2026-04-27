@@ -1,4 +1,5 @@
-import type { CardData, GenreTheme } from "@/components/Card";
+import type { CardData } from "@/components/Card";
+import type { GenreTheme } from "@/lib/card-theme-types";
 import {
   APP_GENRE_THEMES,
   type AppGenreName,
@@ -84,6 +85,11 @@ const rawBlendRows: RawCatalogRow[] = WORLD_MIXED_CARDS.map((c) => ({
   theme: themeForCountry(c.country!),
 }));
 
+/**
+ * Catalog row “kind” + row theme for spotlight cards. Uses `themeForCountry` for world rows
+ * instead of `resolveThemeSelection` so the table shows the country shell consistently; full
+ * card chrome still comes from `resolveThemeSelection` on the `Card` component.
+ */
 function spotlightMetaForCard(card: CardData): {
   kind: CatalogEntry["kind"];
   theme: GenreTheme;

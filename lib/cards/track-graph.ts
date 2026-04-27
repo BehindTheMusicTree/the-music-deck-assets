@@ -18,13 +18,11 @@ export type TrackGraph = {
  * - Cycles are allowed (A->B and B->A, larger loops, etc.).
  */
 export function buildTrackGraph(cards: CardData[]): TrackGraph {
-  const byId: TrackGraph["byId"] = Object.create(null) as TrackGraph["byId"];
-  const tracksOutById: TrackGraph["tracksOutById"] = Object.create(
-    null,
-  ) as TrackGraph["tracksOutById"];
-  const tracksInById: TrackGraph["tracksInById"] = Object.create(
-    null,
-  ) as TrackGraph["tracksInById"];
+  /* Plain `{}` (not `Object.create(null)`) so the graph is RSC-serializable when
+   * passed to Client Components (React rejects null-prototype objects). */
+  const byId: TrackGraph["byId"] = {};
+  const tracksOutById: TrackGraph["tracksOutById"] = {};
+  const tracksInById: TrackGraph["tracksInById"] = {};
 
   for (const card of cards) {
     byId[card.id] = {

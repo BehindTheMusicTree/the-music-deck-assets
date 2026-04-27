@@ -7,15 +7,20 @@ import IntensityGauge from "@/components/IntensityGauge";
 import {
   type AppGenreName,
   appGenreIntensity,
-  isCountrySubgenre,
   matchupGenreDisplayLabel,
   matchupTargetDiamondColor,
   matchupTargetsForAppGenre,
+  type ResolvedThemeSelection,
   resolveThemeSelection,
   subgenreIntensity,
   WORLD_THEMES,
 } from "@/lib/genres";
+import { countryUsesCardFrameFlatShell } from "@/lib/countries";
+import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import type { CardRarity } from "@/lib/cards/card-rarity";
+import type { CardTypePip, CardTypePipSymbol, GenreTheme } from "@/lib/card-theme-types";
+
+export type { CardTypePip, CardTypePipSymbol, GenreTheme } from "@/lib/card-theme-types";
 
 export interface TransitionTrack {
   title: string;
@@ -53,38 +58,6 @@ export interface CardData {
   tracksIn?: number[];
   /** Track ids this card transitions into (successors in a DJ transition). */
   tracksOut?: number[];
-}
-
-export interface CardTypePipSymbol {
-  sym: string;
-  color: string;
-  size?: number;
-  svg?: string;
-}
-
-export interface CardTypePip {
-  symbol?: CardTypePipSymbol;
-  flagBg?: string;
-}
-
-export interface GenreTheme {
-  border: string;
-  frameBorder?: string;
-  frameBg?: string;
-  frameRotateR90?: boolean;
-  frameFilter?: string;
-  frameOpacity?: number;
-  headerBg: string;
-  textMain: string;
-  textBody: string;
-  parchStrip: string;
-  parchAbility: string;
-  barPop: [string, string];
-  barExp: [string, string];
-  barGlowPop: string;
-  barGlowExp: string;
-  typePip?: CardTypePip;
-  icon: string;
 }
 
 const RARITY_COLOR: Record<CardRarity, string> = {
@@ -217,13 +190,16 @@ export default function Card({
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleScaleRef = useRef(1);
-  const resolved = card.genre
+  const resolved: ResolvedThemeSelection = card.genre
     ? resolveThemeSelection({ genre: card.genre, country: card.country })
     : {
         theme,
         displayGenre: "—",
         leftLabel: "—",
         rightLabel: "—",
+        selectionKind: "genre-only",
+        typeStripLayout: "default",
+        mirrorCountryTypeStripRight: false,
       };
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
@@ -240,10 +216,28 @@ export default function Card({
     : undefined;
   const pipLeftSymbol = countryTypePip?.symbol;
   const pipLeftFlagBg = countryTypePip?.flagBg;
+  const hasCountryPipArt = Boolean(pipLeftFlagBg || pipLeftSymbol);
+  /** Same flat flag as the world-themes list row, to the right of the country name (not the tiny diamond). */
+  const showWorldFadeCountryRowSwatch = Boolean(
+    resolved.typeStripLayout === "world-row-flag-by-country" &&
+    !pipLeftSymbol &&
+    pipLeftFlagBg &&
+    card.country != null &&
+    card.country === resolved.resolvedCountry &&
+    resolved.flagStyle === "fade",
+  );
+  const worldRowFlagBgIsImage = Boolean(
+    showWorldFadeCountryRowSwatch &&
+    pipLeftFlagBg &&
+    /^url\(/.test(pipLeftFlagBg.trim()),
+  );
+  /** Mirror country flag/symbol on the right, unless we already show the row swatch by the name. */
   const rightUsesCountryIdentity = Boolean(
-    card.country &&
-    resolved.resolvedSubgenre &&
-    isCountrySubgenre(resolved.resolvedSubgenre),
+    !showWorldFadeCountryRowSwatch &&
+      resolved.mirrorCountryTypeStripRight &&
+      hasCountryPipArt &&
+      resolved.resolvedCountry &&
+      (card.country == null || card.country === resolved.resolvedCountry),
   );
   const pipRightSymbol =
     pipLeftSymbol && rightUsesCountryIdentity ? pipLeftSymbol : undefined;
@@ -252,16 +246,27 @@ export default function Card({
 
   const flagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
   const flagBg = resolved.frameBg ?? effectiveTheme.frameBg;
+  const flatShellFrameBorderSize = flatShellFlagBackgroundSize(flagLayer);
+  const flatShellFrameBgSize = flatShellFlagBackgroundSize(flagBg);
   const worldFrameCountry = resolved.resolvedCountry;
+  /**
+   * R90 border shell (cardFlagUsR90) works for *vertical* bar flags; horizontal bands
+   * (e.g. NL / DE / ES) become sideways after -90° and the frame reads as one band.
+   * URL/SVG/photo flags (US, etc.) and Bretagne stripes use flat shell — see `countryUsesCardFrameFlatShell`.
+   */
+  const worldFlagBorderFlatShell = countryUsesCardFrameFlatShell(
+    worldFrameCountry,
+  );
   const flagRotateR90 = Boolean(
-    flagLayer &&
-      worldFrameCountry &&
-      worldFrameCountry !== "USA" &&
-      worldFrameCountry !== "Bretagne",
+    flagLayer && worldFrameCountry && !worldFlagBorderFlatShell,
   );
   const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
   const worldFrameOpacity =
     resolved.frameOpacity ?? effectiveTheme.frameOpacity;
+  const worldFrameBackgroundPosition =
+    resolved.frameBackgroundPosition ??
+    effectiveTheme.frameBackgroundPosition ??
+    "center";
   const flagStyle = resolved.flagStyle;
   const resolvedFadeColor =
     flagStyle === "fade" ? resolved.fadeColor : undefined;
@@ -280,7 +285,7 @@ export default function Card({
     "--gc-parch-ability": effectiveTheme.parchAbility,
   } as React.CSSProperties;
 
-  /** USA and Bretagne stay flat; other world flags are rotated 90deg for portrait cards. */
+  /** World flags in `worldFlagBorderFlatShell` use a flat border; others use R90 when `flagRotateR90`. */
   const flagFlatShell = Boolean(flagLayer && !flagRotateR90);
 
   const resolveTransitionTrack = (
@@ -409,49 +414,71 @@ export default function Card({
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
-            {pipLeftSymbol ? (
-              pipLeftSymbol.svg ? (
-                <span
-                  className={styles.pipSymbol}
-                  style={{
-                    color: pipLeftSymbol.color,
-                    fontSize: pipLeftSymbol.size,
-                  }}
-                  dangerouslySetInnerHTML={{ __html: pipLeftSymbol.svg }}
+            {showWorldFadeCountryRowSwatch ? (
+              <>
+                <span className={styles.typeText}>{strip.left}</span>
+                <div
+                  className={`${styles.typeStripWorldFlagRow} ${small ? styles.typeStripWorldFlagRowSm : ""}`}
+                  style={
+                    {
+                      backgroundImage: pipLeftFlagBg,
+                      backgroundSize: worldRowFlagBgIsImage
+                        ? "cover"
+                        : "100% 100%",
+                      backgroundPosition: worldFrameBackgroundPosition,
+                      backgroundRepeat: "no-repeat",
+                    } as React.CSSProperties
+                  }
+                  aria-hidden
                 />
-              ) : (
-                <span
-                  className={styles.pipSymbol}
-                  style={{
-                    color: pipLeftSymbol.color,
-                    fontSize: pipLeftSymbol.size,
-                  }}
-                >
-                  {pipLeftSymbol.sym}
-                </span>
-              )
-            ) : pipLeftFlagBg ? (
-              <div
-                className={styles.pipFlag}
-                style={{
-                  backgroundImage: pipLeftFlagBg,
-                  backgroundSize: "100% 160%",
-                  backgroundPosition: "center",
-                  border: "1px solid rgba(20, 16, 10, 0.35)",
-                }}
-              />
+              </>
             ) : (
-              <div
-                className={styles.pip}
-                style={{
-                  background: stripLeftBorder,
-                  border: leftPipNeedsBorder
-                    ? "1px solid rgba(20, 16, 10, 0.45)"
-                    : "none",
-                }}
-              />
+              <>
+                {pipLeftSymbol ? (
+                  pipLeftSymbol.svg ? (
+                    <span
+                      className={styles.pipSymbol}
+                      style={{
+                        color: pipLeftSymbol.color,
+                        fontSize: pipLeftSymbol.size,
+                      }}
+                      dangerouslySetInnerHTML={{ __html: pipLeftSymbol.svg }}
+                    />
+                  ) : (
+                    <span
+                      className={styles.pipSymbol}
+                      style={{
+                        color: pipLeftSymbol.color,
+                        fontSize: pipLeftSymbol.size,
+                      }}
+                    >
+                      {pipLeftSymbol.sym}
+                    </span>
+                  )
+                ) : pipLeftFlagBg ? (
+                  <div
+                    className={styles.pipFlag}
+                    style={{
+                      backgroundImage: pipLeftFlagBg,
+                      backgroundSize: "100% 100%",
+                      backgroundPosition: worldFrameBackgroundPosition,
+                      border: "1px solid rgba(20, 16, 10, 0.35)",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className={styles.pip}
+                    style={{
+                      background: stripLeftBorder,
+                      border: leftPipNeedsBorder
+                        ? "1px solid rgba(20, 16, 10, 0.45)"
+                        : "none",
+                    }}
+                  />
+                )}
+                <span className={styles.typeText}>{strip.left}</span>
+              </>
             )}
-            <span className={styles.typeText}>{strip.left}</span>
           </div>
           <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
             <span className={styles.typeText}>{strip.right}</span>
@@ -481,8 +508,8 @@ export default function Card({
                 className={styles.pipFlag}
                 style={{
                   backgroundImage: pipRightFlagBg,
-                  backgroundSize: "100% 160%",
-                  backgroundPosition: "center",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: worldFrameBackgroundPosition,
                   border: "1px solid rgba(20, 16, 10, 0.35)",
                 }}
               />
@@ -677,7 +704,9 @@ export default function Card({
                   ? "100% 100%, 100% 100%, cover"
                   : "100% 100%, cover",
               backgroundPosition:
-                flagStyle === "fade" ? "0% 0%, 0% 0%, 0% 0%" : "0% 0%, 0% 0%",
+                flagStyle === "fade"
+                  ? `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`
+                  : `0% 0%, ${worldFrameBackgroundPosition}`,
               backgroundRepeat: "no-repeat",
               backgroundClip:
                 flagStyle === "fade"
@@ -708,6 +737,23 @@ export default function Card({
                 flagStyle === "fade"
                   ? `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%) border-box, ${flagLayer} border-box`
                   : `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
+              backgroundClip:
+                flagStyle === "fade"
+                  ? "padding-box, border-box, border-box"
+                  : "padding-box, border-box",
+              backgroundOrigin:
+                flagStyle === "fade"
+                  ? "padding-box, border-box, border-box"
+                  : "padding-box, border-box",
+              backgroundSize:
+                flagStyle === "fade"
+                  ? `100% 100%, 100% 100%, ${flatShellFrameBorderSize}`
+                  : `100% 100%, ${flatShellFrameBorderSize}`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition:
+                flagStyle === "fade"
+                  ? `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`
+                  : `0% 0%, ${worldFrameBackgroundPosition}`,
               border: "10px solid transparent",
               filter: worldFrameFilter,
               opacity: worldFrameOpacity,
@@ -727,7 +773,8 @@ export default function Card({
           backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
           backgroundClip: "padding-box, border-box, border-box",
           backgroundOrigin: "padding-box, border-box, border-box",
-          backgroundSize: "100% 100%, 100% 100%, 100% 100%",
+          backgroundSize: `100% 100%, 100% 100%, ${flatShellFrameBgSize}`,
+          backgroundPosition: `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`,
         }}
       >
         {cardContent}

@@ -13,6 +13,12 @@ import {
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";
 
+/** Resolves transition strip labels/colours on catalogue cards (requires both). */
+const CATALOG_CARD_TRACK = {
+  trackIndex: CATALOG_TRACK_GRAPH.byId,
+  trackGraph: CATALOG_TRACK_GRAPH,
+};
+
 type SortKey =
   | "id"
   | "title"
@@ -923,6 +929,7 @@ export default function CatalogDeckTable({
                               theme={theme}
                               small
                               enableZoom={false}
+                              {...CATALOG_CARD_TRACK}
                             />
                           </div>
                         </div>
@@ -1013,8 +1020,9 @@ export default function CatalogDeckTable({
                                       theme={target.theme}
                                       small
                                       enableZoom={false}
+                                      {...CATALOG_CARD_TRACK}
                                     />
-                                  </div>
+                                </div>
                                 </button>
                               );
                             })}
@@ -1065,6 +1073,7 @@ export default function CatalogDeckTable({
                                       theme={target.theme}
                                       small
                                       enableZoom={false}
+                                      {...CATALOG_CARD_TRACK}
                                     />
                                   </div>
                                 </button>
@@ -1180,6 +1189,7 @@ export default function CatalogDeckTable({
                           theme={theme}
                           small
                           enableZoom={false}
+                          {...CATALOG_CARD_TRACK}
                         />
                       </div>
                     ) : (
@@ -1275,6 +1285,7 @@ export default function CatalogDeckTable({
                           theme={d.theme}
                           enableZoom={false}
                           hoverLift={false}
+                          {...CATALOG_CARD_TRACK}
                         />
                       </div>
                     </div>

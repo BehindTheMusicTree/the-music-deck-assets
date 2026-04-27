@@ -18,7 +18,8 @@ import {
   subgenreTheme,
 } from "@/lib/genres";
 import type { GenreName, GenreThemeNavigateDetail } from "@/lib/genres";
-import Card, { type CardData, type GenreTheme } from "@/components/Card";
+import Card, { type CardData } from "@/components/Card";
+import type { GenreTheme } from "@/lib/card-theme-types";
 import IntensityGauge from "@/components/IntensityGauge";
 import { DEFAULT_PREVIEW_CARD } from "@/lib/cards";
 import type { Intensity } from "@/lib/genres";
@@ -58,6 +59,7 @@ function CountryFlagSwatch({
   const flagBg = FLAG_BG[country] ?? FLAG_BORDERS[country];
   if (!flagBg) return null;
   const isImage = /^url\(/.test(flagBg.trim());
+  const bgPos = WORLD_THEMES[country]?.frameBackgroundPosition ?? "center";
   const ow = size === "row" ? 48 : 200;
   const oh = size === "row" ? 28 : 112;
   return (
@@ -68,7 +70,7 @@ function CountryFlagSwatch({
         height: oh,
         backgroundImage: flagBg,
         backgroundSize: isImage ? "cover" : "100% 100%",
-        backgroundPosition: "center",
+        backgroundPosition: bgPos,
         backgroundRepeat: "no-repeat",
       }}
       aria-hidden
@@ -111,7 +113,7 @@ function TypePipMarker({
         style={{
           backgroundImage: theme.typePip.flagBg,
           backgroundSize: "100% 100%",
-          backgroundPosition: "center",
+          backgroundPosition: theme.frameBackgroundPosition ?? "center",
           backgroundRepeat: "no-repeat",
           clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
         }}
@@ -504,11 +506,18 @@ export default function GenreThemePreview() {
                     title={country}
                     onClick={() => {
                       const firstSub = countrySubs[0]?.n;
-                      if (!firstSub) return;
                       setSelectedCountry(country);
                       setSelectedGenreOnly(undefined);
-                      setSelectedSubgenre(firstSub);
-                      applyRulePreview({ genre: firstSub, country });
+                      if (firstSub) {
+                        setSelectedSubgenre(firstSub);
+                        applyRulePreview({ genre: firstSub, country });
+                        return;
+                      }
+                      // Countries in `COUNTRY_DATA` with no `kind: "country"` subgenres
+                      // (e.g. Netherlands, Germany) still need a genre for
+                      // `resolveThemeSelection` — use Mainstream+country (flag frame + fade).
+                      setSelectedSubgenre(undefined);
+                      applyRulePreview({ genre: "Mainstream", country });
                     }}
                   >
                     <span
