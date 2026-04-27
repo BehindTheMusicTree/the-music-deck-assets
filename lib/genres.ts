@@ -310,6 +310,8 @@ export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
   };
 }
 
+const INFLUENCE_WEIGHT = 0.33;
+
 function mixedWithWhite(hex: string, amount: number): string {
   return mixHex(hex, "#ffffff", amount);
 }
@@ -346,8 +348,6 @@ interface BaseSubgenre {
   influence?: {
     genre: NonMainstreamGenreName;
     intensity: Intensity;
-    /** Blend amount in [0..1]. Parent genre/intensity remains dominant. */
-    weight?: number;
   };
 }
 
@@ -652,7 +652,6 @@ export const SUBGENRES: Subgenre[] = [
     influence: {
       genre: "Reggae/Dub",
       intensity: "experimental",
-      weight: 0.32,
     },
   },
   {
@@ -734,7 +733,6 @@ export const SUBGENRES: Subgenre[] = [
     influence: {
       genre: "Hip-Hop",
       intensity: "experimental",
-      weight: 0.28,
     },
   },
   {
@@ -961,8 +959,7 @@ function resolvedGenreSubgenreColor(sub: GenreSubgenre): string {
     sub.influence.genre,
     sub.influence.intensity,
   );
-  const weight = Math.max(0, Math.min(0.5, sub.influence.weight ?? 0.28));
-  return mixHex(baseColor, influenceColor, weight);
+  return mixHex(baseColor, influenceColor, INFLUENCE_WEIGHT);
 }
 
 export function matchupTargetDiamondColor(name: string): string {

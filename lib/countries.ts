@@ -32,6 +32,8 @@ const GLOBE_ICON =
 export const USA_FLAG_PATH = "/cards/artworks/deck/flag-usa.webp";
 const PUERTO_RICO_FLAG_DATA_URI =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23fff'/%3E%3Crect y='0' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='80' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='160' width='300' height='40' fill='%23EF3340'/%3E%3Cpolygon points='0,0 150,100 0,200' fill='%23002B7C'/%3E%3Cpolygon points='52,74 58,90 75,90 61,100 66,116 52,106 38,116 43,100 29,90 46,90' fill='%23fff'/%3E%3C/svg%3E\")";
+const ENGLAND_FLAG_DATA_URI =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23FFFFFF'/%3E%3Crect x='120' y='0' width='60' height='200' fill='%23C8102E'/%3E%3Crect x='0' y='70' width='300' height='60' fill='%23C8102E'/%3E%3C/svg%3E\")";
 
 export const COUNTRY_DATA: Record<string, CountryDef> = {
   USA: {
@@ -80,7 +82,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
         "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
       bg: "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
     },
-    pip: { sym: "◆", color: "#006847", size: 15 },
+    // Use the flag-filled diamond for Mexico (no custom symbol override).
   },
 
   Peru: {
@@ -218,18 +220,15 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#1a2a48", "#3a5088"],
       barGlowPop: "rgba(200,16,46,.85)",
       barGlowExp: "rgba(26,42,72,.75)",
-      frameBorder:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
-      frameBg:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
+      frameBorder: ENGLAND_FLAG_DATA_URI,
+      frameBg: ENGLAND_FLAG_DATA_URI,
       frameFilter: "saturate(0.82) brightness(0.96) contrast(1.02)",
       frameOpacity: 0.72,
       icon: GLOBE_ICON,
     },
     flag: {
-      border:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
-      bg: "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
+      border: ENGLAND_FLAG_DATA_URI,
+      bg: ENGLAND_FLAG_DATA_URI,
     },
   },
 

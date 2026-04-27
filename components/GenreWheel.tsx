@@ -46,7 +46,6 @@ type WheelTileFocus =
       influence?: {
         genre: GenreName;
         intensity: Intensity;
-        weight?: number;
       };
     };
 
@@ -398,7 +397,6 @@ export default function GenreWheel() {
                     ? {
                         genre: s.influence.genre,
                         intensity: s.influence.intensity,
-                        weight: s.influence.weight,
                       }
                     : undefined,
               })
@@ -740,9 +738,7 @@ export default function GenreWheel() {
                               <dd className="m-0" style={{ color: ink }}>
                                 {wheelFocus.influence.genre} (
                                 {formatIntensity(wheelFocus.influence.intensity)}
-                                {typeof wheelFocus.influence.weight === "number"
-                                  ? `, ${Math.round(wheelFocus.influence.weight * 100)}%`
-                                  : ""}
+                                , 33%
                                 )
                               </dd>
                             </div>

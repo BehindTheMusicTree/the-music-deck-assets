@@ -371,24 +371,6 @@ export default function Card({
           <CardArtwork card={card} />
         </div>
 
-        {/* Transition strips: straddle the header/artwork boundary */}
-        {card.transitionIn && (
-          <div
-            className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-            style={{ background: card.transitionIn.themeColor }}
-          >
-            <span className={styles.transitionStripText}>{card.transitionIn.title}</span>
-          </div>
-        )}
-        {card.transitionOut && (
-          <div
-            className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-            style={{ background: card.transitionOut.themeColor }}
-          >
-            <span className={styles.transitionStripText}>{card.transitionOut.title}</span>
-          </div>
-        )}
-
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
@@ -613,6 +595,24 @@ export default function Card({
           </div>
         </div>
       </div>
+
+      {/* Transition strips — positioned relative to the card/face, straddle header/artwork boundary */}
+      {card.transitionIn && (
+        <div
+          className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+          style={{ background: card.transitionIn.themeColor }}
+        >
+          <span className={styles.transitionStripText}>{card.transitionIn.title}</span>
+        </div>
+      )}
+      {card.transitionOut && (
+        <div
+          className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
+          style={{ background: card.transitionOut.themeColor }}
+        >
+          <span className={styles.transitionStripText}>{card.transitionOut.title}</span>
+        </div>
+      )}
     </>
   );
 

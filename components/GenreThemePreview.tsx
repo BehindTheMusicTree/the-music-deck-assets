@@ -383,6 +383,9 @@ export default function GenreThemePreview() {
                                   }}
                                 />
                               </div>
+                              <div className="w-[112px] ml-auto shrink-0">
+                                <IntensityGauge small intensity={intensity} />
+                              </div>
                             </div>
                             {group.map((s) => {
                               const resolvedSubColor = SUBGENRE_COLOR[s.n];
@@ -390,6 +393,11 @@ export default function GenreThemePreview() {
                               const effectiveColor = hasInfluence
                                 ? resolvedSubColor
                                 : baseGroupColor;
+                              const influenceLabel = s.influence
+                                ? `${s.influence.genre} ${formatIntensityLabel(
+                                    s.influence.intensity,
+                                  )} (33%)`
+                                : "—";
                               const parentLabel = s.parentB
                                 ? `${s.parentA} + ${s.parentB}`
                                 : s.intensity === "pop"
@@ -447,21 +455,14 @@ export default function GenreThemePreview() {
                                   >
                                     {hasInfluence ? effectiveColor : "—"}
                                   </span>
-                                  {hasInfluence ? (
-                                    <span
-                                      className="font-mono text-[10px] tracking-wide uppercase"
-                                      style={{ color: "#8a7050" }}
-                                    >
-                                      Influenced
-                                    </span>
-                                  ) : null}
-                                  <div className="w-16 shrink-0" />
-                                  <div className="w-[112px] shrink-0">
-                                    <IntensityGauge
-                                      small
-                                      intensity={s.intensity}
-                                    />
-                                  </div>
+                                  <span
+                                    className="w-44 shrink-0 font-mono text-[10px] tracking-wide uppercase truncate"
+                                    style={{ color: "#8a7050" }}
+                                    title={influenceLabel}
+                                  >
+                                    {influenceLabel}
+                                  </span>
+                                  <div className="w-[112px] shrink-0" />
                                 </button>
                               );
                             })}
