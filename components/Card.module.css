@@ -221,7 +221,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  overflow: hidden;
+  overflow: visible;
 }
 .bodyArtOverBorder {
   position: absolute;
@@ -637,27 +637,29 @@
   transform-origin: center;
 }
 
-/* Track transition strips — In (left) and Out (right), overlapping header/artwork boundary */
+/* Track transition strips — inside .body, straddle the header/artwork boundary */
 .transitionStrip {
   position: absolute;
-  top: 0;
+  top: -7px;
   width: 44%;
   height: 13px;
   display: flex;
   align-items: center;
   overflow: hidden;
-  z-index: 2;
-  /* Right-pointing arrow: flat left edge, pointed right tip */
-  clip-path: polygon(0% 0%, calc(100% - 7px) 0%, 100% 50%, calc(100% - 7px) 100%, 0% 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
+/* In strip (left): flat left edge, right-pointing arrow tip */
 .transitionStripIn {
   left: 0;
   padding: 0 10px 0 3px;
+  clip-path: polygon(0% 0%, calc(100% - 7px) 0%, 100% 50%, calc(100% - 7px) 100%, 0% 100%);
 }
+/* Out strip (right): hollow left arrow (flèche creuse), right-pointing arrow tip */
 .transitionStripOut {
   right: 0;
-  padding: 0 10px 0 3px;
+  padding: 0 10px 0 12px;
+  clip-path: polygon(8px 0%, calc(100% - 7px) 0%, 100% 50%, calc(100% - 7px) 100%, 8px 100%, 0% 50%);
 }
 .transitionStripText {
   font-family: "Space Mono", monospace;

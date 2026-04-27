@@ -370,7 +370,7 @@ export default function GenreWheel() {
       const rBase = wheelSubgenreRadius(s.intensity);
       const r = rBase + placement.rOffset;
       const { x, y } = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
-      const subgenreHex = SUBGENRE_COLOR[s.n] ?? s.color;
+      const subgenreHex = SUBGENRE_COLOR[s.n];
       tiles.push({
         id: s.n,
         el: (

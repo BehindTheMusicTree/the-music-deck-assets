@@ -337,7 +337,8 @@ export type NonMainstreamGenreName = Exclude<GenreName, "Mainstream">;
 
 interface BaseSubgenre {
   n: string;
-  color: string;
+  /** Deprecated: no longer used to resolve theme colour. */
+  color?: string;
   parentA: GenreName | CountryName;
   parentB?: NonMainstreamGenreName;
   t?: number;
@@ -365,7 +366,7 @@ export type Subgenre = GenreSubgenre | CountrySubgenre;
 
 /**
  * Subgenre colours are resolved from `parentA + intensity` (with optional
- * `influence` blend), while `color` remains available for legacy/manual tuning.
+ * `influence` blend). The legacy `color` field is ignored for theme resolution.
  * - **Genre-linked** (`kind: "genre"`): keep each hex in the same hue family as
  *   `GENRE_THEMES[parentA].border` (lighter/darker/more or less saturated, or a
  *   mix toward `parentB` when set). Avoid unrelated colours unless explicitly
@@ -970,7 +971,6 @@ export function matchupTargetDiamondColor(name: string): string {
   }
   const sub = SUBGENRE_BY_NAME[name];
   if (sub?.kind === "genre") return resolvedGenreSubgenreColor(sub);
-  if (sub?.color) return sub.color;
   throw new Error(`Unknown matchup target "${name}"`);
 }
 

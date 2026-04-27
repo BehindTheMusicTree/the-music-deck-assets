@@ -8,8 +8,10 @@ import {
   GENRE_THEMES,
   GENRE_THEME_NAV_EVENT,
   genreThemeSectionDomId,
+  genreIntensityColor,
   intensityLevelIndex,
   SUBGENRES,
+  SUBGENRE_COLOR,
   WORLD_THEMES,
   isCountrySubgenre,
   resolveThemeSelection,
@@ -19,6 +21,7 @@ import type { GenreName, GenreThemeNavigateDetail } from "@/lib/genres";
 import Card, { type CardData, type GenreTheme } from "@/components/Card";
 import IntensityGauge from "@/components/IntensityGauge";
 import { DEFAULT_PREVIEW_CARD } from "@/lib/cards";
+import type { Intensity } from "@/lib/genres";
 
 function isVeryLight(hex: string) {
   if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return false;
@@ -38,6 +41,10 @@ function subgenresForGenreSection(name: string) {
     if (d !== 0) return d;
     return a.n.localeCompare(b.n);
   });
+}
+
+function formatIntensityLabel(intensity: Intensity): string {
+  return intensity.charAt(0).toUpperCase() + intensity.slice(1);
 }
 
 /** Country flag swatch for World Themes table headers. */
@@ -324,87 +331,143 @@ export default function GenreThemePreview() {
                 {/* Subgenre rows — clickable */}
                 {subs.length > 0 && (
                   <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
-                    {subs.map((s) => {
-                      const d = subgenreTheme(s.color, t);
-                      const parentLabel = s.parentB
-                        ? `${s.parentA} + ${s.parentB}`
-                        : s.intensity === "pop"
-                          ? "Pop"
-                          : s.parentA;
-                      return (
-                        <button
-                          key={s.n}
-                          className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
-                          style={{ background: "#f4edd8" }}
-                          onClick={() => {
-                            if (
-                              selectedSubgenre === s.n &&
-                              selectedCountry &&
-                              !isCountrySubgenre(s.n)
-                            ) {
-                              setSelectedCountry(undefined);
-                              setSelectedGenreOnly(undefined);
-                              setSelectedSubgenre(s.n);
-                              applyRulePreview({ genre: s.n });
-                              return;
-                            }
-                            setSelectedGenreOnly(undefined);
-                            setSelectedSubgenre(s.n);
-                            applyRulePreview({ genre: s.n,
-                              country: selectedCountry,
-                            });
-                          }}
-                        >
-                          <div
-                            className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
-                            style={{
-                              background: s.color,
-                              border: isVeryLight(s.color)
-                                ? "1px solid rgba(20, 16, 10, 0.45)"
-                                : "none",
-                            }}
-                          />
-                          <span
-                            className="font-garamond text-sm flex-1"
-                            style={{ color: "#5a4a30" }}
-                          >
-                            {s.n}
-                          </span>
-                          <span
-                            className="font-mono text-[10px] tracking-wide uppercase"
-                            style={{ color: "#8a7050" }}
-                          >
-                            {parentLabel}
-                          </span>
-                          <span
-                            className="font-mono text-xs"
-                            style={{ color: "#8a7050" }}
-                          >
-                            {s.color}
-                          </span>
-                          <div className="flex items-center gap-1 ml-2 shrink-0">
-                            {[d.headerBg, d.textMain, d.textBody].map(
-                              (c, i) => (
-                                <div
-                                  key={i}
-                                  className="w-3 h-3 rounded-[2px] border border-black/10"
-                                  style={{ background: c }}
-                                />
-                              ),
-                            )}
+                    {(["pop", "soft", "experimental", "hardcore"] as Intensity[])
+                      .map((intensity) => {
+                        const group = subs.filter((s) => s.intensity === intensity);
+                        if (group.length === 0) return null;
+                        const baseGroupColor =
+                          name === "Mainstream"
+                            ? GENRE_THEMES.Mainstream.border
+                            : genreIntensityColor(name, intensity);
+                        const groupTheme = subgenreTheme(baseGroupColor, t);
+                        return (
+                          <div key={intensity}>
                             <div
-                              className="w-10 h-3 rounded-[2px]"
-                              style={{
-                                background: `linear-gradient(to right, ${d.barPop[0]}, ${d.barPop[1]})`,
-                              }}
-                            />
+                              className="px-9 py-1.5 flex items-center gap-3 border-b border-[#d8cca8]"
+                              style={{ color: "#7a6444", background: "#eee2c8" }}
+                            >
+                              <span className="font-mono text-[10px] tracking-[0.14em] uppercase">
+                                {formatIntensityLabel(intensity)}
+                              </span>
+                              <div
+                                className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
+                                style={{
+                                  background: baseGroupColor,
+                                  border: isVeryLight(baseGroupColor)
+                                    ? "1px solid rgba(20, 16, 10, 0.45)"
+                                    : "none",
+                                }}
+                              />
+                              <span
+                                className="font-mono text-xs"
+                                style={{ color: "#8a7050" }}
+                              >
+                                {baseGroupColor}
+                              </span>
+                              <div className="flex items-center gap-1 ml-2 shrink-0">
+                                {[
+                                  groupTheme.headerBg,
+                                  groupTheme.textMain,
+                                  groupTheme.textBody,
+                                ].map((c, i) => (
+                                  <div
+                                    key={i}
+                                    className="w-3 h-3 rounded-[2px] border border-black/10"
+                                    style={{ background: c }}
+                                  />
+                                ))}
+                                <div
+                                  className="w-10 h-3 rounded-[2px]"
+                                  style={{
+                                    background: `linear-gradient(to right, ${groupTheme.barPop[0]}, ${groupTheme.barPop[1]})`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            {group.map((s) => {
+                              const resolvedSubColor = SUBGENRE_COLOR[s.n];
+                              const hasInfluence = resolvedSubColor !== baseGroupColor;
+                              const effectiveColor = hasInfluence
+                                ? resolvedSubColor
+                                : baseGroupColor;
+                              const parentLabel = s.parentB
+                                ? `${s.parentA} + ${s.parentB}`
+                                : s.intensity === "pop"
+                                  ? "Pop"
+                                  : s.parentA;
+                              return (
+                                <button
+                                  key={s.n}
+                                  className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
+                                  style={{ background: "#f4edd8" }}
+                                  onClick={() => {
+                                    if (
+                                      selectedSubgenre === s.n &&
+                                      selectedCountry &&
+                                      !isCountrySubgenre(s.n)
+                                    ) {
+                                      setSelectedCountry(undefined);
+                                      setSelectedGenreOnly(undefined);
+                                      setSelectedSubgenre(s.n);
+                                      applyRulePreview({ genre: s.n });
+                                      return;
+                                    }
+                                    setSelectedGenreOnly(undefined);
+                                    setSelectedSubgenre(s.n);
+                                    applyRulePreview({
+                                      genre: s.n,
+                                      country: selectedCountry,
+                                    });
+                                  }}
+                                >
+                                  <div
+                                    className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] box-border"
+                                    style={{
+                                      background: effectiveColor,
+                                      border: isVeryLight(effectiveColor)
+                                        ? "1px solid rgba(20, 16, 10, 0.45)"
+                                        : "none",
+                                    }}
+                                  />
+                                  <span
+                                    className="font-garamond text-sm flex-1"
+                                    style={{ color: "#5a4a30" }}
+                                  >
+                                    {s.n}
+                                  </span>
+                                  <span
+                                    className="font-mono text-[10px] tracking-wide uppercase"
+                                    style={{ color: "#8a7050" }}
+                                  >
+                                    {parentLabel}
+                                  </span>
+                                  <span
+                                    className="font-mono text-xs"
+                                    style={{ color: "#8a7050" }}
+                                  >
+                                    {hasInfluence ? effectiveColor : "—"}
+                                  </span>
+                                  {hasInfluence ? (
+                                    <span
+                                      className="font-mono text-[10px] tracking-wide uppercase"
+                                      style={{ color: "#8a7050" }}
+                                    >
+                                      Influenced
+                                    </span>
+                                  ) : null}
+                                  <div className="w-16 shrink-0" />
+                                  <div className="w-[112px] shrink-0">
+                                    <IntensityGauge
+                                      small
+                                      intensity={s.intensity}
+                                    />
+                                  </div>
+                                </button>
+                              );
+                            })}
                           </div>
-                          <div className="w-[112px] shrink-0">
-                            <IntensityGauge small intensity={s.intensity} />
-                          </div>
-                        </button>
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                 )}
               </div>
@@ -477,7 +540,7 @@ export default function GenreThemePreview() {
                             applyRulePreview({ genre: s.n, country });
                           }}
                         >
-                          <TypePipMarker theme={t} fallbackColor={s.color} />
+                          <TypePipMarker theme={t} fallbackColor={t.border} />
                           <span
                             className="font-garamond text-sm flex-1"
                             style={{ color: "#5a4a30" }}
@@ -494,7 +557,7 @@ export default function GenreThemePreview() {
                             className="font-mono text-xs"
                             style={{ color: "#8a7050" }}
                           >
-                            {s.color}
+                            {t.border}
                           </span>
                           <div className="w-[112px] shrink-0">
                             <IntensityGauge small intensity={s.intensity} />
