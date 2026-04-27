@@ -315,6 +315,13 @@ All mystical elements become digital-occult motifs: falling green characters, gl
 The environment becomes a vast digital hangar, with floating code columns, blue-green laser beams, and fog lit by neon circuitry.
 Color palette shifts to deep blue, matrix green, black, and glowing cyan highlights.
 Mood: futuristic, hypnotic, cyber-mystical, electrifying. No text, no symbols, no logos.`,
+  95: `🎨 Magic-Style Illustration Prompt — Ich geh heute nicht mehr tanzen — Red Soft Loneliness
+High-detail semi-realistic illustration inspired by the emotional contrast of "Ich geh heute nicht mehr tanzen". Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+In the upper third, depict a person sitting alone on the left side of a ballroom or dance hall. Their silhouette is stylized and anonymous, with no resemblance to any real person. Their posture is quiet, introspective, slightly slouched, as if disconnected from the surrounding energy.
+On the right side, show a group of people dancing and having fun, silhouettes lively and expressive, but still stylized and anonymous. They move with joy, laughter, and rhythm, creating a strong emotional contrast with the solitary figure.
+The environment is a warm, softly lit dance hall with subtle reflections on the floor, faint haze, and gentle light beams.
+The dominant color is a very light red, almost pastel, used in soft glows, highlights, and atmospheric haze. Add delicate particles and warm reflections to enhance the emotional tone.
+Mood: melancholic, introspective, contrasted with joy and movement. Dominant tones: light red, soft pink, warm beige, gentle amber. No text, no symbols, no logos.`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

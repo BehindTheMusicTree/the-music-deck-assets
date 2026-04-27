@@ -1,7 +1,10 @@
 import type { CardData } from "@/components/Card";
 
 export type TrackGraph = {
-  byId: Record<number, Pick<CardData, "id" | "title" | "artist" | "genre">>;
+  byId: Record<
+    number,
+    Pick<CardData, "id" | "title" | "artist" | "genre" | "artwork">
+  >;
   tracksOutById: Record<number, number[]>;
   tracksInById: Record<number, number[]>;
 };
@@ -29,6 +32,7 @@ export function buildTrackGraph(cards: CardData[]): TrackGraph {
       title: card.title,
       artist: card.artist,
       genre: card.genre,
+      artwork: card.artwork,
     };
     tracksOutById[card.id] = [];
     tracksInById[card.id] = [];

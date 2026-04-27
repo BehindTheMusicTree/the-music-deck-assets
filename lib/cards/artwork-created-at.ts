@@ -36,6 +36,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.hakuna-matata-v1.png": "2026-04-26T13:13:05",
   "artwork.is-this-love-v1.png": "2026-04-23T13:45:18",
   "artwork.isaac-hays-shaft-v1.png": "2026-04-26T14:27:18",
+  "artwork.jannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png": "2026-04-27T17:38:00",
   "artwork.jeff-beck-superstition-v1.png": "2026-04-27T15:45:34",
   "artwork.joe-cocker-woman-to-woman-v1.png": "2026-04-26T16:37:39",
   "artwork.justin-timberlake-cry-me-a-river-v1.png": "2026-04-23T13:45:17",

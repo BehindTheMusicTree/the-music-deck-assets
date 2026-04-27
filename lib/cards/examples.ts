@@ -1193,4 +1193,20 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.lil-kleine-drank-drugs-v1.png"],
   },
+  {
+    id: 95,
+    title: "Ich geh heut nicht mehr tanzen",
+    artist: "Jannen May & ENNIO",
+    year: 2016,
+    genre: "Pop Rock",
+    country: "Germany",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 7,
+    rarity: "Classic",
+    artwork: `${ART}artwork.jannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.jannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png"],
+    ...(artworkPromptFor(95) ?? {}),
+  },
 ];

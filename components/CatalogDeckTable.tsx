@@ -47,8 +47,10 @@ const CATALOG_GRID_THUMB_SCALE = 0.58 * 4;
 const CATALOG_CARD_NATIVE_W = 272;
 const CATALOG_CARD_NATIVE_H = 400;
 const CATALOG_DETAIL_CARD_SCALE = 2;
-const CATALOG_DETAIL_CARD_BOX_W = CATALOG_CARD_NATIVE_W * CATALOG_DETAIL_CARD_SCALE;
-const CATALOG_DETAIL_CARD_BOX_H = CATALOG_CARD_NATIVE_H * CATALOG_DETAIL_CARD_SCALE;
+const CATALOG_DETAIL_CARD_BOX_W =
+  CATALOG_CARD_NATIVE_W * CATALOG_DETAIL_CARD_SCALE;
+const CATALOG_DETAIL_CARD_BOX_H =
+  CATALOG_CARD_NATIVE_H * CATALOG_DETAIL_CARD_SCALE;
 
 const INTENSITY_VALUES: readonly Intensity[] = [
   "pop",
@@ -61,11 +63,6 @@ function artworkBasename(artworkUrl: string | undefined): string {
   if (!artworkUrl) return "";
   const parts = artworkUrl.split("/");
   return parts[parts.length - 1] ?? artworkUrl;
-}
-
-function trackIdsLabel(ids: number[] | undefined): string {
-  if (!ids || ids.length === 0) return "—";
-  return ids.join(", ");
 }
 
 function trackRefsLabel(
@@ -480,6 +477,12 @@ export default function CatalogDeckTable({
     sortKey,
     sortAsc,
   ]);
+
+  const catalogEntryById = useMemo(() => {
+    const byId = new Map<number, CatalogEntry>();
+    for (const e of CATALOG_ENTRIES) byId.set(e.card.id, e);
+    return byId;
+  }, []);
 
   const viewToggleBtn =
     "px-3 py-1.5 font-cinzel text-[10px] sm:text-[11px] tracking-[0.14em] rounded-[4px] transition-colors";
@@ -968,32 +971,108 @@ export default function CatalogDeckTable({
                       {card.artist ?? "—"}
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                      <span
-                        className="font-mono text-[11px] leading-snug text-white/85"
-                        title={trackRefsLabel(
-                          CATALOG_TRACK_GRAPH.tracksInById[card.id],
-                          CATALOG_TRACK_GRAPH.byId,
-                        )}
-                      >
-                        {trackRefsLabel(
-                          CATALOG_TRACK_GRAPH.tracksInById[card.id],
-                          CATALOG_TRACK_GRAPH.byId,
-                        )}
-                      </span>
+                      {(() => {
+                        const ids = CATALOG_TRACK_GRAPH.tracksInById[card.id];
+                        if (!ids || ids.length === 0) {
+                          return <span className="text-muted/80">—</span>;
+                        }
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {ids.map((id) => {
+                              const target = catalogEntryById.get(id);
+                              if (!target) {
+                                return (
+                                  <span
+                                    key={id}
+                                    className="inline-flex h-9 min-w-8 items-center justify-center rounded border border-ui-border/70 bg-[#12121a] px-1 font-mono text-[10px] text-muted"
+                                  >
+                                    {id}
+                                  </span>
+                                );
+                              }
+                              return (
+                                <button
+                                  key={id}
+                                  type="button"
+                                  className="flex justify-center rounded border border-ui-border/60 bg-[#12121a]/50 hover:border-gold/40"
+                                  style={{ width: 102, height: 150, overflow: "hidden" }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCatalogEntryDetail(target);
+                                  }}
+                                  aria-label={`Open catalogue details for ${target.card.title}`}
+                                >
+                                  <div
+                                    style={{
+                                      transform: "scale(0.58)",
+                                      transformOrigin: "top center",
+                                    }}
+                                  >
+                                    <Card
+                                      card={target.card}
+                                      theme={target.theme}
+                                      small
+                                      enableZoom={false}
+                                    />
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                      <span
-                        className="font-mono text-[11px] leading-snug text-white/85"
-                        title={trackRefsLabel(
-                          CATALOG_TRACK_GRAPH.tracksOutById[card.id],
-                          CATALOG_TRACK_GRAPH.byId,
-                        )}
-                      >
-                        {trackRefsLabel(
-                          CATALOG_TRACK_GRAPH.tracksOutById[card.id],
-                          CATALOG_TRACK_GRAPH.byId,
-                        )}
-                      </span>
+                      {(() => {
+                        const ids = CATALOG_TRACK_GRAPH.tracksOutById[card.id];
+                        if (!ids || ids.length === 0) {
+                          return <span className="text-muted/80">—</span>;
+                        }
+                        return (
+                          <div className="flex items-center gap-1.5">
+                            {ids.map((id) => {
+                              const target = catalogEntryById.get(id);
+                              if (!target) {
+                                return (
+                                  <span
+                                    key={id}
+                                    className="inline-flex h-9 min-w-8 items-center justify-center rounded border border-ui-border/70 bg-[#12121a] px-1 font-mono text-[10px] text-muted"
+                                  >
+                                    {id}
+                                  </span>
+                                );
+                              }
+                              return (
+                                <button
+                                  key={id}
+                                  type="button"
+                                  className="flex justify-center rounded border border-ui-border/60 bg-[#12121a]/50 hover:border-gold/40"
+                                  style={{ width: 102, height: 150, overflow: "hidden" }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCatalogEntryDetail(target);
+                                  }}
+                                  aria-label={`Open catalogue details for ${target.card.title}`}
+                                >
+                                  <div
+                                    style={{
+                                      transform: "scale(0.58)",
+                                      transformOrigin: "top center",
+                                    }}
+                                  >
+                                    <Card
+                                      card={target.card}
+                                      theme={target.theme}
+                                      small
+                                      enableZoom={false}
+                                    />
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                       {card.artwork ? (
