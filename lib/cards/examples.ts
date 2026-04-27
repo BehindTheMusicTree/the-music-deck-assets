@@ -1115,4 +1115,19 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
     artworkOffsetY: -20,
   },
+  {
+    id: 90,
+    title: "Vois sur ton chemin",
+    artist: "Les Choristes",
+    year: 2004,
+    genre: "Choral",
+    country: "France",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],
+  },
 ];

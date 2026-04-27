@@ -41,6 +41,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.lady-gaga-poker-face-v1.png": "2026-04-23T13:45:17",
   "artwork.las-ketchup-the-ketchup-song-v1.png": "2026-04-25T17:00:07",
   "artwork.led-zeppelin-v1.png": "2026-04-23T13:45:18",
+  "artwork.les-choristes-vois-sur-ton-chemin-v1.png": "2026-04-27T11:43:25",
   "artwork.les-corons-lens-v1.png": "2026-04-25T20:55:35",
   "artwork.los-del-rio-la-macarena-v1.png": "2026-04-25T17:12:47",
   "artwork.luis-mariano-cest-magnifique-v1.png": "2026-04-25T20:14:38",

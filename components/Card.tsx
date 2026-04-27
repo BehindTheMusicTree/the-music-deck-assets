@@ -219,8 +219,12 @@ export default function Card({
 
   const flagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
   const flagBg = resolved.frameBg ?? effectiveTheme.frameBg;
-  const flagUsR90 = Boolean(
-    (resolved.frameRotateR90 ?? effectiveTheme.frameRotateR90) && flagLayer,
+  const worldFrameCountry = resolved.resolvedCountry;
+  const flagRotateR90 = Boolean(
+    flagLayer &&
+      worldFrameCountry &&
+      worldFrameCountry !== "USA" &&
+      worldFrameCountry !== "Bretagne",
   );
   const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
   const worldFrameOpacity =
@@ -243,8 +247,8 @@ export default function Card({
     "--gc-parch-ability": effectiveTheme.parchAbility,
   } as React.CSSProperties;
 
-  /** World flags other than USA (e.g. France): same shell as USA, no rotation */
-  const flagFlatShell = Boolean(flagLayer && !flagUsR90);
+  /** USA and Bretagne stay flat; other world flags are rotated 90deg for portrait cards. */
+  const flagFlatShell = Boolean(flagLayer && !flagRotateR90);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -580,7 +584,7 @@ export default function Card({
       >
         {cardContent}
       </div>
-    ) : flagUsR90 ? (
+    ) : flagRotateR90 ? (
       <div className={`${styles.cardShell}${staticClass}`}>
         <div
           className={styles.cardFlagUsR90}

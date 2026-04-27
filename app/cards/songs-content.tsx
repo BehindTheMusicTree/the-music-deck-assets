@@ -190,7 +190,7 @@ export function CardsSongsContent() {
             {[
               [
                 "Header",
-                "Icon: Genre icon.\nTitle: Song title.\nArtist: Optional artist name.\nPop: Integer 1-9.\nGlow: Scales with pop (same value used for award symbols).\nAlignment: If artist is missing, title is vertically centered.",
+                "Icon: Genre icon.\nTitle: Song title.\nArtist: Omit if the song is traditional with no attributed artist, or if rights are not cleared.\nPop: Integer 1-9.\nGlow: Scales with pop (same value used for award symbols).\nAlignment: If artist is missing, title is vertically centered.",
               ],
               [
                 "Artwork",
@@ -198,28 +198,31 @@ export function CardsSongsContent() {
               ],
               [
                 "Type strip",
-                "Parchment (#ede4cc); left side = genre diamond + genre name, right side = subgenre name + subgenre diamond. Both diamonds and the entire card chrome use the subgenre theme when one exists (see below). Very light diamonds get a subtle dark border for readability.",
+                "Base: Parchment (#ede4cc).\nLeft side: Genre diamond + genre name.\nRight side: Subgenre name + subgenre diamond.\nTheme rule: Both diamonds and the full card chrome use the subgenre theme when one exists.\nReadability: Very light diamonds get a subtle dark border.",
               ],
               [
                 "Matchup strip",
-                "Same parchment base and clipped shape as the type strip, directly beneath it. Left half has a reddish wash and lists genres this card is weak against (colour diamond left, genre name right). Right half has a greenish wash and lists advantage targets (name left, diamond right, like the type strip). Data is canonical in lib/genres.ts (GENRE_BATTLE_MATCHUP). Pure world cards (no resolved genre) show an em dash on each side.",
+                "Base: Same parchment and clipped shape as the type strip, directly beneath it.\nLeft half: Reddish wash, lists weakness targets (colour diamond left, genre name right).\nRight half: Greenish wash, lists advantage targets (name left, diamond right, like the type strip).\nData source: lib/genres.ts (GENRE_BATTLE_MATCHUP).\nWorld cards: Pure world cards (no resolved genre) show an em dash on each side.",
               ],
               [
                 "Ability box",
-                "Parchment (#f4edd8) — ability name and flavour description",
+                "Base: Parchment (#f4edd8).\nContent: Ability name + flavour description.",
               ],
               [
                 "Stats Left - Popularity",
-                "Award symbols only (no text label, no 1–9 number).",
+                "Display: Award symbols only.\nNo text: No text label.\nNo number: No 1-9 numeric display.",
               ],
               [
                 "Stats Right - Intensity",
-                "Right triangle with the right angle on the right. The full triangle is visible in a dull (terne) grey; the filled band uses a green→red gradient for 1/4 (pop) through 4/4 (hardcore); a vertical cursor marks the fill edge, with the same fill percentage (25%–100%) under that position.",
+                "Shape: Right triangle with the right angle on the right.\nBackground: Full triangle visible in dull grey.\nFill: Green-to-red gradient for 1/4 (pop) through 4/4 (hardcore).\nCursor: Vertical cursor marks the fill edge.\nPercentage: Fill percentage under cursor matches position (25%-100%).",
               ],
-              ["Footer", "Year · rarity (SVG shape + name)"],
+              [
+                "Footer",
+                "Year: Release year.\nRarity: SVG shape + rarity name.",
+              ],
               [
                 "Border",
-                "10px solid; colour = subgenre canonical colour if the subgenre has one, otherwise genre border colour. World cards use the country flag in landscape; mixed World/Genre cards fade from flag (left) to genre colour (right).",
+                "Mode normal: 10px solid border.\nMode bleed: No border; artwork bleeds to the card edge.\nColour rule (normal mode): Subgenre canonical colour if available, otherwise genre border colour.\nWorld cards (normal mode): Country flag in landscape.\nMixed World/Genre (normal mode): Fade from flag (left) to genre colour (right).",
               ],
             ].map(([name, desc]) => (
               <div key={name} className="flex gap-3">

@@ -841,6 +841,13 @@ export const SUBGENRES: Subgenre[] = [
     parentA: "Vintage",
     intensity: "pop",
   },
+  {
+    kind: "genre",
+    n: "Choral",
+    color: "#d2cdc2",
+    parentA: "Vintage",
+    intensity: "pop",
+  },
 ];
 
 // Only genre-subgenres can drive a derived subgenre color/theme.

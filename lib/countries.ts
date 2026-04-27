@@ -362,8 +362,8 @@ export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?
 
 export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
-    .filter(([, v]) => v.pip?.bg || v.flag.bg)
-    .map(([k, v]) => [k, v.pip?.bg ?? v.flag.bg!]),
+    .filter(([, v]) => v.pip?.bg || v.flag.border)
+    .map(([k, v]) => [k, v.pip?.bg ?? v.flag.border]),
 );
 
 export const FLAG_ROTATE_R90 = new Set(

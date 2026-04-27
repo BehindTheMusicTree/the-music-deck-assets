@@ -1,6 +1,5 @@
 "use client";
 
-import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import {
   appGenreIntensity,
@@ -43,14 +42,18 @@ function subgenresForGenreSection(name: string) {
 /** World card flag frame — row strip or modal hero (no country text). */
 function CountryFlagSwatch({
   theme,
+  country,
   size,
 }: {
   theme: GenreTheme;
+  country: string;
   size: "row" | "panel";
 }) {
   const flagLayer = theme.frameBorder;
   const flagBg = theme.frameBg;
-  const rot = Boolean(theme.frameRotateR90 && (flagLayer || flagBg));
+  const rot = Boolean(
+    country !== "USA" && country !== "Bretagne" && (flagLayer || flagBg),
+  );
 
   if (rot && (flagBg ?? flagLayer)) {
     const src = (flagBg ?? flagLayer) as string;
@@ -117,18 +120,6 @@ export default function GenreThemePreview() {
   const [selectedSubgenre, setSelectedSubgenre] = useState<string | undefined>(
     undefined,
   );
-  const [worldModalCountry, setWorldModalCountry] = useState<string | null>(
-    null,
-  );
-
-  useEffect(() => {
-    if (!worldModalCountry) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setWorldModalCountry(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [worldModalCountry]);
 
   const orderedGenres: GenreName[] = [
     "Mainstream",
@@ -406,130 +397,105 @@ export default function GenreThemePreview() {
           })}
 
           <div className="section-title-sub mt-2 mb-1">World Themes</div>
-          {Object.entries(WORLD_THEMES).map(([country, t]) => (
-            <div
-              key={country}
-              className="border border-ui-border rounded-[6px] overflow-hidden"
-            >
-              <button
-                type="button"
-                className="w-full flex items-center justify-center gap-4 px-4 py-3 transition-opacity hover:opacity-80"
-                style={{
-                  borderLeft: `4px solid ${t.border}`,
-                  background: "#ede4cc",
-                }}
-                aria-label={`Open ${country} — country subgenres and flag`}
-                title={country}
-                onClick={() => setWorldModalCountry(country)}
-              >
-                <span
-                  className="shrink-0"
-                  dangerouslySetInnerHTML={{
-                    __html: t.icon.replace(/currentColor/g, t.border),
-                  }}
-                />
-                <CountryFlagSwatch theme={t} size="row" />
-              </button>
-            </div>
-          ))}
+          {Object.entries(WORLD_THEMES)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([country, t]) => {
+              const countrySubs = SUBGENRES.filter(
+                (s) => s.kind === "country" && s.parentA === country,
+              ).sort((a, b) => {
+                const d =
+                  intensityLevelIndex(a.intensity) -
+                  intensityLevelIndex(b.intensity);
+                if (d !== 0) return d;
+                return a.n.localeCompare(b.n);
+              });
+              return (
+                <div
+                  key={country}
+                  className="border border-ui-border rounded-[6px] overflow-hidden"
+                >
+                  <button
+                    type="button"
+                    className="w-full flex items-center gap-4 px-4 py-2.5 text-left transition-opacity hover:opacity-80"
+                    style={{
+                      borderLeft: `4px solid ${t.border}`,
+                      background: "#ede4cc",
+                    }}
+                    aria-label={`${country} theme`}
+                    title={country}
+                    onClick={() => {
+                      const firstSub = countrySubs[0]?.n;
+                      if (!firstSub) return;
+                      setSelectedCountry(country);
+                      setSelectedGenreOnly(undefined);
+                      setSelectedSubgenre(firstSub);
+                      applyRulePreview({ genre: firstSub, country });
+                    }}
+                  >
+                    <span
+                      className="shrink-0"
+                      dangerouslySetInnerHTML={{
+                        __html: t.icon.replace(/currentColor/g, t.border),
+                      }}
+                    />
+                    <CountryFlagSwatch theme={t} country={country} size="row" />
+                    <span
+                      className="font-cinzel text-sm tracking-[2px] ml-1"
+                      style={{ color: "#2e2010" }}
+                    >
+                      {country}
+                    </span>
+                  </button>
+
+                  {countrySubs.length > 0 && (
+                    <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
+                      {countrySubs.map((s) => (
+                        <button
+                          key={s.n}
+                          type="button"
+                          className="w-full flex items-center gap-3 pl-9 pr-4 py-2 text-left transition-opacity hover:opacity-80"
+                          style={{ background: "#f4edd8" }}
+                          onClick={() => {
+                            setSelectedCountry(country);
+                            setSelectedGenreOnly(undefined);
+                            setSelectedSubgenre(s.n);
+                            applyRulePreview({ genre: s.n, country });
+                          }}
+                        >
+                          <div
+                            className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] border border-black/20"
+                            style={{ background: s.color }}
+                          />
+                          <span
+                            className="font-garamond text-sm flex-1"
+                            style={{ color: "#5a4a30" }}
+                          >
+                            {s.n}
+                          </span>
+                          <span
+                            className="font-mono text-[10px] tracking-wide uppercase"
+                            style={{ color: "#8a7050" }}
+                          >
+                            {country}
+                          </span>
+                          <span
+                            className="font-mono text-xs"
+                            style={{ color: "#8a7050" }}
+                          >
+                            {s.color}
+                          </span>
+                          <div className="w-[112px] shrink-0">
+                            <IntensityGauge small intensity={s.intensity} />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
       </div>
-
-      {worldModalCountry && typeof document !== "undefined"
-        ? createPortal(
-            <div
-              className="fixed inset-0 z-200 flex items-center justify-center bg-black/55 p-4"
-              role="presentation"
-              onClick={() => setWorldModalCountry(null)}
-            >
-              <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="world-theme-modal-title"
-                className="relative max-h-[min(90vh,640px)] w-full max-w-md overflow-y-auto rounded-lg border border-ui-border bg-surface p-5 shadow-xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  type="button"
-                  className="absolute right-3 top-3 font-mono text-lg leading-none text-muted hover:text-white"
-                  aria-label="Close"
-                  onClick={() => setWorldModalCountry(null)}
-                >
-                  ×
-                </button>
-                <h2
-                  id="world-theme-modal-title"
-                  className="font-cinzel text-xl tracking-[3px] text-white pr-8 mb-4"
-                >
-                  {worldModalCountry}
-                </h2>
-                <div className="mb-6 flex justify-center">
-                  <CountryFlagSwatch
-                    theme={WORLD_THEMES[worldModalCountry]!}
-                    size="panel"
-                  />
-                </div>
-                <div className="font-mono text-[10px] tracking-wide text-muted uppercase mb-2">
-                  Country-native subgenres
-                </div>
-                {(() => {
-                  const countrySubs = SUBGENRES.filter(
-                    (s) =>
-                      s.kind === "country" &&
-                      s.parentA === worldModalCountry,
-                  ).sort((a, b) => {
-                    const d =
-                      intensityLevelIndex(a.intensity) -
-                      intensityLevelIndex(b.intensity);
-                    if (d !== 0) return d;
-                    return a.n.localeCompare(b.n);
-                  });
-                  if (countrySubs.length === 0) {
-                    return (
-                      <p className="font-garamond italic text-muted text-sm m-0">
-                        No country-native subgenres listed for this country.
-                      </p>
-                    );
-                  }
-                  return (
-                    <ul className="m-0 list-none p-0 flex flex-col gap-1">
-                      {countrySubs.map((s) => (
-                        <li key={s.n}>
-                          <button
-                            type="button"
-                            className="w-full flex items-center gap-3 rounded-md border border-ui-border/80 bg-card/80 px-3 py-2.5 text-left transition-opacity hover:opacity-90"
-                            onClick={() => {
-                              setSelectedCountry(worldModalCountry);
-                              setSelectedGenreOnly(undefined);
-                              setSelectedSubgenre(s.n);
-                              applyRulePreview({
-                                genre: s.n,
-                                country: worldModalCountry,
-                              });
-                              setWorldModalCountry(null);
-                            }}
-                          >
-                            <div
-                              className="h-3 w-3 shrink-0 rotate-45 rounded-[1px] border border-black/20"
-                              style={{ background: s.color }}
-                            />
-                            <span className="font-garamond text-sm text-white/90 flex-1 min-w-0">
-                              {s.n}
-                            </span>
-                            <span className="font-mono text-[10px] uppercase text-muted shrink-0">
-                              {s.intensity}
-                            </span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                })()}
-              </div>
-            </div>,
-            document.body,
-          )
-        : null}
     </div>
   );
 }
