@@ -49,6 +49,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.los-del-rio-la-macarena-v1.png": "2026-04-25T17:12:47",
   "artwork.luis-mariano-cest-magnifique-v1.png": "2026-04-25T20:14:38",
   "artwork.luiz-fonzi-despacito-v1.png": "2026-04-23T13:45:17",
+  "artwork.lil-kleine-drank-drugs-v1.png": "2026-04-27T16:56:02",
   "artwork.lunatic-opus-v1.png": "2026-04-26T17:21:44",
   "artwork.me-gustas-tu-v1.png": "2026-04-23T13:45:17",
   "artwork.metallica-enter-sandman-v1.png": "2026-04-23T13:45:17",

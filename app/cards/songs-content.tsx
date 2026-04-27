@@ -13,8 +13,10 @@ import {
   CARD_ARTWORK_BASE,
   CARD_RARITY_ORDER,
 } from "@/lib/cards";
+import { buildTrackGraph } from "@/lib/cards/track-graph";
 
 export function CardsSongsContent() {
+  const trackGraph = buildTrackGraph(DECK_SPOTLIGHT_CARDS);
   const trackIndex = Object.fromEntries(
     DECK_SPOTLIGHT_CARDS.map((c) => [
       c.id,
@@ -24,8 +26,6 @@ export function CardsSongsContent() {
   const fourTetOpusBase = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 85)!;
   const anatomyCard = {
     ...fourTetOpusBase,
-    tracksIn: [84],
-    tracksOut: [86],
   };
 
   const intensityExamples: Array<{
@@ -199,6 +199,7 @@ export function CardsSongsContent() {
               card={anatomyCard}
               theme={APP_GENRE_THEMES.Electronic}
               trackIndex={trackIndex}
+              trackGraph={trackGraph}
             />
           </div>
           <div className="flex flex-col gap-3 pt-2 flex-1">
@@ -241,7 +242,7 @@ export function CardsSongsContent() {
               ],
               [
                 "Track Transition",
-                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nIn: The preceding track that mixes into this card — left strip. Colour: genre theme of the incoming track.\nOut: The track this card transitions into — right strip. Colour: genre theme of the outgoing track.\nGap: The two strips never touch; a clear zone separates them in the centre.",
+                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nOut (source of truth): Store links on the current card with `tracksOut` (array of card ids).\nIn (derived): Incoming links are auto-derived from other cards' `tracksOut`; do not duplicate as manual data.\nIn strip: Left strip shows the first derived incoming track. Out strip: Right strip shows the first outgoing track.\nColour: each strip uses the resolved genre theme of the linked track.\nValidation: Unknown ids in `tracksOut` throw an error when the track graph is built.\nGap: The two strips never touch; a clear zone separates them in the centre.",
               ],
             ].map(([name, desc]) => (
               <div key={name} className="flex gap-3">

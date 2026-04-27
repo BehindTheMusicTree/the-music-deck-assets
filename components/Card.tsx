@@ -193,6 +193,7 @@ export default function Card({
   enableZoom = true,
   hoverLift = true,
   trackIndex,
+  trackGraph,
 }: {
   card: CardData;
   theme: GenreTheme;
@@ -205,6 +206,11 @@ export default function Card({
   hoverLift?: boolean;
   /** Optional card lookup by id for transition strips (`tracksIn` / `tracksOut`). */
   trackIndex?: Record<number, Pick<CardData, "id" | "title" | "artist" | "genre">>;
+  /** Optional derived graph (`tracksIn` from inverse `tracksOut`). */
+  trackGraph?: {
+    tracksInById: Record<number, number[]>;
+    tracksOutById: Record<number, number[]>;
+  };
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -292,8 +298,16 @@ export default function Card({
       themeColor: resolvedRefTheme.border,
     };
   };
-  const transitionIn = resolveTransitionTrack(card.tracksIn?.[0]);
-  const transitionOut = resolveTransitionTrack(card.tracksOut?.[0]);
+  const tracksIn =
+    trackGraph?.tracksInById[card.id] ??
+    card.tracksIn ??
+    [];
+  const tracksOut =
+    trackGraph?.tracksOutById[card.id] ??
+    card.tracksOut ??
+    [];
+  const transitionIn = resolveTransitionTrack(tracksIn[0]);
+  const transitionOut = resolveTransitionTrack(tracksOut[0]);
 
   useLayoutEffect(() => {
     const el = titleRef.current;

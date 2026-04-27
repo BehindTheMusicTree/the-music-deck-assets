@@ -6,6 +6,7 @@ export {
   type CatalogSeriesType,
   CATALOG_DEFAULT_ERA,
   CATALOG_ENTRIES,
+  CATALOG_TRACK_GRAPH,
   CATALOG_KINDS,
   formatCatalogIntensity,
 } from "./catalog";

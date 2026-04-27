@@ -570,6 +570,17 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Hip-House",
+    color: "#6d74b8",
+    parentA: "Hip-Hop",
+    intensity: "soft",
+    influence: {
+      genre: "Electronic",
+      intensity: "experimental",
+    },
+  },
+  {
+    kind: "genre",
     n: "R&B",
     color: "#edd4a8",
     parentA: "Hip-Hop",

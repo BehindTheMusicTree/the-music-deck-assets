@@ -5,6 +5,7 @@ import Card from "@/components/Card";
 import {
   type CatalogEntry,
   CATALOG_ENTRIES,
+  CATALOG_TRACK_GRAPH,
   CARD_RARITY_ORDER,
   CATALOG_KINDS,
   formatCatalogIntensity,
@@ -65,6 +66,21 @@ function artworkBasename(artworkUrl: string | undefined): string {
 function trackIdsLabel(ids: number[] | undefined): string {
   if (!ids || ids.length === 0) return "—";
   return ids.join(", ");
+}
+
+function trackRefsLabel(
+  ids: number[] | undefined,
+  byId: Record<number, { title: string; artist?: string }>,
+): string {
+  if (!ids || ids.length === 0) return "—";
+  return ids
+    .map((id) => {
+      const t = byId[id];
+      if (!t) return String(id);
+      const artist = t.artist?.trim();
+      return `${id} · ${t.title}${artist ? ` — ${artist}` : ""}`;
+    })
+    .join(" | ");
 }
 
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
@@ -951,11 +967,33 @@ export default function CatalogDeckTable({
                     <td className="py-2.5 px-2 text-muted align-middle">
                       {card.artist ?? "—"}
                     </td>
-                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
-                      {trackIdsLabel(card.tracksIn)}
+                    <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                      <span
+                        className="font-mono text-[11px] leading-snug text-white/85"
+                        title={trackRefsLabel(
+                          CATALOG_TRACK_GRAPH.tracksInById[card.id],
+                          CATALOG_TRACK_GRAPH.byId,
+                        )}
+                      >
+                        {trackRefsLabel(
+                          CATALOG_TRACK_GRAPH.tracksInById[card.id],
+                          CATALOG_TRACK_GRAPH.byId,
+                        )}
+                      </span>
                     </td>
-                    <td className="py-2.5 px-2 text-muted tabular-nums align-middle whitespace-nowrap font-mono text-[11px]">
-                      {trackIdsLabel(card.tracksOut)}
+                    <td className="py-2.5 px-2 text-muted align-middle min-w-0">
+                      <span
+                        className="font-mono text-[11px] leading-snug text-white/85"
+                        title={trackRefsLabel(
+                          CATALOG_TRACK_GRAPH.tracksOutById[card.id],
+                          CATALOG_TRACK_GRAPH.byId,
+                        )}
+                      >
+                        {trackRefsLabel(
+                          CATALOG_TRACK_GRAPH.tracksOutById[card.id],
+                          CATALOG_TRACK_GRAPH.byId,
+                        )}
+                      </span>
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                       {card.artwork ? (
@@ -1186,8 +1224,20 @@ export default function CatalogDeckTable({
                         {detailLine("App genre", d.catalogGenreLabel)}
                         {detailLine("Genre line", c.genre ?? "—")}
                         {detailLine("Country / region", c.country ?? "—")}
-                        {detailLine("Tracks in", trackIdsLabel(c.tracksIn))}
-                        {detailLine("Tracks out", trackIdsLabel(c.tracksOut))}
+                        {detailLine(
+                          "Tracks in",
+                          trackRefsLabel(
+                            CATALOG_TRACK_GRAPH.tracksInById[c.id],
+                            CATALOG_TRACK_GRAPH.byId,
+                          ),
+                        )}
+                        {detailLine(
+                          "Tracks out",
+                          trackRefsLabel(
+                            CATALOG_TRACK_GRAPH.tracksOutById[c.id],
+                            CATALOG_TRACK_GRAPH.byId,
+                          ),
+                        )}
                         {detailLine(
                           "Intensity",
                           formatCatalogIntensity(d.catalogIntensity),

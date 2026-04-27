@@ -232,6 +232,33 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
   },
 
+  Netherlands: {
+    theme: {
+      border: "#AE1C28",
+      headerBg: "#100a0a",
+      textMain: "#f4f2ee",
+      textBody: "#d8d4cf",
+      parchStrip: "#e6dfd8",
+      parchAbility: "#eee8e1",
+      barPop: ["#AE1C28", "#d84450"],
+      barExp: ["#21468B", "#3f6cc8"],
+      barGlowPop: "rgba(174,28,40,.85)",
+      barGlowExp: "rgba(33,70,139,.75)",
+      frameBorder:
+        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+      frameBg:
+        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+      frameFilter: "saturate(0.82) brightness(0.95) contrast(1.03)",
+      frameOpacity: 0.7,
+      icon: GLOBE_ICON,
+    },
+    flag: {
+      border:
+        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+      bg: "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+    },
+  },
+
   "Puerto Rico": {
     theme: {
       border: "#002B7C",
@@ -324,6 +351,7 @@ export const COUNTRY_MAP_POINT = {
   Italy: { lon: 12.5, lat: 42.5 },
   Japan: { lon: 138.25, lat: 36.2 },
   England: { lon: -1.5, lat: 52.5 },
+  Netherlands: { lon: 5.29, lat: 52.13 },
   Algeria: { lon: 2.65, lat: 28.35 },
   "Puerto Rico": { lon: -66.45, lat: 18.22 },
   Bretagne: { lon: -3.2, lat: 48.15 },

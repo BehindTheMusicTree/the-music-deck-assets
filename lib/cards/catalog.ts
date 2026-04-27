@@ -24,6 +24,7 @@ import {
   type WishlistCardDef,
   WISHLIST_CARD_DEFS,
 } from "./catalog-wishlist-defs";
+import { buildTrackGraph } from "./track-graph";
 
 export type CatalogSeriesType = "genre" | "country";
 
@@ -384,9 +385,14 @@ const rawWishlistRows: RawCatalogRow[] = WISHLIST_CARD_DEFS.filter(
 
 const rawCatalogRowsAll: RawCatalogRow[] = [...rawCatalogRows, ...rawWishlistRows];
 
+// Validate graph integrity early (unknown tracksOut ids => hard error).
+const CATALOG_TRACK_GRAPH_RAW = buildTrackGraph(rawCatalogRowsAll.map((r) => r.card));
+
 /** Full catalogue: shipped cards plus planned wishlist rows (wishlist never carries bundled artwork). */
 export const CATALOG_ENTRIES: CatalogEntry[] =
   withCatalogNumbering(rawCatalogRowsAll);
+
+export const CATALOG_TRACK_GRAPH = CATALOG_TRACK_GRAPH_RAW;
 
 export const CATALOG_KINDS: CatalogEntry["kind"][] = [
   "Genre",
