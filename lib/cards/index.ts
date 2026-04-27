@@ -6,7 +6,8 @@ export {
   type CatalogSeriesType,
   CATALOG_DEFAULT_ERA,
   CATALOG_ENTRIES,
-  CATALOG_TRACK_GRAPH,
+  CATALOG_CARD_TRACK_INDEX,
+  CATALOG_CARD_TRANSITION_PROPS,
   CATALOG_KINDS,
   formatCatalogIntensity,
 } from "./catalog";
@@ -18,3 +19,8 @@ export {
 } from "./examples";
 export { DEFAULT_PREVIEW_CARD } from "./preview-default";
 export { type CardRarity, CARD_RARITY_ORDER } from "./card-rarity";
+export {
+  buildCardTrackIndex,
+  type CardTrackIndex,
+  type CardTrackIndexEntry,
+} from "./track-graph";

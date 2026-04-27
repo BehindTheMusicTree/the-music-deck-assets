@@ -58,3 +58,37 @@ export function buildTrackGraph(cards: CardData[]): TrackGraph {
   return { byId, tracksOutById, tracksInById };
 }
 
+/** One lookup per id: display fields + incoming/outgoing link ids (for `Card` transition strips). */
+export type CardTrackIndexEntry = Pick<
+  CardData,
+  "id" | "title" | "artist" | "genre" | "artwork"
+> & {
+  tracksIn: number[];
+  tracksOut: number[];
+};
+
+export type CardTrackIndex = Record<number, CardTrackIndexEntry>;
+
+/**
+ * Merges `buildTrackGraph` into a single index so consumers pass only
+ * `cardTrackIndex` to `Card` (no separate `trackGraph`).
+ * @param prebuilt - If already computed (e.g. catalogue), avoids a second `buildTrackGraph` pass.
+ */
+export function buildCardTrackIndex(
+  cards: CardData[],
+  prebuilt?: TrackGraph,
+): CardTrackIndex {
+  const g = prebuilt ?? buildTrackGraph(cards);
+  const index: CardTrackIndex = {};
+  for (const key of Object.keys(g.byId)) {
+    const id = Number(key);
+    const base = g.byId[id];
+    index[id] = {
+      ...base,
+      tracksIn: g.tracksInById[id] ?? [],
+      tracksOut: g.tracksOutById[id] ?? [],
+    };
+  }
+  return index;
+}
+

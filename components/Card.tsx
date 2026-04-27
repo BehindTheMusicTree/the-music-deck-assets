@@ -17,10 +17,14 @@ import {
 } from "@/lib/genres";
 import { countryUsesCardFrameFlatShell } from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
+import type { CardTrackIndex } from "@/lib/cards/track-graph";
 import type { CardRarity } from "@/lib/cards/card-rarity";
-import type { CardTypePip, CardTypePipSymbol, GenreTheme } from "@/lib/card-theme-types";
 
-export type { CardTypePip, CardTypePipSymbol, GenreTheme } from "@/lib/card-theme-types";
+export type {
+  CardTypePip,
+  CardTypePipSymbol,
+  GenreTheme,
+} from "@/lib/card-theme-types";
 
 export interface TransitionTrack {
   title: string;
@@ -153,7 +157,9 @@ function CardArtwork({ card }: { card: CardData }) {
       alt=""
       className={styles.artImg}
       style={
-        dy != null && dy !== 0 ? { transform: `translateY(${dy}px)` } : undefined
+        dy != null && dy !== 0
+          ? { transform: `translateY(${dy}px)` }
+          : undefined
       }
     />
   );
@@ -165,8 +171,7 @@ export default function Card({
   small,
   enableZoom = true,
   hoverLift = true,
-  trackIndex,
-  trackGraph,
+  cardTrackIndex,
 }: {
   card: CardData;
   theme: GenreTheme;
@@ -177,13 +182,12 @@ export default function Card({
    * When false, the card does not lift or change shadow on hover (e.g. catalog detail preview).
    */
   hoverLift?: boolean;
-  /** Optional card lookup by id for transition strips (`tracksIn` / `tracksOut`). */
-  trackIndex?: Record<number, Pick<CardData, "id" | "title" | "artist" | "genre">>;
-  /** Optional derived graph (`tracksIn` from inverse `tracksOut`). */
-  trackGraph?: {
-    tracksInById: Record<number, number[]>;
-    tracksOutById: Record<number, number[]>;
-  };
+  /**
+   * Per-id lookup: each entry has `tracksIn` / `tracksOut` and display fields
+   * for link targets. Built with `buildCardTrackIndex` (e.g. catalogue) or
+   * omitted and `card.tracksIn` / `card.tracksOut` used for edges only.
+   */
+  cardTrackIndex?: CardTrackIndex;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -234,10 +238,10 @@ export default function Card({
   /** Mirror country flag/symbol on the right, unless we already show the row swatch by the name. */
   const rightUsesCountryIdentity = Boolean(
     !showWorldFadeCountryRowSwatch &&
-      resolved.mirrorCountryTypeStripRight &&
-      hasCountryPipArt &&
-      resolved.resolvedCountry &&
-      (card.country == null || card.country === resolved.resolvedCountry),
+    resolved.mirrorCountryTypeStripRight &&
+    hasCountryPipArt &&
+    resolved.resolvedCountry &&
+    (card.country == null || card.country === resolved.resolvedCountry),
   );
   const pipRightSymbol =
     pipLeftSymbol && rightUsesCountryIdentity ? pipLeftSymbol : undefined;
@@ -254,9 +258,8 @@ export default function Card({
    * (e.g. NL / DE / ES) become sideways after -90° and the frame reads as one band.
    * URL/SVG/photo flags (US, etc.) and Bretagne stripes use flat shell — see `countryUsesCardFrameFlatShell`.
    */
-  const worldFlagBorderFlatShell = countryUsesCardFrameFlatShell(
-    worldFrameCountry,
-  );
+  const worldFlagBorderFlatShell =
+    countryUsesCardFrameFlatShell(worldFrameCountry);
   const flagRotateR90 = Boolean(
     flagLayer && worldFrameCountry && !worldFlagBorderFlatShell,
   );
@@ -291,8 +294,8 @@ export default function Card({
   const resolveTransitionTrack = (
     id: number | undefined,
   ): TransitionTrack | undefined => {
-    if (id == null || !trackIndex) return undefined;
-    const ref = trackIndex[id];
+    if (id == null || !cardTrackIndex) return undefined;
+    const ref = cardTrackIndex[id];
     if (!ref) return undefined;
     const resolvedRefTheme = ref.genre
       ? resolveThemeSelection({ genre: ref.genre }).theme
@@ -303,14 +306,9 @@ export default function Card({
       themeColor: resolvedRefTheme.border,
     };
   };
-  const tracksIn =
-    trackGraph?.tracksInById[card.id] ??
-    card.tracksIn ??
-    [];
-  const tracksOut =
-    trackGraph?.tracksOutById[card.id] ??
-    card.tracksOut ??
-    [];
+  const row = cardTrackIndex?.[card.id];
+  const tracksIn = row?.tracksIn ?? card.tracksIn ?? [];
+  const tracksOut = row?.tracksOut ?? card.tracksOut ?? [];
   const transitionIn = resolveTransitionTrack(tracksIn[0]);
   const transitionOut = resolveTransitionTrack(tracksOut[0]);
 
@@ -664,7 +662,9 @@ export default function Card({
           className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
           style={{ background: transitionIn.themeColor }}
         >
-          <span className={styles.transitionStripText}>{transitionIn.title}</span>
+          <span className={styles.transitionStripText}>
+            {transitionIn.title}
+          </span>
         </div>
       )}
       {transitionOut && (
@@ -672,7 +672,9 @@ export default function Card({
           className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
           style={{ background: transitionOut.themeColor }}
         >
-          <span className={styles.transitionStripText}>{transitionOut.title}</span>
+          <span className={styles.transitionStripText}>
+            {transitionOut.title}
+          </span>
         </div>
       )}
     </>

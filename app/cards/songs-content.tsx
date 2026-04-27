@@ -13,16 +13,10 @@ import {
   CARD_ARTWORK_BASE,
   CARD_RARITY_ORDER,
 } from "@/lib/cards";
-import { buildTrackGraph } from "@/lib/cards/track-graph";
+import { buildCardTrackIndex } from "@/lib/cards";
 
 export function CardsSongsContent() {
-  const trackGraph = buildTrackGraph(DECK_SPOTLIGHT_CARDS);
-  const trackIndex = Object.fromEntries(
-    DECK_SPOTLIGHT_CARDS.map((c) => [
-      c.id,
-      { id: c.id, title: c.title, artist: c.artist, genre: c.genre },
-    ]),
-  );
+  const cardTrackIndex = buildCardTrackIndex(DECK_SPOTLIGHT_CARDS);
   const fourTetOpusBase = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 85)!;
   const anatomyCard = {
     ...fourTetOpusBase,
@@ -198,8 +192,7 @@ export function CardsSongsContent() {
             <Card
               card={anatomyCard}
               theme={APP_GENRE_THEMES.Electronic}
-              trackIndex={trackIndex}
-              trackGraph={trackGraph}
+              cardTrackIndex={cardTrackIndex}
             />
           </div>
           <div className="flex flex-col gap-3 pt-2 flex-1">

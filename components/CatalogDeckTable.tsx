@@ -1,23 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Card from "@/components/Card";
+import CatalogCard from "@/components/CatalogCard";
 import {
   type CatalogEntry,
   CATALOG_ENTRIES,
-  CATALOG_TRACK_GRAPH,
+  CATALOG_CARD_TRACK_INDEX,
   CARD_RARITY_ORDER,
   CATALOG_KINDS,
   formatCatalogIntensity,
 } from "@/lib/cards";
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";
-
-/** Resolves transition strip labels/colours on catalogue cards (requires both). */
-const CATALOG_CARD_TRACK = {
-  trackIndex: CATALOG_TRACK_GRAPH.byId,
-  trackGraph: CATALOG_TRACK_GRAPH,
-};
 
 type SortKey =
   | "id"
@@ -924,12 +918,11 @@ export default function CatalogDeckTable({
                               transformOrigin: "top center",
                             }}
                           >
-                            <Card
+                            <CatalogCard
                               card={card}
                               theme={theme}
                               small
                               enableZoom={false}
-                              {...CATALOG_CARD_TRACK}
                             />
                           </div>
                         </div>
@@ -979,7 +972,7 @@ export default function CatalogDeckTable({
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                       {(() => {
-                        const ids = CATALOG_TRACK_GRAPH.tracksInById[card.id];
+                        const ids = CATALOG_CARD_TRACK_INDEX[card.id]?.tracksIn;
                         if (!ids || ids.length === 0) {
                           return <span className="text-muted/80">—</span>;
                         }
@@ -1015,12 +1008,11 @@ export default function CatalogDeckTable({
                                       transformOrigin: "top center",
                                     }}
                                   >
-                                    <Card
+                                    <CatalogCard
                                       card={target.card}
                                       theme={target.theme}
                                       small
                                       enableZoom={false}
-                                      {...CATALOG_CARD_TRACK}
                                     />
                                 </div>
                                 </button>
@@ -1032,7 +1024,7 @@ export default function CatalogDeckTable({
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                       {(() => {
-                        const ids = CATALOG_TRACK_GRAPH.tracksOutById[card.id];
+                        const ids = CATALOG_CARD_TRACK_INDEX[card.id]?.tracksOut;
                         if (!ids || ids.length === 0) {
                           return <span className="text-muted/80">—</span>;
                         }
@@ -1068,12 +1060,11 @@ export default function CatalogDeckTable({
                                       transformOrigin: "top center",
                                     }}
                                   >
-                                    <Card
+                                    <CatalogCard
                                       card={target.card}
                                       theme={target.theme}
                                       small
                                       enableZoom={false}
-                                      {...CATALOG_CARD_TRACK}
                                     />
                                   </div>
                                 </button>
@@ -1184,12 +1175,11 @@ export default function CatalogDeckTable({
                           transformOrigin: "top center",
                         }}
                       >
-                        <Card
+                        <CatalogCard
                           card={card}
                           theme={theme}
                           small
                           enableZoom={false}
-                          {...CATALOG_CARD_TRACK}
                         />
                       </div>
                     ) : (
@@ -1280,12 +1270,11 @@ export default function CatalogDeckTable({
                           transformOrigin: "top center",
                         }}
                       >
-                        <Card
+                        <CatalogCard
                           card={c}
                           theme={d.theme}
                           enableZoom={false}
                           hoverLift={false}
-                          {...CATALOG_CARD_TRACK}
                         />
                       </div>
                     </div>
@@ -1317,15 +1306,15 @@ export default function CatalogDeckTable({
                         {detailLine(
                           "Tracks in",
                           trackRefsLabel(
-                            CATALOG_TRACK_GRAPH.tracksInById[c.id],
-                            CATALOG_TRACK_GRAPH.byId,
+                            CATALOG_CARD_TRACK_INDEX[c.id]?.tracksIn,
+                            CATALOG_CARD_TRACK_INDEX,
                           ),
                         )}
                         {detailLine(
                           "Tracks out",
                           trackRefsLabel(
-                            CATALOG_TRACK_GRAPH.tracksOutById[c.id],
-                            CATALOG_TRACK_GRAPH.byId,
+                            CATALOG_CARD_TRACK_INDEX[c.id]?.tracksOut,
+                            CATALOG_CARD_TRACK_INDEX,
                           ),
                         )}
                         {detailLine(
