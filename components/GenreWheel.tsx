@@ -22,9 +22,11 @@ import {
   GENRE_THEMES,
   WHEEL_GENRES,
   SUBGENRES,
+  SUBGENRE_COLOR,
   WORLD_THEMES,
+  genreIntensityColor,
 } from "@/lib/genres";
-import type { GenreName, Intensity } from "@/lib/genres";
+import type { GenreName, Intensity, NonMainstreamGenreName } from "@/lib/genres";
 import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
 
 type WheelTileFocus =
@@ -41,6 +43,11 @@ type WheelTileFocus =
       sectionGenre: GenreName;
       parentB?: GenreName;
       intensity: Intensity;
+      influence?: {
+        genre: GenreName;
+        intensity: Intensity;
+        weight?: number;
+      };
     };
 
 function formatIntensity(i: Intensity): string {
@@ -64,6 +71,37 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
     x: Number(x.toFixed(4)),
     y: Number(y.toFixed(4)),
   };
+}
+
+function annularSectorPath(
+  cx: number,
+  cy: number,
+  innerR: number,
+  outerR: number,
+  startAngleDeg: number,
+  endAngleDeg: number,
+): string {
+  const outerStart = polarToXY(cx, cy, outerR, startAngleDeg);
+  const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
+  const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
+  const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
+  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const largeArc = span > 180 ? 1 : 0;
+  if (innerR <= 0) {
+    return [
+      `M ${cx} ${cy}`,
+      `L ${outerStart.x} ${outerStart.y}`,
+      `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+      "Z",
+    ].join(" ");
+  }
+  return [
+    `M ${outerStart.x} ${outerStart.y}`,
+    `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+    `L ${innerEnd.x} ${innerEnd.y}`,
+    `A ${innerR} ${innerR} 0 ${largeArc} 0 ${innerStart.x} ${innerStart.y}`,
+    "Z",
+  ].join(" ");
 }
 
 function Rect({
@@ -225,6 +263,28 @@ export default function GenreWheel() {
   const expText = repeat("EXPERIMENTAL", 23);
   const exp2Text = repeat("EXPERIMENTAL", 30);
   const hardText = repeat("HARDCORE", 40);
+  const wheelSlice = 360 / WHEEL_GENRES.length;
+  const intensityBands: Array<{
+    intensity: Intensity;
+    inner: number;
+    outer: number;
+    opacity: number;
+  }> = [
+    { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.22 },
+    { intensity: "soft", inner: R_POP_SOFT_LINE, outer: R_SOFT_EXPERIMENTAL_LINE, opacity: 0.24 },
+    {
+      intensity: "experimental",
+      inner: R_SOFT_EXPERIMENTAL_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE,
+      opacity: 0.22,
+    },
+    {
+      intensity: "hardcore",
+      inner: R_EXPERIMENTAL_HARDCORE_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
+      opacity: 0.2,
+    },
+  ];
 
   const wheelRectStack = useMemo((): ReactNode[] => {
     const tiles: { id: string; el: ReactNode }[] = [];
@@ -310,6 +370,7 @@ export default function GenreWheel() {
       const rBase = wheelSubgenreRadius(s.intensity);
       const r = rBase + placement.rOffset;
       const { x, y } = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
+      const subgenreHex = SUBGENRE_COLOR[s.n] ?? s.color;
       tiles.push({
         id: s.n,
         el: (
@@ -319,7 +380,7 @@ export default function GenreWheel() {
             x={x}
             y={y}
             label={s.n}
-            hex={s.color}
+            hex={subgenreHex}
             small
             hovered={topTileId === s.n}
             onPointerEnter={() => onTilePointerEnter(s.n)}
@@ -328,10 +389,18 @@ export default function GenreWheel() {
               setWheelFocus({
                 kind: "subgenre",
                 label: s.n,
-                hex: s.color,
+                hex: subgenreHex,
                 sectionGenre: s.parentA as GenreName,
                 parentB: s.parentB,
                 intensity: s.intensity,
+                influence:
+                  s.kind === "genre" && s.influence
+                    ? {
+                        genre: s.influence.genre,
+                        intensity: s.influence.intensity,
+                        weight: s.influence.weight,
+                      }
+                    : undefined,
               })
             }
           />
@@ -386,6 +455,37 @@ export default function GenreWheel() {
             d={`M ${WHEEL_CX},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)} A ${R_EXPERIMENTAL_HARDCORE_LINE + 30},${R_EXPERIMENTAL_HARDCORE_LINE + 30} 0 1,1 ${WHEEL_CX - 0.1},${WHEEL_CY - (R_EXPERIMENTAL_HARDCORE_LINE + 30)}`}
           />
         </defs>
+
+        {/* Genre/intensity background sectors */}
+        {WHEEL_GENRES.flatMap((g, i) => {
+          const start = i * wheelSlice - 90 - wheelSlice / 2;
+          const end = i * wheelSlice - 90 + wheelSlice / 2;
+          return intensityBands.map((band) => (
+            <path
+              key={`${g.n}-${band.intensity}`}
+              d={annularSectorPath(
+                WHEEL_CX,
+                WHEEL_CY,
+                band.inner,
+                band.outer,
+                start,
+                end,
+              )}
+              fill={genreIntensityColor(
+                g.n as NonMainstreamGenreName,
+                band.intensity,
+              )}
+              fillOpacity={band.opacity}
+            />
+          ));
+        })}
+        <circle
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
+          r={Math.max(36, Math.round(WHEEL_MAIN_TILE_W * 0.35))}
+          fill={GENRE_THEMES.Mainstream.border}
+          fillOpacity={0.9}
+        />
 
         {/* Mainstream text */}
         <circle
@@ -626,6 +726,24 @@ export default function GenreWheel() {
                               </dt>
                               <dd className="m-0" style={{ color: ink }}>
                                 {wheelFocus.sectionGenre} + {wheelFocus.parentB}
+                              </dd>
+                            </div>
+                          ) : null}
+                          {wheelFocus.influence ? (
+                            <div className="flex flex-wrap gap-x-2 gap-y-0">
+                              <dt
+                                className="m-0 shrink-0 font-mono text-[11px] uppercase tracking-wider"
+                                style={{ color: inkMuted }}
+                              >
+                                Influence
+                              </dt>
+                              <dd className="m-0" style={{ color: ink }}>
+                                {wheelFocus.influence.genre} (
+                                {formatIntensity(wheelFocus.influence.intensity)}
+                                {typeof wheelFocus.influence.weight === "number"
+                                  ? `, ${Math.round(wheelFocus.influence.weight * 100)}%`
+                                  : ""}
+                                )
                               </dd>
                             </div>
                           ) : null}

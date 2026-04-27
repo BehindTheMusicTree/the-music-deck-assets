@@ -7,6 +7,7 @@ import {
 } from "@/lib/genres";
 import {
   MOCK_CARDS,
+  DECK_SPOTLIGHT_CARDS,
   WORLD_FLAG_CARDS,
   WORLD_MIXED_CARDS,
   CARD_ARTWORK_BASE,
@@ -14,6 +15,13 @@ import {
 } from "@/lib/cards";
 
 export function CardsSongsContent() {
+  const fourTetOpusBase = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 85)!;
+  const anatomyCard = {
+    ...fourTetOpusBase,
+    transitionIn: { title: "Opus", artist: "Eric Prydz", themeColor: "#7090e8" },
+    transitionOut: { title: "Opus", artist: "Lunatic", themeColor: "#141c34" },
+  };
+
   const intensityExamples: Array<{
     level: "pop" | "soft" | "experimental" | "hardcore";
     card: CardData;
@@ -182,8 +190,8 @@ export function CardsSongsContent() {
             }}
           >
             <Card
-              card={MOCK_CARDS.Mainstream}
-              theme={APP_GENRE_THEMES.Mainstream}
+              card={anatomyCard}
+              theme={APP_GENRE_THEMES.Electronic}
             />
           </div>
           <div className="flex flex-col gap-3 pt-2 flex-1">
@@ -223,6 +231,10 @@ export function CardsSongsContent() {
               [
                 "Border",
                 "Mode normal: 10px solid border.\nMode bleed: No border; artwork bleeds to the card edge.\nColour rule (normal mode): Subgenre canonical colour if available, otherwise genre border colour.\nWorld cards (normal mode): Country flag in landscape.\nMixed World/Genre (normal mode): Fade from flag (left) to genre colour (right).",
+              ],
+              [
+                "Track Transition",
+                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nIn: The preceding track that mixes into this card — left strip. Colour: genre theme of the incoming track.\nOut: The track this card transitions into — right strip. Colour: genre theme of the outgoing track.\nGap: The two strips never touch; a clear zone separates them in the centre.",
               ],
             ].map(([name, desc]) => (
               <div key={name} className="flex gap-3">

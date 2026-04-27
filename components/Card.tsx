@@ -17,6 +17,13 @@ import {
 } from "@/lib/genres";
 import type { CardRarity } from "@/lib/cards/card-rarity";
 
+export interface TransitionTrack {
+  title: string;
+  artist?: string;
+  /** Genre canonical border colour used as the strip background. */
+  themeColor: string;
+}
+
 export interface CardData {
   id: number;
   title: string;
@@ -42,6 +49,10 @@ export interface CardData {
   /** When true, artwork presentation hides the frame border (full-bleed visual). */
   artworkOverBorder?: boolean;
   country?: string;
+  /** Track that mixes into this card (predecessor in a DJ transition). */
+  transitionIn?: TransitionTrack;
+  /** Track this card transitions into (successor in a DJ transition). */
+  transitionOut?: TransitionTrack;
 }
 
 export interface CardTypePipSymbol {
@@ -359,6 +370,32 @@ export default function Card({
         >
           <CardArtwork card={card} />
         </div>
+
+        {/* Track transition strips: In (left) and Out (right), overlapping header/artwork boundary */}
+        {(card.transitionIn || card.transitionOut) && (
+          <>
+            {card.transitionIn && (
+              <div
+                className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+                style={{ background: card.transitionIn.themeColor }}
+              >
+                <span className={styles.transitionStripText}>
+                  {card.transitionIn.title}
+                </span>
+              </div>
+            )}
+            {card.transitionOut && (
+              <div
+                className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
+                style={{ background: card.transitionOut.themeColor }}
+              >
+                <span className={styles.transitionStripText}>
+                  {card.transitionOut.title}
+                </span>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
         <div className={styles.typeStrip}>

@@ -214,13 +214,16 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
 
 // Wheel genre order (angular positions). Mainstream is the centre — not in this list.
 export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
-  { n: "Reggae/Dub", color: GENRE_THEMES["Reggae/Dub"].border },
-  { n: "Electronic", color: GENRE_THEMES.Electronic.border },
-  { n: "Disco/Funk", color: GENRE_THEMES["Disco/Funk"].border },
-  { n: "Hip-Hop", color: GENRE_THEMES["Hip-Hop"].border },
-  { n: "Rock", color: GENRE_THEMES.Rock.border },
-  { n: "Classical", color: GENRE_THEMES.Classical.border },
-  { n: "Vintage", color: GENRE_THEMES.Vintage.border },
+  {
+    n: "Reggae/Dub",
+    color: genreIntensityColor("Reggae/Dub", "experimental"),
+  },
+  { n: "Electronic", color: genreIntensityColor("Electronic", "experimental") },
+  { n: "Disco/Funk", color: genreIntensityColor("Disco/Funk", "experimental") },
+  { n: "Hip-Hop", color: genreIntensityColor("Hip-Hop", "experimental") },
+  { n: "Rock", color: genreIntensityColor("Rock", "experimental") },
+  { n: "Classical", color: genreIntensityColor("Classical", "experimental") },
+  { n: "Vintage", color: genreIntensityColor("Vintage", "experimental") },
 ];
 
 /** DOM `id` for each genre block under #genre-themes (`GenreThemePreview`). */
@@ -307,6 +310,14 @@ export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
   };
 }
 
+function mixedWithWhite(hex: string, amount: number): string {
+  return mixHex(hex, "#ffffff", amount);
+}
+
+function mixedWithBlack(hex: string, amount: number): string {
+  return mixHex(hex, "#000000", amount);
+}
+
 // ---------------------------------------------------------------------------
 // Subgenres (wheel data)
 // ---------------------------------------------------------------------------
@@ -331,6 +342,12 @@ interface BaseSubgenre {
   parentB?: NonMainstreamGenreName;
   t?: number;
   intensity: Intensity;
+  influence?: {
+    genre: NonMainstreamGenreName;
+    intensity: Intensity;
+    /** Blend amount in [0..1]. Parent genre/intensity remains dominant. */
+    weight?: number;
+  };
 }
 
 export interface GenreSubgenre extends BaseSubgenre {
@@ -347,7 +364,8 @@ export interface CountrySubgenre extends BaseSubgenre {
 export type Subgenre = GenreSubgenre | CountrySubgenre;
 
 /**
- * Subgenre `color` drives card borders and wheel tiles.
+ * Subgenre colours are resolved from `parentA + intensity` (with optional
+ * `influence` blend), while `color` remains available for legacy/manual tuning.
  * - **Genre-linked** (`kind: "genre"`): keep each hex in the same hue family as
  *   `GENRE_THEMES[parentA].border` (lighter/darker/more or less saturated, or a
  *   mix toward `parentB` when set). Avoid unrelated colours unless explicitly
@@ -617,12 +635,24 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Hard Techno",
+    color: "#182242",
+    parentA: "Electronic",
+    intensity: "hardcore",
+  },
+  {
+    kind: "genre",
     n: "Jungle",
     color: "#288090",
     parentA: "Electronic",
     parentB: "Reggae/Dub",
     t: 0.42,
     intensity: "experimental",
+    influence: {
+      genre: "Reggae/Dub",
+      intensity: "experimental",
+      weight: 0.32,
+    },
   },
   {
     kind: "genre",
@@ -700,6 +730,11 @@ export const SUBGENRES: Subgenre[] = [
     color: "#8e2810",
     parentA: "Rock",
     intensity: "hardcore",
+    influence: {
+      genre: "Hip-Hop",
+      intensity: "experimental",
+      weight: 0.28,
+    },
   },
   {
     kind: "genre",
@@ -853,7 +888,10 @@ export const SUBGENRES: Subgenre[] = [
 // Only genre-subgenres can drive a derived subgenre color/theme.
 // Country-subgenres always resolve to their country theme.
 export const SUBGENRE_COLOR: Record<string, string> = Object.fromEntries(
-  SUBGENRES.filter((s) => s.kind === "genre").map((s) => [s.n, s.color]),
+  SUBGENRES.filter((s) => s.kind === "genre").map((s) => [
+    s.n,
+    resolvedGenreSubgenreColor(s),
+  ]),
 );
 const SUBGENRE_PARENT_A: Record<string, GenreName | CountryName> =
   Object.fromEntries(SUBGENRES.map((s) => [s.n, s.parentA]));
@@ -904,11 +942,34 @@ export function appGenreIntensity(genre: AppGenreName): Intensity {
   return APP_GENRE_ONLY_INTENSITY[genre] ?? "pop";
 }
 
+export function genreIntensityColor(
+  genre: NonMainstreamGenreName,
+  intensity: Intensity,
+): string {
+  const base = GENRE_THEMES[genre].border;
+  if (intensity === "pop") return mixedWithWhite(base, 0.55);
+  if (intensity === "soft") return mixedWithWhite(base, 0.32);
+  if (intensity === "experimental") return mixedWithBlack(base, 0.12);
+  return mixedWithBlack(base, 0.38);
+}
+
+function resolvedGenreSubgenreColor(sub: GenreSubgenre): string {
+  const baseColor = genreIntensityColor(sub.parentA, sub.intensity);
+  if (!sub.influence) return baseColor;
+  const influenceColor = genreIntensityColor(
+    sub.influence.genre,
+    sub.influence.intensity,
+  );
+  const weight = Math.max(0, Math.min(0.5, sub.influence.weight ?? 0.28));
+  return mixHex(baseColor, influenceColor, weight);
+}
+
 export function matchupTargetDiamondColor(name: string): string {
   if (name in GENRE_THEMES) {
     return GENRE_THEMES[name as GenreName].border;
   }
   const sub = SUBGENRE_BY_NAME[name];
+  if (sub?.kind === "genre") return resolvedGenreSubgenreColor(sub);
   if (sub?.color) return sub.color;
   throw new Error(`Unknown matchup target "${name}"`);
 }
@@ -1038,7 +1099,8 @@ export function resolveThemeSelection({
     }
 
     const appGenre = appGenreFromSubgenre(g);
-    const resolvedTheme = subgenreTheme(def.color, APP_GENRE_THEMES[appGenre]);
+    const resolvedColor = resolvedGenreSubgenreColor(def);
+    const resolvedTheme = subgenreTheme(resolvedColor, APP_GENRE_THEMES[appGenre]);
 
     if (country) {
       const countryFrameTheme = countryTheme!;
@@ -1063,9 +1125,9 @@ export function resolveThemeSelection({
         resolvedGenre: appGenre,
         resolvedSubgenre: g,
         flagStyle: "fade",
-        fadeColor: def.color,
+        fadeColor: resolvedColor,
         typeStripPrimaryBorder: countryTheme!.border,
-        typeStripSubBorder: def.color,
+        typeStripSubBorder: resolvedColor,
       };
     }
 
@@ -1078,7 +1140,7 @@ export function resolveThemeSelection({
       resolvedSubgenre: g,
       typeStripPrimaryBorder:
         def.intensity === "pop" ? GENRE_THEMES.Mainstream.border : undefined,
-      typeStripSubBorder: def.color,
+      typeStripSubBorder: resolvedColor,
     };
   }
 
@@ -1088,8 +1150,15 @@ export function resolveThemeSelection({
     );
   }
   const appGenre = toAppGenre(g);
+  const genreOnlyColor =
+    appGenre === "Mainstream"
+      ? GENRE_THEMES.Mainstream.border
+      : genreIntensityColor(appGenre, appGenreIntensity(appGenre));
   if (country) {
-    const resolvedTheme = APP_GENRE_THEMES[appGenre];
+    const resolvedTheme =
+      appGenre === "Mainstream"
+        ? APP_GENRE_THEMES[appGenre]
+        : subgenreTheme(genreOnlyColor, APP_GENRE_THEMES[appGenre]);
     const countryFrameTheme = countryTheme!;
     return {
       theme: {
@@ -1111,13 +1180,16 @@ export function resolveThemeSelection({
       resolvedCountry: country,
       resolvedGenre: appGenre,
       flagStyle: "fade",
-      fadeColor: resolvedTheme.border,
+      fadeColor: genreOnlyColor,
       typeStripPrimaryBorder: countryTheme!.border,
-      typeStripSubBorder: resolvedTheme.border,
+      typeStripSubBorder: genreOnlyColor,
     };
   }
 
-  const resolvedTheme = APP_GENRE_THEMES[appGenre];
+  const resolvedTheme =
+    appGenre === "Mainstream"
+      ? APP_GENRE_THEMES[appGenre]
+      : subgenreTheme(genreOnlyColor, APP_GENRE_THEMES[appGenre]);
   return {
     theme: resolvedTheme,
     displayGenre: displayGenreLabel(appGenre),

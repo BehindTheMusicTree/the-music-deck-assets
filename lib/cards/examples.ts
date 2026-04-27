@@ -1010,7 +1010,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     title: "Shaft",
     artist: "Malik Adouane",
     year: 1993,
-    genre: "Techno",
+    genre: "Hard Techno",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 6,
@@ -1035,7 +1035,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
   },
   {
     id: 84,
-    title: "Opus",
+    title: "Opus I",
     artist: "Eric Prydz",
     year: 2015,
     genre: "EDM",
@@ -1048,7 +1048,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
   },
   {
     id: 85,
-    title: "Opus",
+    title: "Opus II",
     artist: "Four Tet",
     year: 2016,
     genre: "Progressive House",
@@ -1061,7 +1061,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
   },
   {
     id: 86,
-    title: "Opus",
+    title: "Opus III",
     artist: "Lunatic",
     year: 2024,
     genre: "Peak Time Techno",
@@ -1118,16 +1118,16 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
   {
     id: 90,
     title: "Vois sur ton chemin",
-    artist: "Les Choristes",
-    year: 2004,
-    genre: "Choral",
+    artist: "BENNETT",
+    year: 2023,
+    genre: "Hard Techno",
     country: "France",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
     rarity: "Classic",
-    artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
+    artwork: `${ART}artwork.bennet-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:
-      ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],
+      ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
   },
 ];

@@ -219,17 +219,17 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barGlowPop: "rgba(200,16,46,.85)",
       barGlowExp: "rgba(26,42,72,.75)",
       frameBorder:
-        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
       frameBg:
-        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
       frameFilter: "saturate(0.82) brightness(0.96) contrast(1.02)",
       frameOpacity: 0.72,
       icon: GLOBE_ICON,
     },
     flag: {
       border:
-        "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
-      bg: "linear-gradient(to bottom, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), linear-gradient(to right, transparent 40%, #C8102E 40%, #C8102E 60%, transparent 60%), #FFFFFF",
+        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
+      bg: "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%), linear-gradient(to right, #FFFFFF 0%, #FFFFFF 40%, #C8102E 40%, #C8102E 60%, #FFFFFF 60%, #FFFFFF 100%)",
     },
   },
 
@@ -293,14 +293,14 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
       barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",
       frameBorder: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-      frameBg: "repeating-linear-gradient(to right, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      frameBg: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
     flag: {
       border: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-      bg:     "repeating-linear-gradient(to right, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      bg:     "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
     },
     pip: {
       sym: "✦", color: "#222222", size: 17,
