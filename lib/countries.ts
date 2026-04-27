@@ -108,7 +108,6 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
         "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
       bg: "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
     },
-    pip: { sym: "◆", color: "#D91023", size: 15 },
   },
 
   France: {
