@@ -13,6 +13,7 @@ import {
   matchupTargetsForAppGenre,
   resolveThemeSelection,
   subgenreIntensity,
+  WORLD_THEMES,
 } from "@/lib/genres";
 import type { CardRarity } from "@/lib/cards/card-rarity";
 
@@ -43,6 +44,18 @@ export interface CardData {
   country?: string;
 }
 
+export interface CardTypePipSymbol {
+  sym: string;
+  color: string;
+  size?: number;
+  svg?: string;
+}
+
+export interface CardTypePip {
+  symbol?: CardTypePipSymbol;
+  flagBg?: string;
+}
+
 export interface GenreTheme {
   border: string;
   frameBorder?: string;
@@ -59,6 +72,7 @@ export interface GenreTheme {
   barExp: [string, string];
   barGlowPop: string;
   barGlowExp: string;
+  typePip?: CardTypePip;
   icon: string;
 }
 
@@ -145,8 +159,6 @@ function isVeryLight(hex: string) {
   return luminance > 205;
 }
 
-import { FLAG_PIP_SYMBOL, FLAG_PIP_BG } from "@/lib/countries";
-
 function CardArtwork({ card }: { card: CardData }) {
   if (!card.artwork) return null;
   const dy = card.artworkOffsetY;
@@ -203,10 +215,11 @@ export default function Card({
   const stripRightBorder = resolved.typeStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
-  const pipLeftSymbol = card.country
-    ? FLAG_PIP_SYMBOL[card.country]
+  const countryTypePip = resolved.resolvedCountry
+    ? WORLD_THEMES[resolved.resolvedCountry]?.typePip
     : undefined;
-  const pipLeftFlagBg = card.country ? FLAG_PIP_BG[card.country] : undefined;
+  const pipLeftSymbol = countryTypePip?.symbol;
+  const pipLeftFlagBg = countryTypePip?.flagBg;
   const rightUsesCountryIdentity = Boolean(
     card.country &&
     resolved.resolvedSubgenre &&

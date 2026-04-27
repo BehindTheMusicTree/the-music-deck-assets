@@ -1133,7 +1133,23 @@ export function resolveThemeSelection({
 // World / country themes — derived from the canonical COUNTRY_DATA in countries.ts
 // ---------------------------------------------------------------------------
 export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
-  Object.entries(COUNTRY_DATA).map(([k, v]) => [k, v.theme]),
+  Object.entries(COUNTRY_DATA).map(([k, v]) => [
+    k,
+    {
+      ...v.theme,
+      typePip: {
+        symbol: v.pip
+          ? {
+              sym: v.pip.sym,
+              color: v.pip.color,
+              size: v.pip.size,
+              svg: v.pip.svg,
+            }
+          : undefined,
+        flagBg: v.pip?.bg ?? v.flag.border,
+      },
+    },
+  ]),
 );
 
 export function themeForCountry(country: string): GenreTheme {

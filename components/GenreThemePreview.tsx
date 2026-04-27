@@ -69,6 +69,56 @@ function CountryFlagSwatch({
   );
 }
 
+function TypePipMarker({
+  theme,
+  fallbackColor,
+}: {
+  theme: GenreTheme;
+  fallbackColor: string;
+}) {
+  const symbol = theme.typePip?.symbol;
+  if (symbol) {
+    const size = Math.min(symbol.size ?? 10, 12);
+    if (symbol.svg) {
+      return (
+        <span
+          className="shrink-0"
+          style={{ color: symbol.color, fontSize: size }}
+          dangerouslySetInnerHTML={{ __html: symbol.svg }}
+        />
+      );
+    }
+    return (
+      <span
+        className="shrink-0 leading-none"
+        style={{ color: symbol.color, fontSize: size }}
+      >
+        {symbol.sym}
+      </span>
+    );
+  }
+  if (theme.typePip?.flagBg) {
+    return (
+      <div
+        className="w-3 h-3 shrink-0 rounded-[1px] border border-black/20"
+        style={{
+          backgroundImage: theme.typePip.flagBg,
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+        }}
+      />
+    );
+  }
+  return (
+    <div
+      className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] border border-black/20"
+      style={{ background: fallbackColor }}
+    />
+  );
+}
+
 export default function GenreThemePreview() {
   const [card, setCard] = useState<CardData>({ ...DEFAULT_PREVIEW_CARD });
   const [theme, setTheme] = useState<GenreTheme>(GENRE_THEMES.Mainstream);
@@ -427,10 +477,7 @@ export default function GenreThemePreview() {
                             applyRulePreview({ genre: s.n, country });
                           }}
                         >
-                          <div
-                            className="w-3 h-3 shrink-0 rotate-45 rounded-[1px] border border-black/20"
-                            style={{ background: s.color }}
-                          />
+                          <TypePipMarker theme={t} fallbackColor={s.color} />
                           <span
                             className="font-garamond text-sm flex-1"
                             style={{ color: "#5a4a30" }}
