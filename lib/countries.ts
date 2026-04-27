@@ -30,6 +30,8 @@ const GLOBE_ICON =
   '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><ellipse cx="8" cy="8" rx="3" ry="6" fill="none" stroke="currentColor" stroke-width=".8"/><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width=".8"/></svg>';
 
 export const USA_FLAG_PATH = "/cards/artworks/deck/flag-usa.webp";
+const PUERTO_RICO_FLAG_DATA_URI =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23fff'/%3E%3Crect y='0' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='80' width='300' height='40' fill='%23EF3340'/%3E%3Crect y='160' width='300' height='40' fill='%23EF3340'/%3E%3Cpolygon points='0,0 150,100 0,200' fill='%23002B7C'/%3E%3Cpolygon points='52,74 58,90 75,90 61,100 66,116 52,106 38,116 43,100 29,90 46,90' fill='%23fff'/%3E%3C/svg%3E\")";
 
 export const COUNTRY_DATA: Record<string, CountryDef> = {
   USA: {
@@ -244,18 +246,15 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#002B7C", "#4068c0"],
       barGlowPop: "rgba(239,51,64,.85)",
       barGlowExp: "rgba(0,43,124,.75)",
-      frameBorder:
-        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
-      frameBg:
-        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+      frameBorder: PUERTO_RICO_FLAG_DATA_URI,
+      frameBg: PUERTO_RICO_FLAG_DATA_URI,
       frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
     flag: {
-      border:
-        "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
-      bg: "linear-gradient(to right, #002B7C 0%, #002B7C 28%, #EF3340 28%, #EF3340 40%, #FFFFFF 40%, #FFFFFF 52%, #EF3340 52%, #EF3340 64%, #FFFFFF 64%, #FFFFFF 76%, #EF3340 76%, #EF3340 100%)",
+      border: PUERTO_RICO_FLAG_DATA_URI,
+      bg: PUERTO_RICO_FLAG_DATA_URI,
     },
   },
 

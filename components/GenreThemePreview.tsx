@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FLAG_BORDERS, FLAG_BG } from "@/lib/countries";
 import {
   appGenreIntensity,
   GENRE_NAMES,
@@ -39,53 +40,17 @@ function subgenresForGenreSection(name: string) {
   });
 }
 
-/** World card flag frame — row strip or modal hero (no country text). */
+/** Country flag swatch for World Themes table headers. */
 function CountryFlagSwatch({
-  theme,
   country,
   size,
 }: {
-  theme: GenreTheme;
   country: string;
   size: "row" | "panel";
 }) {
-  const flagLayer = theme.frameBorder;
-  const flagBg = theme.frameBg;
-  const rot = Boolean(
-    country !== "USA" && country !== "Bretagne" && (flagLayer || flagBg),
-  );
-
-  if (rot && (flagBg ?? flagLayer)) {
-    const src = (flagBg ?? flagLayer) as string;
-    const outerW = size === "row" ? 52 : 220;
-    const outerH = size === "row" ? 34 : 132;
-    const innerW = size === "row" ? 120 : 280;
-    const innerH = size === "row" ? 72 : 176;
-    return (
-      <div
-        className="relative shrink-0 overflow-hidden rounded-[5px] border border-black/15 bg-[rgba(4,6,9,0.92)]"
-        style={{ width: outerW, height: outerH }}
-        aria-hidden
-      >
-        <div
-          className="absolute left-1/2 top-1/2"
-          style={{
-            width: innerW,
-            height: innerH,
-            transform: "translate(-50%,-50%) rotate(-90deg)",
-            backgroundImage: `linear-gradient(transparent,transparent), ${src}`,
-            backgroundSize: "100% 100%, cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-      </div>
-    );
-  }
-
-  if (!flagLayer) return null;
-
-  const bw = size === "row" ? 5 : 14;
+  const flagBg = FLAG_BG[country] ?? FLAG_BORDERS[country];
+  if (!flagBg) return null;
+  const isImage = /^url\(/.test(flagBg.trim());
   const ow = size === "row" ? 48 : 200;
   const oh = size === "row" ? 28 : 112;
   return (
@@ -94,10 +59,10 @@ function CountryFlagSwatch({
       style={{
         width: ow,
         height: oh,
-        background: `linear-gradient(transparent, transparent) padding-box, ${flagLayer} border-box`,
-        border: `${bw}px solid transparent`,
-        backgroundClip: "padding-box, border-box",
-        backgroundOrigin: "padding-box, border-box",
+        backgroundImage: flagBg,
+        backgroundSize: isImage ? "cover" : "100% 100%",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
       aria-hidden
     />
@@ -438,7 +403,7 @@ export default function GenreThemePreview() {
                         __html: t.icon.replace(/currentColor/g, t.border),
                       }}
                     />
-                    <CountryFlagSwatch theme={t} country={country} size="row" />
+                    <CountryFlagSwatch country={country} size="row" />
                     <span
                       className="font-cinzel text-sm tracking-[2px] ml-1"
                       style={{ color: "#2e2010" }}
