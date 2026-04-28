@@ -454,6 +454,7 @@ function pickCountryFrame(source: GenreTheme): CountryFrameFields {
 }
 
 export type ThemeSelectionKind =
+  | "world-country-only"
   | "country-native"
   | "world-blend-subgenre"
   | "genre-subgenre"
@@ -518,6 +519,21 @@ export function resolveThemeSelection({
     throw new Error(
       "Card must set genre (a subgenre name, or an app-level genre).",
     );
+  }
+  if (country && g === country) {
+    const frame = pickCountryFrame(countryTheme!);
+    return {
+      theme: countryTheme!,
+      displayGenre: country,
+      leftLabel: country,
+      rightLabel: "—",
+      ...frame,
+      resolvedCountry: country,
+      typeStripPrimaryBorder: countryTheme!.border,
+      typeStripSubBorder: countryTheme!.border,
+      selectionKind: "world-country-only",
+      mirrorCountryTypeStripRight: true,
+    };
   }
 
   const def = SUBGENRE_BY_NAME[g];

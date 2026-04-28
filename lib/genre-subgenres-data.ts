@@ -207,6 +207,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Chamber Pop",
+    color: "#e8bcc4",
+    parentA: "Rock",
+    intensity: "pop",
+  },
+  {
+    kind: "genre",
     n: "Early Pop Rock",
     color: "#e6c8c8",
     parentA: "Rock",
@@ -493,6 +500,13 @@ export const SUBGENRES: Subgenre[] = [
     kind: "genre",
     n: "Cloud Rap",
     color: "#c09028",
+    parentA: "Hip-Hop",
+    intensity: "experimental",
+  },
+  {
+    kind: "genre",
+    n: "Alternative Hip-Hop",
+    color: "#b88830",
     parentA: "Hip-Hop",
     intensity: "experimental",
   },

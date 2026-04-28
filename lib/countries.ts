@@ -50,7 +50,7 @@ export const USA_FLAG_PATH = "/cards/artworks/deck/flag-usa.webp";
 const PUERTO_RICO_FLAG_PATH = "/cards/artworks/deck/flag-puerto-rico.svg";
 const PUERTO_RICO_FLAG_URL = `url('${PUERTO_RICO_FLAG_PATH}')`;
 const ENGLAND_FLAG_DATA_URI =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%23FFFFFF'/%3E%3Crect x='80' y='0' width='40' height='300' fill='%23C8102E'/%3E%3Crect x='0' y='130' width='200' height='40' fill='%23C8102E'/%3E%3C/svg%3E\")";
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23FFFFFF'/%3E%3Crect x='120' y='0' width='60' height='200' fill='%23C8102E'/%3E%3Crect x='0' y='70' width='300' height='60' fill='%23C8102E'/%3E%3C/svg%3E\")";
 /** White Greek cross on red (civil / state flag style 3:2 for cards). */
 /** Greek cross inset from edges (federal / civil flag style, not edge-to-edge). */
 const SWITZERLAND_FLAG_DATA_URI =
@@ -76,7 +76,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: { border: `url('${USA_FLAG_PATH}')` },
       r90: { border: `url('${USA_FLAG_PATH}')` },
@@ -134,7 +134,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
@@ -197,7 +197,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: cssSpainHorizontal(),
@@ -259,7 +259,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: { border: cssJapanHinomaru(), bg: cssJapanHinomaru() },
       r90: { border: cssJapanHinomaru(), bg: cssJapanHinomaru() },
@@ -285,7 +285,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.72,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: ENGLAND_FLAG_DATA_URI,
@@ -318,7 +318,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
@@ -349,7 +349,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
@@ -380,7 +380,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: SWITZERLAND_FLAG_DATA_URI,
@@ -408,7 +408,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
@@ -441,7 +441,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    defaultCardShell: "flat",
+    defaultCardShell: "r90",
     flag: {
       flat: {
         border: PUERTO_RICO_FLAG_URL,

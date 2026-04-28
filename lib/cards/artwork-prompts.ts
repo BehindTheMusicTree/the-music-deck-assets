@@ -355,6 +355,31 @@ La couleur dominante est un rouge très léger, provenant d'une couche de soleil
 Tous les autres éléments de composition, d'angle, de placement et de structure restent identiques.”`,
   106: `🎨 Magic-Style Illustration Prompt — “Psyché Fatigue — 70s Red Drift (Close-Up Realistic)” (réaliste, années 70, buste, éléments psychés)
 “High-detail realistic illustration in a subtle 1970s aesthetic, showing a stylized, anonymous person seen from the bust up, holding their head with both hands in a gesture of fatigue or mental overload. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third. The figure has 1970s visual cues: natural hair texture, warm retro lighting, soft film grain, muted vintage tones, and period-appropriate clothing shapes, without resembling any real person. From the figure’s head, depict psychedelic elements emerging: swirling organic shapes, soft fractal curves, drifting color ribbons, and abstract patterns reminiscent of 70s visual culture. These elements should feel dreamlike, symbolic, and slightly chaotic. The overall palette is neutral with a very light red dominant tint, like a faint sunset glow touching the scene. Add subtle film grain, warm haze, and gentle glowing particles around the psychedelic forms. Mood: introspective, surreal, emotional, vintage. No text, no symbols, no logos.”`,
+  107: `🔧 Prompt de modification — Version Afro-Américaine 2010 / Folie psyché / Dominante or
+“La personne devient une figure afro-américaine réaliste des années 2010, stylisée mais anonyme, sans ressemblance réelle.
+Elle n’est plus dans la fatigue mais dans une expression de folie, avec un regard ou une posture plus intense, presque exaltée.
+Les éléments psychés qui sortent de la tête deviennent plus délirants, plus chaotiques, plus éclatés, avec des formes abstraites et des motifs plus vifs.
+La couleur dominante devient un or très léger, comme une lueur dorée diffuse qui teinte subtilement toute la scène.
+Tous les autres aspects de composition, de cadrage (vue rapprochée, buste), et de structure restent identiques.”`,
+  108: `🔧 Prompt de modification — Futur / Bleu foncé / 5e dimension / Folie extrême / Femme déesse
+“La personne devient une femme afro-descendante réaliste, stylisée mais anonyme, sans ressemblance réelle, et située dans un futur lointain.
+Elle n’est plus dans la fatigue ni la simple folie, mais dans une folie extrême, transcendante, comme si elle percevait des réalités multiples.
+Ses yeux deviennent entièrement blancs, lumineux, sans pupilles, évoquant une perception au-delà du monde physique.
+Elle se trouve dans l’espace, flottant ou en apesanteur, et son esprit semble s’ouvrir sur la 5e dimension, avec des motifs psychés beaucoup plus vastes, fractals, cosmiques et multidirectionnels.
+La couleur dominante devient un bleu foncé, profond, cosmique, avec des reflets subtils.
+Elle prend une posture ou une aura évoquant une déesse, une entité puissante et visionnaire.
+Tous les autres aspects de composition, de cadrage (vue rapprochée, buste), et de structure restent identiques.”`,
+  109: `🎨 Magic-Style Illustration Prompt — “Mad Rush — Blue Faded Chaos (80s Supermarket)” (foule en panique, années 80, bleu clair dominant)
+“High-detail semi-realistic illustration capturing chaotic human behavior in a crowded 1980s supermarket. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third. Depict a large crowd rushing inside a supermarket, pushing carts, grabbing items, running in different directions. The people are stylized, anonymous, without ressemblance réelle, dressed in 1980s clothing: oversized jackets, pastel sweaters, denim, retro sneakers. The scene should feel surreal and emotionally detached, echoing a sense of absurdity and collective madness. Color palette: very light blue dominant, like a washed-out, melancholic filter over the chaos. Add soft haze, faint reflections on the supermarket tiles, and subtle grain for a retro feel. Mood: melancholic, surreal, chaotic, emotionally distant. No text, no symbols, no logos.”`,
+  110: `🎨 Magic-Style Illustration Prompt — “Mad Rush — Red Faded Undead (Post-Apocalyptic Street)”
+(foule zombie, rue détruite, rouge clair dominant, mouvement vers le fond)
+
+“High-detail semi-realistic illustration capturing chaotic undead movement in a devastated post-apocalyptic street. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third.
+Depict a large crowd of zombies rushing down a ruined street, all moving toward the background, advancing deeper into the scene, stumbling through debris and cracked pavement. The zombies are stylized, anonymous, without gore, with torn clothing and silhouettes evoking collapse and decay.
+The zombie on the left must be pushing a shopping cart.
+The scene should feel surreal and emotionally detached, echoing a sense of absurdity and collective madness in a world that has ended.
+Color palette: very light red dominant, like a washed-out, dusty glow from a burnt sky. Add soft haze, drifting dust, cracked asphalt reflections, and subtle grain for a desolate retro feel.
+Mood: melancholic, surreal, chaotic, emotionally distant. No text, no symbols, no logos.”`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

@@ -6,6 +6,7 @@
  */
 export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.13-organises-bande-organisee-v1.png": "2026-04-23T13:45:17",
+  "artwork.adam-beyer-loosing-your-mind-v1.png": "2026-04-28T12:19:00",
   "artwork.amazing-grace-v1.png": "2026-04-23T13:45:18",
   "artwork.avicii-levels-v1.png": "2026-04-23T13:45:17",
   "artwork.beatles-v1.png": "2026-04-26T09:12:32",
@@ -20,6 +21,8 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.bro-gozh-ma-zadou-v1.png": "2026-04-23T13:45:18",
   "artwork.c2c-superstition-v1.png": "2026-04-27T16:31:41",
   "artwork.can-vitamine-c-v1.png": "2026-04-28T11:42:00",
+  "artwork.raury-jaden-losing-your-mind-v1.png": "2026-04-28T12:12:00",
+  "artwork.tears-for-fears-mad-world-v1.png": "2026-04-28T12:58:00",
   "artwork.carlos-santana-maria-maria-v1.png": "2026-04-23T13:45:17",
   "artwork.carmina-burana-v1.png": "2026-04-23T13:45:17",
   "artwork.celine-dion-my-hearth-will-go-on-v1.png": "2026-04-23T13:45:17",
@@ -35,6 +38,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.eric-prydz-opus-v1.png": "2026-04-26T16:59:09",
   "artwork.four-tet-opus-v1.png": "2026-04-26T17:03:58",
   "artwork.freddy-mercury-the-great-pretender-v1.png": "2026-04-27T19:17:21",
+  "artwork.gary-jules-mad-world-v1.png": "2026-04-28T14:11:04",
   "artwork.god-saves-the-king-v1.png": "2026-04-23T13:45:17",
   "artwork.god-saves-the-queen-v1.png": "2026-04-23T13:45:17",
   "artwork.golden-gate-quartet-take-five-v1.png": "2026-04-23T13:45:17",

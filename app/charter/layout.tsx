@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const SUB_TABS = [
   { href: "/charter/palette", label: "Palette" },
+  { href: "/charter/artworks", label: "Artworks" },
   { href: "/charter/typography", label: "Typography" },
 ] as const;
 

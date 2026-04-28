@@ -252,7 +252,7 @@ export function CardsSongsContent() {
                 <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
                   {name}
                 </div>
-                <div className="font-garamond text-muted leading-[1.5]">
+                <div className="font-garamond text-muted leading-normal">
                   {desc.split("\n").map((line, idx) => {
                     if (!line.trim()) return <div key={idx} className="h-2" />;
                     const colonIndex = line.indexOf(":");
@@ -266,6 +266,18 @@ export function CardsSongsContent() {
                       </div>
                     );
                   })}
+                  {name === "Artwork" ? (
+                    <div>
+                      <span className="text-white">Guidelines:</span>{" "}
+                      <Link
+                        href="/charter/artworks"
+                        className="text-gold underline-offset-2 hover:underline"
+                      >
+                        Charter — Artworks
+                      </Link>
+                      .
+                    </div>
+                  ) : null}
                 </div>
               </div>
             ))}
@@ -290,7 +302,7 @@ export function CardsSongsContent() {
                     <div className="font-cinzel text-[15px] tracking-[1px] text-white mb-1">
                       {item.title}
                     </div>
-                    <ul className="font-garamond text-muted text-[16px] leading-[1.5] list-none pl-0 flex flex-col gap-0.5">
+                    <ul className="font-garamond text-muted text-[16px] leading-normal list-none pl-0 flex flex-col gap-0.5">
                       <li>
                         <span className="text-white">
                           Type strip — primary:

@@ -1009,4 +1009,17 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     ability: A,
     abilityDesc: P,
   },
+  {
+    rowKey: "wl-sorry-seems-hardest-word",
+    id: 12114,
+    title: "Sorry Seems to Be the Hardest Word",
+    artist: "Elton John",
+    year: 1976,
+    kind: "Planned",
+    genre: "Pop Rock",
+    rarity: "Classic",
+    pop: 8,
+    ability: A,
+    abilityDesc: P,
+  },
 ];

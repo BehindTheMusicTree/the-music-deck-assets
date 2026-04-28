@@ -7,6 +7,16 @@ import { displayGenreLabel, resolveThemeSelection } from "./genres";
  * pip is genre-coloured, so mirroring the country would wrongly show the flag twice.
  */
 describe("resolveThemeSelection", () => {
+  it("world-country-only: country header with no country-native subgenre keeps full country theme", () => {
+    const r = resolveThemeSelection({ genre: "Germany", country: "Germany" });
+    expect(r.selectionKind).toBe("world-country-only");
+    expect(r.resolvedCountry).toBe("Germany");
+    expect(r.leftLabel).toBe("Germany");
+    expect(r.rightLabel).toBe("—");
+    expect(r.flagStyle).toBeUndefined();
+    expect(r.mirrorCountryTypeStripRight).toBe(true);
+  });
+
   it("world-genre-only: country on left, app genre on right — do not mirror country to the right", () => {
     const r = resolveThemeSelection({ genre: "Electronic", country: "Spain" });
     expect(r.selectionKind).toBe("world-genre-only");

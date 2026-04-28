@@ -11,6 +11,7 @@ import {
   CATALOG_KINDS,
   formatCatalogIntensity,
 } from "@/lib/cards";
+import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";
 
@@ -99,21 +100,20 @@ function artworkCreatedAtSortValue(raw: string | undefined): number | null {
 }
 
 function formatArtworkCreatedAtDisplay(raw: string): string {
-  const t = artworkCreatedAtSortValue(raw);
-  if (t === null) return raw.trim();
-  try {
-    return new Intl.DateTimeFormat(undefined, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(new Date(t));
-  } catch {
-    return raw.trim();
+  const s = raw.trim();
+  const dt = s.match(
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/,
+  );
+  if (dt) {
+    const [, year, month, day, hour, minute, second] = dt;
+    return `${day}/${month}/${year} ${hour}:${minute}:${second ?? "00"}`;
   }
+  const d = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (d) {
+    const [, year, month, day] = d;
+    return `${day}/${month}/${year}`;
+  }
+  return s;
 }
 
 function artworkPromptPreview(full: string): {
@@ -129,6 +129,10 @@ function artworkPromptPreview(full: string): {
     preview: `${words.slice(0, ARTWORK_PROMPT_PREVIEW_WORDS).join(" ")}…`,
     hasMore: true,
   };
+}
+
+function effectiveArtworkPrompt(card: CatalogEntry["card"]): string {
+  return resolveBundledArtworkPrompt(card.id, card.artworkPrompt);
 }
 
 function compareRows(
@@ -233,12 +237,14 @@ function compareRows(
       return cmp(A, B);
     }
     case "artworkPrompt": {
-      const pa = a.card.artworkPrompt ? 1 : 0;
-      const pb = b.card.artworkPrompt ? 1 : 0;
+      const ap = effectiveArtworkPrompt(a.card);
+      const bp = effectiveArtworkPrompt(b.card);
+      const pa = ap ? 1 : 0;
+      const pb = bp ? 1 : 0;
       if (pa !== pb) return cmp(pa, pb);
       return (
-        (a.card.artworkPrompt ?? "").localeCompare(
-          b.card.artworkPrompt ?? "",
+        ap.localeCompare(
+          bp,
           undefined,
           {
             sensitivity: "base",
@@ -1160,17 +1166,17 @@ export default function CatalogDeckTable({
                       )}
                     </td>
                     <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                      {card.artworkPrompt?.trim() ? (
+                      {effectiveArtworkPrompt(card) ? (
                         <button
                           type="button"
                           className="block w-full max-w-[28ch] text-left font-garamond text-[11px] leading-snug text-white/80 hover:text-gold rounded border border-transparent px-0.5 py-0.5 -mx-0.5 hover:border-ui-border/50 hover:bg-white/3 transition-colors cursor-pointer"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setArtworkPromptModal(card.artworkPrompt!.trim());
+                            setArtworkPromptModal(effectiveArtworkPrompt(card));
                           }}
                           aria-label="Open full artwork prompt"
                         >
-                          {artworkPromptPreview(card.artworkPrompt).preview}
+                          {artworkPromptPreview(effectiveArtworkPrompt(card)).preview}
                         </button>
                       ) : (
                         <span className="text-muted/80">—</span>
@@ -1406,13 +1412,13 @@ export default function CatalogDeckTable({
                           {c.abilityDesc}
                         </p>
                       </div>
-                      {c.artworkPrompt?.trim() ? (
+                      {effectiveArtworkPrompt(c) ? (
                         <button
                           type="button"
                           className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
                           onClick={() => {
                             setCatalogEntryDetail(null);
-                            setArtworkPromptModal(c.artworkPrompt!.trim());
+                            setArtworkPromptModal(effectiveArtworkPrompt(c));
                           }}
                         >
                           View full artwork prompt

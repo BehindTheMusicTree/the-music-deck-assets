@@ -515,10 +515,9 @@ export default function GenreThemePreview() {
                         return;
                       }
                       // Countries in `COUNTRY_DATA` with no `kind: "country"` subgenres
-                      // (e.g. Netherlands, Germany) still need a genre for
-                      // `resolveThemeSelection` — use Mainstream+country (flag frame + fade).
+                      // (e.g. Netherlands, Germany): use explicit country-only selection.
                       setSelectedSubgenre(undefined);
-                      applyRulePreview({ genre: "Mainstream", country });
+                      applyRulePreview({ genre: country, country });
                     }}
                   >
                     <span
