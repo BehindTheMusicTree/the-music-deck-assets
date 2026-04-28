@@ -327,6 +327,17 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Breakbeat Funk",
+    color: "#b06f8e",
+    parentA: "Disco/Funk",
+    intensity: "experimental",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
+  },
+  {
+    kind: "genre",
     n: "Funk Soul",
     color: "#d18aad",
     parentA: "Disco/Funk",
