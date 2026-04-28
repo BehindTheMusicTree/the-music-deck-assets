@@ -9,10 +9,12 @@ describe("genre intensity links", () => {
     expect(out.every((n) => n.intensity === "pop")).toBe(true);
   });
 
-  it("non-mainstream out follows next intensity + next genre", () => {
+  it("non-mainstream out includes self + transitions", () => {
     const out = genreIntensityOut({ genre: "Rock", intensity: "soft" });
     expect(out).toEqual([
+      { genre: "Rock", intensity: "soft" },
       { genre: "Rock", intensity: "experimental" },
+      { genre: "Rock", intensity: "pop" },
       { genre: "Classical", intensity: "soft" },
       { genre: "Hip-Hop", intensity: "soft" },
       { genre: "Classical", intensity: "pop" },
@@ -23,6 +25,8 @@ describe("genre intensity links", () => {
   it("hardcore has no +1 intensity branch", () => {
     const out = genreIntensityOut({ genre: "Vintage", intensity: "hardcore" });
     expect(out).toEqual([
+      { genre: "Vintage", intensity: "hardcore" },
+      { genre: "Vintage", intensity: "experimental" },
       { genre: "Reggae/Dub", intensity: "hardcore" },
       { genre: "Classical", intensity: "hardcore" },
       { genre: "Reggae/Dub", intensity: "experimental" },

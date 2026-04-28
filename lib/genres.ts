@@ -249,9 +249,11 @@ export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[
     return GENRE_NAMES.map((genre) => ({ genre, intensity: "pop" as Intensity }));
   }
   const out: GenreIntensityNode[] = [];
+  out.push({ genre: node.genre, intensity: node.intensity });
   const up = nextIntensity(node.intensity);
   const down = previousIntensity(node.intensity);
   if (up) out.push({ genre: node.genre, intensity: up });
+  if (down) out.push({ genre: node.genre, intensity: down });
   const nextGenre = GENRE_NEXT[node.genre];
   const previousGenre = GENRE_PREVIOUS[node.genre];
   out.push({ genre: nextGenre, intensity: node.intensity });

@@ -42,12 +42,12 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
 }
 
 function circleRadiusForNode(n: { genre: GenreName }): number {
-  return n.genre === "Mainstream" ? 13 : 14;
+  return n.genre === "Mainstream" ? 20 : 14;
 }
 
 function lineToCircleEdge(
-  from: Node,
-  to: Node,
+  from: { genre: GenreName; x: number; y: number },
+  to: { genre: GenreName; x: number; y: number },
 ): { x1: number; y1: number; x2: number; y2: number } {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
@@ -64,23 +64,14 @@ function lineToCircleEdge(
   };
 }
 
-function isLightHex(hex: string): boolean {
-  const s = hex.replace("#", "");
-  const normalized =
-    s.length === 3
-      ? s
-          .split("")
-          .map((c) => c + c)
-          .join("")
-      : s;
-  const r = Number.parseInt(normalized.slice(0, 2), 16);
-  const g = Number.parseInt(normalized.slice(2, 4), 16);
-  const b = Number.parseInt(normalized.slice(4, 6), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 > 160;
-}
-
 function labelNode(n: { genre: GenreName; intensity: Intensity }) {
   return `${n.genre} (${n.intensity})`;
+}
+
+function colourForNode(n: { genre: GenreName; intensity: Intensity }): string {
+  return n.genre === "Mainstream"
+    ? GENRE_THEMES.Mainstream.border
+    : genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity);
 }
 
 function isSameNode(
@@ -172,12 +163,12 @@ export default function GenreTransitionsWheel() {
   }, []);
 
   return (
-    <div className="flex items-start justify-center gap-6">
+    <div className="flex flex-col xl:flex-row items-start justify-center gap-6 w-full">
       <svg
-        width={wheel.svgSize}
-        height={wheel.svgSize}
+        width="100%"
+        height="100%"
         viewBox={`0 0 ${wheel.svgSize} ${wheel.svgSize}`}
-        className="shrink-0"
+        className="w-full h-auto max-w-[1200px] shrink-0"
       >
         <defs>
           <marker
@@ -321,21 +312,14 @@ export default function GenreTransitionsWheel() {
         ))}
       </svg>
       <aside
-        className="sticky top-24 w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto"
-        style={
-          hovered && hovered.genre !== "Mainstream"
-            ? {
-                background: hovered.colour,
-                color: isLightHex(hovered.colour)
-                  ? "rgba(10,10,10,.92)"
-                  : "rgba(255,255,255,.96)",
-              }
-            : undefined
-        }
+        className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto"
       >
         {hovered ? (
           <>
-            <div className="font-mono text-[20px] uppercase tracking-[0.08em]">
+            <div
+              className="font-mono text-[20px] uppercase tracking-[0.08em]"
+              style={{ color: hovered.colour }}
+            >
               {hovered.genre} · {hovered.intensity}
             </div>
             <div className="font-mono text-[18px] mt-2">Out:</div>
@@ -344,6 +328,7 @@ export default function GenreTransitionsWheel() {
                 <li
                   key={`out-${n.genre}-${n.intensity}`}
                   className="font-mono text-[18px]"
+                  style={{ color: colourForNode(n) }}
                 >
                   {labelNode(n)}
                 </li>
@@ -355,6 +340,7 @@ export default function GenreTransitionsWheel() {
                 <li
                   key={`in-${n.genre}-${n.intensity}`}
                   className="font-mono text-[18px]"
+                  style={{ color: colourForNode(n) }}
                 >
                   {labelNode(n)}
                 </li>

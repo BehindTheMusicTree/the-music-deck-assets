@@ -135,7 +135,7 @@ export default function GenresPage() {
         <div id="genre-wheel" className="w-full flex justify-center">
           <GenreWheel />
         </div>
-        <div className="w-full max-w-[860px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden px-[18px] py-4">
+        <div className="w-full max-w-[1800px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-visible px-[18px] py-4">
           <div className="section-title-sub mb-2">Transitions</div>
           <p className="font-garamond italic text-muted leading-[1.45] mb-4 max-w-[760px]">
             A transition node is a genre + intensity pair. From an outer genre,

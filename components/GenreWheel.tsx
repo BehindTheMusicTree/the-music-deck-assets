@@ -322,31 +322,6 @@ export default function GenreWheel() {
       });
     });
 
-    tiles.push({
-      id: "Mainstream",
-      el: (
-        <Rect
-          key="Mainstream"
-          tileId="Mainstream"
-          x={WHEEL_CX}
-          y={WHEEL_CY}
-          label="Mainstream"
-          hex={GENRE_THEMES.Mainstream.border}
-          hovered={topTileId === "Mainstream"}
-          onPointerEnter={() => onTilePointerEnter("Mainstream")}
-          onPointerLeave={onTilePointerLeave}
-          onActivate={() =>
-            setWheelFocus({
-              kind: "genre",
-              label: "Mainstream",
-              hex: GENRE_THEMES.Mainstream.border,
-              genre: "Mainstream",
-            })
-          }
-        />
-      ),
-    });
-
     for (const s of SUBGENRES) {
       if (s.parentA in WORLD_THEMES) continue;
       if (s.parentB && s.parentB in WORLD_THEMES) continue;
@@ -480,10 +455,22 @@ export default function GenreWheel() {
         <circle
           cx={WHEEL_CX}
           cy={WHEEL_CY}
-          r={Math.round(R_POP_SOFT_LINE * 0.52)}
+          r={Math.round(R_POP_SOFT_LINE * 0.35)}
           fill={GENRE_THEMES.Mainstream.border}
           fillOpacity={0.9}
         />
+        <text
+          x={WHEEL_CX}
+          y={WHEEL_CY}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontFamily="Cinzel, serif"
+          fontSize={14}
+          letterSpacing={1.2}
+          fill="rgba(20,16,10,.72)"
+        >
+          Mainstream
+        </text>
 
         {/* Mainstream text */}
         <circle
