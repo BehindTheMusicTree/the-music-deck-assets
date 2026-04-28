@@ -16,19 +16,21 @@ import {
 
 export interface CountryDef {
   theme: GenreTheme;
-  /**
-   * How {@link countryUsesCardFrameFlatShell} resolves: `flat` uses the non-rotated
-   * border shell; `r90` uses the −90° shell (vertical `to right` tricolors that must
-   * not share the flat paint path).
-   */
-  cardFrame: "flat" | "r90";
+  /** Preferred card shell for border rendering. */
+  defaultCardShell: "flat" | "r90";
   flag: {
-    /** CSS value for the border layer (gradient or url()). */
-    border: string;
-    /** CSS value for the pip / background fill. `border` is used as fallback. */
-    bg?: string;
-    /** Rotate the border image 90 ° (USA star-field needs this). */
-    rotateR90?: true;
+    /** Explicit assets for the flat shell (`cardFlagFlat`). */
+    flat: {
+      border: string;
+      bg?: string;
+      backgroundPosition?: string;
+    };
+    /** Explicit assets for the r90 shell (`cardFlagUsR90`). */
+    r90: {
+      border: string;
+      bg?: string;
+      backgroundPosition?: string;
+    };
   };
   pip?: {
     sym: string;
@@ -69,12 +71,12 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    defaultCardShell: "flat",
     flag: {
-      border: `url('${USA_FLAG_PATH}')`,
-      rotateR90: true,
+      flat: { border: `url('${USA_FLAG_PATH}')` },
+      r90: { border: `url('${USA_FLAG_PATH}')` },
     },
     pip: { sym: "★", color: "#1a1a2e" },
-    cardFrame: "flat",
   },
 
   Mexico: {
@@ -95,10 +97,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "r90",
+    defaultCardShell: "r90",
     flag: {
-      border: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
-      bg: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+      flat: {
+        border: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+        bg: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+      },
+      r90: {
+        border: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+        bg: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+      },
     },
     // Use the flag-filled diamond for Mexico (no custom symbol override).
   },
@@ -121,10 +129,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
-      bg: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+      flat: {
+        border: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+        bg: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+      },
+      r90: {
+        border: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+        bg: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+      },
     },
   },
 
@@ -141,10 +155,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "r90",
+    defaultCardShell: "r90",
     flag: {
-      border: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
-      bg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+      flat: {
+        border: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+        bg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+      },
+      r90: {
+        border: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+        bg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+      },
     },
     pip: { sym: "⚜", color: "#1a2a0a", size: 19 },
   },
@@ -162,10 +182,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssSpainHorizontal(),
-      bg: cssSpainHorizontal(),
+      flat: {
+        border: cssSpainHorizontal(),
+        bg: cssSpainHorizontal(),
+      },
+      r90: {
+        border: cssSpainHorizontal(),
+        bg: cssSpainHorizontal(),
+      },
     },
   },
 
@@ -187,10 +213,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "r90",
+    defaultCardShell: "r90",
     flag: {
-      border: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
-      bg: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+      flat: {
+        border: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+        bg: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+      },
+      r90: {
+        border: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+        bg: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+      },
     },
   },
 
@@ -212,10 +244,10 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssJapanHinomaru(),
-      bg: cssJapanHinomaru(),
+      flat: { border: cssJapanHinomaru(), bg: cssJapanHinomaru() },
+      r90: { border: cssJapanHinomaru(), bg: cssJapanHinomaru() },
     },
   },
 
@@ -238,10 +270,18 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.72,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: ENGLAND_FLAG_DATA_URI,
-      bg: ENGLAND_FLAG_DATA_URI,
+      flat: {
+        border: ENGLAND_FLAG_DATA_URI,
+        bg: ENGLAND_FLAG_DATA_URI,
+        backgroundPosition: "center center",
+      },
+      r90: {
+        border: ENGLAND_FLAG_DATA_URI,
+        bg: ENGLAND_FLAG_DATA_URI,
+        backgroundPosition: "center center",
+      },
     },
   },
 
@@ -263,10 +303,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
-      bg: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+      flat: {
+        border: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+        bg: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+      },
+      r90: {
+        border: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+        bg: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+      },
     },
   },
 
@@ -288,10 +334,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
-      bg: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+      flat: {
+        border: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+        bg: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+      },
+      r90: {
+        border: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+        bg: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+      },
     },
   },
 
@@ -313,10 +365,10 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: SWITZERLAND_FLAG_DATA_URI,
-      bg: SWITZERLAND_FLAG_DATA_URI,
+      flat: { border: SWITZERLAND_FLAG_DATA_URI, bg: SWITZERLAND_FLAG_DATA_URI },
+      r90: { border: SWITZERLAND_FLAG_DATA_URI, bg: SWITZERLAND_FLAG_DATA_URI },
     },
   },
 
@@ -338,10 +390,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
-      bg: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+      flat: {
+        border: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+        bg: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+      },
+      r90: {
+        border: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+        bg: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+      },
     },
   },
 
@@ -365,10 +423,18 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: PUERTO_RICO_FLAG_URL,
-      bg: PUERTO_RICO_FLAG_URL,
+      flat: {
+        border: PUERTO_RICO_FLAG_URL,
+        bg: PUERTO_RICO_FLAG_URL,
+        backgroundPosition: "center center",
+      },
+      r90: {
+        border: PUERTO_RICO_FLAG_URL,
+        bg: PUERTO_RICO_FLAG_URL,
+        backgroundPosition: "center center",
+      },
     },
   },
 
@@ -390,10 +456,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "r90",
+    defaultCardShell: "r90",
     flag: {
-      border: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
-      bg: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+      flat: {
+        border: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+        bg: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+      },
+      r90: {
+        border: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+        bg: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+      },
     },
   },
 
@@ -411,10 +483,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
-    cardFrame: "flat",
+    defaultCardShell: "flat",
     flag: {
-      border: cssBretagneRepeating(),
-      bg: cssBretagneRepeating(),
+      flat: {
+        border: cssBretagneRepeating(),
+        bg: cssBretagneRepeating(),
+      },
+      r90: {
+        border: cssBretagneRepeating(),
+        bg: cssBretagneRepeating(),
+      },
     },
     pip: {
       sym: "✦", color: "#222222", size: 17,
@@ -460,14 +538,54 @@ export function themeForCountry(country: string): GenreTheme | undefined {
   return COUNTRY_DATA[country]?.theme;
 }
 
+type CountryCardShell = "flat" | "r90";
+
+function resolveCountryFlagVariant(
+  def: CountryDef,
+  shell: CountryCardShell,
+): { border: string; bg?: string; backgroundPosition?: string } {
+  const flat = def.flag.flat;
+  if (shell === "flat") return flat;
+  return def.flag.r90;
+}
+
+export function countryPreferredCardShell(
+  country: string | undefined,
+): CountryCardShell {
+  if (!country) return "flat";
+  const def = COUNTRY_DATA[country];
+  if (!def) return "flat";
+  return def.defaultCardShell;
+}
+
+export function countryFlagForShell(
+  country: string | undefined,
+  shell: CountryCardShell,
+): { border?: string; bg?: string; backgroundPosition?: string } {
+  if (!country) return {};
+  const def = COUNTRY_DATA[country];
+  if (!def) return {};
+  const variant = resolveCountryFlagVariant(def, shell);
+  return {
+    border: variant.border,
+    bg: variant.bg ?? variant.border,
+    backgroundPosition: variant.backgroundPosition,
+  };
+}
+
 export const FLAG_BORDERS: Record<string, string> = Object.fromEntries(
-  Object.entries(COUNTRY_DATA).map(([k, v]) => [k, v.flag.border]),
+  Object.entries(COUNTRY_DATA).map(([k, v]) => [
+    k,
+    resolveCountryFlagVariant(v, "flat").border,
+  ]),
 );
 
 export const FLAG_BG: Record<string, string> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
-    .filter(([, v]) => v.flag.bg)
-    .map(([k, v]) => [k, v.flag.bg!]),
+    .map(([k, v]) => {
+      const flat = resolveCountryFlagVariant(v, "flat");
+      return [k, flat.bg ?? flat.border] as const;
+    }),
 );
 
 export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?: number; svg?: string }> = Object.fromEntries(
@@ -478,23 +596,9 @@ export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?
 
 export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
-    .filter(([, v]) => v.pip?.bg || v.flag.border)
-    .map(([k, v]) => [k, v.pip?.bg ?? v.flag.border]),
+    .map(([k, v]) => [
+      k,
+      v.pip?.bg ?? resolveCountryFlagVariant(v, "flat").border,
+    ]),
 );
 
-export const FLAG_ROTATE_R90 = new Set(
-  Object.entries(COUNTRY_DATA).filter(([, v]) => v.flag.rotateR90).map(([k]) => k),
-);
-
-/** Countries whose {@link CountryDef.cardFrame} is `"flat"` (non-rotated border shell). */
-export const COUNTRY_CARD_FRAME_FLAT_SHELL = new Set<string>(
-  Object.entries(COUNTRY_DATA)
-    .filter(([, v]) => v.cardFrame === "flat")
-    .map(([k]) => k),
-);
-
-export function countryUsesCardFrameFlatShell(
-  country: string | undefined,
-): boolean {
-  return country ? COUNTRY_DATA[country]?.cardFrame === "flat" : false;
-}

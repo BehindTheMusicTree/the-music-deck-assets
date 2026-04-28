@@ -14,6 +14,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.bella-ciao-casa-de-papel-v1.png": "2026-04-23T13:45:18",
   "artwork.bella-ciao-original-v1.png": "2026-04-23T13:45:17",
   "artwork.bob-marley-i-shot-the-sherif-v1.png": "2026-04-28T09:41:00",
+  "artwork.eric-clapton-i-shot-the-sherif-v1.png": "2026-04-28T09:57:19",
   "artwork.billy-jean-v2.png": "2026-04-23T13:45:17",
   "artwork.bohemian-rhapsody-v2.png": "2026-04-23T13:45:17",
   "artwork.bro-gozh-ma-zadou-v1.png": "2026-04-23T13:45:18",

@@ -15,11 +15,11 @@ import {
   subgenreIntensity,
   WORLD_THEMES,
 } from "@/lib/genres";
-import { countryUsesCardFrameFlatShell } from "@/lib/countries";
+import { countryFlagForShell, countryPreferredCardShell } from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import type { CardTrackIndex } from "@/lib/cards/track-graph";
 import type { CardRarity } from "@/lib/cards/card-rarity";
-import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
+import type { GenreTheme } from "@/lib/card-theme-types";
 
 export type {
   CardTypePip,
@@ -64,11 +64,7 @@ export interface CardData {
   tracksIn?: number[];
   /** Track ids this card transitions into (successors in a DJ transition). */
   tracksOut?: number[];
-  /**
-   * Shipped deck only: catalogue series bucket and number within that bucket.
-   * Applied in `lib/cards/examples` via `mergeShippedCatalogMeta` from `shipped-catalog-meta-by-id`.
-   */
-  catalogSeriesType?: CatalogSeriesType;
+  /** Shipped deck only: catalogue series label and number within that series. */
   catalogSeriesLabel?: string;
   catalogNumber?: number;
 }
@@ -245,25 +241,30 @@ export default function Card({
   const pipRightFlagBg =
     pipLeftFlagBg && rightUsesCountryIdentity ? pipLeftFlagBg : undefined;
 
-  const flagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
-  const flagBg = resolved.frameBg ?? effectiveTheme.frameBg;
+  const worldFrameCountry = resolved.resolvedCountry;
+  const preferredShell = countryPreferredCardShell(worldFrameCountry);
+  const preferredFlagVariant = countryFlagForShell(worldFrameCountry, preferredShell);
+  const fallbackFlagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
+  const fallbackFlagBg = resolved.frameBg ?? effectiveTheme.frameBg;
+  const flagLayer =
+    preferredFlagVariant.border ?? fallbackFlagLayer;
+  const flagBg =
+    preferredFlagVariant.bg ?? fallbackFlagBg;
   const flatShellFrameBorderSize = flatShellFlagBackgroundSize(flagLayer);
   const flatShellFrameBgSize = flatShellFlagBackgroundSize(flagBg);
-  const worldFrameCountry = resolved.resolvedCountry;
   /**
    * R90 border shell (cardFlagUsR90) works for *vertical* bar flags; horizontal bands
    * (e.g. NL / DE / ES) become sideways after -90° and the frame reads as one band.
-   * URL/SVG/photo flags and flat shell are driven by `CountryDef.cardFrame` — see `countryUsesCardFrameFlatShell`.
+   * Frame assets can provide explicit flat / r90 variants per country.
    */
-  const worldFlagBorderFlatShell =
-    countryUsesCardFrameFlatShell(worldFrameCountry);
   const flagRotateR90 = Boolean(
-    flagLayer && worldFrameCountry && !worldFlagBorderFlatShell,
+    flagLayer && worldFrameCountry && preferredShell === "r90",
   );
   const worldFrameFilter = resolved.frameFilter ?? effectiveTheme.frameFilter;
   const worldFrameOpacity =
     resolved.frameOpacity ?? effectiveTheme.frameOpacity;
   const worldFrameBackgroundPosition =
+    preferredFlagVariant.backgroundPosition ??
     resolved.frameBackgroundPosition ??
     effectiveTheme.frameBackgroundPosition ??
     "center";
@@ -285,7 +286,7 @@ export default function Card({
     "--gc-parch-ability": effectiveTheme.parchAbility,
   } as React.CSSProperties;
 
-  /** World flags in `worldFlagBorderFlatShell` use a flat border; others use R90 when `flagRotateR90`. */
+  /** Flat shell when the selected country shell is not r90. */
   const flagFlatShell = Boolean(flagLayer && !flagRotateR90);
 
   const resolveTransitionTrack = (

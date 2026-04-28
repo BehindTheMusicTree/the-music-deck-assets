@@ -21,7 +21,6 @@ import {
   WORLD_FLAG_CARDS,
   WORLD_MIXED_CARDS,
 } from "./examples";
-import { mergeShippedCatalogMeta } from "./merge-shipped-catalog-meta";
 import { buildCardTrackIndex } from "./track-graph";
 
 export type { CatalogSeriesType };
@@ -41,7 +40,7 @@ export type CatalogEntry = {
   kind: CatalogEntryKind;
   card: CardData;
   theme: GenreTheme;
-  /** Copied from `card.catalogSeriesType` (genre vs country/region series). */
+  /** Inferred: "country" when catalogSeriesLabel === card.country, else "genre". */
   catalogSeriesType: CatalogSeriesType;
   /** Copied from `card.catalogSeriesLabel`. */
   catalogSeriesLabel: string;
@@ -174,7 +173,7 @@ const rawSpotlightRows: RawCatalogRow[] = DECK_SPOTLIGHT_CARDS.map((card) => {
 const rawLaMacarena: RawCatalogRow = {
   rowKey: "world-genre-9101",
   kind: "World + genre",
-  card: mergeShippedCatalogMeta({
+  card: {
     id: 9101,
     title: "La Macarena",
     artist: "Los Del Rio",
@@ -187,7 +186,9 @@ const rawLaMacarena: RawCatalogRow = {
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
     country: "Spain",
     genre: "Electronic",
-  }),
+    catalogNumber: 17,
+    catalogSeriesLabel: "Electronic",
+  },
   theme: themeForCountry("Spain"),
 };
 
@@ -246,15 +247,17 @@ function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
   );
 }
 
+function inferCatalogSeriesType(card: CardData): CatalogSeriesType {
+  return card.country != null && card.catalogSeriesLabel === card.country
+    ? "country"
+    : "genre";
+}
+
 function catalogEntryFromRow(row: RawCatalogRow): CatalogEntry {
   const { card } = row;
-  if (
-    card.catalogNumber == null ||
-    !card.catalogSeriesType ||
-    !card.catalogSeriesLabel
-  ) {
+  if (card.catalogNumber == null || !card.catalogSeriesLabel) {
     throw new Error(
-      `Shipped card "${card.title}" (id ${card.id}): set catalogNumber, catalogSeriesType, catalogSeriesLabel (use mergeShippedCatalogMeta in examples)`,
+      `Shipped card "${card.title}" (id ${card.id}): set catalogNumber and catalogSeriesLabel directly on the card definition`,
     );
   }
   return {
@@ -262,7 +265,7 @@ function catalogEntryFromRow(row: RawCatalogRow): CatalogEntry {
     kind: row.kind,
     card,
     theme: row.theme,
-    catalogSeriesType: card.catalogSeriesType,
+    catalogSeriesType: inferCatalogSeriesType(card),
     catalogSeriesLabel: card.catalogSeriesLabel,
     catalogNumber: card.catalogNumber,
     catalogGenreLabel: catalogGenreLabel(row),

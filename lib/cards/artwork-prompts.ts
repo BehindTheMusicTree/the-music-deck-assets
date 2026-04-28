@@ -346,6 +346,13 @@ The street features Caribbean architectural elements: colorful facades, wooden s
 Add a subtle fantasy touch: glowing dust particles, warm sunbeams, and a gentle retro halo around the scene.
 Color palette: warm reds, sun-bleached yellows, faded greens, turquoise accents, all with a vintage patina.
 Mood: tense but poetic, nostalgic, Caribbean, cinematic. No text, no symbols, no logos.”`,
+
+  105: `I Shot the Sheriff — Version Angleterre / Ouvriers / Rouge léger
+“On est dans une rue en Angleterre, avec des bâtiments en briques et une ambiance urbaine britannique.
+Les deux personnages deviennent deux ouvriers blancs, silhouettes stylisées et anonymes, sans ressemblance réelle.
+Ils sont positionnés exactement comme dans la scène d'origine, le long de la route en longueur, vus de haut.
+La couleur dominante est un rouge très léger, provenant d'une couche de soleil qui teinte doucement la scène.
+Tous les autres éléments de composition, d'angle, de placement et de structure restent identiques.”`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

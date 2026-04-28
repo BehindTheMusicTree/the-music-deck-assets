@@ -3,7 +3,7 @@
  * Keeps domain modules from importing UI components for types only.
  */
 
-/** Shipped deck: how catalogue № is bucketed in {@link import("@/lib/cards/shipped-catalog-meta-by-id")}. */
+/** Shipped deck: how catalogue № is bucketed (genre series vs. country/region series). */
 export type CatalogSeriesType = "genre" | "country";
 
 export interface CardTypePipSymbol {

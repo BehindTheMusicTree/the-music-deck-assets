@@ -3,7 +3,6 @@ import type { AppGenreName } from "@/lib/genres";
 import { CARD_ARTWORK_PROMPTS } from "./artwork-prompts";
 import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE as ART } from "./art-path";
-import { mergeShippedCatalogMeta } from "./merge-shipped-catalog-meta";
 
 function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
   const s = CARD_ARTWORK_PROMPTS[id];
@@ -11,7 +10,7 @@ function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
 }
 
 /** One fixture card per app genre (charter anatomy, rarity grid). */
-const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
+export const MOCK_CARDS: Record<AppGenreName, CardData> = {
   Rock: {
     id: 1,
     title: "Bohemian Rhapsody",
@@ -24,6 +23,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     rarity: "Legendary",
     artwork: `${ART}artwork.bohemian-rhapsody-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bohemian-rhapsody-v2.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Rock",
   },
   Mainstream: {
     id: 2,
@@ -37,6 +38,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     rarity: "Legendary",
     artwork: `${ART}artwork.billy-jean-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.billy-jean-v2.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Disco/Funk",
   },
   Electronic: {
     id: 3,
@@ -52,6 +55,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.daft-punk-one-more-time-v1.png"],
     ...(artworkPromptFor(3) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Electronic",
   },
   "Reggae/Dub": {
     id: 4,
@@ -65,6 +70,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     rarity: "Classic",
     artwork: `${ART}artwork.is-this-love-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.is-this-love-v1.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Reggae/Dub",
   },
   "Hip-Hop": {
     id: 5,
@@ -81,6 +88,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.kendrick-lamar-humble-v1.png"],
     ...(artworkPromptFor(5) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Hip-Hop",
   },
   "Disco/Funk": {
     id: 6,
@@ -94,6 +103,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     rarity: "Banger",
     artwork: `${ART}artwork.night-fever-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.night-fever-v1.png"],
+    catalogNumber: 2,
+    catalogSeriesLabel: "Disco/Funk",
   },
   Classical: {
     id: 7,
@@ -109,6 +120,8 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.wagner-ride-of-the-valkyries-v1.png"],
     ...(artworkPromptFor(7) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Vintage",
   },
   Vintage: {
     id: 8,
@@ -123,17 +136,13 @@ const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
     artwork: `${ART}artwork.miles-davis-so-what-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.miles-davis-so-what-v1.png"],
     ...(artworkPromptFor(8) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Vintage",
   },
 };
 
-export const MOCK_CARDS: Record<AppGenreName, CardData> = Object.fromEntries(
-  (Object.entries(MOCK_CARDS_BASE) as [AppGenreName, CardData][]).map(
-    ([k, v]) => [k, mergeShippedCatalogMeta(v)],
-  ),
-) as Record<AppGenreName, CardData>;
-
 /** World cards: country/region identity on the type strip (no genre mix). */
-const WORLD_FLAG_CARDS_BASE: CardData[] = [
+export const WORLD_FLAG_CARDS: CardData[] = [
   {
     id: 20,
     title: "Take Me Home, Country Roads",
@@ -148,6 +157,8 @@ const WORLD_FLAG_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.take-me-home-country-roads-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.take-me-home-country-roads-v1.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "USA",
   },
   {
     id: 24,
@@ -164,6 +175,8 @@ const WORLD_FLAG_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.michel-sardou-les-lacs-du-connemara-v1.png"],
     ...(artworkPromptFor(24) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "France",
   },
   {
     id: 26,
@@ -181,15 +194,13 @@ const WORLD_FLAG_CARDS_BASE: CardData[] = [
     artworkOverBorder: true,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.tri-martolod-v1.png"],
     ...(artworkPromptFor(26) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Bretagne",
   },
 ];
 
-export const WORLD_FLAG_CARDS: CardData[] = WORLD_FLAG_CARDS_BASE.map(
-  mergeShippedCatalogMeta,
-);
-
 /** World + genre/subgenre mixes (fade, dual identity on strip). */
-const WORLD_MIXED_CARDS_BASE: CardData[] = [
+export const WORLD_MIXED_CARDS: CardData[] = [
   {
     id: 27,
     title: "Bande Organisée",
@@ -206,6 +217,8 @@ const WORLD_MIXED_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.13-organises-bande-organisee-v1.png"],
     ...(artworkPromptFor(27) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 21,
@@ -221,6 +234,8 @@ const WORLD_MIXED_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.amazing-grace-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.amazing-grace-v1.png"],
     ...(artworkPromptFor(21) ?? {}),
+    catalogNumber: 3,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 23,
@@ -237,6 +252,8 @@ const WORLD_MIXED_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.rouget-de-lisle-la-marseillaise-v1.png"],
     ...(artworkPromptFor(23) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 25,
@@ -252,15 +269,13 @@ const WORLD_MIXED_CARDS_BASE: CardData[] = [
     country: "Spain",
     artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ska-p-cannabis-v1.png"],
+    catalogNumber: 2,
+    catalogSeriesLabel: "Rock",
   },
 ];
 
-export const WORLD_MIXED_CARDS: CardData[] = WORLD_MIXED_CARDS_BASE.map(
-  mergeShippedCatalogMeta,
-);
-
 /** Additional shipped tracks with artwork (catalogue beyond genre fixtures and world sets). */
-const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
+export const DECK_SPOTLIGHT_CARDS: CardData[] = [
   {
     id: 28,
     title: "All You Need Is Love",
@@ -274,6 +289,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.beatles-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.beatles-v1.png"],
+    catalogNumber: 3,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 29,
@@ -289,6 +306,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.the-sex-pistols-god-saves-the-queen-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-sex-pistols-god-saves-the-queen-v1.png"],
+    catalogNumber: 4,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 30,
@@ -304,6 +323,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.las-ketchup-the-ketchup-song-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.las-ketchup-the-ketchup-song-v1.png"],
+    catalogNumber: 3,
+    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 31,
@@ -320,6 +341,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.les-corons-lens-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.les-corons-lens-v1.png"],
+    catalogNumber: 2,
+    catalogSeriesLabel: "France",
   },
   {
     id: 32,
@@ -335,6 +358,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.luis-mariano-cest-magnifique-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.luis-mariano-cest-magnifique-v1.png"],
+    catalogNumber: 3,
+    catalogSeriesLabel: "France",
   },
   {
     id: 33,
@@ -351,6 +376,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.zaho-mc-solar-caroline-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.zaho-mc-solar-caroline-v1.png"],
+    catalogNumber: 3,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 34,
@@ -366,6 +393,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.la-cucaracha-v1.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Mexico",
   },
   {
     id: 35,
@@ -383,6 +412,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.un-deux-trois-soleil-abdel-kader-v1.png"],
     ...(artworkPromptFor(35) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Algeria",
   },
   {
     id: 36,
@@ -399,6 +430,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.luiz-fonzi-despacito-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luiz-fonzi-despacito-v1.png"],
     ...(artworkPromptFor(36) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Puerto Rico",
   },
   {
     id: 37,
@@ -414,6 +447,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.paul-karlkbrenner-sky-and-sand-v1.png"],
     ...(artworkPromptFor(37) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 38,
@@ -427,6 +462,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.god-saves-the-king-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-saves-the-king-v1.png"],
     ...(artworkPromptFor(38) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 39,
@@ -440,6 +477,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.god-saves-the-queen-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-saves-the-queen-v1.png"],
     ...(artworkPromptFor(39) ?? {}),
+    catalogNumber: 3,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 40,
@@ -453,6 +492,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.pnl-au-dd-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.pnl-au-dd-v1.png"],
+    catalogNumber: 4,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 41,
@@ -468,6 +509,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.carlos-santana-maria-maria-v1.png"],
     ...(artworkPromptFor(41) ?? {}),
+    catalogNumber: 5,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 42,
@@ -482,6 +525,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.avicii-levels-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.avicii-levels-v1.png"],
     ...(artworkPromptFor(42) ?? {}),
+    catalogNumber: 3,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 43,
@@ -497,6 +542,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
     ...(artworkPromptFor(43) ?? {}),
+    catalogNumber: 4,
+    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 44,
@@ -511,6 +558,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.eminem-loge-yourself-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eminem-loge-yourself-v1.png"],
     ...(artworkPromptFor(44) ?? {}),
+    catalogNumber: 6,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 45,
@@ -525,6 +574,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.psy-gagnam-style-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.psy-gagnam-style-v1.png"],
     ...(artworkPromptFor(45) ?? {}),
+    catalogNumber: 4,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 46,
@@ -539,6 +590,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.lady-gaga-poker-face-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lady-gaga-poker-face-v1.png"],
     ...(artworkPromptFor(46) ?? {}),
+    catalogNumber: 5,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 47,
@@ -554,6 +607,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.michael-jackson-thriller-v1.png"],
     ...(artworkPromptFor(47) ?? {}),
+    catalogNumber: 5,
+    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 48,
@@ -569,6 +624,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.sicko-mode-travis-scott-v1.png"],
     ...(artworkPromptFor(48) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 49,
@@ -582,6 +639,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.shape-of-you-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shape-of-you-v1.png"],
+    catalogNumber: 6,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 50,
@@ -598,6 +657,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.danau-latribu-de-dana-v1.png"],
     ...(artworkPromptFor(50) ?? {}),
+    catalogNumber: 8,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 51,
@@ -612,6 +673,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.led-zeppelin-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.led-zeppelin-v1.png"],
     ...(artworkPromptFor(51) ?? {}),
+    catalogNumber: 5,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 52,
@@ -626,6 +689,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.bella-ciao-original-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bella-ciao-original-v1.png"],
     ...(artworkPromptFor(52) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Italy",
   },
   {
     id: 53,
@@ -641,6 +706,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bella-ciao-casa-de-papel-v1.png"],
     ...(artworkPromptFor(53) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 54,
@@ -655,6 +722,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.vivaldi-spring-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-spring-v1.png"],
     ...(artworkPromptFor(54) ?? {}),
+    catalogNumber: 4,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 55,
@@ -669,6 +738,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.vivaldi-summer-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-summer-v1.png"],
     ...(artworkPromptFor(55) ?? {}),
+    catalogNumber: 5,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 56,
@@ -683,6 +754,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.vivaldi-autumn-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-autumn-v1.png"],
     ...(artworkPromptFor(56) ?? {}),
+    catalogNumber: 6,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 57,
@@ -697,6 +770,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.vivaldi-winter-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-winter-v1.png"],
     ...(artworkPromptFor(57) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 58,
@@ -711,6 +786,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.taylor-swift-shake-it-off-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.taylor-swift-shake-it-off-v1.png"],
+    catalogNumber: 8,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 59,
@@ -724,6 +801,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.darude-sandstorm-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.darude-sandstorm-v1.png"],
+    catalogNumber: 9,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 61,
@@ -738,6 +817,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v1.png"],
+    catalogNumber: 4,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 62,
@@ -752,6 +833,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v2.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v2.png"],
+    catalogNumber: 5,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 63,
@@ -767,6 +850,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.red-hot-chili-peppers-suck-my-kiss-v1.png"],
     ...(artworkPromptFor(63) ?? {}),
+    catalogNumber: 6,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 64,
@@ -781,6 +866,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.me-gustas-tu-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.me-gustas-tu-v1.png"],
+    catalogNumber: 2,
+    catalogSeriesLabel: "Reggae/Dub",
   },
   {
     id: 65,
@@ -795,6 +882,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.mozart-requiem-lacrimosa-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.mozart-requiem-lacrimosa-v1.png"],
+    catalogNumber: 8,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 66,
@@ -809,6 +898,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.verdi-dies-irae-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.verdi-dies-irae-v1.png"],
     ...(artworkPromptFor(66) ?? {}),
+    catalogNumber: 9,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 67,
@@ -824,6 +915,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.justin-timberlake-cry-me-a-river-v1.png"],
     ...(artworkPromptFor(67) ?? {}),
+    catalogNumber: 9,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 68,
@@ -839,6 +932,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.white-stripes-seven-nation-army-v1.png"],
     ...(artworkPromptFor(68) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 69,
@@ -854,6 +949,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.eiffel-65-blue-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eiffel-65-blue-v1.png"],
     ...(artworkPromptFor(69) ?? {}),
+    catalogNumber: 10,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 70,
@@ -867,6 +964,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.without-me-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.without-me-v1.png"],
+    catalogNumber: 10,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 71,
@@ -882,6 +981,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.metallica-enter-sandman-v1.png"],
     ...(artworkPromptFor(71) ?? {}),
+    catalogNumber: 8,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 72,
@@ -896,6 +997,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.beethoven-symphony-no-5-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.beethoven-symphony-no-5-v1.png"],
+    catalogNumber: 10,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 73,
@@ -909,6 +1012,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.carmina-burana-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.carmina-burana-v1.png"],
+    catalogNumber: 11,
+    catalogSeriesLabel: "Classical",
   },
   {
     id: 74,
@@ -923,6 +1028,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.smells-like-teen-spirit-v2.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.smells-like-teen-spirit-v2.png"],
+    catalogNumber: 9,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 75,
@@ -936,6 +1043,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.money-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.money-v2.png"],
+    catalogNumber: 10,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 76,
@@ -952,6 +1061,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.golden-gate-quartet-take-five-v1.png"],
     ...(artworkPromptFor(76) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "USA",
   },
   {
     id: 77,
@@ -967,6 +1078,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.bro-gozh-ma-zadou-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bro-gozh-ma-zadou-v1.png"],
     ...(artworkPromptFor(77) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Bretagne",
   },
   {
     id: 78,
@@ -980,6 +1093,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.hakuna-matata-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.hakuna-matata-v1.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Pop",
   },
   {
     id: 79,
@@ -996,6 +1111,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.dr-dre-tupac-california-love-v1.png"],
     ...(artworkPromptFor(79) ?? {}),
+    catalogNumber: 11,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 80,
@@ -1010,6 +1127,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.ratm-guerilla-radio-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ratm-guerilla-radio-v1.png"],
+    catalogNumber: 11,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 81,
@@ -1025,6 +1144,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.isaac-hays-shaft-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.isaac-hays-shaft-v1.png"],
     ...(artworkPromptFor(81) ?? {}),
+    catalogNumber: 6,
+    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 82,
@@ -1040,6 +1161,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.shaft-malik-adouane-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shaft-malik-adouane-v1.png"],
     ...(artworkPromptFor(82) ?? {}),
+    catalogNumber: 11,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 83,
@@ -1055,6 +1178,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.joe-cocker-woman-to-woman-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.joe-cocker-woman-to-woman-v1.png"],
+    catalogNumber: 12,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 84,
@@ -1069,6 +1194,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.eric-prydz-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eric-prydz-opus-v1.png"],
+    catalogNumber: 12,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 85,
@@ -1083,6 +1210,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.four-tet-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.four-tet-opus-v1.png"],
+    catalogNumber: 13,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 86,
@@ -1096,6 +1225,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.lunatic-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lunatic-opus-v1.png"],
+    catalogNumber: 14,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 87,
@@ -1112,6 +1243,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.toto-africa-v1.png"],
     artworkOffsetY: -30,
     ...(artworkPromptFor(87) ?? {}),
+    catalogNumber: 13,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 88,
@@ -1125,6 +1258,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.dr-dre-next-episode-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.dr-dre-next-episode-v1.png"],
+    catalogNumber: 12,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 89,
@@ -1140,6 +1275,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
     artworkOffsetY: -20,
+    catalogNumber: 6,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 90,
@@ -1156,6 +1293,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
     ...(artworkPromptFor(90) ?? {}),
+    catalogNumber: 15,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 91,
@@ -1172,6 +1311,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.stevie-wonder-superstition-v1.png"],
     ...(artworkPromptFor(91) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 92,
@@ -1187,6 +1328,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.jeff-beck-superstition-v1.png"],
     ...(artworkPromptFor(92) ?? {}),
+    catalogNumber: 14,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 93,
@@ -1201,6 +1344,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.c2c-superstition-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.c2c-superstition-v1.png"],
     ...(artworkPromptFor(93) ?? {}),
+    catalogNumber: 16,
+    catalogSeriesLabel: "Electronic",
   },
   {
     id: 94,
@@ -1216,6 +1361,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.lil-kleine-drank-drugs-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.lil-kleine-drank-drugs-v1.png"],
+    catalogNumber: 13,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 95,
@@ -1234,6 +1381,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
         "artwork.hannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png"
       ],
     ...(artworkPromptFor(95) ?? {}),
+    catalogNumber: 15,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 96,
@@ -1250,6 +1399,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.teriyaki-boys-tokyo-drift-v1.png"],
     ...(artworkPromptFor(96) ?? {}),
+    catalogNumber: 14,
+    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 97,
@@ -1265,6 +1416,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.e-gschankte-tag-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.e-gschankte-tag-v1.png"],
     ...(artworkPromptFor(97) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Switzerland",
   },
   {
     id: 98,
@@ -1281,6 +1434,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.ivan-larionov-kalinka-v1.png"],
     ...(artworkPromptFor(98) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Russia",
   },
   {
     id: 99,
@@ -1297,6 +1452,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.red-army-choir-kalinka-v1.png"],
     ...(artworkPromptFor(99) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Russia",
   },
   {
     id: 100,
@@ -1314,6 +1471,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-platters-the-great-pretender-v1.png"],
     ...(artworkPromptFor(100) ?? {}),
+    catalogNumber: 7,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 101,
@@ -1329,6 +1488,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.freddy-mercury-the-great-pretender-v1.png"],
     ...(artworkPromptFor(101) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Pop",
   },
   {
     id: 102,
@@ -1344,6 +1505,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.linkin-park-in-the-end-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.linkin-park-in-the-end-v1.png"],
+    catalogNumber: 16,
+    catalogSeriesLabel: "Rock",
   },
   {
     id: 103,
@@ -1359,6 +1522,8 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],
+    catalogNumber: 8,
+    catalogSeriesLabel: "Vintage",
   },
   {
     id: 104,
@@ -1368,14 +1533,31 @@ const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
     genre: "Roots",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    tracksOut: [105],
     pop: 9,
     rarity: "Legendary",
     artwork: `${ART}artwork.bob-marley-i-shot-the-sherif-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bob-marley-i-shot-the-sherif-v1.png"],
+    catalogNumber: 3,
+    catalogSeriesLabel: "Reggae/Dub",
+  },
+  {
+    id: 105,
+    title: "I Shot the Sheriff",
+    artist: "Eric Clapton",
+    year: 1974,
+    genre: "Blues Rock",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    tracksIn: [104],
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.eric-clapton-i-shot-the-sherif-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.eric-clapton-i-shot-the-sherif-v1.png"],
+    ...(artworkPromptFor(105) ?? {}),
+    catalogNumber: 17,
+    catalogSeriesLabel: "Rock",
   },
 ];
-
-export const DECK_SPOTLIGHT_CARDS: CardData[] = DECK_SPOTLIGHT_CARDS_BASE.map(
-  mergeShippedCatalogMeta,
-);

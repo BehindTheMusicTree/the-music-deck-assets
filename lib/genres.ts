@@ -1,16 +1,12 @@
 import type { GenreTheme } from "@/lib/card-theme-types";
-import { COUNTRY_DATA } from "@/lib/countries";
+import { COUNTRY_DATA, countryFlagForShell } from "@/lib/countries";
 import {
-  APP_GENRE_NAMES,
-  GENRE_NAMES,
   type AppGenreName,
   type GenreName,
   type NonMainstreamGenreName,
 } from "./genre-names";
 import {
-  intensityLevelIndex,
   SUBGENRES,
-  type CountrySubgenre,
   type GenreSubgenre,
   type Intensity,
   type Subgenre,
@@ -312,7 +308,6 @@ function mixedWithBlack(hex: string, amount: number): string {
   return mixHex(hex, "#000000", amount);
 }
 
-
 type CountryName = keyof typeof COUNTRY_DATA;
 
 // Only genre-subgenres can drive a derived subgenre color/theme.
@@ -552,7 +547,10 @@ export function resolveThemeSelection({
 
     const appGenre = appGenreFromSubgenre(g);
     const resolvedColor = resolvedGenreSubgenreColor(def);
-    const resolvedTheme = subgenreTheme(resolvedColor, APP_GENRE_THEMES[appGenre]);
+    const resolvedTheme = subgenreTheme(
+      resolvedColor,
+      APP_GENRE_THEMES[appGenre],
+    );
 
     if (country) {
       const countryFrameTheme = countryTheme!;
@@ -663,7 +661,7 @@ export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
               svg: v.pip.svg,
             }
           : undefined,
-        flagBg: v.pip?.bg ?? v.flag.border,
+        flagBg: v.pip?.bg ?? countryFlagForShell(k, "flat").border,
       },
     },
   ]),
