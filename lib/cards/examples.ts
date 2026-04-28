@@ -1569,9 +1569,11 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
+
     rarity: "Classic",
     artwork: `${ART}artwork.can-vitamine-c-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.can-vitamine-c-v1.png"],
+    artworkOffsetY: -25,
     catalogNumber: 18,
     catalogSeriesLabel: "Rock",
   },

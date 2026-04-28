@@ -671,7 +671,7 @@
 }
 /* Out strip (right): hollow left arrow (flèche creuse), right-pointing arrow tip */
 .transitionStripOut {
-  right: -10px;
+  right: -17px;
   padding: 0 10px 0 12px;
   clip-path: polygon(
     0% 0%,
@@ -701,8 +701,8 @@
   left: -10px;
 }
 .notchMaskOut {
-  /* strip left edge = 100% - 37% (mirrors the right: -10px + width: calc(37% + 10px)) */
-  left: calc(100% - 37%);
+  /* strip left edge = 100% - 37% + 7px (mirrors right: -17px + width: calc(37% + 10px)) */
+  left: calc(100% - 37% + 7px);
 }
 
 .transitionStripText {
