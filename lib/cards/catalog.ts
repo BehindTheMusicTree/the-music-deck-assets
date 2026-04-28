@@ -1,5 +1,5 @@
 import type { CardData } from "@/components/Card";
-import type { GenreTheme } from "@/lib/card-theme-types";
+import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
 import {
   APP_GENRE_THEMES,
   type AppGenreName,
@@ -21,28 +21,31 @@ import {
   WORLD_FLAG_CARDS,
   WORLD_MIXED_CARDS,
 } from "./examples";
-import {
-  type WishlistCardDef,
-  WISHLIST_CARD_DEFS,
-} from "./catalog-wishlist-defs";
+import { mergeShippedCatalogMeta } from "./merge-shipped-catalog-meta";
 import { buildCardTrackIndex } from "./track-graph";
 
-export type CatalogSeriesType = "genre" | "country";
+export type { CatalogSeriesType };
 
 /** Card season label: every shipped catalogue card is season 1 for now. */
 export const CATALOG_DEFAULT_ERA = "Era I" as const;
 export type CatalogEra = typeof CATALOG_DEFAULT_ERA;
 
+export type CatalogEntryKind =
+  | "Genre"
+  | "World"
+  | "World blend"
+  | "World + genre";
+
 export type CatalogEntry = {
   rowKey: string;
-  kind: "Genre" | "World" | "World blend" | "World + genre" | "Planned";
+  kind: CatalogEntryKind;
   card: CardData;
   theme: GenreTheme;
-  /** Numbering bucket: by parent app genre, except country-native (then by country/region). */
+  /** Copied from `card.catalogSeriesType` (genre vs country/region series). */
   catalogSeriesType: CatalogSeriesType;
-  /** Display label for the numbering bucket (genre or country/region name). */
+  /** Copied from `card.catalogSeriesLabel`. */
   catalogSeriesLabel: string;
-  /** Index within `catalogSeriesLabel` (stable order by internal card id). */
+  /** Copied from `card.catalogNumber` (per-series index from shipped meta). */
   catalogNumber: number;
   /** Parent app genre for the table (World for pure country-native strips). */
   catalogGenreLabel: string;
@@ -54,7 +57,7 @@ export type CatalogEntry = {
 
 export type RawCatalogRow = {
   rowKey: string;
-  kind: CatalogEntry["kind"];
+  kind: CatalogEntryKind;
   card: CardData;
   theme: GenreTheme;
 };
@@ -91,7 +94,7 @@ const rawBlendRows: RawCatalogRow[] = WORLD_MIXED_CARDS.map((c) => ({
  * card chrome still comes from `resolveThemeSelection` on the `Card` component.
  */
 function spotlightMetaForCard(card: CardData): {
-  kind: CatalogEntry["kind"];
+  kind: CatalogEntryKind;
   theme: GenreTheme;
 } {
   const g = card.genre;
@@ -126,7 +129,7 @@ function spotlightMetaForCard(card: CardData): {
 
 const SPOTLIGHT_CATALOG_META: Record<
   number,
-  { kind: CatalogEntry["kind"]; theme: GenreTheme }
+  { kind: CatalogEntryKind; theme: GenreTheme }
 > = (() => {
   const fr = themeForCountry("France");
   const es = themeForCountry("Spain");
@@ -134,7 +137,7 @@ const SPOTLIGHT_CATALOG_META: Record<
   const pr = themeForCountry("Puerto Rico");
   const mx = themeForCountry("Mexico");
   const rock = APP_GENRE_THEMES.Rock;
-  const base: Record<number, { kind: CatalogEntry["kind"]; theme: GenreTheme }> = {
+  const base: Record<number, { kind: CatalogEntryKind; theme: GenreTheme }> = {
     28: { kind: "Genre", theme: rock },
     29: { kind: "Genre", theme: rock },
     30: { kind: "World blend", theme: es },
@@ -171,7 +174,7 @@ const rawSpotlightRows: RawCatalogRow[] = DECK_SPOTLIGHT_CARDS.map((card) => {
 const rawLaMacarena: RawCatalogRow = {
   rowKey: "world-genre-9101",
   kind: "World + genre",
-  card: {
+  card: mergeShippedCatalogMeta({
     id: 9101,
     title: "La Macarena",
     artist: "Los Del Rio",
@@ -184,7 +187,7 @@ const rawLaMacarena: RawCatalogRow = {
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
     country: "Spain",
     genre: "Electronic",
-  },
+  }),
   theme: themeForCountry("Spain"),
 };
 
@@ -231,7 +234,7 @@ function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
   }
   if (isCountrySubgenre(card.genre)) {
     throw new Error(
-      `Catalog row "${row.rowKey}": use seriesForRow for country-native "${card.genre}"`,
+      `Catalog row "${row.rowKey}": country-native "${card.genre}" must not reach resolvedAppGenre`,
     );
   }
   const r = resolveThemeSelection({ genre: card.genre, country: card.country });
@@ -243,76 +246,29 @@ function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
   );
 }
 
-function seriesForRow(row: RawCatalogRow): {
-  catalogSeriesType: CatalogSeriesType;
-  catalogSeriesLabel: string;
-  seriesSortKey: string;
-} {
+function catalogEntryFromRow(row: RawCatalogRow): CatalogEntry {
   const { card } = row;
-  if (card.genre && isCountrySubgenre(card.genre)) {
-    const label = card.country ?? "";
-    if (!label) {
-      throw new Error(
-        `Country-native subgenre "${card.genre}" requires card.country on "${card.title}"`,
-      );
-    }
-    return {
-      catalogSeriesType: "country",
-      catalogSeriesLabel: label,
-      seriesSortKey: `country:${label}`,
-    };
+  if (
+    card.catalogNumber == null ||
+    !card.catalogSeriesType ||
+    !card.catalogSeriesLabel
+  ) {
+    throw new Error(
+      `Shipped card "${card.title}" (id ${card.id}): set catalogNumber, catalogSeriesType, catalogSeriesLabel (use mergeShippedCatalogMeta in examples)`,
+    );
   }
-  const g = resolvedAppGenre(row);
-  const label = displayGenreLabel(g);
   return {
-    catalogSeriesType: "genre",
-    catalogSeriesLabel: label,
-    seriesSortKey: `genre:${g}`,
+    rowKey: row.rowKey,
+    kind: row.kind,
+    card,
+    theme: row.theme,
+    catalogSeriesType: card.catalogSeriesType,
+    catalogSeriesLabel: card.catalogSeriesLabel,
+    catalogNumber: card.catalogNumber,
+    catalogGenreLabel: catalogGenreLabel(row),
+    catalogIntensity: catalogCardIntensity(row),
+    catalogEra: CATALOG_DEFAULT_ERA,
   };
-}
-
-type InterimRow = RawCatalogRow & {
-  catalogSeriesType: CatalogSeriesType;
-  catalogSeriesLabel: string;
-  seriesSortKey: string;
-};
-
-function withCatalogNumbering(rows: RawCatalogRow[]): CatalogEntry[] {
-  const interim: InterimRow[] = rows.map((r) => ({
-    ...r,
-    ...seriesForRow(r),
-  }));
-  const bySeriesKey = new Map<string, InterimRow[]>();
-  for (const r of interim) {
-    const list = bySeriesKey.get(r.seriesSortKey) ?? [];
-    list.push(r);
-    bySeriesKey.set(r.seriesSortKey, list);
-  }
-  const numberByRowKey = new Map<string, number>();
-  for (const group of bySeriesKey.values()) {
-    group.sort((a, b) => a.card.id - b.card.id);
-    group.forEach((r, i) => numberByRowKey.set(r.rowKey, i + 1));
-  }
-  return interim
-    .sort((a, b) => a.card.id - b.card.id)
-    .map((r) => {
-      const n = numberByRowKey.get(r.rowKey);
-      if (n === undefined) {
-        throw new Error(`Missing catalogue number for row "${r.rowKey}"`);
-      }
-      return {
-        rowKey: r.rowKey,
-        kind: r.kind,
-        card: r.card,
-        theme: r.theme,
-        catalogSeriesType: r.catalogSeriesType,
-        catalogSeriesLabel: r.catalogSeriesLabel,
-        catalogNumber: n,
-        catalogGenreLabel: catalogGenreLabel(r),
-        catalogIntensity: catalogCardIntensity(r),
-        catalogEra: CATALOG_DEFAULT_ERA,
-      };
-    });
 }
 
 const rawCatalogRows: RawCatalogRow[] = [
@@ -323,84 +279,29 @@ const rawCatalogRows: RawCatalogRow[] = [
   rawLaMacarena,
 ];
 
-function normCatalogKey(title: string, artist?: string): string {
+/** Normalised title|artist key for deduplicating wishlist rows against the shipped deck. */
+export function normCatalogKey(title: string, artist?: string): string {
   const t = title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const a = (artist ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   return `${t}|${a}`;
 }
 
-function wishlistDefToRaw(d: WishlistCardDef): RawCatalogRow {
-  const card: CardData = {
-    id: d.id,
-    title: d.title,
-    artist: d.artist,
-    year: d.year,
-    genre: d.genre,
-    country: d.country,
-    ability: d.ability,
-    abilityDesc: d.abilityDesc,
-    pop: d.pop ?? 5,
-    rarity: d.rarity,
-    artworkPrompt: d.artworkPrompt,
-  };
-  if (d.kind === "World") {
-    return {
-      rowKey: d.rowKey,
-      kind: "World",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  if (d.kind === "World blend") {
-    return {
-      rowKey: d.rowKey,
-      kind: "World blend",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  if (d.kind === "World + genre") {
-    if (!d.genre) {
-      throw new Error(`Wishlist "${d.rowKey}" (World + genre) must set genre`);
-    }
-    return {
-      rowKey: d.rowKey,
-      kind: "World + genre",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  const rowKind = d.kind === "Planned" ? "Planned" : "Genre";
-  if (!d.genre) {
-    throw new Error(`Wishlist "${d.rowKey}" must set genre`);
-  }
-  return {
-    rowKey: d.rowKey,
-    kind: rowKind,
-    card,
-    theme: resolveThemeSelection({ genre: d.genre, country: d.country }).theme,
-  };
-}
-
-const existingCatalogKeys = new Set(
+/** Keys for shipped catalogue rows only — used by `lib/cards/wishlist.ts`. */
+export const SHIPPED_CATALOG_DEDUP_KEYS = new Set(
   rawCatalogRows.map((r) => normCatalogKey(r.card.title, r.card.artist)),
 );
-const rawWishlistRows: RawCatalogRow[] = WISHLIST_CARD_DEFS.filter(
-  (d) => !existingCatalogKeys.has(normCatalogKey(d.title, d.artist)),
-).map(wishlistDefToRaw);
 
-const rawCatalogRowsAll: RawCatalogRow[] = [...rawCatalogRows, ...rawWishlistRows];
-
-/** Full catalogue: shipped cards plus planned wishlist rows (wishlist never carries bundled artwork). */
-export const CATALOG_ENTRIES: CatalogEntry[] =
-  withCatalogNumbering(rawCatalogRowsAll);
+/** Shipped deck only (bundled artwork). Wishlist rows live in {@link WISHLIST_ENTRIES}. */
+export const CATALOG_ENTRIES: CatalogEntry[] = rawCatalogRows
+  .map(catalogEntryFromRow)
+  .sort((a, b) => a.card.id - b.card.id);
 
 /**
- * Per-id transition data for catalogue cards. `buildCardTrackIndex` runs
+ * Per-id transition data for shipped catalogue cards. `buildCardTrackIndex` runs
  * `buildTrackGraph` once (validates `tracksOut` links on the same card list).
  */
 export const CATALOG_CARD_TRACK_INDEX = buildCardTrackIndex(
-  rawCatalogRowsAll.map((r) => r.card),
+  rawCatalogRows.map((r) => r.card),
 );
 
 /**
@@ -411,10 +312,9 @@ export const CATALOG_CARD_TRANSITION_PROPS = {
   cardTrackIndex: CATALOG_CARD_TRACK_INDEX,
 } as const;
 
-export const CATALOG_KINDS: CatalogEntry["kind"][] = [
+export const CATALOG_KINDS: CatalogEntryKind[] = [
   "Genre",
   "World",
   "World blend",
   "World + genre",
-  "Planned",
 ];

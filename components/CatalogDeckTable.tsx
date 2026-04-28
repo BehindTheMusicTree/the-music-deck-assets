@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import CatalogCard from "@/components/CatalogCard";
+import WishlistDeckTable from "@/components/WishlistDeckTable";
 import {
   type CatalogEntry,
   CATALOG_ENTRIES,
@@ -306,6 +307,9 @@ export default function CatalogDeckTable({
     null,
   );
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [catalogPanel, setCatalogPanel] = useState<"deck" | "wishlist">(
+    "deck",
+  );
   const [catalogEntryDetail, setCatalogEntryDetail] =
     useState<CatalogEntry | null>(null);
 
@@ -493,44 +497,99 @@ export default function CatalogDeckTable({
 
   return (
     <div className={["w-full min-w-0", className].filter(Boolean).join(" ")}>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-3 min-w-0">
-        <div
-          className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5"
-          role="group"
-          aria-label="Catalog layout"
+      <div
+        className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5 mb-4"
+        role="tablist"
+        aria-label="Catalog source"
+      >
+        <button
+          type="button"
+          className={[
+            viewToggleBtn,
+            catalogPanel === "deck" ? viewToggleActive : viewToggleInactive,
+          ].join(" ")}
+          role="tab"
+          aria-selected={catalogPanel === "deck"}
+          id="catalog-tab-deck"
+          aria-controls="catalog-panel-deck"
+          onClick={() => {
+            setCatalogPanel("deck");
+          }}
         >
-          <button
-            type="button"
-            className={[
-              viewToggleBtn,
-              viewMode === "table" ? viewToggleActive : viewToggleInactive,
-            ].join(" ")}
-            aria-pressed={viewMode === "table"}
-            onClick={() => {
-              setViewMode("table");
-              setCatalogEntryDetail(null);
-            }}
-          >
-            Table
-          </button>
-          <button
-            type="button"
-            className={[
-              viewToggleBtn,
-              viewMode === "grid" ? viewToggleActive : viewToggleInactive,
-            ].join(" ")}
-            aria-pressed={viewMode === "grid"}
-            onClick={() => setViewMode("grid")}
-          >
-            Grid
-          </button>
-        </div>
-        <span className="font-mono text-[11px] text-muted tabular-nums shrink-0">
-          {visibleRows.length} card{visibleRows.length === 1 ? "" : "s"}
-        </span>
+          Shipped deck
+        </button>
+        <button
+          type="button"
+          className={[
+            viewToggleBtn,
+            catalogPanel === "wishlist" ? viewToggleActive : viewToggleInactive,
+          ].join(" ")}
+          role="tab"
+          aria-selected={catalogPanel === "wishlist"}
+          id="catalog-tab-wishlist"
+          aria-controls="catalog-panel-wishlist"
+          onClick={() => {
+            setCatalogPanel("wishlist");
+            setCatalogEntryDetail(null);
+            setArtworkPromptModal(null);
+          }}
+        >
+          Wishlist
+        </button>
       </div>
 
-      <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
+      {catalogPanel === "wishlist" ? (
+        <div
+          id="catalog-panel-wishlist"
+          role="tabpanel"
+          aria-labelledby="catalog-tab-wishlist"
+        >
+          <WishlistDeckTable />
+        </div>
+      ) : (
+        <div
+          id="catalog-panel-deck"
+          role="tabpanel"
+          aria-labelledby="catalog-tab-deck"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3 min-w-0">
+            <div
+              className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5"
+              role="group"
+              aria-label="Catalog layout"
+            >
+              <button
+                type="button"
+                className={[
+                  viewToggleBtn,
+                  viewMode === "table" ? viewToggleActive : viewToggleInactive,
+                ].join(" ")}
+                aria-pressed={viewMode === "table"}
+                onClick={() => {
+                  setViewMode("table");
+                  setCatalogEntryDetail(null);
+                }}
+              >
+                Table
+              </button>
+              <button
+                type="button"
+                className={[
+                  viewToggleBtn,
+                  viewMode === "grid" ? viewToggleActive : viewToggleInactive,
+                ].join(" ")}
+                aria-pressed={viewMode === "grid"}
+                onClick={() => setViewMode("grid")}
+              >
+                Grid
+              </button>
+            </div>
+            <span className="font-mono text-[11px] text-muted tabular-nums shrink-0">
+              {visibleRows.length} card{visibleRows.length === 1 ? "" : "s"}
+            </span>
+          </div>
+
+          <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
         <table className="w-full min-w-[1820px] border-collapse text-left">
           <thead>
             <tr className="border-b border-ui-border">
@@ -1406,6 +1465,8 @@ export default function CatalogDeckTable({
           </div>
         </div>
       ) : null}
+        </div>
+      )}
     </div>
   );
 }

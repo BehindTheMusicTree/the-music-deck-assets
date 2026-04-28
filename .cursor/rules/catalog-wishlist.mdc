@@ -1,6 +1,6 @@
 ---
 description: Wishlist is planned-only — no bundled artwork; promote to shipped when art exists
-globs: lib/cards/catalog-wishlist-defs.ts, lib/cards/examples.ts, lib/cards/artwork-prompts.ts, lib/cards/catalog.ts
+globs: lib/cards/catalog-wishlist-defs.ts, lib/cards/wishlist-types.ts, lib/cards/wishlist.ts, lib/cards/examples.ts, lib/cards/artwork-prompts.ts, lib/cards/catalog.ts
 alwaysApply: false
 ---
 
@@ -11,6 +11,7 @@ alwaysApply: false
 - **Planned rows only:** tracks that do **not** yet have a PNG under `public/cards/artworks/deck/`.
 - **Do not add** `artwork`, `artworkFile`, or `artworkCreatedAt` on wishlist defs — those fields belong on shipped `CardData` only.
 - **`artworkPrompt` is allowed** on wishlist rows as an optional illustration brief while the asset is still pending.
+- **UI:** wishlist rows render in the Catalog page under the Wishlist tab (`WishlistDeckTable`); they are **not** merged into `CATALOG_ENTRIES`. Resolved rows are `WishlistEntry` in [`lib/cards/wishlist.ts`](lib/cards/wishlist.ts); source shape is `WishlistCardDef` in [`lib/cards/wishlist-types.ts`](lib/cards/wishlist-types.ts).
 
 ## When bundled artwork exists
 
@@ -19,6 +20,6 @@ alwaysApply: false
 3. Set **`artwork`**, **`artworkCreatedAt`** (local ISO-like datetime from PNG birth time in [`lib/cards/artwork-created-at.ts`](lib/cards/artwork-created-at.ts), keyed by filename), and optional **`artworkPrompt`** via [`lib/cards/artwork-prompts.ts`](lib/cards/artwork-prompts.ts) + `artworkPromptFor(id)` in `examples.ts`.
 4. **Catalogue wiring:** for spotlight ids, `SPOTLIGHT_CATALOG_META` in [`lib/cards/catalog.ts`](lib/cards/catalog.ts) is filled automatically for `id > 36` via `spotlightMetaForCard` — ensure `genre` / `country` on the card resolve correctly.
 
-## `catalog.ts`
+## `wishlist.ts` / `catalog.ts`
 
-- `wishlistDefToRaw` maps wishlist → `CardData` **without** artwork paths; shipped rows carry real `artwork` URLs.
+- [`lib/cards/wishlist.ts`](lib/cards/wishlist.ts) maps defs → `WishlistEntry` + `CardData` **without** artwork paths; shipped rows in `catalog.ts` carry real `artwork` URLs. Dedup against the shipped deck uses `SHIPPED_CATALOG_DEDUP_KEYS` from `catalog.ts`.

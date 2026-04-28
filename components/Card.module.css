@@ -244,7 +244,8 @@
 .artOverBorder {
   inset: -10px;
 }
-/* Fill art box (no banding); keep aspect; crop overflow; top edge fixed, centred horizontally */
+/* object-fit: cover, top + horizontal center. With `artworkOffsetY`, inline height/translate
+   keep the art box bottom flush (taller by |offset|, then shifted) without stretching. */
 .artImg {
   width: 100%;
   height: 100%;
@@ -302,20 +303,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-}
-/* World + fade: same rectangular flag as genre-theme “World Themes” list rows, right of the country name */
-.typeStripWorldFlagRow {
-  width: 44px;
-  height: 26px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  border: 1px solid rgba(20, 16, 10, 0.18);
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1);
-}
-.typeStripWorldFlagRowSm {
-  width: 32px;
-  height: 20px;
-  border-radius: 3px;
 }
 /* Right column: subgenre text to the left of its diamond; cluster aligned to strip end */
 .typeStripSubSide {

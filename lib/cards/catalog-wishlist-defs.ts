@@ -1,23 +1,6 @@
-import type { CardRarity } from "@/lib/cards/card-rarity";
+import type { WishlistCardDef } from "@/lib/cards/wishlist-types";
 
-/** Planned catalogue rows only (no bundled artwork — see `DECK_SPOTLIGHT_CARDS` / `examples.ts`). */
-export type WishlistCardDef = {
-  rowKey: string;
-  id: number;
-  title: string;
-  artist?: string;
-  year: number;
-  kind: "Genre" | "World" | "World blend" | "World + genre" | "Planned";
-  /** Subgenre, or an app-level genre when the card is World+genre only. */
-  genre?: string;
-  country?: string;
-  rarity: CardRarity;
-  pop?: number;
-  ability: string;
-  abilityDesc: string;
-  /** Optional illustration brief before the asset is shipped to `public/cards/artworks/deck/`. */
-  artworkPrompt?: string;
-};
+export type { WishlistCardDef } from "@/lib/cards/wishlist-types";
 
 const P = "Planned catalogue entry.";
 const A = "Reserve";

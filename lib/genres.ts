@@ -208,14 +208,14 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
 export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   {
     n: "Reggae/Dub",
-    color: genreIntensityColor("Reggae/Dub", "experimental"),
+    color: genreIntensityColor("Reggae/Dub", "soft"),
   },
-  { n: "Electronic", color: genreIntensityColor("Electronic", "experimental") },
-  { n: "Disco/Funk", color: genreIntensityColor("Disco/Funk", "experimental") },
-  { n: "Hip-Hop", color: genreIntensityColor("Hip-Hop", "experimental") },
-  { n: "Rock", color: genreIntensityColor("Rock", "experimental") },
-  { n: "Classical", color: genreIntensityColor("Classical", "experimental") },
-  { n: "Vintage", color: genreIntensityColor("Vintage", "experimental") },
+  { n: "Electronic", color: genreIntensityColor("Electronic", "soft") },
+  { n: "Disco/Funk", color: genreIntensityColor("Disco/Funk", "soft") },
+  { n: "Hip-Hop", color: genreIntensityColor("Hip-Hop", "soft") },
+  { n: "Rock", color: genreIntensityColor("Rock", "soft") },
+  { n: "Classical", color: genreIntensityColor("Classical", "soft") },
+  { n: "Vintage", color: genreIntensityColor("Vintage", "soft") },
 ];
 
 /** DOM `id` for each genre block under #genre-themes (`GenreThemePreview`). */
@@ -355,21 +355,11 @@ export function subgenreIntensity(subgenre: string): Intensity {
 }
 
 /** Intensity when the card has no subgenre (genre-only); subgenre overrides when present. */
-const APP_GENRE_ONLY_INTENSITY: Partial<Record<AppGenreName, Intensity>> = {
-  Electronic: "hardcore",
-  "Hip-Hop": "experimental",
-  Classical: "hardcore",
-  Rock: "experimental",
-  "Reggae/Dub": "soft",
-  "Disco/Funk": "pop",
-  Vintage: "pop",
-};
-
 export function appGenreIntensity(genre: AppGenreName): Intensity {
   if (!(genre in APP_GENRE_THEMES)) {
     throw new Error(`Unknown app genre "${genre}"`);
   }
-  return APP_GENRE_ONLY_INTENSITY[genre] ?? "pop";
+  return "soft";
 }
 
 export function genreIntensityColor(
@@ -475,8 +465,6 @@ export type ThemeSelectionKind =
   | "world-genre-only"
   | "genre-only";
 
-export type TypeStripLayout = "default" | "world-row-flag-by-country";
-
 export interface ResolvedThemeSelection {
   theme: GenreTheme;
   displayGenre: string;
@@ -497,8 +485,7 @@ export interface ResolvedThemeSelection {
   typeStripSubBorder?: string;
   /** Why this row resolved — drives Card type-strip / frame behaviour without re-deriving. */
   selectionKind: ThemeSelectionKind;
-  typeStripLayout: TypeStripLayout;
-  /** When true, Card mirrors country pip/flag on the right of the type strip (when not using row swatch). */
+  /** When true, Card mirrors the country pip (diamond flag) or symbol on the right of the type strip. */
   mirrorCountryTypeStripRight: boolean;
 }
 
@@ -519,6 +506,8 @@ export function displayGenreLabel(genre: AppGenreName): string {
  * @param g Canonical subgenre from `SUBGENRE_BY_NAME`, or an app-level genre
  *   (e.g. "Electronic" for World+genre, or a genre-only track with no subgenre name).
  * @param country For World, World blend, and World+genre.
+ * For `world-genre-only`, `mirrorCountryTypeStripRight` is false so the right type-strip pip
+ * uses the genre border (ELECTRONIC, etc.), not a second country flag.
  */
 export function resolveThemeSelection({
   genre: g,
@@ -557,7 +546,6 @@ export function resolveThemeSelection({
         resolvedSubgenre: g,
         typeStripPrimaryBorder: resolvedTheme.border,
         selectionKind: "country-native",
-        typeStripLayout: "default",
         mirrorCountryTypeStripRight: true,
       };
     }
@@ -586,7 +574,6 @@ export function resolveThemeSelection({
         typeStripPrimaryBorder: countryTheme!.border,
         typeStripSubBorder: resolvedColor,
         selectionKind: "world-blend-subgenre",
-        typeStripLayout: "default",
         mirrorCountryTypeStripRight: true,
       };
     }
@@ -594,15 +581,13 @@ export function resolveThemeSelection({
     return {
       theme: resolvedTheme,
       displayGenre: appGenre,
-      leftLabel: def.intensity === "pop" ? "Pop" : displayGenreLabel(appGenre),
+      leftLabel: displayGenreLabel(appGenre),
       rightLabel: g,
       resolvedGenre: appGenre,
       resolvedSubgenre: g,
-      typeStripPrimaryBorder:
-        def.intensity === "pop" ? GENRE_THEMES.Mainstream.border : undefined,
+      typeStripPrimaryBorder: undefined,
       typeStripSubBorder: resolvedColor,
       selectionKind: "genre-subgenre",
-      typeStripLayout: "default",
       mirrorCountryTypeStripRight: false,
     };
   }
@@ -640,7 +625,6 @@ export function resolveThemeSelection({
       typeStripPrimaryBorder: countryTheme!.border,
       typeStripSubBorder: genreOnlyColor,
       selectionKind: "world-genre-only",
-      typeStripLayout: "world-row-flag-by-country",
       mirrorCountryTypeStripRight: false,
     };
   }
@@ -658,7 +642,6 @@ export function resolveThemeSelection({
     typeStripPrimaryBorder: resolvedTheme.border,
     typeStripSubBorder: resolvedTheme.border,
     selectionKind: "genre-only",
-    typeStripLayout: "default",
     mirrorCountryTypeStripRight: false,
   };
 }

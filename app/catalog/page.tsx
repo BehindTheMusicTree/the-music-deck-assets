@@ -10,11 +10,13 @@ export default function CatalogPage() {
         CATA<em className="text-gold not-italic">LOG</em>
       </h2>
       <p className="font-garamond italic text-muted max-w-[600px] text-center mb-4">
-        The full set of cards with bundled artwork. Catalogue numbers are per
-        genre, or per country/region when the subgenre is country-native. Use
-        the Table / Grid toggle: in table view, filter and sort from the
-        headers, then click a row to open the full catalogue details and a
-        2×-size card; in grid view, click a card for the same details.
+        The shipped deck lists every card with bundled artwork (catalogue
+        numbers are per genre, or per country/region when the subgenre is
+        country-native). Use the Shipped deck / Wishlist tabs: the wishlist tab
+        lists planned rows without bundled deck PNGs yet. Under Shipped deck,
+        use the Table / Grid toggle — in table view, filter and sort from the
+        headers, then click a row for full details and a 2× card; in grid view,
+        click a card for the same.
       </p>
       <p className="font-garamond text-muted text-center text-sm mb-10 max-w-[520px]">
         Frame rules and anatomy:{" "}

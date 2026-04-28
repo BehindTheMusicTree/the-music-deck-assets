@@ -3,6 +3,7 @@ import type { AppGenreName } from "@/lib/genres";
 import { CARD_ARTWORK_PROMPTS } from "./artwork-prompts";
 import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE as ART } from "./art-path";
+import { mergeShippedCatalogMeta } from "./merge-shipped-catalog-meta";
 
 function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
   const s = CARD_ARTWORK_PROMPTS[id];
@@ -10,7 +11,7 @@ function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
 }
 
 /** One fixture card per app genre (charter anatomy, rarity grid). */
-export const MOCK_CARDS: Record<AppGenreName, CardData> = {
+const MOCK_CARDS_BASE: Record<AppGenreName, CardData> = {
   Rock: {
     id: 1,
     title: "Bohemian Rhapsody",
@@ -125,8 +126,14 @@ export const MOCK_CARDS: Record<AppGenreName, CardData> = {
   },
 };
 
+export const MOCK_CARDS: Record<AppGenreName, CardData> = Object.fromEntries(
+  (Object.entries(MOCK_CARDS_BASE) as [AppGenreName, CardData][]).map(
+    ([k, v]) => [k, mergeShippedCatalogMeta(v)],
+  ),
+) as Record<AppGenreName, CardData>;
+
 /** World cards: country/region identity on the type strip (no genre mix). */
-export const WORLD_FLAG_CARDS: CardData[] = [
+const WORLD_FLAG_CARDS_BASE: CardData[] = [
   {
     id: 20,
     title: "Take Me Home, Country Roads",
@@ -177,8 +184,12 @@ export const WORLD_FLAG_CARDS: CardData[] = [
   },
 ];
 
+export const WORLD_FLAG_CARDS: CardData[] = WORLD_FLAG_CARDS_BASE.map(
+  mergeShippedCatalogMeta,
+);
+
 /** World + genre/subgenre mixes (fade, dual identity on strip). */
-export const WORLD_MIXED_CARDS: CardData[] = [
+const WORLD_MIXED_CARDS_BASE: CardData[] = [
   {
     id: 27,
     title: "Bande Organisée",
@@ -244,16 +255,21 @@ export const WORLD_MIXED_CARDS: CardData[] = [
   },
 ];
 
+export const WORLD_MIXED_CARDS: CardData[] = WORLD_MIXED_CARDS_BASE.map(
+  mergeShippedCatalogMeta,
+);
+
 /** Additional shipped tracks with artwork (catalogue beyond genre fixtures and world sets). */
-export const DECK_SPOTLIGHT_CARDS: CardData[] = [
+const DECK_SPOTLIGHT_CARDS_BASE: CardData[] = [
   {
     id: 28,
-    title: "Hey Jude",
+    title: "All You Need Is Love",
     artist: "The Beatles",
     year: 1968,
     genre: "Pop Rock",
     ability: "Coda",
     abilityDesc: "Draws a second card if popularity is 9.",
+    artworkOffsetY: -25,
     pop: 9,
     rarity: "Legendary",
     artwork: `${ART}artwork.beatles-v1.png`,
@@ -297,6 +313,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "French Variety",
     country: "France",
     ability: "Terril",
+    artworkOffsetY: -35,
     abilityDesc:
       "French World cards gain +5 power while this card remains in play.",
     pop: 7,
@@ -344,6 +361,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     country: "Mexico",
     ability: "Reserve",
     abilityDesc: "Planned catalogue entry.",
+    artworkOffsetY: -20,
     pop: 7,
     rarity: "Banger",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
@@ -971,6 +989,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "Rap",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -25,
     pop: 9,
     rarity: "Legendary",
     artwork: `${ART}artwork.dr-dre-tupac-california-love-v1.png`,
@@ -986,6 +1005,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "Pop Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -24,
     pop: 8,
     rarity: "Legendary",
     artwork: `${ART}artwork.ratm-guerilla-radio-v1.png`,
@@ -999,6 +1019,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "Disco",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -25,
     pop: 8,
     rarity: "Classic",
     artwork: `${ART}artwork.isaac-hays-shaft-v1.png`,
@@ -1013,6 +1034,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "Hard Techno",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -25,
     pop: 6,
     rarity: "Banger",
     artwork: `${ART}artwork.shaft-malik-adouane-v1.png`,
@@ -1027,6 +1049,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     genre: "Soul Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -35,
     pop: 8,
     rarity: "Classic",
     artwork: `${ART}artwork.joe-cocker-woman-to-woman-v1.png`,
@@ -1087,6 +1110,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.toto-africa-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.toto-africa-v1.png"],
+    artworkOffsetY: -30,
     ...(artworkPromptFor(87) ?? {}),
   },
   {
@@ -1306,4 +1330,52 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.freddy-mercury-the-great-pretender-v1.png"],
     ...(artworkPromptFor(101) ?? {}),
   },
+  {
+    id: 102,
+    title: "In the End",
+    artist: "Linkin Park",
+    year: 2000,
+    genre: "Pop Rock",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    artworkOffsetY: -20,
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.linkin-park-in-the-end-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.linkin-park-in-the-end-v1.png"],
+  },
+  {
+    id: 103,
+    title: "Vois sur ton chemin",
+    artist: "Les Choristes",
+    year: 2004,
+    genre: "Choral",
+    country: "France",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],
+  },
+  {
+    id: 104,
+    title: "I Shot the Sherif",
+    artist: "Bob Marley & The Wailers",
+    year: 1973,
+    genre: "Roots",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.bob-marley-i-shot-the-sherif-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.bob-marley-i-shot-the-sherif-v1.png"],
+  },
 ];
+
+export const DECK_SPOTLIGHT_CARDS: CardData[] = DECK_SPOTLIGHT_CARDS_BASE.map(
+  mergeShippedCatalogMeta,
+);

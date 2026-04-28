@@ -1,4 +1,13 @@
 import type { GenreTheme } from "@/lib/card-theme-types";
+import {
+  cssBretagneRepeating,
+  cssHorizontalTricolorEqual,
+  cssJapanHinomaru,
+  cssSpainHorizontal,
+  cssVerticalTricolorEqual,
+  cssVerticalTricolorFrance,
+  cssVerticalTwoBandEqual,
+} from "@/lib/flag-gradients";
 
 // ---------------------------------------------------------------------------
 // Canonical country definitions — single source of truth for World cards.
@@ -7,6 +16,12 @@ import type { GenreTheme } from "@/lib/card-theme-types";
 
 export interface CountryDef {
   theme: GenreTheme;
+  /**
+   * How {@link countryUsesCardFrameFlatShell} resolves: `flat` uses the non-rotated
+   * border shell; `r90` uses the −90° shell (vertical `to right` tricolors that must
+   * not share the flat paint path).
+   */
+  cardFrame: "flat" | "r90";
   flag: {
     /** CSS value for the border layer (gradient or url()). */
     border: string;
@@ -59,6 +74,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       rotateR90: true,
     },
     pip: { sym: "★", color: "#1a1a2e" },
+    cardFrame: "flat",
   },
 
   Mexico: {
@@ -73,18 +89,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#CE1126", "#e83040"],
       barGlowPop: "rgba(0,104,71,.85)",
       barGlowExp: "rgba(206,17,38,.75)",
-      frameBorder:
-        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
-      frameBg:
-        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+      frameBorder: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+      frameBg: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
       frameFilter: "saturate(0.8) brightness(0.95) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "r90",
     flag: {
-      border:
-        "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
-      bg: "linear-gradient(to right, #006847 0%, #006847 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE1126 66.66%, #CE1126 100%)",
+      border: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
+      bg: cssVerticalTricolorEqual("#006847", "#FFFFFF", "#CE1126"),
     },
     // Use the flag-filled diamond for Mexico (no custom symbol override).
   },
@@ -101,18 +115,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#9a1420", "#c42030"],
       barGlowPop: "rgba(217,16,35,.85)",
       barGlowExp: "rgba(154,20,32,.75)",
-      frameBorder:
-        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
-      frameBg:
-        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+      frameBorder: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+      frameBg: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
       frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
-      bg: "linear-gradient(to right, #D91023 0%, #D91023 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #D91023 66.66%, #D91023 100%)",
+      border: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
+      bg: cssVerticalTricolorEqual("#D91023", "#FFFFFF", "#D91023"),
     },
   },
 
@@ -123,18 +135,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       parchStrip: "#d7dde0", parchAbility: "#e3e8ea",
       barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
       barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
-      frameBorder:
-        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
-      frameBg:
-        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
+      frameBorder: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+      frameBg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "r90",
     flag: {
-      border:
-        "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
-      bg: "linear-gradient(to right, #0055A4 0%, #0055A4 33.34%, #FFFFFF 33.34%, #FFFFFF 66.66%, #EF4135 66.66%, #EF4135 100%)",
+      border: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
+      bg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
     },
     pip: { sym: "⚜", color: "#1a2a0a", size: 19 },
   },
@@ -146,17 +156,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       parchStrip: "#e5d1cb", parchAbility: "#edded7",
       barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
       barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
-      frameBorder: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-      frameBg:
-        "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+      frameBorder: cssSpainHorizontal(),
+      frameBg: cssSpainHorizontal(),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
-      bg: "linear-gradient(to bottom, #AA151B 0%, #AA151B 25%, #F1BF00 25%, #F1BF00 75%, #AA151B 75%, #AA151B 100%)",
+      border: cssSpainHorizontal(),
+      bg: cssSpainHorizontal(),
     },
   },
 
@@ -172,18 +181,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#CE2B37", "#e85858"],
       barGlowPop: "rgba(0,146,70,.85)",
       barGlowExp: "rgba(206,43,55,.75)",
-      frameBorder:
-        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
-      frameBg:
-        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+      frameBorder: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+      frameBg: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "r90",
     flag: {
-      border:
-        "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
-      bg: "linear-gradient(to right, #009246 0%, #009246 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #CE2B37 66.66%, #CE2B37 100%)",
+      border: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
+      bg: cssVerticalTricolorEqual("#009246", "#FFFFFF", "#CE2B37"),
     },
   },
 
@@ -199,18 +206,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#1a1a28", "#404058"],
       barGlowPop: "rgba(188,0,45,.85)",
       barGlowExp: "rgba(40,40,72,.75)",
-      frameBorder:
-        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
-      frameBg:
-        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+      frameBorder: cssJapanHinomaru(),
+      frameBg: cssJapanHinomaru(),
       frameFilter: "saturate(0.8) brightness(0.97) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
-      bg: "radial-gradient(circle at 50% 50%, #BC002D 0%, #BC002D 24%, #FFFFFF 24.5%, #FFFFFF 100%)",
+      border: cssJapanHinomaru(),
+      bg: cssJapanHinomaru(),
     },
   },
 
@@ -228,10 +233,12 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barGlowExp: "rgba(26,42,72,.75)",
       frameBorder: ENGLAND_FLAG_DATA_URI,
       frameBg: ENGLAND_FLAG_DATA_URI,
+      frameBackgroundPosition: "center center",
       frameFilter: "saturate(0.82) brightness(0.96) contrast(1.02)",
       frameOpacity: 0.72,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
       border: ENGLAND_FLAG_DATA_URI,
       bg: ENGLAND_FLAG_DATA_URI,
@@ -250,18 +257,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#21468B", "#3f6cc8"],
       barGlowPop: "rgba(174,28,40,.85)",
       barGlowExp: "rgba(33,70,139,.75)",
-      frameBorder:
-        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
-      frameBg:
-        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+      frameBorder: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+      frameBg: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
       frameFilter: "saturate(0.82) brightness(0.95) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
-      bg: "linear-gradient(to bottom, #AE1C28 0%, #AE1C28 33.33%, #FFFFFF 33.33%, #FFFFFF 66.66%, #21468B 66.66%, #21468B 100%)",
+      border: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
+      bg: cssHorizontalTricolorEqual("#AE1C28", "#FFFFFF", "#21468B"),
     },
   },
 
@@ -277,18 +282,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#DD0000", "#ff3a3a"],
       barGlowPop: "rgba(58,58,58,.8)",
       barGlowExp: "rgba(221,0,0,.75)",
-      frameBorder:
-        "linear-gradient(to bottom, #000000 0%, #000000 33.33%, #DD0000 33.33%, #DD0000 66.66%, #FFCE00 66.66%, #FFCE00 100%)",
-      frameBg:
-        "linear-gradient(to bottom, #000000 0%, #000000 33.33%, #DD0000 33.33%, #DD0000 66.66%, #FFCE00 66.66%, #FFCE00 100%)",
+      frameBorder: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+      frameBg: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
       frameFilter: "saturate(0.84) brightness(0.95) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "linear-gradient(to bottom, #000000 0%, #000000 33.33%, #DD0000 33.33%, #DD0000 66.66%, #FFCE00 66.66%, #FFCE00 100%)",
-      bg: "linear-gradient(to bottom, #000000 0%, #000000 33.33%, #DD0000 33.33%, #DD0000 66.66%, #FFCE00 66.66%, #FFCE00 100%)",
+      border: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
+      bg: cssHorizontalTricolorEqual("#000000", "#DD0000", "#FFCE00"),
     },
   },
 
@@ -310,6 +313,7 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
       border: SWITZERLAND_FLAG_DATA_URI,
       bg: SWITZERLAND_FLAG_DATA_URI,
@@ -328,18 +332,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#0039A6", "#4068c8"],
       barGlowPop: "rgba(213,43,30,.85)",
       barGlowExp: "rgba(0,57,166,.75)",
-      frameBorder:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
-      frameBg:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+      frameBorder: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+      frameBg: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
       frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border:
-        "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
-      bg: "linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 33.33%, #0039A6 33.33%, #0039A6 66.66%, #D52B1E 66.66%, #D52B1E 100%)",
+      border: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
+      bg: cssHorizontalTricolorEqual("#FFFFFF", "#0039A6", "#D52B1E"),
     },
   },
 
@@ -357,12 +359,13 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barGlowExp: "rgba(0,43,124,.75)",
       frameBorder: PUERTO_RICO_FLAG_URL,
       frameBg: PUERTO_RICO_FLAG_URL,
-      /** Hoist-anchored: border ring and pips show the blue field + star, not only stripes. */
-      frameBackgroundPosition: "left center",
+      /** With uniform border stretch, center keeps the hoist triangle readable on the left edge. */
+      frameBackgroundPosition: "center center",
       frameFilter: "saturate(0.88) brightness(0.96) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
       border: PUERTO_RICO_FLAG_URL,
       bg: PUERTO_RICO_FLAG_URL,
@@ -381,18 +384,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       barExp: ["#D21034", "#e83850"],
       barGlowPop: "rgba(0,98,51,.85)",
       barGlowExp: "rgba(210,16,52,.75)",
-      frameBorder:
-        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
-      frameBg:
-        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+      frameBorder: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+      frameBg: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
       frameFilter: "saturate(0.82) brightness(0.95) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "r90",
     flag: {
-      border:
-        "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
-      bg: "linear-gradient(to right, #006233 0%, #006233 50%, #FFFFFF 50%, #FFFFFF 100%)",
+      border: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
+      bg: cssVerticalTwoBandEqual("#006233", "#FFFFFF"),
     },
   },
 
@@ -404,15 +405,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       parchStrip: "#dad2be", parchAbility: "#e4ddcb",
       barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
       barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",
-      frameBorder: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-      frameBg: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      frameBorder: cssBretagneRepeating(),
+      frameBg: cssBretagneRepeating(),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
       frameOpacity: 0.7,
       icon: GLOBE_ICON,
     },
+    cardFrame: "flat",
     flag: {
-      border: "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
-      bg:     "repeating-linear-gradient(to bottom, #000000 0%, #000000 9.09%, #ffffff 9.09%, #ffffff 18.18%)",
+      border: cssBretagneRepeating(),
+      bg: cssBretagneRepeating(),
     },
     pip: {
       sym: "✦", color: "#222222", size: 17,
@@ -484,22 +486,15 @@ export const FLAG_ROTATE_R90 = new Set(
   Object.entries(COUNTRY_DATA).filter(([, v]) => v.flag.rotateR90).map(([k]) => k),
 );
 
-/** Card shell uses flat border painting (not R90) — must match `components/Card` frame logic. */
-export const COUNTRY_CARD_FRAME_FLAT_SHELL = new Set<string>([
-  "USA",
-  "Bretagne",
-  "Netherlands",
-  "Germany",
-  "Spain",
-  "Japan",
-  "England",
-  "Switzerland",
-  "Puerto Rico",
-  "Russia",
-]);
+/** Countries whose {@link CountryDef.cardFrame} is `"flat"` (non-rotated border shell). */
+export const COUNTRY_CARD_FRAME_FLAT_SHELL = new Set<string>(
+  Object.entries(COUNTRY_DATA)
+    .filter(([, v]) => v.cardFrame === "flat")
+    .map(([k]) => k),
+);
 
 export function countryUsesCardFrameFlatShell(
   country: string | undefined,
 ): boolean {
-  return Boolean(country && COUNTRY_CARD_FRAME_FLAT_SHELL.has(country));
+  return country ? COUNTRY_DATA[country]?.cardFrame === "flat" : false;
 }

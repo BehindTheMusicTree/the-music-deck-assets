@@ -48,7 +48,10 @@ function formatIntensityLabel(intensity: Intensity): string {
   return intensity.charAt(0).toUpperCase() + intensity.slice(1);
 }
 
-/** Country flag swatch for World Themes table headers. */
+/**
+ * Rectangular flag swatch for World Themes table UI only — not used on {@link Card} (cards
+ * always use the diamond .pipFlag for country identity on the type strip).
+ */
 function CountryFlagSwatch({
   country,
   size,
@@ -402,9 +405,7 @@ export default function GenreThemePreview() {
                                 : "—";
                               const parentLabel = s.parentB
                                 ? `${s.parentA} + ${s.parentB}`
-                                : s.intensity === "pop"
-                                  ? "Pop"
-                                  : s.parentA;
+                                : s.parentA;
                               return (
                                 <button
                                   key={s.n}

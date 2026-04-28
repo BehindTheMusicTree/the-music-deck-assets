@@ -1,0 +1,59 @@
+import { describe, expect, it } from "vitest";
+import { displayGenreLabel, resolveThemeSelection } from "./genres";
+
+/**
+ * Contract: `mirrorCountryTypeStripRight` only when the *right* type-strip label should echo
+ * the same country pip/flag as the left. For world + *app genre* (e.g. ELECTRONIC), the right
+ * pip is genre-coloured, so mirroring the country would wrongly show the flag twice.
+ */
+describe("resolveThemeSelection", () => {
+  it("world-genre-only: country on left, app genre on right — do not mirror country to the right", () => {
+    const r = resolveThemeSelection({ genre: "Electronic", country: "Spain" });
+    expect(r.selectionKind).toBe("world-genre-only");
+    expect(r.resolvedCountry).toBe("Spain");
+    expect(r.resolvedGenre).toBe("Electronic");
+    expect(r.leftLabel).toBe("Spain");
+    expect(r.rightLabel).toBe("Electronic");
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
+    expect(r.flagStyle).toBe("fade");
+  });
+
+  it("world-genre-only: Mainstream + country", () => {
+    const r = resolveThemeSelection({ genre: "Mainstream", country: "USA" });
+    expect(r.selectionKind).toBe("world-genre-only");
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
+    expect(r.rightLabel).toBe("Pop");
+  });
+
+  it("world-blend-subgenre: subgenre on right — mirror country identity on both sides", () => {
+    const r = resolveThemeSelection({ genre: "Rap", country: "France" });
+    expect(r.selectionKind).toBe("world-blend-subgenre");
+    expect(r.mirrorCountryTypeStripRight).toBe(true);
+    expect(r.leftLabel).toBe("France");
+    expect(r.rightLabel).toBe("Rap");
+  });
+
+  it("country-native: subgenre on right — mirror country pips", () => {
+    const r = resolveThemeSelection({
+      genre: "Folk Breton",
+      country: "Bretagne",
+    });
+    expect(r.selectionKind).toBe("country-native");
+    expect(r.mirrorCountryTypeStripRight).toBe(true);
+    expect(r.leftLabel).toBe("Bretagne");
+    expect(r.rightLabel).toBe("Folk Breton");
+  });
+
+  it("genre-subgenre: no country — no mirroring", () => {
+    const r = resolveThemeSelection({ genre: "Pop Rock" });
+    expect(r.selectionKind).toBe("genre-subgenre");
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
+  });
+
+  it("genre-only: no country — no mirroring", () => {
+    const r = resolveThemeSelection({ genre: "Rock" });
+    expect(r.selectionKind).toBe("genre-only");
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
+    expect(r.leftLabel).toBe(displayGenreLabel("Rock"));
+  });
+});

@@ -19,6 +19,7 @@ import { countryUsesCardFrameFlatShell } from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import type { CardTrackIndex } from "@/lib/cards/track-graph";
 import type { CardRarity } from "@/lib/cards/card-rarity";
+import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
 
 export type {
   CardTypePip,
@@ -51,8 +52,9 @@ export interface CardData {
   /** ISO-like local datetime when the bundled PNG was created (`YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss`). */
   artworkCreatedAt?: string;
   /**
-   * Vertical shift of the artwork in CSS pixels (inside the art frame, `object-fit: cover`).
-   * Negative values move the image up (e.g. −20 when composition sits too low in the PNG).
+   * Vertical shift in CSS pixels (same `object-fit: cover`); the art frame is still fully
+   * bottom-flush — we grow the image by |offset| and translate so proportions stay fixed and
+   * the image stays centered horizontally.
    */
   artworkOffsetY?: number;
   /** When true, artwork presentation hides the frame border (full-bleed visual). */
@@ -62,6 +64,13 @@ export interface CardData {
   tracksIn?: number[];
   /** Track ids this card transitions into (successors in a DJ transition). */
   tracksOut?: number[];
+  /**
+   * Shipped deck only: catalogue series bucket and number within that bucket.
+   * Applied in `lib/cards/examples` via `mergeShippedCatalogMeta` from `shipped-catalog-meta-by-id`.
+   */
+  catalogSeriesType?: CatalogSeriesType;
+  catalogSeriesLabel?: string;
+  catalogNumber?: number;
 }
 
 const RARITY_COLOR: Record<CardRarity, string> = {
@@ -150,6 +159,7 @@ function isVeryLight(hex: string) {
 function CardArtwork({ card }: { card: CardData }) {
   if (!card.artwork) return null;
   const dy = card.artworkOffsetY;
+  const hasOffset = dy != null && dy !== 0;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -157,8 +167,11 @@ function CardArtwork({ card }: { card: CardData }) {
       alt=""
       className={styles.artImg}
       style={
-        dy != null && dy !== 0
-          ? { transform: `translateY(${dy}px)` }
+        hasOffset
+          ? {
+              height: `calc(100% + ${Math.abs(dy)}px)`,
+              transform: `translateY(${dy}px)`,
+            }
           : undefined
       }
     />
@@ -202,7 +215,6 @@ export default function Card({
         leftLabel: "—",
         rightLabel: "—",
         selectionKind: "genre-only",
-        typeStripLayout: "default",
         mirrorCountryTypeStripRight: false,
       };
   const effectiveTheme = resolved.theme;
@@ -221,23 +233,8 @@ export default function Card({
   const pipLeftSymbol = countryTypePip?.symbol;
   const pipLeftFlagBg = countryTypePip?.flagBg;
   const hasCountryPipArt = Boolean(pipLeftFlagBg || pipLeftSymbol);
-  /** Same flat flag as the world-themes list row, to the right of the country name (not the tiny diamond). */
-  const showWorldFadeCountryRowSwatch = Boolean(
-    resolved.typeStripLayout === "world-row-flag-by-country" &&
-    !pipLeftSymbol &&
-    pipLeftFlagBg &&
-    card.country != null &&
-    card.country === resolved.resolvedCountry &&
-    resolved.flagStyle === "fade",
-  );
-  const worldRowFlagBgIsImage = Boolean(
-    showWorldFadeCountryRowSwatch &&
-    pipLeftFlagBg &&
-    /^url\(/.test(pipLeftFlagBg.trim()),
-  );
-  /** Mirror country flag/symbol on the right, unless we already show the row swatch by the name. */
+  /** Mirror country flag (diamond {@link styles.pipFlag}) or symbol on the right when enabled. */
   const rightUsesCountryIdentity = Boolean(
-    !showWorldFadeCountryRowSwatch &&
     resolved.mirrorCountryTypeStripRight &&
     hasCountryPipArt &&
     resolved.resolvedCountry &&
@@ -256,7 +253,7 @@ export default function Card({
   /**
    * R90 border shell (cardFlagUsR90) works for *vertical* bar flags; horizontal bands
    * (e.g. NL / DE / ES) become sideways after -90° and the frame reads as one band.
-   * URL/SVG/photo flags (US, etc.) and Bretagne stripes use flat shell — see `countryUsesCardFrameFlatShell`.
+   * URL/SVG/photo flags and flat shell are driven by `CountryDef.cardFrame` — see `countryUsesCardFrameFlatShell`.
    */
   const worldFlagBorderFlatShell =
     countryUsesCardFrameFlatShell(worldFrameCountry);
@@ -409,74 +406,57 @@ export default function Card({
           <CardArtwork card={card} />
         </div>
 
-        {/* Type strip: diamond + genre (left), subgenre + diamond (right) */}
+        {/*
+          Type strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
+          flag swatch; that pattern is reserved for list/panel views (e.g. CountryFlagSwatch).
+        */}
         <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
-            {showWorldFadeCountryRowSwatch ? (
-              <>
-                <span className={styles.typeText}>{strip.left}</span>
-                <div
-                  className={`${styles.typeStripWorldFlagRow} ${small ? styles.typeStripWorldFlagRowSm : ""}`}
-                  style={
-                    {
-                      backgroundImage: pipLeftFlagBg,
-                      backgroundSize: worldRowFlagBgIsImage
-                        ? "cover"
-                        : "100% 100%",
-                      backgroundPosition: worldFrameBackgroundPosition,
-                      backgroundRepeat: "no-repeat",
-                    } as React.CSSProperties
-                  }
-                  aria-hidden
-                />
-              </>
-            ) : (
-              <>
-                {pipLeftSymbol ? (
-                  pipLeftSymbol.svg ? (
-                    <span
-                      className={styles.pipSymbol}
-                      style={{
-                        color: pipLeftSymbol.color,
-                        fontSize: pipLeftSymbol.size,
-                      }}
-                      dangerouslySetInnerHTML={{ __html: pipLeftSymbol.svg }}
-                    />
-                  ) : (
-                    <span
-                      className={styles.pipSymbol}
-                      style={{
-                        color: pipLeftSymbol.color,
-                        fontSize: pipLeftSymbol.size,
-                      }}
-                    >
-                      {pipLeftSymbol.sym}
-                    </span>
-                  )
-                ) : pipLeftFlagBg ? (
-                  <div
-                    className={styles.pipFlag}
+            <>
+              {pipLeftSymbol ? (
+                pipLeftSymbol.svg ? (
+                  <span
+                    className={styles.pipSymbol}
                     style={{
-                      backgroundImage: pipLeftFlagBg,
-                      backgroundSize: "100% 100%",
-                      backgroundPosition: worldFrameBackgroundPosition,
-                      border: "1px solid rgba(20, 16, 10, 0.35)",
+                      color: pipLeftSymbol.color,
+                      fontSize: pipLeftSymbol.size,
                     }}
+                    dangerouslySetInnerHTML={{ __html: pipLeftSymbol.svg }}
                   />
                 ) : (
-                  <div
-                    className={styles.pip}
+                  <span
+                    className={styles.pipSymbol}
                     style={{
-                      background: stripLeftBorder,
-                      border: leftPipNeedsBorder
-                        ? "1px solid rgba(20, 16, 10, 0.45)"
-                        : "none",
+                      color: pipLeftSymbol.color,
+                      fontSize: pipLeftSymbol.size,
                     }}
-                  />
-                )}
-                <span className={styles.typeText}>{strip.left}</span>
-              </>
-            )}
+                  >
+                    {pipLeftSymbol.sym}
+                  </span>
+                )
+              ) : pipLeftFlagBg ? (
+                <div
+                  className={styles.pipFlag}
+                  style={{
+                    backgroundImage: pipLeftFlagBg,
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: worldFrameBackgroundPosition,
+                    border: "1px solid rgba(20, 16, 10, 0.35)",
+                  }}
+                />
+              ) : (
+                <div
+                  className={styles.pip}
+                  style={{
+                    background: stripLeftBorder,
+                    border: leftPipNeedsBorder
+                      ? "1px solid rgba(20, 16, 10, 0.45)"
+                      : "none",
+                  }}
+                />
+              )}
+              <span className={styles.typeText}>{strip.left}</span>
+            </>
           </div>
           <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
             <span className={styles.typeText}>{strip.right}</span>
@@ -703,8 +683,8 @@ export default function Card({
                   : `linear-gradient(${"transparent"}, ${"transparent"}), ${flagBg}`,
               backgroundSize:
                 flagStyle === "fade"
-                  ? "100% 100%, 100% 100%, cover"
-                  : "100% 100%, cover",
+                  ? "100% 100%, 100% 100%, 100% 100%"
+                  : "100% 100%, 100% 100%",
               backgroundPosition:
                 flagStyle === "fade"
                   ? `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`
@@ -735,10 +715,10 @@ export default function Card({
           aria-hidden
           style={
             {
-              background:
+              backgroundImage:
                 flagStyle === "fade"
-                  ? `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%) border-box, ${flagLayer} border-box`
-                  : `linear-gradient(${"transparent"}, ${"transparent"}) padding-box, ${flagLayer} border-box`,
+                  ? `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagLayer}`
+                  : `linear-gradient(${"transparent"}, ${"transparent"}), ${flagLayer}`,
               backgroundClip:
                 flagStyle === "fade"
                   ? "padding-box, border-box, border-box"
