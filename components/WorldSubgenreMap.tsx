@@ -2,11 +2,7 @@
 
 import { createRoot, type Root } from "react-dom/client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  SUBGENRES,
-  type CountrySubgenre,
-  WORLD_THEMES,
-} from "@/lib/genres";
+import { SUBGENRES, type CountrySubgenre, WORLD_THEMES } from "@/lib/genres";
 import { COUNTRY_MAP_POINT } from "@/lib/countries";
 import type {
   Map as MaplibreMap,
@@ -28,12 +24,10 @@ const OSM_RASTER_STYLE: StyleSpecification = {
       tileSize: 256,
       maxzoom: 19,
       attribution:
-        "© <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noreferrer\">OpenStreetMap</a> contributors",
+        '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
     },
   },
-  layers: [
-    { id: "osm", type: "raster", source: "osm" },
-  ],
+  layers: [{ id: "osm", type: "raster", source: "osm" }],
 };
 
 /** SW then NE (lng, lat) for `fitBounds`. */
@@ -44,10 +38,7 @@ const WORLD_FIT: [[number, number], [number, number]] = [
 
 const MIN_MAP_PX = 80;
 
-function fitWorldInView(
-  map: MaplibreMap,
-  container: HTMLElement,
-): boolean {
+function fitWorldInView(map: MaplibreMap, container: HTMLElement): boolean {
   const w = container.clientWidth;
   const h = container.clientHeight;
   if (w < MIN_MAP_PX || h < MIN_MAP_PX) return false;
@@ -218,7 +209,8 @@ function CountryPopupFromLeaves({
       leaves
         .map(
           (leaf) =>
-            (leaf.properties as { country?: string } | null | undefined)?.country,
+            (leaf.properties as { country?: string } | null | undefined)
+              ?.country,
         )
         .filter((c): c is string => Boolean(c)),
     ),
@@ -270,10 +262,7 @@ export default function WorldSubgenreMap() {
   const onResetRef = useRef<(() => void) | null>(null);
 
   const countrySubs = useMemo(
-    () =>
-      SUBGENRES.filter(
-        (s): s is CountrySubgenre => s.kind === "country",
-      ),
+    () => SUBGENRES.filter((s): s is CountrySubgenre => s.kind === "country"),
     [],
   );
 
@@ -414,7 +403,9 @@ export default function WorldSubgenreMap() {
             });
           }
 
-          const geoSource = map.getSource(SUBGENRE_SOURCE_ID) as unknown as ClusterGeoSource;
+          const geoSource = map.getSource(
+            SUBGENRE_SOURCE_ID,
+          ) as unknown as ClusterGeoSource;
 
           const openClusterLeavesPopup = (
             clusterId: number,
@@ -462,8 +453,9 @@ export default function WorldSubgenreMap() {
             const f = feats[0];
             if (!f?.properties || f.properties.cluster_id === undefined) return;
             const clusterId = f.properties.cluster_id as number;
-            const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
-              .coordinates;
+            const coords = (
+              f.geometry as { type: "Point"; coordinates: [number, number] }
+            ).coordinates;
             void (async () => {
               try {
                 const expansionZoom =
@@ -497,8 +489,9 @@ export default function WorldSubgenreMap() {
             if (!f?.properties) return;
             const p = f.properties as { country: string };
             if (!p.country) return;
-            const coords = (f.geometry as { type: "Point"; coordinates: [number, number] })
-              .coordinates;
+            const coords = (
+              f.geometry as { type: "Point"; coordinates: [number, number] }
+            ).coordinates;
             closeActivePopup();
             const el = document.createElement("div");
             activeRoot = createRoot(el);
@@ -583,21 +576,18 @@ export default function WorldSubgenreMap() {
     <div className="w-full max-w-[min(100%,1400px)] mx-auto flex flex-col items-center gap-5 mt-14 mb-6 px-3 sm:px-4">
       <div className="text-center max-w-[720px]">
         <div className="section-title mb-1.5">World map</div>
-        <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
-          Each country or region has a single pin at an approximate representative
-          point; opening the pin lists every country-native subgenre defined for
-          that place. The base map uses{" "}
+        <p className="font-garamond italic text-muted leading-[1.45] m-0">
+          Each country or region has a single pin at an approximate
+          representative point; opening the pin lists every country-native
+          subgenre defined for that place. The base map uses{" "}
           <span className="not-italic text-white/75">OpenStreetMap</span>{" "}
-          (standard tiles, Web Mercator). Unlike the colour wheel, only geography
-          is encoded — intensity rings do not apply here.
+          (standard tiles, Web Mercator). Unlike the colour wheel, only
+          geography is encoded — intensity rings do not apply here.
         </p>
       </div>
 
       {loadError ? (
-        <p
-          className="font-mono text-sm text-red-300/90"
-          role="alert"
-        >
+        <p className="font-mono text-sm text-red-300/90" role="alert">
           {loadError}
         </p>
       ) : null}
@@ -624,11 +614,11 @@ export default function WorldSubgenreMap() {
       </div>
 
       <p className="font-mono text-[10px] tracking-wide text-muted/80 m-0 text-center">
-        Scroll to zoom, drag to pan, double-click empty space to fit the world again.
-        Pin colour follows the country flag border. Nearby regions cluster — click a
-        cluster to zoom until it splits; when it cannot split further, a summary opens.
-        Click a pin for that country or region and its subgenres. Click empty map to close
-        popups.
+        Scroll to zoom, drag to pan, double-click empty space to fit the world
+        again. Pin colour follows the country flag border. Nearby regions
+        cluster — click a cluster to zoom until it splits; when it cannot split
+        further, a summary opens. Click a pin for that country or region and its
+        subgenres. Click empty map to close popups.
       </p>
     </div>
   );

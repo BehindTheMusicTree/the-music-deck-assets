@@ -38,7 +38,7 @@ export default function TypographyPage() {
           <div className="font-garamond text-[22px] text-white mb-2 leading-[1.5]">
             A collectible card game built around music.
           </div>
-          <div className="font-garamond italic text-[16px] text-muted mb-5 leading-[1.6]">
+          <div className="font-garamond italic text-muted mb-5 leading-[1.6]">
             Each genre owns a border colour. World is the exception — it
             overlays a dotted pattern on the host genre&apos;s colour.
           </div>

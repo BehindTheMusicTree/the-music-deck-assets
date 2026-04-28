@@ -54,7 +54,7 @@ export default function GenresPage() {
         <div className="w-full max-w-[860px] mt-6 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           <div className="px-[18px] pt-4 pb-3">
             <div className="section-title mb-1">Intensity Scale</div>
-            <p className="font-garamond italic text-muted text-[16px] leading-[1.45] m-0">
+            <p className="font-garamond italic text-muted leading-[1.45] m-0">
               Each genre spans an intensity scale — from pop intensity to
               hardcore intensity.
             </p>
@@ -149,20 +149,20 @@ export default function GenresPage() {
         </div>
         <div className="w-full max-w-[860px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden px-[18px] py-4">
           <div className="section-title-sub mb-2">Transitions</div>
-          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[760px]">
+          <p className="font-garamond italic text-muted leading-[1.45] mb-4 max-w-[760px]">
             A transition node is a genre + intensity pair. From an outer genre,
             valid outs are: same genre at next intensity, and next genre at same
             intensity. Mainstream is special: it fans out to every genre at pop
             intensity.
           </p>
           {(() => {
-            const cx = 210;
-            const cy = 210;
+            const cx = 260;
+            const cy = 260;
             const ringRadius: Record<Intensity, number> = {
-              pop: 74,
-              soft: 104,
-              experimental: 134,
-              hardcore: 164,
+              pop: 92,
+              soft: 132,
+              experimental: 172,
+              hardcore: 212,
             };
             const pointFor = (genre: GenreName, intensity: Intensity) => {
               if (genre === "Mainstream") return { x: cx, y: cy };
@@ -200,7 +200,7 @@ export default function GenresPage() {
             );
             return (
               <div className="flex justify-center">
-                <svg width={420} height={420} viewBox="0 0 420 420">
+                <svg width={520} height={520} viewBox="0 0 520 520">
                   <defs>
                     <marker
                       id="genre-transition-arrow"
@@ -264,7 +264,7 @@ export default function GenresPage() {
 
         <div id="genre-intensity" className="w-full max-w-[1100px] mt-10 mb-10">
           <div className="section-title mb-2">Genre-level intensity</div>
-          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[680px]">
+          <p className="font-garamond italic text-muted leading-[1.45] mb-4 max-w-[680px]">
             When a card has a subgenre, intensity comes from that subgenre. When
             there is no subgenre (genre-only card), intensity is taken from the
             genre row below: <span className="text-white/80">Electronic</span>{" "}
@@ -277,7 +277,7 @@ export default function GenresPage() {
             <span className="text-white/80">experimental</span>, and all other
             genres are <span className="text-white/80">pop</span>.
           </p>
-          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[680px]">
+          <p className="font-garamond italic text-muted leading-[1.45] mb-4 max-w-[680px]">
             <span className="text-white/80">Mainstream</span> (shown as{" "}
             <span className="text-white/80">Pop</span> on cards) is only the
             centre of the colour wheel — it is{" "}
@@ -327,7 +327,7 @@ export default function GenresPage() {
 
         <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
           <div className="section-title mb-2">Genre Themes</div>
-          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
+          <p className="font-garamond italic text-muted leading-[1.45] mb-6 max-w-[600px]">
             Each genre defines a full colour theme used across the card frame.
             You can preview a subgenre alone, a country or region alone, or
             combine a subgenre with a country to apply the World/Genre border
