@@ -204,6 +204,12 @@ function nextIntensity(i: Intensity): Intensity | undefined {
   return INTENSITY_ORDER[idx + 1];
 }
 
+function previousIntensity(i: Intensity): Intensity | undefined {
+  const idx = INTENSITY_ORDER.indexOf(i);
+  if (idx <= 0) return undefined;
+  return INTENSITY_ORDER[idx - 1];
+}
+
 function genreIntensityKey(n: GenreIntensityNode): string {
   return `${n.genre}|${n.intensity}`;
 }
@@ -244,9 +250,16 @@ export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[
   }
   const out: GenreIntensityNode[] = [];
   const up = nextIntensity(node.intensity);
+  const down = previousIntensity(node.intensity);
   if (up) out.push({ genre: node.genre, intensity: up });
   const nextGenre = GENRE_NEXT[node.genre];
+  const previousGenre = GENRE_PREVIOUS[node.genre];
   out.push({ genre: nextGenre, intensity: node.intensity });
+  out.push({ genre: previousGenre, intensity: node.intensity });
+  if (down) {
+    out.push({ genre: nextGenre, intensity: down });
+    out.push({ genre: previousGenre, intensity: down });
+  }
   out.push({ genre: nextGenre, intensity: node.intensity });
   return uniqueGenreIntensity(out);
 }

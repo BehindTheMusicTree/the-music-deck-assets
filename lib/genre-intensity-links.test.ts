@@ -14,12 +14,20 @@ describe("genre intensity links", () => {
     expect(out).toEqual([
       { genre: "Rock", intensity: "experimental" },
       { genre: "Classical", intensity: "soft" },
+      { genre: "Hip-Hop", intensity: "soft" },
+      { genre: "Classical", intensity: "pop" },
+      { genre: "Hip-Hop", intensity: "pop" },
     ]);
   });
 
   it("hardcore has no +1 intensity branch", () => {
     const out = genreIntensityOut({ genre: "Vintage", intensity: "hardcore" });
-    expect(out).toEqual([{ genre: "Reggae/Dub", intensity: "hardcore" }]);
+    expect(out).toEqual([
+      { genre: "Reggae/Dub", intensity: "hardcore" },
+      { genre: "Classical", intensity: "hardcore" },
+      { genre: "Reggae/Dub", intensity: "experimental" },
+      { genre: "Classical", intensity: "experimental" },
+    ]);
   });
 
   it("in-links are exact inverse of out-links", () => {
