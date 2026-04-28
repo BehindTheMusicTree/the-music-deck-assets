@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  countryFlagForShell,
-  countryPreferredCardShell,
-} from "./countries";
+import { countryFlagForShell, countryPreferredCardShell } from "./countries";
 import { resolveThemeSelection } from "./genres";
 
 function includesHexColor(css: string, hex: string): boolean {
@@ -31,10 +28,7 @@ function resolvedCardBorderFromCountry(country: string): string {
   const shell = countryPreferredCardShell(resolved.resolvedCountry);
   const variant = countryFlagForShell(resolved.resolvedCountry, shell);
   return (
-    variant.border ??
-    resolved.frameBorder ??
-    resolved.theme.frameBorder ??
-    ""
+    variant.border ?? resolved.frameBorder ?? resolved.theme.frameBorder ?? ""
   );
 }
 
@@ -61,9 +55,7 @@ describe("country border colors for cards", () => {
       expect(border.length).toBeGreaterThan(0);
       for (const color of palette) {
         if (!includesHexColor(border, color)) {
-          throw new Error(
-            `Missing ${color} in ${country} border: ${border}`,
-          );
+          throw new Error(`Missing ${color} in ${country} border: ${border}`);
         }
       }
     }

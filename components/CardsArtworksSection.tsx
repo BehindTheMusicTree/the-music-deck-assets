@@ -4,8 +4,10 @@ import { useMemo, useState } from "react";
 import {
   GENRE_NAMES,
   GENRE_THEMES,
+  WHEEL_GENRES,
   genreIntensityColor,
   type Intensity,
+  type NonMainstreamGenreName,
 } from "@/lib/genres";
 
 type ArtworksTabId = "format" | "dominant-colour" | "style" | "mix" | "prompt";
@@ -134,8 +136,60 @@ function intensityColourRow(genre: string, intensity: Intensity): string {
   return genreIntensityColor(genre, intensity);
 }
 
+function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + Math.cos(rad) * r, y: cy + Math.sin(rad) * r };
+}
+
+function annularSectorPath(
+  cx: number,
+  cy: number,
+  innerR: number,
+  outerR: number,
+  startAngleDeg: number,
+  endAngleDeg: number,
+) {
+  const outerStart = polarToXY(cx, cy, outerR, startAngleDeg);
+  const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
+  const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
+  const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
+  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const largeArc = span > 180 ? 1 : 0;
+  if (innerR <= 0) {
+    return [
+      `M ${cx} ${cy}`,
+      `L ${outerStart.x} ${outerStart.y}`,
+      `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+      "Z",
+    ].join(" ");
+  }
+  return [
+    `M ${outerStart.x} ${outerStart.y}`,
+    `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+    `L ${innerEnd.x} ${innerEnd.y}`,
+    `A ${innerR} ${innerR} 0 ${largeArc} 0 ${innerStart.x} ${innerStart.y}`,
+    "Z",
+  ].join(" ");
+}
+
+function isLightHex(hex: string): boolean {
+  const s = hex.replace("#", "");
+  const normalized = s.length === 3 ? s.split("").map((c) => c + c).join("") : s;
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 160;
+}
+
 export default function CardsArtworksSection() {
   const [activeTab, setActiveTab] = useState<ArtworksTabId>("format");
+  const [hoveredWheelColour, setHoveredWheelColour] = useState<{
+    genre: string;
+    intensity: Intensity;
+    colour: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const dominantColourByGenre = useMemo(
     () =>
@@ -152,22 +206,28 @@ export default function CardsArtworksSection() {
     [],
   );
 
-  const dominantColourWheel = useMemo(() => {
-    const outer = dominantColourByGenre.filter((g) => g.genre !== "Mainstream");
-    const cx = 210;
-    const cy = 210;
-    const labelR = 190;
-    return outer.map((g, i) => {
-      const angleDeg = -90 + (i * 360) / outer.length;
-      const angle = (angleDeg * Math.PI) / 180;
-      return {
-        ...g,
-        angleDeg,
-        x: cx + labelR * Math.cos(angle),
-        y: cy + labelR * Math.sin(angle),
-      };
-    });
-  }, [dominantColourByGenre]);
+  const dominantColourWheel = useMemo(
+    () => {
+      const byGenre = new Map(
+        dominantColourByGenre
+          .filter((g) => g.genre !== "Mainstream")
+          .map((g) => [g.genre, g] as const),
+      );
+      const ordered = WHEEL_GENRES.map((wg) => {
+        const entry = byGenre.get(wg.n);
+        if (!entry) {
+          throw new Error(`Missing dominant-colour entry for wheel genre "${wg.n}"`);
+        }
+        return entry;
+      });
+      return ordered.map((g, i, arr) => {
+          const angleDeg = -90 + (i * 360) / arr.length;
+          const p = polarToXY(220, 220, 204, angleDeg);
+          return { ...g, angleDeg, x: p.x, y: p.y };
+      });
+    },
+    [dominantColourByGenre],
+  );
 
   return (
     <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
@@ -228,10 +288,94 @@ export default function CardsArtworksSection() {
               viewBox="0 0 440 440"
               className="overflow-visible"
             >
-              <circle cx={220} cy={220} r={84} fill="none" stroke="rgba(255,255,255,.16)" strokeDasharray="4 6" />
-              <circle cx={220} cy={220} r={116} fill="none" stroke="rgba(255,255,255,.16)" strokeDasharray="4 6" />
-              <circle cx={220} cy={220} r={148} fill="none" stroke="rgba(255,255,255,.16)" strokeDasharray="4 6" />
-              <circle cx={220} cy={220} r={180} fill="none" stroke="rgba(255,255,255,.16)" strokeDasharray="4 6" />
+              {WHEEL_GENRES.flatMap((g, i) => {
+                const slice = 360 / WHEEL_GENRES.length;
+                const start = i * slice - 90 - slice / 2;
+                const end = i * slice - 90 + slice / 2;
+                const genre = g.n as NonMainstreamGenreName;
+                return [
+                  {
+                    intensity: "pop" as const,
+                    inner: 0,
+                    outer: 84,
+                  },
+                  {
+                    intensity: "soft" as const,
+                    inner: 84,
+                    outer: 116,
+                  },
+                  {
+                    intensity: "experimental" as const,
+                    inner: 116,
+                    outer: 148,
+                  },
+                  {
+                    intensity: "hardcore" as const,
+                    inner: 148,
+                    outer: 180,
+                  },
+                ].map((band) => (
+                  <path
+                    key={`${g.n}-${band.intensity}`}
+                    d={annularSectorPath(220, 220, band.inner, band.outer, start, end)}
+                    fill={genreIntensityColor(genre, band.intensity)}
+                    onMouseEnter={() =>
+                      setHoveredWheelColour({
+                        genre: g.n,
+                        intensity: band.intensity,
+                        colour: genreIntensityColor(genre, band.intensity),
+                        x: 0,
+                        y: 0,
+                      })
+                    }
+                    onMouseMove={(e) =>
+                      setHoveredWheelColour((prev) =>
+                        prev
+                          ? {
+                              ...prev,
+                              x: e.clientX,
+                              y: e.clientY,
+                            }
+                          : prev,
+                      )
+                    }
+                    onMouseLeave={() => setHoveredWheelColour(null)}
+                  />
+                ));
+              })}
+
+              <circle
+                cx={220}
+                cy={220}
+                r={84}
+                fill="none"
+                stroke="rgba(255,255,255,.16)"
+                strokeDasharray="4 6"
+              />
+              <circle
+                cx={220}
+                cy={220}
+                r={116}
+                fill="none"
+                stroke="rgba(255,255,255,.16)"
+                strokeDasharray="4 6"
+              />
+              <circle
+                cx={220}
+                cy={220}
+                r={148}
+                fill="none"
+                stroke="rgba(255,255,255,.16)"
+                strokeDasharray="4 6"
+              />
+              <circle
+                cx={220}
+                cy={220}
+                r={180}
+                fill="none"
+                stroke="rgba(255,255,255,.16)"
+                strokeDasharray="4 6"
+              />
 
               {dominantColourWheel.map((g) => {
                 const rad = (g.angleDeg * Math.PI) / 180;
@@ -267,6 +411,27 @@ export default function CardsArtworksSection() {
                           fill={entry.colour}
                           stroke="rgba(255,255,255,.25)"
                           strokeWidth={1}
+                          onMouseEnter={() =>
+                            setHoveredWheelColour({
+                              genre: g.genre,
+                              intensity: entry.intensity,
+                              colour: entry.colour,
+                              x: 0,
+                              y: 0,
+                            })
+                          }
+                          onMouseMove={(e) =>
+                            setHoveredWheelColour((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                  }
+                                : prev,
+                            )
+                          }
+                          onMouseLeave={() => setHoveredWheelColour(null)}
                         >
                           <title>{`${g.genre} · ${entry.intensity}: ${entry.colour}`}</title>
                         </circle>
@@ -282,6 +447,22 @@ export default function CardsArtworksSection() {
                       {g.genre}
                     </text>
                   </g>
+                );
+              })}
+
+              {WHEEL_GENRES.map((_, i) => {
+                const angle = ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
+                const outer = polarToXY(220, 220, 180, angle);
+                return (
+                  <line
+                    key={`divider-${i}`}
+                    x1={220}
+                    y1={220}
+                    x2={outer.x}
+                    y2={outer.y}
+                    stroke="rgba(255,255,255,.24)"
+                    strokeWidth={1}
+                  />
                 );
               })}
 
@@ -306,6 +487,28 @@ export default function CardsArtworksSection() {
               </text>
             </svg>
           </div>
+          {hoveredWheelColour && hoveredWheelColour.x > 0 ? (
+            <div
+              className="fixed z-150 rounded border border-white/20 px-3 py-2 pointer-events-none"
+              style={{
+                left: hoveredWheelColour.x + 14,
+                top: hoveredWheelColour.y + 14,
+                background: hoveredWheelColour.colour,
+              }}
+            >
+              <div
+                className="font-mono text-[12px] tracking-[0.08em] uppercase whitespace-nowrap"
+                style={{
+                  color: isLightHex(hoveredWheelColour.colour)
+                    ? "rgba(10,10,10,.9)"
+                    : "rgba(255,255,255,.96)",
+                }}
+              >
+                {hoveredWheelColour.genre} · {hoveredWheelColour.intensity} ·{" "}
+                {hoveredWheelColour.colour}
+              </div>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
