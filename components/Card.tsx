@@ -174,23 +174,21 @@ function CardArtwork({ card }: { card: CardData }) {
   );
 }
 
-// Clip-path applied to .card when transition strips are present.
-// Cuts notch holes so the page background shows through — context-independent (no blend modes).
+// Clip-path applied to .card when a transitionIn strip is present.
+// The trackIn strip sits over the card's LEFT BORDER — we cut through the border only so the
+// notch void shows the page background instead of the colored frame.
+// The trackOut strip's notch is INSIDE the card content (dark header) — no cut needed there;
+// the header shows naturally behind the strip's own clip-path void.
 // Coordinates are in the card's border-box (272×400, border-radius 16).
 // Strip top: 44px (header) + 10px (border) − 6.5px (half strip) = 47.5px; bottom = 60.5px.
 const _CARD_PATH_BASE =
   "M 16 0 L 256 0 Q 272 0 272 16 L 272 384 Q 272 400 256 400 L 16 400 Q 0 400 0 384 L 0 16 Q 0 0 16 0 Z";
-// Left notch: x=0–8 (border edge → tip), CCW so nonzero fill-rule punches a hole.
+// Left notch: x=0–8 (left border edge → tip), CCW so nonzero fill-rule punches a hole.
 const _NOTCH_LEFT = "M 0 47.5 L 0 60.5 L 8 54 Z";
-// Right notch: strip left edge = 279px − 103px = 176px from frame left, tip at 184px.
-const _NOTCH_RIGHT = "M 176 47.5 L 176 60.5 L 184 54 Z";
 
-function cardNotchPath(
-  hasLeft: boolean,
-  hasRight: boolean,
-): string | undefined {
-  if (!hasLeft && !hasRight) return undefined;
-  return `path('${_CARD_PATH_BASE}${hasLeft ? " " + _NOTCH_LEFT : ""}${hasRight ? " " + _NOTCH_RIGHT : ""}')`;
+function cardNotchPath(hasLeft: boolean): string | undefined {
+  if (!hasLeft) return undefined;
+  return `path('${_CARD_PATH_BASE} ${_NOTCH_LEFT}')`;
 }
 
 export default function Card({
@@ -687,7 +685,7 @@ export default function Card({
 
   const staticClass = hoverLift ? "" : ` ${styles.cardStatic}`;
   const frameStaticClass = hoverLift ? "" : ` ${styles.cardFrameStatic}`;
-  const notchClipPath = cardNotchPath(!!transitionIn, !!transitionOut);
+  const notchClipPath = cardNotchPath(!!transitionIn);
 
   const renderInnerCard = () =>
     card.artworkOverBorder ? (

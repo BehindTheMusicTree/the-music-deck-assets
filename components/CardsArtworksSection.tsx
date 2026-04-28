@@ -267,7 +267,7 @@ export default function CardsArtworksSection() {
 
   const generatedPrompt = useMemo(() => {
     const base =
-      "Vertical 2:3 high-detail illustration. The bottom 60% will be covered on-card, so place all key visual elements in the upper third. Subjects should have no resemblance to celebrities). No text, no symbols, no logos.";
+      "Vertical 2:3 high-detail illustration. Draw only within the top 40% of the frame where all key visual elements must be concentrated. Keep the bottom 60% mostly empty, soft, and out-of-focus (blurred atmosphere, minimal detail, no important subject matter) to preserve card UI readability. Subjects should have no resemblance to celebrities. No text, no symbols, no logos.";
     const primaryGuide = styleGuideForGenre(primaryPromptChoice.genre);
     const primary = `Primary style anchor with dominant colour ${primaryPromptChoice.colour}. Intensity mood: ${formatIntensity(primaryPromptChoice.intensity)}.${
       primaryGuide
@@ -320,7 +320,7 @@ export default function CardsArtworksSection() {
       {activeTab === "format" ? (
         <section>
           <div className="section-label-accent mb-2">Artwork format</div>
-          <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
+          <ul className="font-garamond text-muted leading-[1.8] pl-5 list-disc">
             <li>Master format: vertical 2:3.</li>
             <li>
               Lower ~60% is usually covered by UI: place key elements in the
@@ -340,7 +340,7 @@ export default function CardsArtworksSection() {
           <div className="section-label-accent mb-2">
             Dominant colour system
           </div>
-          <p className="font-garamond text-sm text-muted mb-4">
+          <p className="font-garamond text-muted mb-4">
             Dominant colour comes from genre + intensity. Country-native
             subgenre cards follow country/region visual identity instead of this
             wheel.
@@ -616,7 +616,7 @@ export default function CardsArtworksSection() {
                 <div className="font-cinzel tracking-widest text-gold">
                   {row.genre}
                 </div>
-                <div className="font-garamond text-sm text-white/90 mt-1">
+                <div className="font-garamond text-white/90 mt-1">
                   {row.style}
                 </div>
                 <div className="font-garamond text-muted mt-1">{row.notes}</div>
@@ -629,11 +629,11 @@ export default function CardsArtworksSection() {
       {activeTab === "mix" ? (
         <section>
           <div className="section-label-accent mb-2">Mixed influences</div>
-          <p className="font-garamond text-sm text-muted leading-[1.8] mb-3">
+          <p className="font-garamond text-muted leading-[1.8] mb-3">
             Subgenres with influence metadata should blend both parent
             identities in one coherent visual system.
           </p>
-          <p className="font-garamond text-sm text-muted leading-[1.8]">
+          <p className="font-garamond text-muted leading-[1.8]">
             Example: <span className="text-white/90">Nu Metal</span> keeps Rock
             hardcore as primary anchor (palette, texture, aggression), then adds
             Hip-Hop hardcore cues (rhythmic graphic language, urban forms,
@@ -645,7 +645,7 @@ export default function CardsArtworksSection() {
       {activeTab === "prompt" ? (
         <section>
           <div className="section-label-accent mb-2">Prompt generator</div>
-          <div className="font-garamond text-sm text-muted mb-4">
+          <div className="font-garamond text-muted mb-4">
             1) Choose primary genre/intensity. 2) Optionally choose a secondary
             influence. 3) Write the subject. 4) Copy the generated prompt.
           </div>
@@ -843,7 +843,7 @@ export default function CardsArtworksSection() {
               value={promptSubject}
               onChange={(e) => setPromptSubject(e.target.value)}
               placeholder="Describe the scene subject, action, mood, setting..."
-              className="w-full min-h-[100px] rounded border border-ui-border bg-[#0f0f14] px-3 py-2 text-sm text-white/90 placeholder:text-muted/70"
+              className="w-full min-h-[100px] rounded border border-ui-border bg-[#0f0f14] px-3 py-2 text-white/90 placeholder:text-muted/70"
             />
           </div>
 
@@ -857,7 +857,7 @@ export default function CardsArtworksSection() {
             <div className="mt-3 flex justify-end">
               <button
                 type="button"
-                className="font-mono text-[11px] tracking-widest text-gold border border-ui-border rounded px-3 py-1.5 hover:bg-white/5"
+                className="font-mono tracking-widest text-gold border border-ui-border rounded px-3 py-1.5 hover:bg-white/5"
                 onClick={() => navigator.clipboard.writeText(generatedPrompt)}
               >
                 Copy prompt
