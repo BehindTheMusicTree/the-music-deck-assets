@@ -9,6 +9,7 @@ import {
   CATALOG_CARD_TRACK_INDEX,
   CARD_RARITY_ORDER,
   CATALOG_KINDS,
+  deriveTracksInFromTrackIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
 import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
@@ -1033,8 +1034,10 @@ export default function CatalogDeckTable({
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {
-                            const ids =
-                              CATALOG_CARD_TRACK_INDEX[card.id]?.tracksIn;
+                            const ids = deriveTracksInFromTrackIndex(
+                              CATALOG_CARD_TRACK_INDEX,
+                              card.id,
+                            );
                             if (!ids || ids.length === 0) {
                               return <span className="text-muted/80">—</span>;
                             }
@@ -1383,7 +1386,10 @@ export default function CatalogDeckTable({
                             {detailLine(
                               "Tracks in",
                               trackRefsLabel(
-                                CATALOG_CARD_TRACK_INDEX[c.id]?.tracksIn,
+                                deriveTracksInFromTrackIndex(
+                                  CATALOG_CARD_TRACK_INDEX,
+                                  c.id,
+                                ),
                                 CATALOG_CARD_TRACK_INDEX,
                               ),
                             )}

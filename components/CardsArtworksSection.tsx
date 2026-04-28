@@ -43,7 +43,7 @@ const GENRE_STYLE_GUIDE: {
     genre: "Hip-Hop",
     style: "Early-2000s cel-shaded street mural aesthetic",
     notes:
-      "Cel-shaded illustration, bold inked outlines, flatter shadow blocks, saturated urban palette, mural-like graphic contrast, sharp edge control over painterly blending.",
+      "General art direction: realistic comic-book look with thick black outlines, clean silhouettes, and believable human proportions. Cell-shading approach: flat shadow blocks, minimal gradients, and sharply cut shadow areas. Saturated but slightly dusty palette with warm early-2000s California energy. Characters: stylized faces with simplified features and expressive reads (without caricature); heavy contour lines around face, nose, lips, and glasses; stylized streetwear, never photoreal. Simple perspective, straight lines, sharp angles, limited micro-detail, clean smooth surface treatment. Light and mood: hard Los Angeles-style daylight, crisp cast shadows, warm dominance (gold, beige, yellow, sand, sky blue), high contrast with bright highlights and deep shadows. Cars and props: slightly exaggerated forms, heavy body silhouettes, wide wheels, stylized light-band reflections, vivid paint with pronounced chrome accents.",
   },
   {
     genre: "Disco/Funk",
@@ -269,7 +269,7 @@ export default function CardsArtworksSection() {
     const base =
       "Vertical 2:3 high-detail illustration. Draw only within the top 40% of the frame where all key visual elements must be concentrated. Keep the bottom 60% mostly empty, soft, and out-of-focus (blurred atmosphere, minimal detail, no important subject matter) to preserve card UI readability. Subjects should have no resemblance to celebrities. No text, no symbols, no logos.";
     const primaryGuide = styleGuideForGenre(primaryPromptChoice.genre);
-    const primary = `Primary style anchor with dominant colour ${primaryPromptChoice.colour}. Intensity mood: ${formatIntensity(primaryPromptChoice.intensity)}.${
+    const primary = `Primary style anchor with dominant colour ${primaryPromptChoice.colour}.${
       primaryGuide
         ? ` Style: ${primaryGuide.style}. Guidance: ${primaryGuide.notes}`
         : ""

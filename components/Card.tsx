@@ -17,7 +17,10 @@ import {
 } from "@/lib/genres";
 import { countryFlagForShell, countryPreferredCardShell } from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
-import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import {
+  deriveTracksInFromTrackIndex,
+  type CardTrackIndex,
+} from "@/lib/cards/track-graph";
 import type { CardRarity } from "@/lib/cards/card-rarity";
 import type { GenreTheme } from "@/lib/card-theme-types";
 
@@ -60,8 +63,6 @@ export interface CardData {
   /** When true, artwork presentation hides the frame border (full-bleed visual). */
   artworkOverBorder?: boolean;
   country?: string;
-  /** Track ids that mix into this card (predecessors in a DJ transition). */
-  tracksIn?: number[];
   /** Track ids this card transitions into (successors in a DJ transition). */
   tracksOut?: number[];
   /** Shipped deck only: catalogue series label and number within that series. */
@@ -209,9 +210,8 @@ export default function Card({
    */
   hoverLift?: boolean;
   /**
-   * Per-id lookup: each entry has `tracksIn` / `tracksOut` and display fields
-   * for link targets. Built with `buildCardTrackIndex` (e.g. catalogue) or
-   * omitted and `card.tracksIn` / `card.tracksOut` used for edges only.
+   * Per-id lookup with `tracksOut` + display fields for link targets.
+   * Built with `buildCardTrackIndex` (e.g. catalogue).
    */
   cardTrackIndex?: CardTrackIndex;
 }) {
@@ -322,7 +322,9 @@ export default function Card({
     };
   };
   const row = cardTrackIndex?.[card.id];
-  const tracksIn = row?.tracksIn ?? card.tracksIn ?? [];
+  const tracksIn = cardTrackIndex
+    ? deriveTracksInFromTrackIndex(cardTrackIndex, card.id)
+    : [];
   const tracksOut = row?.tracksOut ?? card.tracksOut ?? [];
   const transitionIn = resolveTransitionTrack(tracksIn[0]);
   const transitionOut = resolveTransitionTrack(tracksOut[0]);

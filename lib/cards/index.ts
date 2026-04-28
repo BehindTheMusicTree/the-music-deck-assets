@@ -30,6 +30,7 @@ export { DEFAULT_PREVIEW_CARD } from "./preview-default";
 export { type CardRarity, CARD_RARITY_ORDER } from "./card-rarity";
 export {
   buildCardTrackIndex,
+  deriveTracksInFromTrackIndex,
   type CardTrackIndex,
   type CardTrackIndexEntry,
 } from "./track-graph";

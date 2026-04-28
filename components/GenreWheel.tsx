@@ -480,7 +480,7 @@ export default function GenreWheel() {
         <circle
           cx={WHEEL_CX}
           cy={WHEEL_CY}
-          r={Math.max(36, Math.round(WHEEL_MAIN_TILE_W * 0.35))}
+          r={Math.round(R_POP_SOFT_LINE * 0.52)}
           fill={GENRE_THEMES.Mainstream.border}
           fillOpacity={0.9}
         />

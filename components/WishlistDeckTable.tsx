@@ -6,6 +6,7 @@ import {
   CARD_RARITY_ORDER,
   CATALOG_CARD_TRACK_INDEX,
   CATALOG_CARD_TRANSITION_PROPS,
+  deriveTracksInFromTrackIndex,
   formatCatalogIntensity,
   type WishlistEntry,
   WISHLIST_ENTRIES,
@@ -829,7 +830,10 @@ export default function WishlistDeckTable({
                         {detailLine(
                           "Tracks in",
                           trackRefsLabel(
-                            CATALOG_CARD_TRACK_INDEX[c.id]?.tracksIn,
+                            deriveTracksInFromTrackIndex(
+                              CATALOG_CARD_TRACK_INDEX,
+                              c.id,
+                            ),
                             CATALOG_CARD_TRACK_INDEX,
                           ),
                         )}

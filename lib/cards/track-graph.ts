@@ -63,7 +63,6 @@ export type CardTrackIndexEntry = Pick<
   CardData,
   "id" | "title" | "artist" | "genre" | "artwork"
 > & {
-  tracksIn: number[];
   tracksOut: number[];
 };
 
@@ -85,10 +84,27 @@ export function buildCardTrackIndex(
     const base = g.byId[id];
     index[id] = {
       ...base,
-      tracksIn: g.tracksInById[id] ?? [],
       tracksOut: g.tracksOutById[id] ?? [],
     };
   }
   return index;
+}
+
+/**
+ * UI helper: derive incoming transition ids for one card from other cards'
+ * `tracksOut`, keeping `tracksOut` as the single source of truth.
+ */
+export function deriveTracksInFromTrackIndex(
+  cardTrackIndex: CardTrackIndex,
+  targetId: number,
+): number[] {
+  const incoming: number[] = [];
+  for (const key of Object.keys(cardTrackIndex)) {
+    const sourceId = Number(key);
+    if (cardTrackIndex[sourceId]?.tracksOut.includes(targetId)) {
+      incoming.push(sourceId);
+    }
+  }
+  return incoming;
 }
 
