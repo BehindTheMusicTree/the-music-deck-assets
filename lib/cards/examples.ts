@@ -1305,7 +1305,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     title: "Superstition",
     artist: "Stevie Wonder",
     year: 1972,
-    genre: "Funk",
+    genre: "Funk Soul",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     tracksOut: [93, 92],

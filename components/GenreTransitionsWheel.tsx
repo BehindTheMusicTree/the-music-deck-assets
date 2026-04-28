@@ -21,6 +21,16 @@ type Node = {
   y: number;
 };
 
+const TRANSITION_WHEEL_SCALE = 1.0;
+const TRANSITION_WHEEL_BASE_CENTER = 630;
+const TRANSITION_WHEEL_BASE_OUTER_LABEL_MARGIN = 26;
+const TRANSITION_WHEEL_BASE_RING_RADIUS: Record<Intensity, number> = {
+  pop: 225,
+  soft: 330,
+  experimental: 435,
+  hardcore: 540,
+};
+
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180;
   const x = cx + Math.cos(rad) * r;
@@ -32,7 +42,7 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
 }
 
 function circleRadiusForNode(n: { genre: GenreName }): number {
-  return n.genre === "Mainstream" ? 20 : 14;
+  return n.genre === "Mainstream" ? 13 : 14;
 }
 
 function lineToCircleEdge(
@@ -84,14 +94,30 @@ export default function GenreTransitionsWheel() {
   const [hovered, setHovered] = useState<Node | null>(null);
 
   const wheel = useMemo(() => {
-    const cx = 630;
-    const cy = 630;
+    const cx = Math.round(
+      TRANSITION_WHEEL_BASE_CENTER * TRANSITION_WHEEL_SCALE,
+    );
+    const cy = Math.round(
+      TRANSITION_WHEEL_BASE_CENTER * TRANSITION_WHEEL_SCALE,
+    );
     const ringRadius: Record<Intensity, number> = {
-      pop: 225,
-      soft: 330,
-      experimental: 435,
-      hardcore: 540,
+      pop: Math.round(
+        TRANSITION_WHEEL_BASE_RING_RADIUS.pop * TRANSITION_WHEEL_SCALE,
+      ),
+      soft: Math.round(
+        TRANSITION_WHEEL_BASE_RING_RADIUS.soft * TRANSITION_WHEEL_SCALE,
+      ),
+      experimental: Math.round(
+        TRANSITION_WHEEL_BASE_RING_RADIUS.experimental * TRANSITION_WHEEL_SCALE,
+      ),
+      hardcore: Math.round(
+        TRANSITION_WHEEL_BASE_RING_RADIUS.hardcore * TRANSITION_WHEEL_SCALE,
+      ),
     };
+    const outerLabelMargin = Math.round(
+      TRANSITION_WHEEL_BASE_OUTER_LABEL_MARGIN * TRANSITION_WHEEL_SCALE,
+    );
+    const svgSize = Math.round((ringRadius.hardcore + outerLabelMargin + 64) * 2);
     const pointFor = (genre: GenreName, intensity: Intensity) => {
       if (genre === "Mainstream") return { x: cx, y: cy };
       const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
@@ -133,12 +159,26 @@ export default function GenreTransitionsWheel() {
             .filter((n) => n.genre !== "Mainstream" && n.intensity === "pop")
             .map((n) => ({ from: mainstream, to: n }));
     const normalLinks = links.filter((l) => !l.fanOut);
-    return { cx, cy, ringRadius, nodes, normalLinks, mainstreamPopLinks };
+    return {
+      cx,
+      cy,
+      ringRadius,
+      outerLabelMargin,
+      svgSize,
+      nodes,
+      normalLinks,
+      mainstreamPopLinks,
+    };
   }, []);
 
   return (
     <div className="flex items-start justify-center gap-6">
-      <svg width={1470} height={1470} viewBox="0 0 1470 1470">
+      <svg
+        width={wheel.svgSize}
+        height={wheel.svgSize}
+        viewBox={`0 0 ${wheel.svgSize} ${wheel.svgSize}`}
+        className="shrink-0"
+      >
         <defs>
           <marker
             id="genre-transition-arrow"
@@ -194,7 +234,7 @@ export default function GenreTransitionsWheel() {
             key={`genre-transition-intensity-${label}`}
             x={wheel.cx + 10}
             y={wheel.cy - r + 12}
-            className="font-mono text-[18px] uppercase tracking-[0.08em] fill-white/70"
+            className="font-mono text-[36px] uppercase tracking-[0.08em] fill-white/78"
           >
             {label}
           </text>
@@ -204,7 +244,7 @@ export default function GenreTransitionsWheel() {
           const p = polarToXY(
             wheel.cx,
             wheel.cy,
-            wheel.ringRadius.hardcore + 26,
+            wheel.ringRadius.hardcore + wheel.outerLabelMargin,
             a,
           );
           return (
@@ -214,7 +254,7 @@ export default function GenreTransitionsWheel() {
               y={p.y}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="font-mono text-[24px] tracking-[0.06em] fill-white/85"
+              className="font-mono text-[48px] tracking-[0.06em] fill-white/9"
             >
               {g.n}
             </text>
@@ -231,8 +271,8 @@ export default function GenreTransitionsWheel() {
               y1={edge.y1}
               x2={edge.x2}
               y2={edge.y2}
-              stroke={hovered ? "rgba(255,255,255,.26)" : "rgba(255,255,255,.5)"}
-              strokeWidth={isOut || isIn ? 4 : 2.8}
+              stroke="rgba(255,255,255,.5)"
+              strokeWidth={2.8}
               markerEnd={
                 isOut
                   ? "url(#genre-transition-arrow-out)"
@@ -254,8 +294,8 @@ export default function GenreTransitionsWheel() {
               y1={edge.y1}
               x2={edge.x2}
               y2={edge.y2}
-              stroke={hovered ? "rgba(246,246,242,.26)" : "rgba(246,246,242,.9)"}
-              strokeWidth={isOut || isIn ? 4.6 : 3.4}
+              stroke="rgba(246,246,242,.9)"
+              strokeWidth={3.4}
               markerEnd={
                 isOut
                   ? "url(#genre-transition-arrow-out)"
@@ -281,9 +321,9 @@ export default function GenreTransitionsWheel() {
         ))}
       </svg>
       <aside
-        className="sticky top-24 w-[420px] min-h-[420px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70"
+        className="sticky top-24 w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto"
         style={
-          hovered
+          hovered && hovered.genre !== "Mainstream"
             ? {
                 background: hovered.colour,
                 color: isLightHex(hovered.colour)
