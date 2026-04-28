@@ -110,8 +110,8 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "Border and full theme always come from the region theme (same rule as country-subgenre).",
-      card: WORLD_FLAG_CARDS[2],
-      theme: worldThemeForCountry(WORLD_FLAG_CARDS[2].country!),
+      card: DECK_SPOTLIGHT_CARDS.find((c) => c.id === 77)!,
+      theme: worldThemeForCountry("Bretagne"),
     },
     {
       key: "country-plus-genre",
@@ -143,6 +143,16 @@ export function CardsSongsContent() {
         "Border fades from country flag (left) to subgenre/genre colour (right).",
       card: WORLD_MIXED_CARDS[0],
       theme: worldThemeForCountry(WORLD_MIXED_CARDS[0].country!),
+    },
+    {
+      key: "bleed",
+      title: "Bleed mode",
+      left: "Country/region.",
+      right: "Country-subgenre.",
+      border:
+        "No border — artwork fills the card edge-to-edge. UI bands (type strip, ability, stats, footer) stay inset as in normal mode.",
+      card: WORLD_FLAG_CARDS[2],
+      theme: worldThemeForCountry(WORLD_FLAG_CARDS[2].country!),
     },
   ];
 
