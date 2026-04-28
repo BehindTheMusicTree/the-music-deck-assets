@@ -7,10 +7,18 @@ import IntensityGauge from "@/components/IntensityGauge";
 import {
   APP_GENRE_NAMES,
   APP_GENRE_THEMES,
+  GENRE_NAMES,
+  GENRE_THEMES,
+  WHEEL_GENRES,
   SUBGENRE_COLOR,
   appGenreIntensity,
   displayGenreLabel,
+  genreIntensityColor,
+  genreIntensityOut,
   intensityLevelIndex,
+  type GenreName,
+  type Intensity,
+  type NonMainstreamGenreName,
 } from "@/lib/genres";
 
 function textOnBg(hex: string): string {
@@ -18,6 +26,11 @@ function textOnBg(hex: string): string {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? "#0a1020" : "#c8d8f0";
+}
+
+function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + Math.cos(rad) * r, y: cy + Math.sin(rad) * r };
 }
 
 export default function GenresPage() {
@@ -51,18 +64,20 @@ export default function GenresPage() {
           <div className="px-[18px] pb-4">
             <div className="section-title-sub mb-2">Example — Electronic</div>
             <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
-              {(["Electropop", "EDM", "Techno", "Psytrance"] as const).map((label) => {
-                const bg = SUBGENRE_COLOR[label];
-                return (
-                  <div
-                    key={label}
-                    className="flex-1 flex items-center justify-center font-mono tracking-[1px]"
-                    style={{ background: bg, color: textOnBg(bg) }}
-                  >
-                    {label}
-                  </div>
-                );
-              })}
+              {(["Electropop", "EDM", "Techno", "Psytrance"] as const).map(
+                (label) => {
+                  const bg = SUBGENRE_COLOR[label];
+                  return (
+                    <div
+                      key={label}
+                      className="flex-1 flex items-center justify-center font-mono tracking-[1px]"
+                      style={{ background: bg, color: textOnBg(bg) }}
+                    >
+                      {label}
+                    </div>
+                  );
+                },
+              )}
             </div>
             <div className="flex justify-between mt-1 px-0.5">
               <span className="font-mono  text-muted opacity-50 tracking-[1px]">
@@ -120,8 +135,10 @@ export default function GenresPage() {
               </div>
               <p className="font-garamond italic text-muted leading-[1.5] ml-2 max-w-[340px]">
                 Crimson + gold yellow blend into{" "}
-                <span style={{ color: SUBGENRE_COLOR["Nu Metal"] }}>amber orange</span> — the hue
-                inherits influence from both parent genres.
+                <span style={{ color: SUBGENRE_COLOR["Nu Metal"] }}>
+                  amber orange
+                </span>{" "}
+                — the hue inherits influence from both parent genres.
               </p>
             </div>
           </div>
@@ -130,8 +147,118 @@ export default function GenresPage() {
         <div id="genre-wheel" className="w-full flex justify-center">
           <GenreWheel />
         </div>
+        <div className="w-full max-w-[860px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden px-[18px] py-4">
+          <div className="section-title-sub mb-2">Transitions</div>
+          <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-4 max-w-[760px]">
+            A transition node is a genre + intensity pair. From an outer genre,
+            valid outs are: same genre at next intensity, and next genre at same
+            intensity. Mainstream is special: it fans out to every genre at pop
+            intensity.
+          </p>
+          {(() => {
+            const cx = 210;
+            const cy = 210;
+            const ringRadius: Record<Intensity, number> = {
+              pop: 74,
+              soft: 104,
+              experimental: 134,
+              hardcore: 164,
+            };
+            const pointFor = (genre: GenreName, intensity: Intensity) => {
+              if (genre === "Mainstream") return { x: cx, y: cy };
+              const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
+              const angle = (idx / WHEEL_GENRES.length) * 360 - 90;
+              return polarToXY(cx, cy, ringRadius[intensity], angle);
+            };
+            const nodes = GENRE_NAMES.flatMap((genre) => {
+              const levels: Intensity[] =
+                genre === "Mainstream"
+                  ? (["pop"] as const)
+                  : (["pop", "soft", "experimental", "hardcore"] as const);
+              return levels.map((intensity) => ({
+                genre,
+                intensity,
+                colour:
+                  genre === "Mainstream"
+                    ? GENRE_THEMES.Mainstream.border
+                    : genreIntensityColor(
+                        genre as NonMainstreamGenreName,
+                        intensity,
+                      ),
+                ...pointFor(genre, intensity),
+              }));
+            });
+            const links = nodes.flatMap((from) =>
+              genreIntensityOut({
+                genre: from.genre,
+                intensity: from.intensity,
+              }).map((to) => ({
+                from,
+                to: { ...to, ...pointFor(to.genre, to.intensity) },
+                fanOut: from.genre === "Mainstream",
+              })),
+            );
+            return (
+              <div className="flex justify-center">
+                <svg width={420} height={420} viewBox="0 0 420 420">
+                  <defs>
+                    <marker
+                      id="genre-transition-arrow"
+                      markerWidth="6"
+                      markerHeight="6"
+                      refX="5"
+                      refY="3"
+                      orient="auto"
+                    >
+                      <path d="M0,0 L6,3 L0,6 Z" fill="rgba(255,255,255,.55)" />
+                    </marker>
+                  </defs>
+                  {Object.values(ringRadius).map((r) => (
+                    <circle
+                      key={`genre-transition-ring-${r}`}
+                      cx={cx}
+                      cy={cy}
+                      r={r}
+                      fill="none"
+                      stroke="rgba(255,255,255,.12)"
+                      strokeDasharray="4 6"
+                    />
+                  ))}
+                  {links.map((l, i) => (
+                    <line
+                      key={`genre-transition-link-${i}`}
+                      x1={l.from.x}
+                      y1={l.from.y}
+                      x2={l.to.x}
+                      y2={l.to.y}
+                      stroke={
+                        l.fanOut
+                          ? "rgba(255,255,255,.28)"
+                          : "rgba(255,255,255,.5)"
+                      }
+                      strokeWidth={l.fanOut ? 1 : 1.4}
+                      strokeDasharray={l.fanOut ? "3 4" : undefined}
+                      markerEnd="url(#genre-transition-arrow)"
+                    />
+                  ))}
+                  {nodes.map((n) => (
+                    <circle
+                      key={`${n.genre}-${n.intensity}`}
+                      cx={n.x}
+                      cy={n.y}
+                      r={n.genre === "Mainstream" ? 7 : 4.5}
+                      fill={n.colour}
+                      stroke="rgba(255,255,255,.35)"
+                      strokeWidth={1}
+                    />
+                  ))}
+                </svg>
+              </div>
+            );
+          })()}
+        </div>
 
-        <div id="world-map" className="w-full flex justify-center">
+        <div id="world-genres" className="w-full flex justify-center">
           <WorldSubgenreMap />
         </div>
 

@@ -5,10 +5,10 @@ import { scrollToCardsSection } from "@/lib/cards-nav-scroll";
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
-  { id: "genre-wheel", label: "Genre Wheel" },
-  { id: "world-map", label: "World map" },
-  { id: "genre-intensity", label: "Genre intensity" },
-  { id: "genre-themes", label: "Genre Themes" },
+  { id: "genre-wheel", label: "Wheel" },
+  { id: "world-genres", label: "World" },
+  { id: "genre-intensity", label: "Intensity" },
+  { id: "genre-themes", label: "Themes" },
   { id: "associations", label: "Associations" },
 ] as const;
 

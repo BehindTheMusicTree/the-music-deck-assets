@@ -74,6 +74,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "country",
+    n: "Gospel",
+    color: "#6e6e6a",
+    parentA: "USA",
+    intensity: "soft",
+  },
+  {
+    kind: "country",
     n: "French Variety",
     color: "#0055a4",
     parentA: "France",
@@ -445,6 +452,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Soul Jazz",
+    color: "#8a7a70",
+    parentA: "Vintage",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
     n: "Soul",
     color: "#9a8f60",
     parentA: "Vintage",
@@ -530,6 +544,13 @@ export const SUBGENRES: Subgenre[] = [
     color: "#6e5608",
     parentA: "Hip-Hop",
     intensity: "experimental",
+  },
+  {
+    kind: "genre",
+    n: "Gangsta Rap",
+    color: "#5e4608",
+    parentA: "Hip-Hop",
+    intensity: "hardcore",
   },
   {
     kind: "genre",

@@ -1035,17 +1035,4 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     ability: A,
     abilityDesc: P,
   },
-  {
-    rowKey: "wl-amen-brother",
-    id: 12116,
-    title: "Amen, Brother",
-    artist: "The Winstons",
-    year: 1969,
-    kind: "Planned",
-    genre: "Soul",
-    rarity: "Legendary",
-    pop: 8,
-    ability: A,
-    abilityDesc: P,
-  },
 ];

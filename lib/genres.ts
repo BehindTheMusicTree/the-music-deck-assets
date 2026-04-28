@@ -1,6 +1,7 @@
 import type { GenreTheme } from "@/lib/card-theme-types";
 import { COUNTRY_DATA, countryFlagForShell } from "@/lib/countries";
 import {
+  GENRE_NAMES,
   type AppGenreName,
   type GenreName,
   type NonMainstreamGenreName,
@@ -147,6 +148,123 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
   Classical: GENRE_THEMES.Classical,
   Vintage: GENRE_THEMES.Vintage,
 };
+
+/**
+ * Circular genre chain for wheel outer ring only.
+ * Mainstream is the hub and intentionally has no next pointer.
+ */
+export const GENRE_NEXT: Record<NonMainstreamGenreName, NonMainstreamGenreName> =
+  (() => {
+    const order: NonMainstreamGenreName[] = [
+      "Reggae/Dub",
+      "Electronic",
+      "Disco/Funk",
+      "Hip-Hop",
+      "Rock",
+      "Classical",
+      "Vintage",
+    ];
+    const out = {} as Record<
+      NonMainstreamGenreName,
+      NonMainstreamGenreName
+    >;
+    for (let i = 0; i < order.length; i += 1) {
+      const current = order[i];
+      const next = order[(i + 1) % order.length];
+      out[current] = next;
+    }
+    return out;
+  })();
+
+/** Reverse circular chain for wheel outer ring only. */
+export const GENRE_PREVIOUS: Record<
+  NonMainstreamGenreName,
+  NonMainstreamGenreName
+> = (() => {
+  const out = {} as Record<NonMainstreamGenreName, NonMainstreamGenreName>;
+  for (const current of Object.keys(GENRE_NEXT) as NonMainstreamGenreName[]) {
+    const next = GENRE_NEXT[current];
+    out[next] = current;
+  }
+  return out;
+})();
+
+export type GenreIntensityNode = {
+  genre: GenreName;
+  intensity: Intensity;
+};
+
+export type GenreIntensityDirection = "out" | "in";
+
+const INTENSITY_ORDER: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
+
+function nextIntensity(i: Intensity): Intensity | undefined {
+  const idx = INTENSITY_ORDER.indexOf(i);
+  if (idx < 0 || idx === INTENSITY_ORDER.length - 1) return undefined;
+  return INTENSITY_ORDER[idx + 1];
+}
+
+function genreIntensityKey(n: GenreIntensityNode): string {
+  return `${n.genre}|${n.intensity}`;
+}
+
+function uniqueGenreIntensity(nodes: GenreIntensityNode[]): GenreIntensityNode[] {
+  const seen = new Set<string>();
+  const out: GenreIntensityNode[] = [];
+  for (const n of nodes) {
+    const k = genreIntensityKey(n);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(n);
+  }
+  return out;
+}
+
+function allGenreIntensityNodes(): GenreIntensityNode[] {
+  const out: GenreIntensityNode[] = [];
+  for (const genre of GENRE_NAMES) {
+    const levels: Intensity[] =
+      genre === "Mainstream" ? ["pop"] : [...INTENSITY_ORDER];
+    for (const intensity of levels) {
+      out.push({ genre, intensity });
+    }
+  }
+  return out;
+}
+
+/**
+ * Transition rule helper.
+ * - Mainstream (hub): out -> all genres at `pop` intensity.
+ * - Other genres: out -> (same genre, next intensity) + (next genre, same intensity).
+ *   The "next genre, same intensity" term is intentionally de-duplicated if repeated.
+ */
+export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
+  if (node.genre === "Mainstream") {
+    return GENRE_NAMES.map((genre) => ({ genre, intensity: "pop" as Intensity }));
+  }
+  const out: GenreIntensityNode[] = [];
+  const up = nextIntensity(node.intensity);
+  if (up) out.push({ genre: node.genre, intensity: up });
+  const nextGenre = GENRE_NEXT[node.genre];
+  out.push({ genre: nextGenre, intensity: node.intensity });
+  out.push({ genre: nextGenre, intensity: node.intensity });
+  return uniqueGenreIntensity(out);
+}
+
+export function genreIntensityIn(node: GenreIntensityNode): GenreIntensityNode[] {
+  return allGenreIntensityNodes().filter((candidate) =>
+    genreIntensityOut(candidate).some(
+      (outNode) => genreIntensityKey(outNode) === genreIntensityKey(node),
+    ),
+  );
+}
+
+export function genreIntensityLinks(
+  node: GenreIntensityNode,
+  direction: GenreIntensityDirection = "out",
+): GenreIntensityNode[] {
+  return direction === "out" ? genreIntensityOut(node) : genreIntensityIn(node);
+}
 
 /** Weak vs / Advantage vs targets (canonical; aligns with Genres — Associations). */
 export const GENRE_BATTLE_MATCHUP: Record<
