@@ -50,7 +50,7 @@ export const USA_FLAG_PATH = "/cards/artworks/deck/flag-usa.webp";
 const PUERTO_RICO_FLAG_PATH = "/cards/artworks/deck/flag-puerto-rico.svg";
 const PUERTO_RICO_FLAG_URL = `url('${PUERTO_RICO_FLAG_PATH}')`;
 const ENGLAND_FLAG_DATA_URI =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23FFFFFF'/%3E%3Crect x='120' y='0' width='60' height='200' fill='%23C8102E'/%3E%3Crect x='0' y='70' width='300' height='60' fill='%23C8102E'/%3E%3C/svg%3E\")";
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Crect width='200' height='300' fill='%23FFFFFF'/%3E%3Crect x='80' y='0' width='40' height='300' fill='%23C8102E'/%3E%3Crect x='0' y='130' width='200' height='40' fill='%23C8102E'/%3E%3C/svg%3E\")";
 /** White Greek cross on red (civil / state flag style 3:2 for cards). */
 /** Greek cross inset from edges (federal / civil flag style, not edge-to-edge). */
 const SWITZERLAND_FLAG_DATA_URI =
@@ -59,11 +59,16 @@ const SWITZERLAND_FLAG_DATA_URI =
 export const COUNTRY_DATA: Record<string, CountryDef> = {
   USA: {
     theme: {
-      border: "#B22234", headerBg: "#060c18",
-      textMain: "#f1eee6", textBody: "#d2cfc6",
-      parchStrip: "#e8d6cf", parchAbility: "#efe1d9",
-      barPop: ["#B22234", "#e84455"], barExp: ["#3C3B6E", "#6060cc"],
-      barGlowPop: "rgba(178,34,52,.85)", barGlowExp: "rgba(96,96,204,.75)",
+      border: "#B22234",
+      headerBg: "#060c18",
+      textMain: "#f1eee6",
+      textBody: "#d2cfc6",
+      parchStrip: "#e8d6cf",
+      parchAbility: "#efe1d9",
+      barPop: ["#B22234", "#e84455"],
+      barExp: ["#3C3B6E", "#6060cc"],
+      barGlowPop: "rgba(178,34,52,.85)",
+      barGlowExp: "rgba(96,96,204,.75)",
       frameBorder: `url('${USA_FLAG_PATH}')`,
       frameBg: `url('${USA_FLAG_PATH}')`,
       frameRotateR90: true,
@@ -144,11 +149,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 
   France: {
     theme: {
-      border: "#0055A4", headerBg: "#04091a",
-      textMain: "#eceaf2", textBody: "#ceccd6",
-      parchStrip: "#d7dde0", parchAbility: "#e3e8ea",
-      barPop: ["#0055A4", "#4488ee"], barExp: ["#EF4135", "#ff7066"],
-      barGlowPop: "rgba(0,85,164,.85)", barGlowExp: "rgba(239,65,53,.75)",
+      border: "#0055A4",
+      headerBg: "#04091a",
+      textMain: "#eceaf2",
+      textBody: "#ceccd6",
+      parchStrip: "#d7dde0",
+      parchAbility: "#e3e8ea",
+      barPop: ["#0055A4", "#4488ee"],
+      barExp: ["#EF4135", "#ff7066"],
+      barGlowPop: "rgba(0,85,164,.85)",
+      barGlowExp: "rgba(239,65,53,.75)",
       frameBorder: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
       frameBg: cssVerticalTricolorFrance("#0055A4", "#FFFFFF", "#EF4135"),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
@@ -171,11 +181,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
 
   Spain: {
     theme: {
-      border: "#AA151B", headerBg: "#120606",
-      textMain: "#ffffff", textBody: "#dddddd",
-      parchStrip: "#e5d1cb", parchAbility: "#edded7",
-      barPop: ["#AA151B", "#e03030"], barExp: ["#2a6e2a", "#50b050"],
-      barGlowPop: "rgba(170,21,27,.85)", barGlowExp: "rgba(80,176,80,.75)",
+      border: "#AA151B",
+      headerBg: "#120606",
+      textMain: "#ffffff",
+      textBody: "#dddddd",
+      parchStrip: "#e5d1cb",
+      parchAbility: "#edded7",
+      barPop: ["#AA151B", "#e03030"],
+      barExp: ["#2a6e2a", "#50b050"],
+      barGlowPop: "rgba(170,21,27,.85)",
+      barGlowExp: "rgba(80,176,80,.75)",
       frameBorder: cssSpainHorizontal(),
       frameBg: cssSpainHorizontal(),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
@@ -367,7 +382,10 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
     },
     defaultCardShell: "flat",
     flag: {
-      flat: { border: SWITZERLAND_FLAG_DATA_URI, bg: SWITZERLAND_FLAG_DATA_URI },
+      flat: {
+        border: SWITZERLAND_FLAG_DATA_URI,
+        bg: SWITZERLAND_FLAG_DATA_URI,
+      },
       r90: { border: SWITZERLAND_FLAG_DATA_URI, bg: SWITZERLAND_FLAG_DATA_URI },
     },
   },
@@ -472,11 +490,16 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
   // Gwenn-ha-Du: 11 alternating black/white horizontal stripes + canton hermine
   Bretagne: {
     theme: {
-      border: "#222222", headerBg: "#0a0a0a",
-      textMain: "#f8f7f3", textBody: "#dddcd7",
-      parchStrip: "#dad2be", parchAbility: "#e4ddcb",
-      barPop: ["#333333", "#666666"], barExp: ["#999999", "#cccccc"],
-      barGlowPop: "rgba(50,50,50,.85)", barGlowExp: "rgba(180,180,180,.75)",
+      border: "#222222",
+      headerBg: "#0a0a0a",
+      textMain: "#f8f7f3",
+      textBody: "#dddcd7",
+      parchStrip: "#dad2be",
+      parchAbility: "#e4ddcb",
+      barPop: ["#333333", "#666666"],
+      barExp: ["#999999", "#cccccc"],
+      barGlowPop: "rgba(50,50,50,.85)",
+      barGlowExp: "rgba(180,180,180,.75)",
       frameBorder: cssBretagneRepeating(),
       frameBg: cssBretagneRepeating(),
       frameFilter: "saturate(0.78) brightness(0.9) contrast(1.03)",
@@ -495,12 +518,13 @@ export const COUNTRY_DATA: Record<string, CountryDef> = {
       },
     },
     pip: {
-      sym: "✦", color: "#222222", size: 17,
+      sym: "✦",
+      color: "#222222",
+      size: 17,
       svg: '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.1c.55 1.75 1.2 2.46 2.8 3.02-1.6.56-2.25 1.27-2.8 3.02-.55-1.75-1.2-2.46-2.8-3.02 1.6-.56 2.25-1.27 2.8-3.02zm0 6.65c.26.8.56 1.13 1.3 1.39-.74.26-1.04.59-1.3 1.39-.26-.8-.56-1.13-1.3-1.39.74-.26 1.04-.59 1.3-1.39z" fill="currentColor"/><circle cx="3.15" cy="8.95" r=".78" fill="currentColor"/><circle cx="8.85" cy="8.95" r=".78" fill="currentColor"/></svg>',
       bg: "repeating-linear-gradient(to bottom, #000000 0%, #000000 50%, #ffffff 50%, #ffffff 100%)",
     },
   },
-
 };
 
 // ---------------------------------------------------------------------------
@@ -524,9 +548,15 @@ export const COUNTRY_MAP_POINT = {
   "Puerto Rico": { lon: -66.45, lat: 18.22 },
   Russia: { lon: 37.62, lat: 55.75 },
   Bretagne: { lon: -3.2, lat: 48.15 },
-} as const satisfies Record<keyof typeof COUNTRY_DATA, { lon: number; lat: number }>;
+} as const satisfies Record<
+  keyof typeof COUNTRY_DATA,
+  { lon: number; lat: number }
+>;
 
-export function countryToMapSvg(lon: number, lat: number): { x: number; y: number } {
+export function countryToMapSvg(
+  lon: number,
+  lat: number,
+): { x: number; y: number } {
   return { x: lon + 180, y: 90 - lat };
 }
 
@@ -581,24 +611,32 @@ export const FLAG_BORDERS: Record<string, string> = Object.fromEntries(
 );
 
 export const FLAG_BG: Record<string, string> = Object.fromEntries(
-  Object.entries(COUNTRY_DATA)
-    .map(([k, v]) => {
-      const flat = resolveCountryFlagVariant(v, "flat");
-      return [k, flat.bg ?? flat.border] as const;
-    }),
+  Object.entries(COUNTRY_DATA).map(([k, v]) => {
+    const flat = resolveCountryFlagVariant(v, "flat");
+    return [k, flat.bg ?? flat.border] as const;
+  }),
 );
 
-export const FLAG_PIP_SYMBOL: Record<string, { sym: string; color: string; size?: number; svg?: string }> = Object.fromEntries(
+export const FLAG_PIP_SYMBOL: Record<
+  string,
+  { sym: string; color: string; size?: number; svg?: string }
+> = Object.fromEntries(
   Object.entries(COUNTRY_DATA)
     .filter(([, v]) => v.pip)
-    .map(([k, v]) => [k, { sym: v.pip!.sym, color: v.pip!.color, size: v.pip!.size, svg: v.pip!.svg }]),
-);
-
-export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
-  Object.entries(COUNTRY_DATA)
     .map(([k, v]) => [
       k,
-      v.pip?.bg ?? resolveCountryFlagVariant(v, "flat").border,
+      {
+        sym: v.pip!.sym,
+        color: v.pip!.color,
+        size: v.pip!.size,
+        svg: v.pip!.svg,
+      },
     ]),
 );
 
+export const FLAG_PIP_BG: Record<string, string> = Object.fromEntries(
+  Object.entries(COUNTRY_DATA).map(([k, v]) => [
+    k,
+    v.pip?.bg ?? resolveCountryFlagVariant(v, "flat").border,
+  ]),
+);

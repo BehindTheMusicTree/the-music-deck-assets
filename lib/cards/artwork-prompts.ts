@@ -353,6 +353,8 @@ Les deux personnages deviennent deux ouvriers blancs, silhouettes stylisées et 
 Ils sont positionnés exactement comme dans la scène d'origine, le long de la route en longueur, vus de haut.
 La couleur dominante est un rouge très léger, provenant d'une couche de soleil qui teinte doucement la scène.
 Tous les autres éléments de composition, d'angle, de placement et de structure restent identiques.”`,
+  106: `🎨 Magic-Style Illustration Prompt — “Psyché Fatigue — 70s Red Drift (Close-Up Realistic)” (réaliste, années 70, buste, éléments psychés)
+“High-detail realistic illustration in a subtle 1970s aesthetic, showing a stylized, anonymous person seen from the bust up, holding their head with both hands in a gesture of fatigue or mental overload. Vertical composition. The bottom 60% of the artwork will be covered, so place all key visual elements in the upper third. The figure has 1970s visual cues: natural hair texture, warm retro lighting, soft film grain, muted vintage tones, and period-appropriate clothing shapes, without resembling any real person. From the figure’s head, depict psychedelic elements emerging: swirling organic shapes, soft fractal curves, drifting color ribbons, and abstract patterns reminiscent of 70s visual culture. These elements should feel dreamlike, symbolic, and slightly chaotic. The overall palette is neutral with a very light red dominant tint, like a faint sunset glow touching the scene. Add subtle film grain, warm haze, and gentle glowing particles around the psychedelic forms. Mood: introspective, surreal, emotional, vintage. No text, no symbols, no logos.”`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

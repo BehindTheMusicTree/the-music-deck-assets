@@ -12,6 +12,7 @@
   flex-direction: column;
   flex-shrink: 0;
   cursor: pointer;
+  isolation: isolate;
   transition:
     transform 0.15s,
     box-shadow 0.15s;
@@ -681,6 +682,29 @@
     8px 50%
   );
 }
+/* Transparent punch-through at the concave notch of each transition strip.
+   mix-blend-mode: destination-out erases the card (border + background) at the notch void,
+   so the page background shows through. Requires isolation: isolate on .card. */
+.notchMask {
+  position: absolute;
+  top: calc(44px - (13px / 2));
+  width: 8px;
+  height: 13px;
+  background: black;
+  mix-blend-mode: destination-out;
+  z-index: 25;
+  pointer-events: none;
+  /* triangle matching the concave left notch of the strip clip-path */
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+}
+.notchMaskIn {
+  left: -10px;
+}
+.notchMaskOut {
+  /* strip left edge = 100% - 37% (mirrors the right: -10px + width: calc(37% + 10px)) */
+  left: calc(100% - 37%);
+}
+
 .transitionStripText {
   display: block;
   width: 100%;

@@ -639,24 +639,30 @@ export default function Card({
 
       {/* Transition strips — positioned relative to the card/face, straddle header/artwork boundary */}
       {transitionIn && (
-        <div
-          className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-          style={{ background: transitionIn.themeColor }}
-        >
-          <span className={styles.transitionStripText}>
-            {transitionIn.title}
-          </span>
-        </div>
+        <>
+          <div
+            className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+            style={{ background: transitionIn.themeColor }}
+          >
+            <span className={styles.transitionStripText}>
+              {transitionIn.title}
+            </span>
+          </div>
+          <div className={`${styles.notchMask} ${styles.notchMaskIn}`} />
+        </>
       )}
       {transitionOut && (
-        <div
-          className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-          style={{ background: transitionOut.themeColor }}
-        >
-          <span className={styles.transitionStripText}>
-            {transitionOut.title}
-          </span>
-        </div>
+        <>
+          <div
+            className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
+            style={{ background: transitionOut.themeColor }}
+          >
+            <span className={styles.transitionStripText}>
+              {transitionOut.title}
+            </span>
+          </div>
+          <div className={`${styles.notchMask} ${styles.notchMaskOut}`} />
+        </>
       )}
     </>
   );
