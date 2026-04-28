@@ -155,8 +155,8 @@ export default function GenresPage() {
                 (previous(A), B).
               </li>
               <li>
-                Neighbour genre branches at lower intensity:
-                (next(A), B - 1) and (previous(A), B - 1).
+                Neighbour genre branches at lower intensity: (next(A), B - 1)
+                and (previous(A), B - 1).
               </li>
               <li>
                 Some subgenres add an influence bridge (bidirectional). Example:

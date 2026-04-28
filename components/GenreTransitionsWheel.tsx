@@ -37,6 +37,10 @@ type Node = {
 type HoverState = {
   node: Node;
   subgenreLabel?: string;
+  bridge?: {
+    from: Node;
+    to: Node;
+  };
 };
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
@@ -85,7 +89,7 @@ function isSameNode(
 }
 
 function circleRadiusForNode(n: { genre: GenreName }) {
-  return n.genre === "Mainstream" ? 20 : 12;
+  return n.genre === "Mainstream" ? 24 : 16;
 }
 
 function lineToCircleEdge(
@@ -160,15 +164,27 @@ export default function GenreTransitionsWheel() {
       nodes.map((n) => [`${n.genre}|${n.intensity}`, n]),
     );
 
-    const subgenreNodes = SUBGENRES.filter((s) => s.kind === "genre")
+    const subgenreNodes = SUBGENRES.filter(
+      (s) => s.kind === "genre" && Boolean(s.influence),
+    )
       .map((s) => {
         const placement = subgenrePlacement.get(s.n);
         if (!placement) return null;
         const r = wheelSubgenreRadius(s.intensity) + placement.rOffset;
         const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
         const node = byKey[`${s.parentA}|${s.intensity}`];
-        if (!node) return null;
-        return { label: s.n, x: pos.x, y: pos.y, node, colour: node.colour };
+        const influenceNode = s.influence
+          ? byKey[`${s.influence.genre}|${s.influence.intensity}`]
+          : null;
+        if (!node || !influenceNode) return null;
+        return {
+          label: s.n,
+          x: pos.x,
+          y: pos.y,
+          node,
+          influenceNode,
+          colour: node.colour,
+        };
       })
       .filter((s): s is NonNullable<typeof s> => s !== null);
 
@@ -179,25 +195,29 @@ export default function GenreTransitionsWheel() {
   const hoveredOut = hoveredNode ? genreIntensityOut(hoveredNode) : [];
   const hoveredIn = hoveredNode ? genreIntensityIn(hoveredNode) : [];
 
-  const outLinks = hoveredNode
-    ? hoveredOut
+  const outLinks = hovered?.bridge
+    ? [hovered.bridge]
+    : hoveredNode
+      ? hoveredOut
         .map((to) => {
           const toNode = data.byKey[`${to.genre}|${to.intensity}`];
           if (!toNode || isSameNode(hoveredNode, toNode)) return null;
           return { from: hoveredNode, to: toNode };
         })
         .filter((l): l is NonNullable<typeof l> => l !== null)
-    : [];
+      : [];
 
-  const inLinks = hoveredNode
-    ? hoveredIn
+  const inLinks = hovered?.bridge
+    ? [{ from: hovered.bridge.to, to: hovered.bridge.from }]
+    : hoveredNode
+      ? hoveredIn
         .map((from) => {
           const fromNode = data.byKey[`${from.genre}|${from.intensity}`];
           if (!fromNode || isSameNode(hoveredNode, fromNode)) return null;
           return { from: fromNode, to: hoveredNode };
         })
         .filter((l): l is NonNullable<typeof l> => l !== null)
-    : [];
+      : [];
 
   const wheelSlice = 360 / WHEEL_GENRES.length;
   const intensityBands: Array<{
@@ -392,12 +412,18 @@ export default function GenreTransitionsWheel() {
             key={`subgenre-${s.label}`}
             cx={s.x}
             cy={s.y}
-            r={5}
+            r={8}
             fill={s.colour}
             stroke="rgba(255,255,255,.55)"
             strokeWidth={1.2}
             style={{ cursor: "pointer" }}
-            onMouseEnter={() => setHovered({ node: s.node, subgenreLabel: s.label })}
+            onMouseEnter={() =>
+              setHovered({
+                node: s.node,
+                subgenreLabel: s.label,
+                bridge: { from: s.node, to: s.influenceNode },
+              })
+            }
             onMouseLeave={() => setHovered(null)}
           />
         ))}

@@ -26,7 +26,11 @@ import {
   WORLD_THEMES,
   genreIntensityColor,
 } from "@/lib/genres";
-import type { GenreName, Intensity, NonMainstreamGenreName } from "@/lib/genres";
+import type {
+  GenreName,
+  Intensity,
+  NonMainstreamGenreName,
+} from "@/lib/genres";
 import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
 
 type WheelTileFocus =
@@ -84,7 +88,7 @@ function annularSectorPath(
   const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
   const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
   const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
-  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const span = (((endAngleDeg - startAngleDeg) % 360) + 360) % 360;
   const largeArc = span > 180 ? 1 : 0;
   if (innerR <= 0) {
     return [
@@ -270,7 +274,12 @@ export default function GenreWheel() {
     opacity: number;
   }> = [
     { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.22 },
-    { intensity: "soft", inner: R_POP_SOFT_LINE, outer: R_SOFT_EXPERIMENTAL_LINE, opacity: 0.24 },
+    {
+      intensity: "soft",
+      inner: R_POP_SOFT_LINE,
+      outer: R_SOFT_EXPERIMENTAL_LINE,
+      opacity: 0.24,
+    },
     {
       intensity: "experimental",
       inner: R_SOFT_EXPERIMENTAL_LINE,
@@ -724,9 +733,10 @@ export default function GenreWheel() {
                               </dt>
                               <dd className="m-0" style={{ color: ink }}>
                                 {wheelFocus.influence.genre} (
-                                {formatIntensity(wheelFocus.influence.intensity)}
-                                , 33%
-                                )
+                                {formatIntensity(
+                                  wheelFocus.influence.intensity,
+                                )}
+                                , 33% )
                               </dd>
                             </div>
                           ) : null}

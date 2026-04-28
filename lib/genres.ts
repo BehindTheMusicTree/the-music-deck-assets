@@ -153,28 +153,27 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
  * Circular genre chain for wheel outer ring only.
  * Mainstream is the hub and intentionally has no next pointer.
  */
-export const GENRE_NEXT: Record<NonMainstreamGenreName, NonMainstreamGenreName> =
-  (() => {
-    const order: NonMainstreamGenreName[] = [
-      "Reggae/Dub",
-      "Electronic",
-      "Disco/Funk",
-      "Hip-Hop",
-      "Rock",
-      "Classical",
-      "Vintage",
-    ];
-    const out = {} as Record<
-      NonMainstreamGenreName,
-      NonMainstreamGenreName
-    >;
-    for (let i = 0; i < order.length; i += 1) {
-      const current = order[i];
-      const next = order[(i + 1) % order.length];
-      out[current] = next;
-    }
-    return out;
-  })();
+export const GENRE_NEXT: Record<
+  NonMainstreamGenreName,
+  NonMainstreamGenreName
+> = (() => {
+  const order: NonMainstreamGenreName[] = [
+    "Reggae/Dub",
+    "Electronic",
+    "Disco/Funk",
+    "Hip-Hop",
+    "Rock",
+    "Classical",
+    "Vintage",
+  ];
+  const out = {} as Record<NonMainstreamGenreName, NonMainstreamGenreName>;
+  for (let i = 0; i < order.length; i += 1) {
+    const current = order[i];
+    const next = order[(i + 1) % order.length];
+    out[current] = next;
+  }
+  return out;
+})();
 
 /** Reverse circular chain for wheel outer ring only. */
 export const GENRE_PREVIOUS: Record<
@@ -196,7 +195,12 @@ export type GenreIntensityNode = {
 
 export type GenreIntensityDirection = "out" | "in";
 
-const INTENSITY_ORDER: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
+const INTENSITY_ORDER: Intensity[] = [
+  "pop",
+  "soft",
+  "experimental",
+  "hardcore",
+];
 
 function nextIntensity(i: Intensity): Intensity | undefined {
   const idx = INTENSITY_ORDER.indexOf(i);
@@ -214,7 +218,9 @@ function genreIntensityKey(n: GenreIntensityNode): string {
   return `${n.genre}|${n.intensity}`;
 }
 
-function uniqueGenreIntensity(nodes: GenreIntensityNode[]): GenreIntensityNode[] {
+function uniqueGenreIntensity(
+  nodes: GenreIntensityNode[],
+): GenreIntensityNode[] {
   const seen = new Set<string>();
   const out: GenreIntensityNode[] = [];
   for (const n of nodes) {
@@ -238,39 +244,40 @@ function allGenreIntensityNodes(): GenreIntensityNode[] {
   return out;
 }
 
-const INFLUENCE_TRANSITION_BRIDGES: Record<string, GenreIntensityNode[]> = (() => {
-  const bridgeTargets = new Map<string, GenreIntensityNode[]>();
+const INFLUENCE_TRANSITION_BRIDGES: Record<string, GenreIntensityNode[]> =
+  (() => {
+    const bridgeTargets = new Map<string, GenreIntensityNode[]>();
 
-  const addBridge = (from: GenreIntensityNode, to: GenreIntensityNode) => {
-    const key = genreIntensityKey(from);
-    const list = bridgeTargets.get(key) ?? [];
-    list.push(to);
-    bridgeTargets.set(key, list);
-  };
-
-  for (const sub of SUBGENRES) {
-    if (sub.kind !== "genre" || !sub.influence) continue;
-    const baseNode: GenreIntensityNode = {
-      genre: sub.parentA,
-      intensity: sub.intensity,
-    };
-    const influenceNode: GenreIntensityNode = {
-      genre: sub.influence.genre,
-      intensity: sub.influence.intensity,
+    const addBridge = (from: GenreIntensityNode, to: GenreIntensityNode) => {
+      const key = genreIntensityKey(from);
+      const list = bridgeTargets.get(key) ?? [];
+      list.push(to);
+      bridgeTargets.set(key, list);
     };
 
-    // Influence bridges are bidirectional by design.
-    addBridge(baseNode, influenceNode);
-    addBridge(influenceNode, baseNode);
-  }
+    for (const sub of SUBGENRES) {
+      if (sub.kind !== "genre" || !sub.influence) continue;
+      const baseNode: GenreIntensityNode = {
+        genre: sub.parentA,
+        intensity: sub.intensity,
+      };
+      const influenceNode: GenreIntensityNode = {
+        genre: sub.influence.genre,
+        intensity: sub.influence.intensity,
+      };
 
-  return Object.fromEntries(
-    Array.from(bridgeTargets.entries()).map(([key, nodes]) => [
-      key,
-      uniqueGenreIntensity(nodes),
-    ]),
-  );
-})();
+      // Influence bridges are bidirectional by design.
+      addBridge(baseNode, influenceNode);
+      addBridge(influenceNode, baseNode);
+    }
+
+    return Object.fromEntries(
+      Array.from(bridgeTargets.entries()).map(([key, nodes]) => [
+        key,
+        uniqueGenreIntensity(nodes),
+      ]),
+    );
+  })();
 
 /**
  * Transition rule helper.
@@ -278,9 +285,14 @@ const INFLUENCE_TRANSITION_BRIDGES: Record<string, GenreIntensityNode[]> = (() =
  * - Other genres: out -> (same genre, next intensity) + (next genre, same intensity).
  *   The "next genre, same intensity" term is intentionally de-duplicated if repeated.
  */
-export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
+export function genreIntensityOut(
+  node: GenreIntensityNode,
+): GenreIntensityNode[] {
   if (node.genre === "Mainstream") {
-    return GENRE_NAMES.map((genre) => ({ genre, intensity: "pop" as Intensity }));
+    return GENRE_NAMES.map((genre) => ({
+      genre,
+      intensity: "pop" as Intensity,
+    }));
   }
   const out: GenreIntensityNode[] = [];
   out.push({ genre: node.genre, intensity: node.intensity });
@@ -301,7 +313,9 @@ export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[
   return uniqueGenreIntensity(out);
 }
 
-export function genreIntensityIn(node: GenreIntensityNode): GenreIntensityNode[] {
+export function genreIntensityIn(
+  node: GenreIntensityNode,
+): GenreIntensityNode[] {
   return allGenreIntensityNodes().filter((candidate) =>
     genreIntensityOut(candidate).some(
       (outNode) => genreIntensityKey(outNode) === genreIntensityKey(node),
