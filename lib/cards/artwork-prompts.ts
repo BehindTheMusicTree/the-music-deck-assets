@@ -380,6 +380,11 @@ The zombie on the left must be pushing a shopping cart.
 The scene should feel surreal and emotionally detached, echoing a sense of absurdity and collective madness in a world that has ended.
 Color palette: very light red dominant, like a washed-out, dusty glow from a burnt sky. Add soft haze, drifting dust, cracked asphalt reflections, and subtle grain for a desolate retro feel.
 Mood: melancholic, surreal, chaotic, emotionally distant. No text, no symbols, no logos.”`,
+  111: `Vertical 2:3 high-detail illustration. Draw only within the top 40% of the frame where all key visual elements must be concentrated. Keep the bottom 60% mostly empty, soft, and out-of-focus (blurred atmosphere, minimal detail, no important subject matter) to preserve card UI readability. Subjects should have no resemblance to celebrities. No text, no symbols, no logos.
+
+Primary style anchor with dominant colour #6d88da. Intensity mood: Soft. Style: Futurist techno-ritual concept art. Guidance: Synthetic digital render language, hard-surface geometric clarity, cool cyan/blue-violet grading, emissive light accents, smooth gradients, controlled bloom, and near-clinical edge precision; prioritise engineered cleanliness over painterly texture.
+
+Subject: un stade olympique, des humain qui regarde des robots faire de l'athletisme en les encourageant en criant et levant les bras. angle de vue depuis les tribunes..`,
 };
 
 /** Text shown on the card: explicit `artworkPrompt` on data, else the bundled map by card id. */

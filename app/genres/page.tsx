@@ -6,10 +6,19 @@ import GenreThemePreview from "@/components/GenreThemePreview";
 import IntensityGauge from "@/components/IntensityGauge";
 import {
   APP_GENRE_NAMES,
+  APP_GENRE_THEMES,
+  SUBGENRE_COLOR,
   appGenreIntensity,
   displayGenreLabel,
   intensityLevelIndex,
 } from "@/lib/genres";
+
+function textOnBg(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? "#0a1020" : "#c8d8f0";
+}
 
 export default function GenresPage() {
   return (
@@ -42,21 +51,18 @@ export default function GenresPage() {
           <div className="px-[18px] pb-4">
             <div className="section-title-sub mb-2">Example — Electronic</div>
             <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
-              {[
-                { label: "Electropop", color: "#b8d4f0", text: "#0a1020" },
-                { label: "New Wave", color: "#c8d8f0", text: "#0a1020" },
-                { label: "EDM", color: "#5070d0" },
-                { label: "Techno", color: "#2850c8" },
-                { label: "Psytrance", color: "#080f2a" },
-              ].map(({ label, color, text }) => (
-                <div
-                  key={label}
-                  className="flex-1 flex items-center justify-center font-mono  tracking-[1px]"
-                  style={{ background: color, color: text ?? "#c8d8f0" }}
-                >
-                  {label}
-                </div>
-              ))}
+              {(["Electropop", "EDM", "Techno", "Psytrance"] as const).map((label) => {
+                const bg = SUBGENRE_COLOR[label];
+                return (
+                  <div
+                    key={label}
+                    className="flex-1 flex items-center justify-center font-mono tracking-[1px]"
+                    style={{ background: bg, color: textOnBg(bg) }}
+                  >
+                    {label}
+                  </div>
+                );
+              })}
             </div>
             <div className="flex justify-between mt-1 px-0.5">
               <span className="font-mono  text-muted opacity-50 tracking-[1px]">
@@ -72,15 +78,17 @@ export default function GenresPage() {
         <div className="w-full max-w-[860px] mt-2 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-hidden">
           {/* Mix rule */}
           <div className="px-[18px] py-4">
-            <div className="section-title-sub mb-3">Cross-genre colour mixing</div>
+            <div className="section-title-sub mb-3">
+              Cross-genre colour mixing
+            </div>
             <div className="flex items-center gap-3 flex-wrap">
               {/* Metal swatch */}
               <div className="flex flex-col items-center gap-1">
                 <div
                   className="w-10 h-10 rounded-[4px]"
-                  style={{ background: "#7a0810" }}
+                  style={{ background: SUBGENRE_COLOR["Metal"] }}
                 />
-                <span className="font-mono  tracking-[1px] text-muted">
+                <span className="font-mono tracking-[1px] text-muted">
                   Metal
                 </span>
               </div>
@@ -91,9 +99,9 @@ export default function GenresPage() {
               <div className="flex flex-col items-center gap-1">
                 <div
                   className="w-10 h-10 rounded-[4px]"
-                  style={{ background: "#c8960a" }}
+                  style={{ background: APP_GENRE_THEMES["Hip-Hop"].border }}
                 />
-                <span className="font-mono  tracking-[1px] text-muted">
+                <span className="font-mono tracking-[1px] text-muted">
                   Hip-Hop
                 </span>
               </div>
@@ -104,15 +112,15 @@ export default function GenresPage() {
               <div className="flex flex-col items-center gap-1">
                 <div
                   className="w-10 h-10 rounded-[4px]"
-                  style={{ background: "#b84008" }}
+                  style={{ background: SUBGENRE_COLOR["Nu Metal"] }}
                 />
-                <span className="font-mono  tracking-[1px] text-muted">
+                <span className="font-mono tracking-[1px] text-muted">
                   Nu Metal
                 </span>
               </div>
               <p className="font-garamond italic text-muted leading-[1.5] ml-2 max-w-[340px]">
                 Crimson + gold yellow blend into{" "}
-                <span style={{ color: "#c85010" }}>amber orange</span> — the hue
+                <span style={{ color: SUBGENRE_COLOR["Nu Metal"] }}>amber orange</span> — the hue
                 inherits influence from both parent genres.
               </p>
             </div>
@@ -193,10 +201,10 @@ export default function GenresPage() {
         <div id="genre-themes" className="w-full max-w-[1100px] mt-4 mb-10">
           <div className="section-title mb-2">Genre Themes</div>
           <p className="font-garamond italic text-muted text-[16px] leading-[1.45] mb-6 max-w-[600px]">
-            Each genre defines a full colour theme used across the card frame. You
-            can preview a subgenre alone, a country or region alone, or combine a
-            subgenre with a country to apply the World/Genre border rule
-            automatically.
+            Each genre defines a full colour theme used across the card frame.
+            You can preview a subgenre alone, a country or region alone, or
+            combine a subgenre with a country to apply the World/Genre border
+            rule automatically.
           </p>
           <GenreThemePreview />
         </div>

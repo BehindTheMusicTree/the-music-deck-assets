@@ -410,6 +410,13 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "French House",
+    color: "#5b6ec8",
+    parentA: "Electronic",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
     n: "Progressive House",
     color: "#3848b0",
     parentA: "Electronic",

@@ -1658,4 +1658,20 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     catalogNumber: 19,
     catalogSeriesLabel: "Electronic",
   },
+  {
+    id: 111,
+    title: "Harder, Better, Faster, Stronger",
+    artist: "Daft Punk",
+    year: 2001,
+    genre: "French House",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.daft-punk-harder-better-faster-stronger-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.daft-punk-harder-better-faster-stronger-v1.png"],
+    catalogNumber: 20,
+    catalogSeriesLabel: "Electronic",
+  },
 ];

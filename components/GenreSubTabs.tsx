@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { scrollToCardsSection } from "@/lib/cards-nav-scroll";
 
 const SECTIONS = [
   { id: "overview", label: "Overview" },
@@ -43,10 +44,7 @@ export default function GenreSubTabs() {
                 const el = document.getElementById(id);
                 const nav = (e.currentTarget as HTMLElement).closest("nav");
                 if (!el) return;
-                const stickyOffset =
-                  (document.querySelector("header")?.offsetHeight ?? 0) +
-                  (nav?.offsetHeight ?? 0);
-                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - stickyOffset, behavior: "smooth" });
+                scrollToCardsSection(el, nav);
               }}
               className={[
                 "tab-font-13 whitespace-nowrap font-mono tracking-[0.12em] px-2.5 sm:px-3 py-2 no-underline border-b-2 -mb-px transition-colors",

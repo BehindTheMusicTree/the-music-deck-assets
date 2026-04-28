@@ -26,6 +26,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.carlos-santana-maria-maria-v1.png": "2026-04-23T13:45:17",
   "artwork.carmina-burana-v1.png": "2026-04-23T13:45:17",
   "artwork.celine-dion-my-hearth-will-go-on-v1.png": "2026-04-23T13:45:17",
+  "artwork.daft-punk-harder-better-faster-stronger-v1.png": "2026-04-28T16:08:13",
   "artwork.daft-punk-one-more-time-v1.png": "2026-04-23T13:45:17",
   "artwork.danau-latribu-de-dana-v1.png": "2026-04-23T13:45:17",
   "artwork.darude-sandstorm-v1.png": "2026-04-26T13:29:37",
