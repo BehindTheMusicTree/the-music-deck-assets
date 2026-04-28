@@ -1712,7 +1712,7 @@ export const DECK_SPOTLIGHT_CARDS: CardData[] = [
     title: "Amen, Brother",
     artist: "The Winstons",
     year: 1969,
-    genre: "Breakbeat Funk",
+    genre: "Early Funk",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,

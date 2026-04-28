@@ -12,7 +12,6 @@ export function intensityLevelIndex(level: Intensity): number {
 
 type CountryName = keyof typeof COUNTRY_DATA;
 
-
 interface BaseSubgenre {
   n: string;
   /** Deprecated: no longer used to resolve theme colour. */
@@ -327,7 +326,7 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
-    n: "Breakbeat Funk",
+    n: "Early Funk",
     color: "#b06f8e",
     parentA: "Disco/Funk",
     intensity: "experimental",

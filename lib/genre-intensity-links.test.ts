@@ -39,4 +39,24 @@ describe("genre intensity links", () => {
     expect(incoming).toContainEqual({ genre: "Mainstream", intensity: "pop" });
     expect(incoming).toContainEqual({ genre: "Hip-Hop", intensity: "pop" });
   });
+
+  it("adds bidirectional influence bridges from subgenre metadata", () => {
+    const electronicExperimentalOut = genreIntensityOut({
+      genre: "Electronic",
+      intensity: "experimental",
+    });
+    expect(electronicExperimentalOut).toContainEqual({
+      genre: "Hip-Hop",
+      intensity: "experimental",
+    });
+
+    const hipHopExperimentalOut = genreIntensityOut({
+      genre: "Hip-Hop",
+      intensity: "experimental",
+    });
+    expect(hipHopExperimentalOut).toContainEqual({
+      genre: "Electronic",
+      intensity: "experimental",
+    });
+  });
 });

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import {
-  GENRE_NAMES,
   GENRE_THEMES,
+  SUBGENRES,
   WHEEL_GENRES,
   genreIntensityColor,
   genreIntensityIn,
@@ -12,6 +12,19 @@ import {
   type Intensity,
   type NonMainstreamGenreName,
 } from "@/lib/genres";
+import {
+  R_EXPERIMENTAL_HARDCORE_LINE,
+  R_POP_SOFT_LINE,
+  R_SOFT_EXPERIMENTAL_LINE,
+  WHEEL_CX,
+  WHEEL_CY,
+  WHEEL_RADIAL_DIVIDER_EXTRA,
+  WHEEL_VIEWBOX_HEIGHT,
+  WHEEL_VIEWBOX_Y_TRIM,
+  WHEEL_VIEW_SIZE,
+  wheelSubgenreRadius,
+} from "@/lib/genre-wheel-geometry";
+import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
 
 type Node = {
   genre: GenreName;
@@ -21,34 +34,64 @@ type Node = {
   y: number;
 };
 
-const TRANSITION_WHEEL_SCALE = 1.0;
-const TRANSITION_WHEEL_BASE_CENTER = 630;
-const TRANSITION_WHEEL_BASE_OUTER_LABEL_MARGIN = 26;
-const TRANSITION_WHEEL_BASE_RING_RADIUS: Record<Intensity, number> = {
-  pop: 225,
-  soft: 330,
-  experimental: 435,
-  hardcore: 540,
+type HoverState = {
+  node: Node;
+  subgenreLabel?: string;
 };
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = (angleDeg * Math.PI) / 180;
   const x = cx + Math.cos(rad) * r;
   const y = cy + Math.sin(rad) * r;
-  return {
-    x: Number(x.toFixed(4)),
-    y: Number(y.toFixed(4)),
-  };
+  return { x: Number(x.toFixed(4)), y: Number(y.toFixed(4)) };
 }
 
-function circleRadiusForNode(n: { genre: GenreName }): number {
-  return n.genre === "Mainstream" ? 20 : 14;
+function annularSectorPath(
+  cx: number,
+  cy: number,
+  innerR: number,
+  outerR: number,
+  startAngleDeg: number,
+  endAngleDeg: number,
+): string {
+  const outerStart = polarToXY(cx, cy, outerR, startAngleDeg);
+  const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
+  const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
+  const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
+  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const largeArc = span > 180 ? 1 : 0;
+  if (innerR <= 0) {
+    return [
+      `M ${cx} ${cy}`,
+      `L ${outerStart.x} ${outerStart.y}`,
+      `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+      "Z",
+    ].join(" ");
+  }
+  return [
+    `M ${outerStart.x} ${outerStart.y}`,
+    `A ${outerR} ${outerR} 0 ${largeArc} 1 ${outerEnd.x} ${outerEnd.y}`,
+    `L ${innerEnd.x} ${innerEnd.y}`,
+    `A ${innerR} ${innerR} 0 ${largeArc} 0 ${innerStart.x} ${innerStart.y}`,
+    "Z",
+  ].join(" ");
+}
+
+function isSameNode(
+  a: { genre: GenreName; intensity: Intensity },
+  b: { genre: GenreName; intensity: Intensity },
+) {
+  return a.genre === b.genre && a.intensity === b.intensity;
+}
+
+function circleRadiusForNode(n: { genre: GenreName }) {
+  return n.genre === "Mainstream" ? 20 : 12;
 }
 
 function lineToCircleEdge(
   from: { genre: GenreName; x: number; y: number },
   to: { genre: GenreName; x: number; y: number },
-): { x1: number; y1: number; x2: number; y2: number } {
+) {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const d = Math.hypot(dx, dy) || 1;
@@ -68,119 +111,131 @@ function labelNode(n: { genre: GenreName; intensity: Intensity }) {
   return `${n.genre} (${n.intensity})`;
 }
 
-function colourForNode(n: { genre: GenreName; intensity: Intensity }): string {
+function colourForNode(n: { genre: GenreName; intensity: Intensity }) {
   return n.genre === "Mainstream"
     ? GENRE_THEMES.Mainstream.border
     : genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity);
 }
 
-function isSameNode(
-  a: { genre: GenreName; intensity: Intensity },
-  b: { genre: GenreName; intensity: Intensity },
-): boolean {
-  return a.genre === b.genre && a.intensity === b.intensity;
-}
-
 export default function GenreTransitionsWheel() {
-  const [hovered, setHovered] = useState<Node | null>(null);
+  const [hovered, setHovered] = useState<HoverState | null>(null);
+  const subgenrePlacement = useMemo(
+    () => computeWheelSubgenrePlacements(SUBGENRES),
+    [],
+  );
 
-  const wheel = useMemo(() => {
-    const cx = Math.round(
-      TRANSITION_WHEEL_BASE_CENTER * TRANSITION_WHEEL_SCALE,
-    );
-    const cy = Math.round(
-      TRANSITION_WHEEL_BASE_CENTER * TRANSITION_WHEEL_SCALE,
-    );
-    const ringRadius: Record<Intensity, number> = {
-      pop: Math.round(
-        TRANSITION_WHEEL_BASE_RING_RADIUS.pop * TRANSITION_WHEEL_SCALE,
-      ),
-      soft: Math.round(
-        TRANSITION_WHEEL_BASE_RING_RADIUS.soft * TRANSITION_WHEEL_SCALE,
-      ),
-      experimental: Math.round(
-        TRANSITION_WHEEL_BASE_RING_RADIUS.experimental * TRANSITION_WHEEL_SCALE,
-      ),
-      hardcore: Math.round(
-        TRANSITION_WHEEL_BASE_RING_RADIUS.hardcore * TRANSITION_WHEEL_SCALE,
-      ),
-    };
-    const outerLabelMargin = Math.round(
-      TRANSITION_WHEEL_BASE_OUTER_LABEL_MARGIN * TRANSITION_WHEEL_SCALE,
-    );
-    const svgSize = Math.round((ringRadius.hardcore + outerLabelMargin + 64) * 2);
+  const data = useMemo(() => {
+    const intensityLevels: Intensity[] = [
+      "pop",
+      "soft",
+      "experimental",
+      "hardcore",
+    ];
     const pointFor = (genre: GenreName, intensity: Intensity) => {
-      if (genre === "Mainstream") return { x: cx, y: cy };
+      if (genre === "Mainstream") return { x: WHEEL_CX, y: WHEEL_CY };
       const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
       const angle = (idx / WHEEL_GENRES.length) * 360 - 90;
-      return polarToXY(cx, cy, ringRadius[intensity], angle);
+      return polarToXY(WHEEL_CX, WHEEL_CY, wheelSubgenreRadius(intensity), angle);
     };
-    const nodes: Node[] = GENRE_NAMES.flatMap((genre) => {
-      const levels: Intensity[] =
-        genre === "Mainstream"
-          ? (["pop"] as const)
-          : (["pop", "soft", "experimental", "hardcore"] as const);
-      return levels.map((intensity) => ({
-        genre,
-        intensity,
-        colour:
-          genre === "Mainstream"
-            ? GENRE_THEMES.Mainstream.border
-            : genreIntensityColor(genre as NonMainstreamGenreName, intensity),
-        ...pointFor(genre, intensity),
-      }));
-    });
-    const links = nodes.flatMap((from) =>
-      genreIntensityOut({
-        genre: from.genre,
-        intensity: from.intensity,
-      }).map((to) => ({
-        from,
-        to: { ...to, ...pointFor(to.genre, to.intensity) },
-        fanOut: from.genre === "Mainstream",
-      })),
+
+    const nodes: Node[] = [
+      {
+        genre: "Mainstream",
+        intensity: "pop",
+        colour: GENRE_THEMES.Mainstream.border,
+        x: WHEEL_CX,
+        y: WHEEL_CY,
+      },
+      ...WHEEL_GENRES.flatMap((g) =>
+        intensityLevels.map((intensity) => ({
+          genre: g.n,
+          intensity,
+          colour: genreIntensityColor(g.n as NonMainstreamGenreName, intensity),
+          ...pointFor(g.n, intensity),
+        })),
+      ),
+    ];
+
+    const byKey: Record<string, Node> = Object.fromEntries(
+      nodes.map((n) => [`${n.genre}|${n.intensity}`, n]),
     );
-    const mainstream = nodes.find(
-      (n) => n.genre === "Mainstream" && n.intensity === "pop",
-    );
-    const mainstreamPopLinks =
-      mainstream == null
-        ? []
-        : nodes
-            .filter((n) => n.genre !== "Mainstream" && n.intensity === "pop")
-            .map((n) => ({ from: mainstream, to: n }));
-    const normalLinks = links.filter((l) => !l.fanOut);
-    return {
-      cx,
-      cy,
-      ringRadius,
-      outerLabelMargin,
-      svgSize,
-      nodes,
-      normalLinks,
-      mainstreamPopLinks,
-    };
-  }, []);
+
+    const subgenreNodes = SUBGENRES.filter((s) => s.kind === "genre")
+      .map((s) => {
+        const placement = subgenrePlacement.get(s.n);
+        if (!placement) return null;
+        const r = wheelSubgenreRadius(s.intensity) + placement.rOffset;
+        const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
+        const node = byKey[`${s.parentA}|${s.intensity}`];
+        if (!node) return null;
+        return { label: s.n, x: pos.x, y: pos.y, node, colour: node.colour };
+      })
+      .filter((s): s is NonNullable<typeof s> => s !== null);
+
+    return { byKey, subgenreNodes };
+  }, [subgenrePlacement]);
+
+  const hoveredNode = hovered?.node ?? null;
+  const hoveredOut = hoveredNode ? genreIntensityOut(hoveredNode) : [];
+  const hoveredIn = hoveredNode ? genreIntensityIn(hoveredNode) : [];
+
+  const outLinks = hoveredNode
+    ? hoveredOut
+        .map((to) => {
+          const toNode = data.byKey[`${to.genre}|${to.intensity}`];
+          if (!toNode || isSameNode(hoveredNode, toNode)) return null;
+          return { from: hoveredNode, to: toNode };
+        })
+        .filter((l): l is NonNullable<typeof l> => l !== null)
+    : [];
+
+  const inLinks = hoveredNode
+    ? hoveredIn
+        .map((from) => {
+          const fromNode = data.byKey[`${from.genre}|${from.intensity}`];
+          if (!fromNode || isSameNode(hoveredNode, fromNode)) return null;
+          return { from: fromNode, to: hoveredNode };
+        })
+        .filter((l): l is NonNullable<typeof l> => l !== null)
+    : [];
+
+  const wheelSlice = 360 / WHEEL_GENRES.length;
+  const intensityBands: Array<{
+    intensity: Intensity;
+    inner: number;
+    outer: number;
+    opacity: number;
+  }> = [
+    { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
+    {
+      intensity: "soft",
+      inner: R_POP_SOFT_LINE,
+      outer: R_SOFT_EXPERIMENTAL_LINE,
+      opacity: 0.2,
+    },
+    {
+      intensity: "experimental",
+      inner: R_SOFT_EXPERIMENTAL_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE,
+      opacity: 0.18,
+    },
+    {
+      intensity: "hardcore",
+      inner: R_EXPERIMENTAL_HARDCORE_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
+      opacity: 0.16,
+    },
+  ];
 
   return (
     <div className="flex flex-col xl:flex-row items-start justify-center gap-6 w-full">
       <svg
         width="100%"
         height="100%"
-        viewBox={`0 0 ${wheel.svgSize} ${wheel.svgSize}`}
-        className="w-full h-auto max-w-[1200px] shrink-0"
+        viewBox={`0 ${WHEEL_VIEWBOX_Y_TRIM} ${WHEEL_VIEW_SIZE} ${WHEEL_VIEWBOX_HEIGHT}`}
+        className="w-full h-auto max-w-[1200px] shrink-0 overflow-visible"
       >
         <defs>
-          <marker
-            id="genre-transition-arrow"
-            markerWidth="10"
-            markerHeight="10"
-            refX="8"
-            refY="5"
-            orient="auto"
-          >
-            <path d="M0,0 L10,5 L0,10 Z" fill="rgba(255,255,255,.75)" />
-          </marker>
           <marker
             id="genre-transition-arrow-out"
             markerWidth="10"
@@ -202,129 +257,169 @@ export default function GenreTransitionsWheel() {
             <path d="M0,0 L10,5 L0,10 Z" fill="rgba(59,130,246,.95)" />
           </marker>
         </defs>
-        {Object.values(wheel.ringRadius).map((r) => (
-          <circle
-            key={`genre-transition-ring-${r}`}
-            cx={wheel.cx}
-            cy={wheel.cy}
-            r={r}
-            fill="none"
-            stroke="rgba(255,255,255,.12)"
-            strokeDasharray="4 6"
-          />
-        ))}
-        {(
-          [
-            ["pop", wheel.ringRadius.pop],
-            ["soft", wheel.ringRadius.soft],
-            ["experimental", wheel.ringRadius.experimental],
-            ["hardcore", wheel.ringRadius.hardcore],
-          ] as const
-        ).map(([label, r]) => (
-          <text
-            key={`genre-transition-intensity-${label}`}
-            x={wheel.cx + 10}
-            y={wheel.cy - r + 12}
-            className="font-mono text-[36px] uppercase tracking-[0.08em] fill-white/78"
-          >
-            {label}
-          </text>
-        ))}
-        {WHEEL_GENRES.map((g, idx) => {
-          const a = (idx / WHEEL_GENRES.length) * 360 - 90;
-          const p = polarToXY(
-            wheel.cx,
-            wheel.cy,
-            wheel.ringRadius.hardcore + wheel.outerLabelMargin,
-            a,
-          );
-          return (
-            <text
-              key={`genre-transition-genre-${g.n}`}
-              x={p.x}
-              y={p.y}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="font-mono text-[48px] tracking-[0.06em] fill-white/9"
-            >
-              {g.n}
-            </text>
-          );
+
+        {WHEEL_GENRES.flatMap((g, i) => {
+          const start = i * wheelSlice - 90 - wheelSlice / 2;
+          const end = i * wheelSlice - 90 + wheelSlice / 2;
+          return intensityBands.map((band) => {
+            const isHovered =
+              hoveredNode != null &&
+              hoveredNode.genre === g.n &&
+              hoveredNode.intensity === band.intensity;
+            return (
+              <path
+                key={`${g.n}-${band.intensity}`}
+                d={annularSectorPath(
+                  WHEEL_CX,
+                  WHEEL_CY,
+                  band.inner,
+                  band.outer,
+                  start,
+                  end,
+                )}
+                fill={genreIntensityColor(
+                  g.n as NonMainstreamGenreName,
+                  band.intensity,
+                )}
+                fillOpacity={isHovered ? 0.42 : band.opacity}
+                style={{ cursor: "pointer" }}
+                onMouseEnter={() => {
+                  const node = data.byKey[`${g.n}|${band.intensity}`];
+                  if (node) setHovered({ node });
+                }}
+                onMouseLeave={() => setHovered(null)}
+              />
+            );
+          });
         })}
-        {wheel.normalLinks.map((l, i) => {
-          const edge = lineToCircleEdge(l.from, l.to);
-          const isIn = hovered ? isSameNode(l.to, hovered) : false;
-          const isOut = hovered ? isSameNode(l.from, hovered) : false;
+
+        <circle
+          cx={WHEEL_CX}
+          cy={WHEEL_CY}
+          r={Math.round(R_POP_SOFT_LINE * 0.35)}
+          fill={GENRE_THEMES.Mainstream.border}
+          fillOpacity={hoveredNode?.genre === "Mainstream" ? 1 : 0.9}
+          style={{ cursor: "pointer" }}
+          onMouseEnter={() => {
+            const node = data.byKey["Mainstream|pop"];
+            if (node) setHovered({ node });
+          }}
+          onMouseLeave={() => setHovered(null)}
+        />
+
+        {[R_POP_SOFT_LINE, R_SOFT_EXPERIMENTAL_LINE, R_EXPERIMENTAL_HARDCORE_LINE].map(
+          (r) => (
+            <circle
+              key={`genre-transition-ring-${r}`}
+              cx={WHEEL_CX}
+              cy={WHEEL_CY}
+              r={r}
+              fill="none"
+              stroke="rgba(255,255,255,.12)"
+              strokeDasharray="4 6"
+            />
+          ),
+        )}
+        {WHEEL_GENRES.map((_, i) => {
+          const angle = ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
+          const inner = polarToXY(WHEEL_CX, WHEEL_CY, 0, angle);
+          const outer = polarToXY(
+            WHEEL_CX,
+            WHEEL_CY,
+            R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
+            angle,
+          );
           return (
             <line
-              key={`genre-transition-link-${i}`}
+              key={i}
+              x1={inner.x}
+              y1={inner.y}
+              x2={outer.x}
+              y2={outer.y}
+              stroke="rgba(255, 255, 255, 0.22)"
+              strokeWidth={1}
+            />
+          );
+        })}
+
+        {outLinks.map((l, i) => {
+          const edge = lineToCircleEdge(l.from, l.to);
+          return (
+            <line
+              key={`out-link-${i}`}
               x1={edge.x1}
               y1={edge.y1}
               x2={edge.x2}
               y2={edge.y2}
-              stroke="rgba(255,255,255,.5)"
-              strokeWidth={2.8}
-              markerEnd={
-                isOut
-                  ? "url(#genre-transition-arrow-out)"
-                  : isIn
-                    ? "url(#genre-transition-arrow-in)"
-                    : "url(#genre-transition-arrow)"
-              }
+              stroke="rgba(255,255,255,.52)"
+              strokeWidth={2.4}
+              markerEnd="url(#genre-transition-arrow-out)"
             />
           );
         })}
-        {wheel.mainstreamPopLinks.map((l, i) => {
+        {inLinks.map((l, i) => {
           const edge = lineToCircleEdge(l.from, l.to);
-          const isIn = hovered ? isSameNode(l.to, hovered) : false;
-          const isOut = hovered ? isSameNode(l.from, hovered) : false;
           return (
             <line
-              key={`genre-transition-mainstream-pop-${i}`}
+              key={`in-link-${i}`}
               x1={edge.x1}
               y1={edge.y1}
               x2={edge.x2}
               y2={edge.y2}
-              stroke="rgba(246,246,242,.9)"
-              strokeWidth={3.4}
-              markerEnd={
-                isOut
-                  ? "url(#genre-transition-arrow-out)"
-                  : isIn
-                    ? "url(#genre-transition-arrow-in)"
-                    : "url(#genre-transition-arrow)"
-              }
+              stroke="rgba(255,255,255,.42)"
+              strokeWidth={2.2}
+              markerEnd="url(#genre-transition-arrow-in)"
             />
           );
         })}
-        {wheel.nodes.map((n) => (
+
+        {Object.values(data.byKey).map((n) => (
           <circle
-            key={`${n.genre}-${n.intensity}`}
+            key={`node-${n.genre}-${n.intensity}`}
             cx={n.x}
             cy={n.y}
             r={circleRadiusForNode(n)}
             fill={n.colour}
-            stroke="rgba(255,255,255,.35)"
-            strokeWidth={2}
-            onMouseEnter={() => setHovered(n)}
+            stroke="rgba(255,255,255,.45)"
+            strokeWidth={hoveredNode && isSameNode(hoveredNode, n) ? 2.6 : 1.6}
+            style={{ cursor: "pointer" }}
+            onMouseEnter={() => setHovered({ node: n })}
+            onMouseLeave={() => setHovered(null)}
+          />
+        ))}
+        {data.subgenreNodes.map((s) => (
+          <circle
+            key={`subgenre-${s.label}`}
+            cx={s.x}
+            cy={s.y}
+            r={5}
+            fill={s.colour}
+            stroke="rgba(255,255,255,.55)"
+            strokeWidth={1.2}
+            style={{ cursor: "pointer" }}
+            onMouseEnter={() => setHovered({ node: s.node, subgenreLabel: s.label })}
             onMouseLeave={() => setHovered(null)}
           />
         ))}
       </svg>
-      <aside
-        className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto"
-      >
-        {hovered ? (
+
+      <aside className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto">
+        {hoveredNode ? (
           <>
+            {hovered?.subgenreLabel ? (
+              <div className="font-mono text-[15px] text-muted uppercase tracking-[0.08em] mb-1">
+                Subgenre: {hovered.subgenreLabel}
+              </div>
+            ) : null}
             <div
               className="font-mono text-[20px] uppercase tracking-[0.08em]"
-              style={{ color: hovered.colour }}
+              style={{ color: hoveredNode.colour }}
             >
-              {hovered.genre} · {hovered.intensity}
+              {hoveredNode.genre} · {hoveredNode.intensity}
             </div>
             <div className="font-mono text-[18px] mt-2">Out:</div>
             <ul className="m-0 mt-1 pl-6 list-disc">
-              {genreIntensityOut(hovered).map((n) => (
+              {hoveredOut.map((n) => (
                 <li
                   key={`out-${n.genre}-${n.intensity}`}
                   className="font-mono text-[18px]"
@@ -336,7 +431,7 @@ export default function GenreTransitionsWheel() {
             </ul>
             <div className="font-mono text-[18px] mt-2">In:</div>
             <ul className="m-0 mt-1 pl-6 list-disc">
-              {genreIntensityIn(hovered).map((n) => (
+              {hoveredIn.map((n) => (
                 <li
                   key={`in-${n.genre}-${n.intensity}`}
                   className="font-mono text-[18px]"
@@ -349,7 +444,8 @@ export default function GenreTransitionsWheel() {
           </>
         ) : (
           <div className="font-mono text-[18px] text-muted">
-            Hover a genre/intensity point to inspect transitions.
+            Hover a genre/intensity sector or a subgenre dot to display transition
+            arrows.
           </div>
         )}
       </aside>

@@ -238,6 +238,40 @@ function allGenreIntensityNodes(): GenreIntensityNode[] {
   return out;
 }
 
+const INFLUENCE_TRANSITION_BRIDGES: Record<string, GenreIntensityNode[]> = (() => {
+  const bridgeTargets = new Map<string, GenreIntensityNode[]>();
+
+  const addBridge = (from: GenreIntensityNode, to: GenreIntensityNode) => {
+    const key = genreIntensityKey(from);
+    const list = bridgeTargets.get(key) ?? [];
+    list.push(to);
+    bridgeTargets.set(key, list);
+  };
+
+  for (const sub of SUBGENRES) {
+    if (sub.kind !== "genre" || !sub.influence) continue;
+    const baseNode: GenreIntensityNode = {
+      genre: sub.parentA,
+      intensity: sub.intensity,
+    };
+    const influenceNode: GenreIntensityNode = {
+      genre: sub.influence.genre,
+      intensity: sub.influence.intensity,
+    };
+
+    // Influence bridges are bidirectional by design.
+    addBridge(baseNode, influenceNode);
+    addBridge(influenceNode, baseNode);
+  }
+
+  return Object.fromEntries(
+    Array.from(bridgeTargets.entries()).map(([key, nodes]) => [
+      key,
+      uniqueGenreIntensity(nodes),
+    ]),
+  );
+})();
+
 /**
  * Transition rule helper.
  * - Mainstream (hub): out -> all genres at `pop` intensity.
@@ -263,6 +297,7 @@ export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[
     out.push({ genre: previousGenre, intensity: down });
   }
   out.push({ genre: nextGenre, intensity: node.intensity });
+  out.push(...(INFLUENCE_TRANSITION_BRIDGES[genreIntensityKey(node)] ?? []));
   return uniqueGenreIntensity(out);
 }
 

@@ -137,12 +137,34 @@ export default function GenresPage() {
         </div>
         <div className="w-full max-w-[1800px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-visible px-[18px] py-4">
           <div className="section-title-sub mb-2">Transitions</div>
-          <p className="font-garamond italic text-muted leading-[1.45] mb-4 max-w-[760px]">
-            A transition node is a genre + intensity pair. From an outer genre,
-            valid outs are: same genre at next intensity, and next genre at same
-            intensity. Mainstream is special: it fans out to every genre at pop
-            intensity.
-          </p>
+          <div className="mb-4 max-w-[900px]">
+            <p className="font-garamond italic text-muted leading-[1.45] mb-2">
+              A transition node is a genre + intensity pair. Current out rules:
+            </p>
+            <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
+              <li>
+                Mainstream (pop) fans out to every genre at pop intensity.
+              </li>
+              <li>
+                For any non-mainstream node (genre A, intensity B), out includes
+                self: (A, B).
+              </li>
+              <li>Same genre intensity branches: (A, B + 1) and (A, B - 1).</li>
+              <li>
+                Neighbour genre branches at same intensity: (next(A), B) and
+                (previous(A), B).
+              </li>
+              <li>
+                Neighbour genre branches at lower intensity:
+                (next(A), B - 1) and (previous(A), B - 1).
+              </li>
+              <li>
+                Some subgenres add an influence bridge (bidirectional). Example:
+                Turntablism includes a Hip-Hop (experimental) influence, so this
+                pair adds extra transitions in both directions.
+              </li>
+            </ul>
+          </div>
           <GenreTransitionsWheel />
         </div>
 

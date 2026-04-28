@@ -212,6 +212,14 @@ export function CardsSongsContent() {
                 "Icon: Genre icon.\nTitle: Song title.\nArtist: Omit if the song is traditional with no attributed artist, or if rights are not cleared.\nPop: Integer 1-9.\nGlow: Scales with pop (same value used for award symbols).\nAlignment: If artist is missing, title is vertically centered.",
               ],
               [
+                "Track Transition",
+                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nOut (source of truth): Store links on the current card with `tracksOut` (array of card ids).\nIn (derived): Incoming links are auto-derived from other cards' `tracksOut`; do not duplicate as manual data.\nIn strip: Left strip shows the first derived incoming track. Out strip: Right strip shows the first outgoing track.\nColour: each strip uses the resolved genre theme of the linked track.\nValidation: Unknown ids in `tracksOut` throw an error when the track graph is built.\nGap: The two strips never touch; a clear zone separates them in the centre.",
+              ],
+              [
+                "Genre Transitions",
+                "Optional. Mirrors the transition logic documented in Genres > Transitions.\nReference: use the same in/out graph rules as the Genres tab transition section.\nIn strip: Left strip lists incoming genre/intensity nodes (first visible item).\nOut strip: Right strip lists outgoing genre/intensity nodes (first visible item).\nColour: each strip uses the canonical colour of the referenced genre/intensity node.\nFilter rule: Exclude same-genre transitions that only change intensity.\nInfluence bridge: Some subgenres add bidirectional links via influence metadata (example: Turntablism influenced by Hip-Hop experimental).\nPurpose: Make genre navigation readable on-card while staying consistent with the global transition graph.",
+              ],
+              [
                 "Artwork",
                 "Image: Required real asset image.\nPrompt: Required if AI-generated.\nDominant palette: Prefer genre colour (e.g. white/pink for Disco Pop).\nMood: Mystical.\nRights safety: Avoid copyrighted or overly identifiable elements when rights are not cleared (faces, brands, logos, signature items such as Michael Jackson's gold glove).",
               ],
@@ -243,10 +251,6 @@ export function CardsSongsContent() {
                 "Border",
                 "Mode normal: 10px solid border.\nMode bleed: No border; artwork bleeds to the card edge.\nColour rule (normal mode): Subgenre canonical colour if available, otherwise genre border colour.\nWorld cards (normal mode): Country flag in landscape.\nMixed World/Genre (normal mode): Fade from flag (left) to genre colour (right).",
               ],
-              [
-                "Track Transition",
-                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nOut (source of truth): Store links on the current card with `tracksOut` (array of card ids).\nIn (derived): Incoming links are auto-derived from other cards' `tracksOut`; do not duplicate as manual data.\nIn strip: Left strip shows the first derived incoming track. Out strip: Right strip shows the first outgoing track.\nColour: each strip uses the resolved genre theme of the linked track.\nValidation: Unknown ids in `tracksOut` throw an error when the track graph is built.\nGap: The two strips never touch; a clear zone separates them in the centre.",
-              ],
             ].map(([name, desc]) => (
               <div key={name} className="flex gap-3">
                 <div className="w-[120px] shrink-0 font-cinzel tracking-[1px] text-gold pt-px">
@@ -261,8 +265,7 @@ export function CardsSongsContent() {
                     const value = line.slice(colonIndex + 1).trimStart();
                     return (
                       <div key={idx}>
-                        <span className="text-white">{label}</span>{" "}
-                        {value}
+                        <span className="text-white">{label}</span> {value}
                       </div>
                     );
                   })}
