@@ -174,6 +174,25 @@ function CardArtwork({ card }: { card: CardData }) {
   );
 }
 
+// Clip-path applied to .card when transition strips are present.
+// Cuts notch holes so the page background shows through — context-independent (no blend modes).
+// Coordinates are in the card's border-box (272×400, border-radius 16).
+// Strip top: 44px (header) + 10px (border) − 6.5px (half strip) = 47.5px; bottom = 60.5px.
+const _CARD_PATH_BASE =
+  "M 16 0 L 256 0 Q 272 0 272 16 L 272 384 Q 272 400 256 400 L 16 400 Q 0 400 0 384 L 0 16 Q 0 0 16 0 Z";
+// Left notch: x=0–8 (border edge → tip), CCW so nonzero fill-rule punches a hole.
+const _NOTCH_LEFT = "M 0 47.5 L 0 60.5 L 8 54 Z";
+// Right notch: strip left edge = 279px − 103px = 176px from frame left, tip at 184px.
+const _NOTCH_RIGHT = "M 176 47.5 L 176 60.5 L 184 54 Z";
+
+function cardNotchPath(
+  hasLeft: boolean,
+  hasRight: boolean,
+): string | undefined {
+  if (!hasLeft && !hasRight) return undefined;
+  return `path('${_CARD_PATH_BASE}${hasLeft ? " " + _NOTCH_LEFT : ""}${hasRight ? " " + _NOTCH_RIGHT : ""}')`;
+}
+
 export default function Card({
   card,
   theme,
@@ -637,48 +656,50 @@ export default function Card({
         </div>
       </div>
 
-      {/* Transition strips — positioned relative to the card/face, straddle header/artwork boundary */}
+    </>
+  );
+
+  // Strips rendered as siblings of .card inside .cardFrame — never inside the card itself.
+  const cardStrips = (
+    <>
       {transitionIn && (
-        <>
-          <div
-            className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-            style={{ background: transitionIn.themeColor }}
-          >
-            <span className={styles.transitionStripText}>
-              {transitionIn.title}
-            </span>
-          </div>
-          <div className={`${styles.notchMask} ${styles.notchMaskIn}`} />
-        </>
+        <div
+          className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+          style={{ background: transitionIn.themeColor }}
+        >
+          <span className={styles.transitionStripText}>
+            {transitionIn.title}
+          </span>
+        </div>
       )}
       {transitionOut && (
-        <>
-          <div
-            className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-            style={{ background: transitionOut.themeColor }}
-          >
-            <span className={styles.transitionStripText}>
-              {transitionOut.title}
-            </span>
-          </div>
-          <div className={`${styles.notchMask} ${styles.notchMaskOut}`} />
-        </>
+        <div
+          className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
+          style={{ background: transitionOut.themeColor }}
+        >
+          <span className={styles.transitionStripText}>
+            {transitionOut.title}
+          </span>
+        </div>
       )}
     </>
   );
 
   const staticClass = hoverLift ? "" : ` ${styles.cardStatic}`;
+  const frameStaticClass = hoverLift ? "" : ` ${styles.cardFrameStatic}`;
+  const notchClipPath = cardNotchPath(!!transitionIn, !!transitionOut);
 
   const renderInnerCard = () =>
     card.artworkOverBorder ? (
       <div
+        data-card-ui
         className={`${styles.card} ${styles.cardNoBorder}${staticClass}`}
         style={varStyle}
       >
         {cardContent}
       </div>
     ) : flagRotateR90 ? (
-      <div className={`${styles.cardShell}${staticClass}`}>
+      <div data-card-ui className={`${styles.cardShell}${staticClass}`}>
         <div
           className={styles.cardFlagUsR90}
           aria-hidden
@@ -716,7 +737,7 @@ export default function Card({
         </div>
       </div>
     ) : flagFlatShell ? (
-      <div className={`${styles.cardShell}${staticClass}`}>
+      <div data-card-ui className={`${styles.cardShell}${staticClass}`}>
         <div
           className={styles.cardFlagFlat}
           aria-hidden
@@ -754,23 +775,35 @@ export default function Card({
         </div>
       </div>
     ) : flagStyle === "fade" && flagBg ? (
-      <div
-        className={`${styles.card}${staticClass}`}
-        style={{
-          ...varStyle,
-          border: "10px solid transparent",
-          backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
-          backgroundClip: "padding-box, border-box, border-box",
-          backgroundOrigin: "padding-box, border-box, border-box",
-          backgroundSize: `100% 100%, 100% 100%, ${flatShellFrameBgSize}`,
-          backgroundPosition: `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`,
-        }}
-      >
-        {cardContent}
+      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+        <div
+          data-card-ui
+          className={`${styles.card}${staticClass}`}
+          style={{
+            ...varStyle,
+            border: "10px solid transparent",
+            backgroundImage: `linear-gradient(${"transparent"}, ${"transparent"}), linear-gradient(to right, transparent 42%, ${resolvedFadeColor} 58%), ${flagBg}`,
+            backgroundClip: "padding-box, border-box, border-box",
+            backgroundOrigin: "padding-box, border-box, border-box",
+            backgroundSize: `100% 100%, 100% 100%, ${flatShellFrameBgSize}`,
+            backgroundPosition: `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`,
+            clipPath: notchClipPath,
+          }}
+        >
+          {cardContent}
+        </div>
+        {cardStrips}
       </div>
     ) : (
-      <div className={`${styles.card}${staticClass}`} style={varStyle}>
-        {cardContent}
+      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+        <div
+          data-card-ui
+          className={`${styles.card}${staticClass}`}
+          style={{ ...varStyle, clipPath: notchClipPath }}
+        >
+          {cardContent}
+        </div>
+        {cardStrips}
       </div>
     );
 
@@ -793,7 +826,7 @@ export default function Card({
   }, [isZoomed]);
 
   const baseCard = small ? (
-    <div className={styles.wrapSm}>
+    <div data-card-ui className={styles.wrapSm}>
       <div className={styles.cardSm}>{renderInnerCard()}</div>
     </div>
   ) : (

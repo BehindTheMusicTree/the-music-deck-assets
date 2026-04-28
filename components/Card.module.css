@@ -1,3 +1,14 @@
+/* Outer wrapper: positions the card + transition strips as a unit. Strips are siblings of
+   .card inside this frame so their protrusion is not clipped by the card itself. */
+.cardFrame {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.cardFrameStatic {
+  cursor: default;
+}
+
 /* Card frame — 272×400. Typography below is compact “token” UI (<15px) on purpose;
    the 15px floor applies to page chrome in app routes, not to card / wheel content. */
 .card {
@@ -12,7 +23,6 @@
   flex-direction: column;
   flex-shrink: 0;
   cursor: pointer;
-  isolation: isolate;
   transition:
     transform 0.15s,
     box-shadow 0.15s;
@@ -642,12 +652,13 @@
   transform-origin: center;
 }
 
-/* Transition strips: siblings of header+body, positioned relative to the card/face frame.
-   Align strip vertical midpoint with the header bottom border (44px). */
+/* Transition strips: siblings of .card inside .cardFrame (NOT children of .card).
+   Coordinates are relative to .cardFrame = card border-box (272×400).
+   Strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top. */
 .transitionStrip {
   position: absolute;
-  top: calc(44px - (13px / 2));
-  width: calc(37% + 10px);
+  top: calc(44px + 10px - (13px / 2));
+  width: 103px;
   height: 13px;
   display: flex;
   align-items: center;
@@ -655,10 +666,11 @@
   overflow: hidden;
   z-index: 20;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s;
 }
-/* In strip (left): hollow left arrow, right-pointing arrow tip */
+/* In strip (left): starts at card left border edge, concave notch on left tail */
 .transitionStripIn {
-  left: -10px;
+  left: 0;
   padding: 0 10px 0 12px;
   clip-path: polygon(
     0% 0%,
@@ -669,9 +681,9 @@
     8px 50%
   );
 }
-/* Out strip (right): hollow left arrow (flèche creuse), right-pointing arrow tip */
+/* Out strip (right): arrow tip protrudes 7px past card right border edge */
 .transitionStripOut {
-  right: -17px;
+  right: -7px;
   padding: 0 10px 0 12px;
   clip-path: polygon(
     0% 0%,
@@ -682,27 +694,12 @@
     8px 50%
   );
 }
-/* Transparent punch-through at the concave notch of each transition strip.
-   mix-blend-mode: destination-out erases the card (border + background) at the notch void,
-   so the page background shows through. Requires isolation: isolate on .card. */
-.notchMask {
-  position: absolute;
-  top: calc(44px - (13px / 2));
-  width: 8px;
-  height: 13px;
-  background: black;
-  mix-blend-mode: destination-out;
-  z-index: 25;
-  pointer-events: none;
-  /* triangle matching the concave left notch of the strip clip-path */
-  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+/* Lift strips when .card hovers (strips are ~ siblings in .cardFrame). */
+.card:hover ~ .transitionStrip {
+  transform: translateY(-4px);
 }
-.notchMaskIn {
-  left: -10px;
-}
-.notchMaskOut {
-  /* strip left edge = 100% - 37% + 7px (mirrors right: -17px + width: calc(37% + 10px)) */
-  left: calc(100% - 37% + 7px);
+.cardStatic.card:hover ~ .transitionStrip {
+  transform: none;
 }
 
 .transitionStripText {

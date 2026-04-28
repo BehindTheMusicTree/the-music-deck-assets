@@ -8,7 +8,7 @@ import RemixesSubTabs from "@/components/RemixesSubTabs";
 type TopTab = "songs" | "remixes";
 
 const primaryLink =
-  "whitespace-nowrap font-mono text-[12px] sm:text-[13px] tracking-[0.14em] px-3 sm:px-3.5 py-2.5 no-underline border-b-2 -mb-px transition-colors";
+  "tab-font-13 whitespace-nowrap font-mono tracking-[0.14em] px-3 sm:px-3.5 py-2.5 no-underline border-b-2 -mb-px transition-colors";
 
 type Props = { songs: ReactNode; remixes: ReactNode };
 

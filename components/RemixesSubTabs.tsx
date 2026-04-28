@@ -53,7 +53,7 @@ export default function RemixesSubTabs({ stickToTop = true }: Props) {
                 scrollToCardsSection(el, nav);
               }}
               className={[
-                "whitespace-nowrap font-mono text-[11px] sm:text-[12px] tracking-[0.12em] px-2.5 sm:px-3 py-2 no-underline border-b-2 -mb-px transition-colors",
+                "tab-font-13 whitespace-nowrap font-mono tracking-[0.12em] px-2.5 sm:px-3 py-2 no-underline border-b-2 -mb-px transition-colors",
                 active === id
                   ? "text-gold border-gold"
                   : "text-muted border-transparent hover:text-white hover:border-ui-border",

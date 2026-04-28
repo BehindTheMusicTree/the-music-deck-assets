@@ -44,7 +44,7 @@ export default function CharterTabs() {
                   key={href}
                   href={href}
                   className={[
-                    "whitespace-nowrap font-mono text-[12px] sm:text-[13px] tracking-[0.12em] px-2.5 sm:px-3 py-1.5 rounded no-underline border border-transparent",
+                    "whitespace-nowrap font-mono text-[12px] tracking-[0.12em] px-2.5 sm:px-3 py-1.5 rounded no-underline border border-transparent",
                     on
                       ? "text-gold border-ui-border bg-card"
                       : "text-muted hover:text-white hover:border-ui-border/60",

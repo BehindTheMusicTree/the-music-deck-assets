@@ -17,7 +17,7 @@ const ARTWORK_TABS: { id: ArtworksTabId; label: string }[] = [
   { id: "dominant-colour", label: "2. Dominant colour" },
   { id: "style", label: "3. Style" },
   { id: "mix", label: "4. Mixed influences" },
-  { id: "prompt", label: "5. Prompt examples" },
+  { id: "prompt", label: "5. Prompt generator" },
 ];
 
 const INTENSITIES: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
@@ -30,53 +30,54 @@ const GENRE_STYLE_GUIDE: {
   {
     genre: "Mainstream (Pop)",
     style: "Heroic fantasy illustration",
-    notes: "Grand silhouettes, uplifting light beams, mythic composition.",
+    notes:
+      "High-polish digital painting, clean heroic-fantasy finish, smooth gradients, soft bloom, luminous white-gold highlights, minimal visible brush grain.",
   },
   {
     genre: "Rock",
     style: "Gritty stage realism with painterly grain",
     notes:
-      "Raw concert energy, dramatic contrast, tactile texture, grounded atmosphere.",
+      "Analog-leaning painterly rendering, visible dry-brush strokes, matte/grainy surface, warm red-amber grading, imperfect edges, tactile material noise; prioritise organic brushwork over geometric cleanliness.",
   },
   {
     genre: "Hip-Hop",
     style: "Early-2000s cel-shaded street mural aesthetic",
     notes:
-      "Thick ink outlines, bold urban perspective, stylised heat and attitude.",
+      "Cel-shaded illustration, bold inked outlines, flatter shadow blocks, saturated urban palette, mural-like graphic contrast, sharp edge control over painterly blending.",
   },
   {
     genre: "Disco/Funk",
     style: "Neon beachfront nightlife poster aesthetic",
     notes:
-      "Warm neon haze, chrome reflections, palm silhouettes, dance-floor motion.",
+      "Retro poster-driven illustration, neon magenta/cyan/gold treatment, glossy highlights, chrome-like accents, clean vector-like readability with light print-grain overlay.",
   },
   {
     genre: "Reggae/Dub",
     style: "Caribbean vintage poster style",
     notes:
-      "Warm faded colours, soft grain, retro paper texture, vertical composition.",
+      "Vintage poster print look, warm faded inks, softened contrast, retro paper texture, subtle offset-print imperfections, slightly desaturated sun-aged colour handling.",
   },
   {
     genre: "Vintage",
     style: "Old photographs",
     notes:
-      "Aged tones, soft blur, subtle scratches and film response; documentary mood.",
+      "Archival photo emulation, low-contrast tonal curve, analog grain, dust/scratch artifacts, mild halation, faded chemical colour cast, reduced modern digital sharpness.",
   },
   {
     genre: "Electronic",
     style: "Futurist techno-ritual concept art",
     notes:
-      "Geometric light structures, controlled abstraction, high-contrast synthetic glow.",
+      "Synthetic digital render language, hard-surface geometric clarity, cool cyan/blue-violet grading, emissive light accents, smooth gradients, controlled bloom, and near-clinical edge precision; prioritise engineered cleanliness over painterly texture.",
   },
   {
     genre: "Classical",
     style: "Epic paintings",
     notes:
-      "Orchestral grandeur, dramatic sky-lighting, monumental framing and symbolism.",
+      "Grand oil-painting language, chiaroscuro value structure, painterly brush massing, canvas-like depth, classical glazing feel, rich but restrained pigment rendering.",
   },
 ];
 
-const PROMPT_EXAMPLES: {
+export const PROMPT_EXAMPLES: {
   genre: string;
   intensity: Intensity;
   prompt: string;
@@ -133,7 +134,7 @@ const PROMPT_EXAMPLES: {
 
 function intensityColourRow(genre: string, intensity: Intensity): string {
   if (genre === "Mainstream") return GENRE_THEMES.Mainstream.border;
-  return genreIntensityColor(genre, intensity);
+  return genreIntensityColor(genre as NonMainstreamGenreName, intensity);
 }
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
@@ -153,7 +154,7 @@ function annularSectorPath(
   const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
   const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
   const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
-  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const span = (((endAngleDeg - startAngleDeg) % 360) + 360) % 360;
   const largeArc = span > 180 ? 1 : 0;
   if (innerR <= 0) {
     return [
@@ -174,11 +175,35 @@ function annularSectorPath(
 
 function isLightHex(hex: string): boolean {
   const s = hex.replace("#", "");
-  const normalized = s.length === 3 ? s.split("").map((c) => c + c).join("") : s;
+  const normalized =
+    s.length === 3
+      ? s
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : s;
   const r = Number.parseInt(normalized.slice(0, 2), 16);
   const g = Number.parseInt(normalized.slice(2, 4), 16);
   const b = Number.parseInt(normalized.slice(4, 6), 16);
   return (r * 299 + g * 587 + b * 114) / 1000 > 160;
+}
+
+type WheelChoice = {
+  genre: string;
+  intensity: Intensity;
+  colour: string;
+};
+
+function formatIntensity(i: Intensity): string {
+  return i.charAt(0).toUpperCase() + i.slice(1);
+}
+
+function styleGuideForGenre(
+  genre: string,
+): { style: string; notes: string } | null {
+  const key = genre === "Mainstream" ? "Mainstream (Pop)" : genre;
+  const row = GENRE_STYLE_GUIDE.find((g) => g.genre === key);
+  return row ? { style: row.style, notes: row.notes } : null;
 }
 
 export default function CardsArtworksSection() {
@@ -190,11 +215,23 @@ export default function CardsArtworksSection() {
     x: number;
     y: number;
   } | null>(null);
+  const [primaryPromptChoice, setPrimaryPromptChoice] = useState<WheelChoice>({
+    genre: "Mainstream",
+    intensity: "pop",
+    colour: GENRE_THEMES.Mainstream.border,
+  });
+  const [secondaryPromptChoice, setSecondaryPromptChoice] =
+    useState<WheelChoice | null>(null);
+  const [promptSubject, setPromptSubject] = useState("");
+  const [hoveredPromptSegment, setHoveredPromptSegment] = useState<
+    string | null
+  >(null);
 
   const dominantColourByGenre = useMemo(
     () =>
       GENRE_NAMES.map((genre) => {
-        const intensities = genre === "Mainstream" ? (["pop"] as const) : INTENSITIES;
+        const intensities =
+          genre === "Mainstream" ? (["pop"] as const) : INTENSITIES;
         return {
           genre,
           entries: intensities.map((intensity) => ({
@@ -206,28 +243,52 @@ export default function CardsArtworksSection() {
     [],
   );
 
-  const dominantColourWheel = useMemo(
-    () => {
-      const byGenre = new Map(
-        dominantColourByGenre
-          .filter((g) => g.genre !== "Mainstream")
-          .map((g) => [g.genre, g] as const),
-      );
-      const ordered = WHEEL_GENRES.map((wg) => {
-        const entry = byGenre.get(wg.n);
-        if (!entry) {
-          throw new Error(`Missing dominant-colour entry for wheel genre "${wg.n}"`);
-        }
-        return entry;
-      });
-      return ordered.map((g, i, arr) => {
-          const angleDeg = -90 + (i * 360) / arr.length;
-          const p = polarToXY(220, 220, 204, angleDeg);
-          return { ...g, angleDeg, x: p.x, y: p.y };
-      });
-    },
-    [dominantColourByGenre],
-  );
+  const dominantColourWheel = useMemo(() => {
+    const byGenre = new Map(
+      dominantColourByGenre
+        .filter((g) => g.genre !== "Mainstream")
+        .map((g) => [g.genre, g] as const),
+    );
+    const ordered = WHEEL_GENRES.map((wg) => {
+      const entry = byGenre.get(wg.n);
+      if (!entry) {
+        throw new Error(
+          `Missing dominant-colour entry for wheel genre "${wg.n}"`,
+        );
+      }
+      return entry;
+    });
+    return ordered.map((g, i, arr) => {
+      const angleDeg = -90 + (i * 360) / arr.length;
+      const p = polarToXY(220, 220, 204, angleDeg);
+      return { ...g, angleDeg, x: p.x, y: p.y };
+    });
+  }, [dominantColourByGenre]);
+
+  const generatedPrompt = useMemo(() => {
+    const base =
+      "Vertical 2:3 high-detail illustration. The bottom 60% will be covered on-card, so place all key visual elements in the upper third. Subjects should have no resemblance to celebrities). No text, no symbols, no logos.";
+    const primaryGuide = styleGuideForGenre(primaryPromptChoice.genre);
+    const primary = `Primary style anchor with dominant colour ${primaryPromptChoice.colour}. Intensity mood: ${formatIntensity(primaryPromptChoice.intensity)}.${
+      primaryGuide
+        ? ` Style: ${primaryGuide.style}. Guidance: ${primaryGuide.notes}`
+        : ""
+    }`;
+    const secondaryGuide = secondaryPromptChoice
+      ? styleGuideForGenre(secondaryPromptChoice.genre)
+      : null;
+    const secondary = secondaryPromptChoice
+      ? `Secondary influence blended as supporting visual language, not overriding the primary anchor. Secondary dominant colour ${secondaryPromptChoice.colour}. Secondary intensity mood: ${formatIntensity(secondaryPromptChoice.intensity)}.${
+          secondaryGuide
+            ? ` Style: ${secondaryGuide.style}. Guidance: ${secondaryGuide.notes}`
+            : ""
+        }`
+      : "";
+    const subject = promptSubject.trim()
+      ? `Subject: ${promptSubject.trim()}.`
+      : "Subject: [Describe the scene, characters, action, and mood].";
+    return [base, primary, secondary, subject].filter(Boolean).join("\n\n");
+  }, [primaryPromptChoice, secondaryPromptChoice, promptSubject]);
 
   return (
     <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
@@ -262,8 +323,8 @@ export default function CardsArtworksSection() {
           <ul className="font-garamond text-sm text-muted leading-[1.8] pl-5 list-disc">
             <li>Master format: vertical 2:3.</li>
             <li>
-              Lower ~60% is usually covered by UI: place key elements in the upper
-              third.
+              Lower ~60% is usually covered by UI: place key elements in the
+              upper third.
             </li>
             <li>No text, logos, or signatures in final artwork.</li>
             <li>
@@ -276,10 +337,13 @@ export default function CardsArtworksSection() {
 
       {activeTab === "dominant-colour" ? (
         <section>
-          <div className="section-label-accent mb-2">Dominant colour system</div>
+          <div className="section-label-accent mb-2">
+            Dominant colour system
+          </div>
           <p className="font-garamond text-sm text-muted mb-4">
-            Dominant colour comes from genre + intensity. Country-native subgenre
-            cards follow country/region visual identity instead of this wheel.
+            Dominant colour comes from genre + intensity. Country-native
+            subgenre cards follow country/region visual identity instead of this
+            wheel.
           </p>
           <div className="flex justify-center">
             <svg
@@ -317,7 +381,14 @@ export default function CardsArtworksSection() {
                 ].map((band) => (
                   <path
                     key={`${g.n}-${band.intensity}`}
-                    d={annularSectorPath(220, 220, band.inner, band.outer, start, end)}
+                    d={annularSectorPath(
+                      220,
+                      220,
+                      band.inner,
+                      band.outer,
+                      start,
+                      end,
+                    )}
                     fill={genreIntensityColor(genre, band.intensity)}
                     onMouseEnter={() =>
                       setHoveredWheelColour({
@@ -473,6 +544,27 @@ export default function CardsArtworksSection() {
                 fill={GENRE_THEMES.Mainstream.border}
                 stroke="rgba(255,255,255,.25)"
                 strokeWidth={1.5}
+                onMouseEnter={() =>
+                  setHoveredWheelColour({
+                    genre: "Mainstream",
+                    intensity: "pop",
+                    colour: GENRE_THEMES.Mainstream.border,
+                    x: 0,
+                    y: 0,
+                  })
+                }
+                onMouseMove={(e) =>
+                  setHoveredWheelColour((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          x: e.clientX,
+                          y: e.clientY,
+                        }
+                      : prev,
+                  )
+                }
+                onMouseLeave={() => setHoveredWheelColour(null)}
               >
                 <title>{`Mainstream · pop: ${GENRE_THEMES.Mainstream.border}`}</title>
               </circle>
@@ -521,15 +613,13 @@ export default function CardsArtworksSection() {
                 key={row.genre}
                 className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-3"
               >
-                <div className="font-cinzel text-[13px] tracking-widest text-gold">
+                <div className="font-cinzel tracking-widest text-gold">
                   {row.genre}
                 </div>
                 <div className="font-garamond text-sm text-white/90 mt-1">
                   {row.style}
                 </div>
-                <div className="font-garamond text-[13px] text-muted mt-1">
-                  {row.notes}
-                </div>
+                <div className="font-garamond text-muted mt-1">{row.notes}</div>
               </div>
             ))}
           </div>
@@ -540,8 +630,8 @@ export default function CardsArtworksSection() {
         <section>
           <div className="section-label-accent mb-2">Mixed influences</div>
           <p className="font-garamond text-sm text-muted leading-[1.8] mb-3">
-            Subgenres with influence metadata should blend both parent identities
-            in one coherent visual system.
+            Subgenres with influence metadata should blend both parent
+            identities in one coherent visual system.
           </p>
           <p className="font-garamond text-sm text-muted leading-[1.8]">
             Example: <span className="text-white/90">Nu Metal</span> keeps Rock
@@ -554,21 +644,225 @@ export default function CardsArtworksSection() {
 
       {activeTab === "prompt" ? (
         <section>
-          <div className="section-label-accent mb-2">Prompt examples</div>
-          <div className="flex flex-col gap-3">
-            {PROMPT_EXAMPLES.map((row) => (
+          <div className="section-label-accent mb-2">Prompt generator</div>
+          <div className="font-garamond text-sm text-muted mb-4">
+            1) Choose primary genre/intensity. 2) Optionally choose a secondary
+            influence. 3) Write the subject. 4) Copy the generated prompt.
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-5">
+            {[
+              {
+                title: "1. Primary genre/intensity",
+                selected: primaryPromptChoice,
+                setSelected: setPrimaryPromptChoice,
+              },
+              {
+                title: "2. Secondary genre/intensity (optional)",
+                selected: secondaryPromptChoice,
+                setSelected: setSecondaryPromptChoice,
+              },
+            ].map(({ title, selected, setSelected }) => (
               <div
-                key={`${row.genre}-${row.intensity}`}
-                className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-3"
+                key={title}
+                className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-4"
               >
-                <div className="font-mono text-[11px] tracking-[0.12em] text-gold uppercase mb-1">
-                  {row.genre} · {row.intensity}
+                <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-3">
+                  {title}
                 </div>
-                <div className="font-garamond text-sm text-white/90 leading-[1.7]">
-                  {row.prompt}
+                <div className="flex justify-center">
+                  <svg width={340} height={340} viewBox="0 0 440 440">
+                    {WHEEL_GENRES.flatMap((g, i) => {
+                      const slice = 360 / WHEEL_GENRES.length;
+                      const start = i * slice - 90 - slice / 2;
+                      const end = i * slice - 90 + slice / 2;
+                      const genre = g.n as NonMainstreamGenreName;
+                      return [
+                        { intensity: "pop" as const, inner: 0, outer: 84 },
+                        { intensity: "soft" as const, inner: 84, outer: 116 },
+                        {
+                          intensity: "experimental" as const,
+                          inner: 116,
+                          outer: 148,
+                        },
+                        {
+                          intensity: "hardcore" as const,
+                          inner: 148,
+                          outer: 180,
+                        },
+                      ].map((band) => {
+                        const colour = genreIntensityColor(
+                          genre,
+                          band.intensity,
+                        );
+                        const hoverId = `${title}-${g.n}-${band.intensity}`;
+                        const active =
+                          selected?.genre === g.n &&
+                          selected?.intensity === band.intensity;
+                        const hovered = hoveredPromptSegment === hoverId;
+                        return (
+                          <path
+                            key={hoverId}
+                            d={annularSectorPath(
+                              220,
+                              220,
+                              band.inner,
+                              band.outer,
+                              start,
+                              end,
+                            )}
+                            fill={colour}
+                            stroke={
+                              active
+                                ? "rgba(255,255,255,.95)"
+                                : "rgba(255,255,255,.08)"
+                            }
+                            strokeWidth={active || hovered ? 2 : 1}
+                            style={{
+                              cursor: "pointer",
+                              filter: hovered
+                                ? "brightness(1.14) saturate(1.08)"
+                                : "none",
+                              transformOrigin: "220px 220px",
+                              transition:
+                                "filter 120ms ease, stroke-width 120ms ease",
+                            }}
+                            onMouseEnter={() =>
+                              setHoveredPromptSegment(hoverId)
+                            }
+                            onMouseLeave={() => setHoveredPromptSegment(null)}
+                            onClick={() =>
+                              setSelected({
+                                genre: g.n,
+                                intensity: band.intensity,
+                                colour,
+                              })
+                            }
+                          />
+                        );
+                      });
+                    })}
+
+                    {[84, 116, 148, 180].map((r) => (
+                      <circle
+                        key={`${title}-ring-${r}`}
+                        cx={220}
+                        cy={220}
+                        r={r}
+                        fill="none"
+                        stroke="rgba(255,255,255,.16)"
+                        strokeDasharray="4 6"
+                      />
+                    ))}
+
+                    {WHEEL_GENRES.map((_, i) => {
+                      const angle =
+                        ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
+                      const outer = polarToXY(220, 220, 180, angle);
+                      return (
+                        <line
+                          key={`${title}-divider-${i}`}
+                          x1={220}
+                          y1={220}
+                          x2={outer.x}
+                          y2={outer.y}
+                          stroke="rgba(255,255,255,.24)"
+                          strokeWidth={1}
+                        />
+                      );
+                    })}
+
+                    <circle
+                      cx={220}
+                      cy={220}
+                      r={26}
+                      fill={GENRE_THEMES.Mainstream.border}
+                      stroke={
+                        selected?.genre === "Mainstream"
+                          ? "rgba(255,255,255,.95)"
+                          : "rgba(255,255,255,.25)"
+                      }
+                      strokeWidth={selected?.genre === "Mainstream" ? 2 : 1.5}
+                      onMouseEnter={() =>
+                        setHoveredPromptSegment(`${title}-Mainstream-pop`)
+                      }
+                      onMouseLeave={() => setHoveredPromptSegment(null)}
+                      onClick={() =>
+                        setSelected({
+                          genre: "Mainstream",
+                          intensity: "pop",
+                          colour: GENRE_THEMES.Mainstream.border,
+                        })
+                      }
+                      style={{
+                        cursor: "pointer",
+                        filter:
+                          hoveredPromptSegment === `${title}-Mainstream-pop`
+                            ? "brightness(1.12) saturate(1.06)"
+                            : "none",
+                        transition:
+                          "filter 120ms ease, stroke-width 120ms ease",
+                      }}
+                    />
+                    <text
+                      x={220}
+                      y={220}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      className="font-cinzel text-[10px] tracking-[0.08em] fill-black/70"
+                    >
+                      Mainstream
+                    </text>
+                  </svg>
                 </div>
+                <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.08em] text-muted text-center">
+                  {selected
+                    ? `${selected.genre} · ${selected.intensity} · ${selected.colour}`
+                    : "None selected"}
+                </div>
+                {title.includes("Secondary") ? (
+                  <div className="mt-2 flex justify-center">
+                    <button
+                      type="button"
+                      className="font-mono text-[10px] tracking-[0.08em] text-gold border border-ui-border rounded px-2 py-1 hover:bg-white/5"
+                      onClick={() => setSecondaryPromptChoice(null)}
+                    >
+                      Clear secondary
+                    </button>
+                  </div>
+                ) : null}
               </div>
             ))}
+          </div>
+
+          <div className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-4 mb-4">
+            <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
+              3. Sujet
+            </div>
+            <textarea
+              value={promptSubject}
+              onChange={(e) => setPromptSubject(e.target.value)}
+              placeholder="Describe the scene subject, action, mood, setting..."
+              className="w-full min-h-[100px] rounded border border-ui-border bg-[#0f0f14] px-3 py-2 text-sm text-white/90 placeholder:text-muted/70"
+            />
+          </div>
+
+          <div className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-4">
+            <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
+              4. Generated prompt
+            </div>
+            <pre className="whitespace-pre-wrap font-garamond text-[14px] leading-[1.6] text-white/90 m-0 p-3 rounded bg-[#0f0f14] border border-ui-border/80">
+              {generatedPrompt}
+            </pre>
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                className="font-mono text-[11px] tracking-widest text-gold border border-ui-border rounded px-3 py-1.5 hover:bg-white/5"
+                onClick={() => navigator.clipboard.writeText(generatedPrompt)}
+              >
+                Copy prompt
+              </button>
+            </div>
           </div>
         </section>
       ) : null}

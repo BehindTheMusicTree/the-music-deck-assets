@@ -9,14 +9,21 @@ const SUB_TABS = [
   { href: "/charter/typography", label: "Typography" },
 ] as const;
 
-export default function CharterLayout({ children }: { children: React.ReactNode }) {
+export default function CharterLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname() ?? "/charter/palette";
 
   return (
     <>
       <div className="border-b border-ui-border bg-surface">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <nav className="flex gap-0 -mx-1 overflow-x-auto [&::-webkit-scrollbar]:h-0" aria-label="Charter sections">
+          <nav
+            className="flex gap-0 -mx-1 overflow-x-auto [&::-webkit-scrollbar]:h-0"
+            aria-label="Charter sections"
+          >
             {SUB_TABS.map(({ href, label }) => {
               const on = pathname === href || pathname.startsWith(`${href}/`);
               return (
