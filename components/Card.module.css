@@ -723,3 +723,27 @@
   text-overflow: ellipsis;
   line-height: 1;
 }
+
+.transitionStripGenre {
+  width: 28px;
+  padding: 0;
+  justify-content: center;
+}
+
+.transitionStripIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.96);
+  filter:
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+}
+
+.transitionStripIcon svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}

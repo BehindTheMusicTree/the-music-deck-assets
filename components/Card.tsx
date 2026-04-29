@@ -7,12 +7,17 @@ import IntensityGauge from "@/components/IntensityGauge";
 import {
   type AppGenreName,
   appGenreIntensity,
+  genreIntensityColor,
+  genreIntensityIn,
+  genreIntensityOut,
+  GENRE_THEMES,
   matchupGenreDisplayLabel,
   matchupTargetDiamondColor,
   matchupTargetsForAppGenre,
   type ResolvedThemeSelection,
   resolveThemeSelection,
   subgenreIntensity,
+  type Intensity,
   WORLD_THEMES,
 } from "@/lib/genres";
 import { countryFlagForShell, countryPreferredCardShell } from "@/lib/countries";
@@ -36,6 +41,13 @@ export interface TransitionTrack {
   /** Genre canonical border colour used as the strip background. */
   themeColor: string;
 }
+
+type GenreTransitionStrip = {
+  genre: string;
+  intensity: Intensity;
+  themeColor: string;
+  icon: string;
+};
 
 export interface CardData {
   id: number;
@@ -318,9 +330,47 @@ export default function Card({
   const transitionsIn = tracksIn.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
   const transitionsOut = tracksOut.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
 
+  const currentGenre = resolved.resolvedGenre;
+  const currentIntensity: Intensity | undefined = (() => {
+    if (resolved.resolvedSubgenre) return subgenreIntensity(resolved.resolvedSubgenre);
+    if (currentGenre) return appGenreIntensity(currentGenre as AppGenreName);
+    return undefined;
+  })();
+  const toGenreTransitionStrip = (n: { genre: string; intensity: Intensity }): GenreTransitionStrip => ({
+    genre: n.genre,
+    intensity: n.intensity,
+    themeColor:
+      n.genre === "Mainstream"
+        ? GENRE_THEMES.Mainstream.border
+        : genreIntensityColor(
+            n.genre as Exclude<keyof typeof GENRE_THEMES, "Mainstream">,
+            n.intensity,
+          ),
+    icon: GENRE_THEMES[n.genre as keyof typeof GENRE_THEMES]?.icon ?? "",
+  });
+  const genreTransitionsIn: GenreTransitionStrip[] =
+    currentGenre && currentIntensity
+      ? genreIntensityIn({
+          genre: currentGenre as keyof typeof GENRE_THEMES,
+          intensity: currentIntensity,
+        })
+          .filter((n) => n.genre !== currentGenre)
+          .map(toGenreTransitionStrip)
+      : [];
+  const genreTransitionsOut: GenreTransitionStrip[] =
+    currentGenre && currentIntensity
+      ? genreIntensityOut({
+          genre: currentGenre as keyof typeof GENRE_THEMES,
+          intensity: currentIntensity,
+        })
+          .filter((n) => n.genre !== currentGenre)
+          .map(toGenreTransitionStrip)
+      : [];
+
   const STRIP_H = 13;
   const STRIP_GAP = 2;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
+  const genreStripBaseTop = STRIP_TOP_BASE + Math.max(transitionsIn.length, transitionsOut.length) * (STRIP_H + STRIP_GAP) + 3;
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -671,6 +721,32 @@ export default function Card({
           style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
         >
           <span className={styles.transitionStripText}>{t.title}</span>
+        </div>
+      ))}
+      {genreTransitionsIn.map((t, i) => (
+        <div
+          key={`genre-in-${i}-${t.genre}-${t.intensity}`}
+          className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+          style={{ background: t.themeColor, top: genreStripBaseTop + i * (STRIP_H + STRIP_GAP) }}
+          title={`${t.genre} (${t.intensity})`}
+        >
+          <span
+            className={styles.transitionStripIcon}
+            dangerouslySetInnerHTML={{ __html: t.icon }}
+          />
+        </div>
+      ))}
+      {genreTransitionsOut.map((t, i) => (
+        <div
+          key={`genre-out-${i}-${t.genre}-${t.intensity}`}
+          className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
+          style={{ background: t.themeColor, top: genreStripBaseTop + i * (STRIP_H + STRIP_GAP) }}
+          title={`${t.genre} (${t.intensity})`}
+        >
+          <span
+            className={styles.transitionStripIcon}
+            dangerouslySetInnerHTML={{ __html: t.icon }}
+          />
         </div>
       ))}
     </>

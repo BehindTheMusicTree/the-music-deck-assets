@@ -147,7 +147,8 @@ export default function GenresPage() {
             </p>
             <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
               <li>
-                Mainstream (pop) fans out to every genre at pop intensity.
+                Mainstream (pop) fans out to every genre at pop intensity,
+                including itself.
               </li>
               <li>
                 For any non-mainstream node (genre A, intensity B), out includes
@@ -161,6 +162,10 @@ export default function GenresPage() {
               <li>
                 Neighbour genre branches at lower intensity: (next(A), B - 1)
                 and (previous(A), B - 1).
+              </li>
+              <li>
+                Extra pop hub link: when B = pop, non-mainstream nodes also link
+                to Mainstream (pop).
               </li>
               <li>
                 Some subgenres add an influence bridge (bidirectional). Example:
