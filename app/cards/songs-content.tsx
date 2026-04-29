@@ -214,7 +214,7 @@ export function CardsSongsContent() {
               ],
               [
                 "Genre Transitions",
-                "Strips showing neighbouring genres on the intensity spectrum — where this card sits in the broader genre graph.",
+                "Small genre icons on coloured strips: valid mix paths under the transition rules — left lists genre and intensity pairs that may lead into this card; right lists pairs this card may transition out to next. Each strip uses that endpoint's colour. These follow the genre transition graph (genre plus intensity at each step), not only moving along one intensity axis.",
               ],
               [
                 "Artwork",

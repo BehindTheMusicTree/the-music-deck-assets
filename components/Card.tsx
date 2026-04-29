@@ -11,6 +11,7 @@ import {
   genreIntensityIn,
   genreIntensityOut,
   GENRE_THEMES,
+  sortGenreIntensityNodesForStripDisplay,
   matchupGenreDisplayLabel,
   matchupTargetDiamondColor,
   matchupTargetsForAppGenre,
@@ -220,6 +221,11 @@ export default function Card({
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
+  const typeStripRef = useRef<HTMLDivElement>(null);
+  const cardFrameRef = useRef<HTMLDivElement>(null);
+  const [genreStripAnchorTop, setGenreStripAnchorTop] = useState<number | null>(
+    null,
+  );
   const titleScaleRef = useRef(1);
   const resolved: ResolvedThemeSelection = card.genre
     ? resolveThemeSelection({ genre: card.genre, country: card.country })
@@ -350,27 +356,65 @@ export default function Card({
   });
   const genreTransitionsIn: GenreTransitionStrip[] =
     currentGenre && currentIntensity
-      ? genreIntensityIn({
-          genre: currentGenre as keyof typeof GENRE_THEMES,
-          intensity: currentIntensity,
-        })
-          .filter((n) => n.genre !== currentGenre)
-          .map(toGenreTransitionStrip)
+      ? sortGenreIntensityNodesForStripDisplay(
+          genreIntensityIn({
+            genre: currentGenre as keyof typeof GENRE_THEMES,
+            intensity: currentIntensity,
+          }).filter((n) => n.genre !== currentGenre),
+        ).map(toGenreTransitionStrip)
       : [];
   const genreTransitionsOut: GenreTransitionStrip[] =
     currentGenre && currentIntensity
-      ? genreIntensityOut({
-          genre: currentGenre as keyof typeof GENRE_THEMES,
-          intensity: currentIntensity,
-        })
-          .filter((n) => n.genre !== currentGenre)
-          .map(toGenreTransitionStrip)
+      ? sortGenreIntensityNodesForStripDisplay(
+          genreIntensityOut({
+            genre: currentGenre as keyof typeof GENRE_THEMES,
+            intensity: currentIntensity,
+          }).filter((n) => n.genre !== currentGenre),
+        ).map(toGenreTransitionStrip)
       : [];
 
-  const STRIP_H = 13;
+  const STRIP_H = 17;
   const STRIP_GAP = 2;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
-  const genreStripBaseTop = STRIP_TOP_BASE + Math.max(transitionsIn.length, transitionsOut.length) * (STRIP_H + STRIP_GAP) + 3;
+  const GENRE_GAP_ABOVE_TYPE_STRIP = 3;
+  /** Either side may list fewer transitions — anchor each stack from the bottom above the type strip. */
+  const genreTransitionStripTop = (index: number, sideCount: number): number | null => {
+    if (genreStripAnchorTop == null || sideCount === 0) return null;
+    const bottomStripeTop =
+      genreStripAnchorTop - GENRE_GAP_ABOVE_TYPE_STRIP - STRIP_H;
+    return bottomStripeTop - (sideCount - 1 - index) * (STRIP_H + STRIP_GAP);
+  };
+  const genreStripRowCount = Math.max(
+    genreTransitionsIn.length,
+    genreTransitionsOut.length,
+  );
+
+  useLayoutEffect(() => {
+    if (genreStripRowCount === 0) return;
+    const frame = cardFrameRef.current;
+    const strip = typeStripRef.current;
+    if (!frame || !strip) return;
+    const measure = () => {
+      const ft = frame.getBoundingClientRect().top;
+      const st = strip.getBoundingClientRect().top;
+      setGenreStripAnchorTop(st - ft);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(frame);
+    ro.observe(strip);
+    return () => ro.disconnect();
+  }, [
+    genreStripRowCount,
+    card.id,
+    card.abilityDesc,
+    card.title,
+    card.pop,
+    transitionsIn.length,
+    transitionsOut.length,
+    small,
+    titleScale,
+  ]);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -473,7 +517,7 @@ export default function Card({
           Type strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
           flag swatch; that pattern is reserved for list/panel views (e.g. CountryFlagSwatch).
         */}
-        <div className={styles.typeStrip}>
+        <div ref={typeStripRef} className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
             <>
               {pipLeftSymbol ? (
@@ -723,32 +767,50 @@ export default function Card({
           <span className={styles.transitionStripText}>{t.title}</span>
         </div>
       ))}
-      {genreTransitionsIn.map((t, i) => (
-        <div
-          key={`genre-in-${i}-${t.genre}-${t.intensity}`}
-          className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
-          style={{ background: t.themeColor, top: genreStripBaseTop + i * (STRIP_H + STRIP_GAP) }}
-          title={`${t.genre} (${t.intensity})`}
-        >
-          <span
-            className={styles.transitionStripIcon}
-            dangerouslySetInnerHTML={{ __html: t.icon }}
-          />
-        </div>
-      ))}
-      {genreTransitionsOut.map((t, i) => (
-        <div
-          key={`genre-out-${i}-${t.genre}-${t.intensity}`}
-          className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
-          style={{ background: t.themeColor, top: genreStripBaseTop + i * (STRIP_H + STRIP_GAP) }}
-          title={`${t.genre} (${t.intensity})`}
-        >
-          <span
-            className={styles.transitionStripIcon}
-            dangerouslySetInnerHTML={{ __html: t.icon }}
-          />
-        </div>
-      ))}
+      {genreStripAnchorTop != null
+        ? genreTransitionsIn.map((t, i) => {
+            const top = genreTransitionStripTop(i, genreTransitionsIn.length);
+            if (top == null) return null;
+            return (
+              <div
+                key={`genre-in-${i}-${t.genre}-${t.intensity}`}
+                className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+                style={{
+                  background: t.themeColor,
+                  top,
+                }}
+                title={`${t.genre} (${t.intensity})`}
+              >
+                <span
+                  className={styles.transitionStripIcon}
+                  dangerouslySetInnerHTML={{ __html: t.icon }}
+                />
+              </div>
+            );
+          })
+        : null}
+      {genreStripAnchorTop != null
+        ? genreTransitionsOut.map((t, i) => {
+            const top = genreTransitionStripTop(i, genreTransitionsOut.length);
+            if (top == null) return null;
+            return (
+              <div
+                key={`genre-out-${i}-${t.genre}-${t.intensity}`}
+                className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
+                style={{
+                  background: t.themeColor,
+                  top,
+                }}
+                title={`${t.genre} (${t.intensity})`}
+              >
+                <span
+                  className={styles.transitionStripIcon}
+                  dangerouslySetInnerHTML={{ __html: t.icon }}
+                />
+              </div>
+            );
+          })
+        : null}
     </>
   );
 
@@ -840,7 +902,10 @@ export default function Card({
         </div>
       </div>
     ) : flagStyle === "fade" && flagBg ? (
-      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+      <div
+        ref={cardFrameRef}
+        className={`${styles.cardFrame}${frameStaticClass}`}
+      >
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}
@@ -859,7 +924,10 @@ export default function Card({
         {cardStrips}
       </div>
     ) : (
-      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+      <div
+        ref={cardFrameRef}
+        className={`${styles.cardFrame}${frameStaticClass}`}
+      >
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}

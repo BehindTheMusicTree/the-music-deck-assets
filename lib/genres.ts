@@ -456,6 +456,26 @@ export function genreIntensityLinks(
   return direction === "out" ? genreIntensityOut(node) : genreIntensityIn(node);
 }
 
+function compareGenreIntensityNodesForStripDisplay(
+  a: GenreIntensityNode,
+  b: GenreIntensityNode,
+): number {
+  const ga = GENRE_NAMES.indexOf(a.genre);
+  const gb = GENRE_NAMES.indexOf(b.genre);
+  const byGenre = (ga === -1 ? 999 : ga) - (gb === -1 ? 999 : gb);
+  if (byGenre !== 0) return byGenre;
+  const ia = INTENSITY_ORDER.indexOf(a.intensity);
+  const ib = INTENSITY_ORDER.indexOf(b.intensity);
+  return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+}
+
+/** Card genre transition strips: grouped by {@link GENRE_NAMES} order; intensities ascending within each genre. */
+export function sortGenreIntensityNodesForStripDisplay(
+  nodes: GenreIntensityNode[],
+): GenreIntensityNode[] {
+  return [...nodes].sort(compareGenreIntensityNodesForStripDisplay);
+}
+
 /** Weak vs / Advantage vs targets (canonical; aligns with Genres — Associations). */
 export const GENRE_BATTLE_MATCHUP: Record<
   GenreName,

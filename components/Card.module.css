@@ -661,17 +661,18 @@
 
 /* Transition strips: siblings of .card inside .cardFrame (NOT children of .card).
    Coordinates are relative to .cardFrame = card border-box (272×400).
-   Strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top. */
+   Track-strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top.
+   Genre icon strips are positioned in JS just above the type strip (genre/subgenre band). */
 .transitionStrip {
   position: absolute;
   width: 103px;
-  height: 13px;
+  height: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   z-index: 20;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
   transition: transform 0.15s;
 }
 .transitionStripIn {
@@ -725,8 +726,9 @@
 }
 
 .transitionStripGenre {
-  width: 28px;
-  padding: 0;
+  width: 30px;
+  padding: 4px 2px;
+  box-sizing: border-box;
   justify-content: center;
 }
 
@@ -734,16 +736,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
   color: rgba(255, 255, 255, 0.96);
-  filter:
-    drop-shadow(0 0 2px rgba(0, 0, 0, 0.85))
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+  filter: none;
 }
 
 .transitionStripIcon svg {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   display: block;
 }

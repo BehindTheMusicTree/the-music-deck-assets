@@ -139,6 +139,7 @@ export const CLASSICAL_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
+    tracksOut: [116],
     rarity: "Legendary",
     artwork: `${ART}artwork.beethoven-symphony-no-5-v1.png`,
     artworkCreatedAt:
