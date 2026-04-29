@@ -738,7 +738,7 @@
 .genreTransitionStripIn {
   position: absolute;
   left: 0;
-  width: 30px;
+  width: 24px;
   height: 17px;
   padding: 4px 2px;
   box-sizing: border-box;
@@ -759,7 +759,7 @@
 .genreTransitionStripOut {
   position: absolute;
   right: -7px;
-  width: 30px;
+  width: 24px;
   height: 17px;
   padding: 4px 2px;
   box-sizing: border-box;
