@@ -6,11 +6,13 @@ import {
   SUBGENRES,
   WHEEL_GENRES,
   genreIntensityColor,
-  genreIntensityIn,
-  genreIntensityOut,
+  transitionIn,
+  transitionOut,
   type GenreName,
   type Intensity,
   type NonMainstreamGenreName,
+  type TransitionNode,
+  type TransitionSubgenreNode,
 } from "@/lib/genres";
 import {
   R_EXPERIMENTAL_HARDCORE_LINE,
@@ -32,15 +34,13 @@ type Node = {
   colour: string;
   x: number;
   y: number;
+  r?: number;
 };
 
 type HoverState = {
-  node: Node;
+  node: TransitionNode;
+  anchor: Node;
   subgenreLabel?: string;
-  bridge?: {
-    from: Node;
-    to: Node;
-  };
 };
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
@@ -81,14 +81,20 @@ function annularSectorPath(
   ].join(" ");
 }
 
-function isSameNode(
-  a: { genre: GenreName; intensity: Intensity },
-  b: { genre: GenreName; intensity: Intensity },
-) {
-  return a.genre === b.genre && a.intensity === b.intensity;
+function isSameTransitionNode(a: TransitionNode, b: TransitionNode): boolean {
+  if (a.kind !== b.kind) return false;
+  if (a.kind === "genreIntensity" && b.kind === "genreIntensity") {
+    return a.genre === b.genre && a.intensity === b.intensity;
+  }
+  return (
+    a.kind === "subgenre" &&
+    b.kind === "subgenre" &&
+    a.subgenre === b.subgenre
+  );
 }
 
 function circleRadiusForNode(n: { genre: GenreName }) {
+  if ("r" in n && typeof n.r === "number") return n.r;
   return n.genre === "Mainstream" ? 24 : 16;
 }
 
@@ -111,14 +117,23 @@ function lineToCircleEdge(
   };
 }
 
-function labelNode(n: { genre: GenreName; intensity: Intensity }) {
+function labelNode(n: TransitionNode) {
+  if (n.kind === "subgenre") return `${n.subgenre}`;
   return `${n.genre} (${n.intensity})`;
 }
 
-function colourForNode(n: { genre: GenreName; intensity: Intensity }) {
-  return n.genre === "Mainstream"
-    ? GENRE_THEMES.Mainstream.border
-    : genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity);
+function colourForNode(
+  n: TransitionNode,
+  byKey: Record<string, Node>,
+  subgenreNodes: Array<{ label: string; colour: string }>,
+) {
+  if (n.kind === "subgenre") {
+    const dot = subgenreNodes.find((s) => s.label === n.subgenre);
+    if (dot) return dot.colour;
+    return genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity);
+  }
+  const node = byKey[`${n.genre}|${n.intensity}`];
+  return node?.colour ?? genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity);
 }
 
 export default function GenreTransitionsWheel() {
@@ -173,17 +188,14 @@ export default function GenreTransitionsWheel() {
         const r = wheelSubgenreRadius(s.intensity) + placement.rOffset;
         const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
         const node = byKey[`${s.parentA}|${s.intensity}`];
-        const influenceNode = s.influence
-          ? byKey[`${s.influence.genre}|${s.influence.intensity}`]
-          : null;
-        if (!node || !influenceNode) return null;
+        if (!node) return null;
         return {
           label: s.n,
           x: pos.x,
           y: pos.y,
           node,
-          influenceNode,
           colour: node.colour,
+          radius: 8,
         };
       })
       .filter((s): s is NonNullable<typeof s> => s !== null);
@@ -192,32 +204,43 @@ export default function GenreTransitionsWheel() {
   }, [subgenrePlacement]);
 
   const hoveredNode = hovered?.node ?? null;
-  const hoveredOut = hoveredNode ? genreIntensityOut(hoveredNode) : [];
-  const hoveredIn = hoveredNode ? genreIntensityIn(hoveredNode) : [];
+  const hoveredOut = hoveredNode ? transitionOut(hoveredNode) : [];
+  const hoveredIn = hoveredNode ? transitionIn(hoveredNode) : [];
 
-  const outLinks = hovered?.bridge
-    ? [hovered.bridge]
-    : hoveredNode
-      ? hoveredOut
+  const resolveTransitionNodePoint = (node: TransitionNode): Node | null => {
+    if (node.kind === "genreIntensity") {
+      return data.byKey[`${node.genre}|${node.intensity}`] ?? null;
+    }
+    const dot = data.subgenreNodes.find((s) => s.label === node.subgenre);
+    if (!dot) return null;
+    return { ...dot.node, x: dot.x, y: dot.y, r: dot.radius };
+  };
+
+  const hoveredAnchor = hovered?.anchor ?? (hoveredNode ? resolveTransitionNodePoint(hoveredNode) : null);
+
+  const outLinks = hoveredNode
+    ? hoveredOut
         .map((to) => {
-          const toNode = data.byKey[`${to.genre}|${to.intensity}`];
-          if (!toNode || isSameNode(hoveredNode, toNode)) return null;
-          return { from: hoveredNode, to: toNode };
+          const toPoint = resolveTransitionNodePoint(to);
+          if (!hoveredAnchor || !toPoint || isSameTransitionNode(hoveredNode, to)) {
+            return null;
+          }
+          return { from: hoveredAnchor, to: toPoint };
         })
         .filter((l): l is NonNullable<typeof l> => l !== null)
-      : [];
+    : [];
 
-  const inLinks = hovered?.bridge
-    ? [{ from: hovered.bridge.to, to: hovered.bridge.from }]
-    : hoveredNode
-      ? hoveredIn
+  const inLinks = hoveredNode
+    ? hoveredIn
         .map((from) => {
-          const fromNode = data.byKey[`${from.genre}|${from.intensity}`];
-          if (!fromNode || isSameNode(hoveredNode, fromNode)) return null;
-          return { from: fromNode, to: hoveredNode };
+          const fromPoint = resolveTransitionNodePoint(from);
+          if (!hoveredAnchor || !fromPoint || isSameTransitionNode(hoveredNode, from)) {
+            return null;
+          }
+          return { from: fromPoint, to: hoveredAnchor };
         })
         .filter((l): l is NonNullable<typeof l> => l !== null)
-      : [];
+    : [];
 
   const wheelSlice = 360 / WHEEL_GENRES.length;
   const intensityBands: Array<{
@@ -284,6 +307,7 @@ export default function GenreTransitionsWheel() {
           return intensityBands.map((band) => {
             const isHovered =
               hoveredNode != null &&
+              hoveredNode.kind === "genreIntensity" &&
               hoveredNode.genre === g.n &&
               hoveredNode.intensity === band.intensity;
             return (
@@ -305,7 +329,16 @@ export default function GenreTransitionsWheel() {
                 style={{ cursor: "pointer" }}
                 onMouseEnter={() => {
                   const node = data.byKey[`${g.n}|${band.intensity}`];
-                  if (node) setHovered({ node });
+                  if (node) {
+                    setHovered({
+                      node: {
+                        kind: "genreIntensity",
+                        genre: g.n,
+                        intensity: band.intensity,
+                      },
+                      anchor: node,
+                    });
+                  }
                 }}
                 onMouseLeave={() => setHovered(null)}
               />
@@ -322,7 +355,12 @@ export default function GenreTransitionsWheel() {
           style={{ cursor: "pointer" }}
           onMouseEnter={() => {
             const node = data.byKey["Mainstream|pop"];
-            if (node) setHovered({ node });
+            if (node) {
+              setHovered({
+                node: { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+                anchor: node,
+              });
+            }
           }}
           onMouseLeave={() => setHovered(null)}
         />
@@ -401,9 +439,21 @@ export default function GenreTransitionsWheel() {
             r={circleRadiusForNode(n)}
             fill={n.colour}
             stroke="rgba(255,255,255,.45)"
-            strokeWidth={hoveredNode && isSameNode(hoveredNode, n) ? 2.6 : 1.6}
+            strokeWidth={
+              hoveredNode &&
+              hoveredNode.kind === "genreIntensity" &&
+              hoveredNode.genre === n.genre &&
+              hoveredNode.intensity === n.intensity
+                ? 2.6
+                : 1.6
+            }
             style={{ cursor: "pointer" }}
-            onMouseEnter={() => setHovered({ node: n })}
+            onMouseEnter={() =>
+              setHovered({
+                node: { kind: "genreIntensity", genre: n.genre, intensity: n.intensity },
+                anchor: n,
+              })
+            }
             onMouseLeave={() => setHovered(null)}
           />
         ))}
@@ -412,18 +462,29 @@ export default function GenreTransitionsWheel() {
             key={`subgenre-${s.label}`}
             cx={s.x}
             cy={s.y}
-            r={8}
+            r={s.radius}
             fill={s.colour}
             stroke="rgba(255,255,255,.55)"
             strokeWidth={1.2}
             style={{ cursor: "pointer" }}
-            onMouseEnter={() =>
+            onMouseEnter={() => {
+              const anchor: Node = {
+                ...s.node,
+                x: s.x,
+                y: s.y,
+                r: s.radius,
+              };
               setHovered({
-                node: s.node,
+                node: {
+                  kind: "subgenre",
+                  subgenre: s.label,
+                  genre: s.node.genre as NonMainstreamGenreName,
+                  intensity: s.node.intensity,
+                } as TransitionSubgenreNode,
+                anchor,
                 subgenreLabel: s.label,
-                bridge: { from: s.node, to: s.influenceNode },
-              })
-            }
+              });
+            }}
             onMouseLeave={() => setHovered(null)}
           />
         ))}
@@ -439,17 +500,21 @@ export default function GenreTransitionsWheel() {
             ) : null}
             <div
               className="font-mono text-[20px] uppercase tracking-[0.08em]"
-              style={{ color: hoveredNode.colour }}
+              style={{
+                color: colourForNode(hoveredNode, data.byKey, data.subgenreNodes),
+              }}
             >
-              {hoveredNode.genre} · {hoveredNode.intensity}
+              {labelNode(hoveredNode)}
             </div>
             <div className="font-mono text-[18px] mt-2">Out:</div>
             <ul className="m-0 mt-1 pl-6 list-disc">
               {hoveredOut.map((n) => (
                 <li
-                  key={`out-${n.genre}-${n.intensity}`}
+                  key={`out-${n.kind === "subgenre" ? n.subgenre : `${n.genre}-${n.intensity}`}`}
                   className="font-mono text-[18px]"
-                  style={{ color: colourForNode(n) }}
+                  style={{
+                    color: colourForNode(n, data.byKey, data.subgenreNodes),
+                  }}
                 >
                   {labelNode(n)}
                 </li>
@@ -459,9 +524,11 @@ export default function GenreTransitionsWheel() {
             <ul className="m-0 mt-1 pl-6 list-disc">
               {hoveredIn.map((n) => (
                 <li
-                  key={`in-${n.genre}-${n.intensity}`}
+                  key={`in-${n.kind === "subgenre" ? n.subgenre : `${n.genre}-${n.intensity}`}`}
                   className="font-mono text-[18px]"
-                  style={{ color: colourForNode(n) }}
+                  style={{
+                    color: colourForNode(n, data.byKey, data.subgenreNodes),
+                  }}
                 >
                   {labelNode(n)}
                 </li>
