@@ -1,5 +1,8 @@
 import Link from "next/link";
 import BattlesSubTabs from "@/components/BattlesSubTabs";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Battles" };
+
 
 export default function BattlesPage() {
   return (

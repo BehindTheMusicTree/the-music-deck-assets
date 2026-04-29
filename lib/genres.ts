@@ -468,15 +468,6 @@ export const GENRE_BATTLE_MATCHUP: Record<
   const byGenre = new Map<NonMainstreamGenreName, number>(
     wheelGenres.map((g, i) => [g, i]),
   );
-  const influencedTargetsByGenre: Record<NonMainstreamGenreName, Set<GenreName>> =
-    Object.fromEntries(wheelGenres.map((g) => [g, new Set<GenreName>()])) as Record<
-      NonMainstreamGenreName,
-      Set<GenreName>
-    >;
-  for (const sub of GENRE_SUBGENRES) {
-    if (!sub.influence) continue;
-    influencedTargetsByGenre[sub.parentA].add(sub.influence.genre);
-  }
   const atOffset = (
     genre: NonMainstreamGenreName,
     offset: number,
@@ -506,9 +497,7 @@ export const GENRE_BATTLE_MATCHUP: Record<
       atOffset(genre, -2),
       atOffset(genre, +3),
     ];
-    const removedWeaknesses = influencedTargetsByGenre[genre];
-    const weakVs = weakVsBase.filter((g) => !removedWeaknesses.has(g));
-    out[genre] = { advantageVs, weakVs };
+    out[genre] = { advantageVs, weakVs: weakVsBase };
   }
   return out;
 })();

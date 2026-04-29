@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Typography" };
+
 export default function TypographyPage() {
   return (
     <div className="px-6 py-10 flex flex-col items-center">

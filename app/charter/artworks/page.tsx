@@ -1,4 +1,7 @@
 import CardsArtworksSection from "@/components/CardsArtworksSection";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Artworks" };
+
 
 export default function CharterArtworksPage() {
   return (

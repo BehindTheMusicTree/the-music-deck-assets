@@ -6,7 +6,6 @@ import {
   SUBGENRES,
   WHEEL_GENRES,
   genreIntensityColor,
-  matchupIncomingFrom,
   matchupTargetsForAppGenre,
   type AppGenreName,
   type GenreName,
@@ -197,10 +196,12 @@ export default function GenreMashupWheel() {
 
   const hoveredGenre = hovered?.node.genre;
   const hoveredIntensity = hovered?.node.intensity;
-  const { advantageVs, weakVs } = matchupTargetsForAppGenre(
+  const { advantageVs, weakVs: baseWeakVs } = matchupTargetsForAppGenre(
     hoveredGenre as AppGenreName | undefined,
   );
-  const incoming = matchupIncomingFrom(hoveredGenre as AppGenreName | undefined);
+  const weakVs = hovered?.subgenreInfluence
+    ? baseWeakVs.filter((g) => g !== hovered.subgenreInfluence?.genre)
+    : baseWeakVs;
 
   const anchor = hovered?.anchor ?? null;
   const outLinks =
@@ -223,7 +224,7 @@ export default function GenreMashupWheel() {
       : [];
   const inLinks =
     anchor && hoveredGenre
-      ? incoming
+      ? weakVs
           .flatMap((g) => {
             const levels: Intensity[] =
               g === "Mainstream"

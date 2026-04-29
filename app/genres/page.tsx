@@ -6,6 +6,7 @@ import GenreThemePreview from "@/components/GenreThemePreview";
 import GenreTransitionsWheel from "@/components/GenreTransitionsWheel";
 import GenreMashupWheel from "@/components/GenreMashupWheel";
 import IntensityGauge from "@/components/IntensityGauge";
+import type { Metadata } from "next";
 import {
   APP_GENRE_NAMES,
   APP_GENRE_THEMES,
@@ -14,6 +15,8 @@ import {
   displayGenreLabel,
   intensityLevelIndex,
 } from "@/lib/genres";
+
+export const metadata: Metadata = { title: "Genres" };
 
 function textOnBg(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);

@@ -13,18 +13,16 @@ describe("genre mashup matchup rules", () => {
   it("Rock follows circular +2/-3 advantage and -2/+3 weakness", () => {
     expect(matchupTargetsForAppGenre("Rock")).toEqual({
       advantageVs: ["Vintage", "Electronic"],
-      weakVs: ["Disco/Funk"],
+      weakVs: ["Disco/Funk", "Reggae/Dub"],
     });
   });
 
-  it("influence removes weakness when target matches influence genre", () => {
-    // Hip-Hop has Hip-House (influence Electronic) and R&B (influence Vintage),
-    // so both weak targets are removed.
+  it("genre matchup does not inherit subgenre influences", () => {
     expect(matchupTargetsForAppGenre("Hip-Hop")).toEqual({
       advantageVs: ["Classical", "Reggae/Dub"],
-      weakVs: [],
+      weakVs: ["Electronic", "Vintage"],
     });
-    // Disco/Funk has Early Funk (influence Vintage), but Vintage is not in weakVs here.
+    // Even with influenced subgenres, base wheel rule applies unchanged at genre level.
     expect(matchupTargetsForAppGenre("Disco/Funk")).toEqual({
       advantageVs: ["Rock", "Vintage"],
       weakVs: ["Reggae/Dub", "Classical"],
