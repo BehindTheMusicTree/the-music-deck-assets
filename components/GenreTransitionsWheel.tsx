@@ -50,6 +50,20 @@ function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
   return { x: Number(x.toFixed(4)), y: Number(y.toFixed(4)) };
 }
 
+function normalizeDeltaDeg(a: number, b: number): number {
+  let d = a - b;
+  while (d > 180) d -= 360;
+  while (d < -180) d += 360;
+  return d;
+}
+
+function parentGenreAngleDeg(genre: GenreName): number {
+  if (genre === "Mainstream") return -90;
+  const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
+  if (idx < 0) return -90;
+  return (idx / WHEEL_GENRES.length) * 360 - 90;
+}
+
 function annularSectorPath(
   cx: number,
   cy: number,
@@ -179,14 +193,35 @@ export default function GenreTransitionsWheel() {
       nodes.map((n) => [`${n.genre}|${n.intensity}`, n]),
     );
 
-    const subgenreNodes = SUBGENRES.filter(
+    const influencedSubs = SUBGENRES.filter(
       (s) => s.kind === "genre" && Boolean(s.influence),
-    )
+    );
+    const influencedBucketCounts = new Map<string, number>();
+    for (const s of influencedSubs) {
+      const k = `${s.parentA}|${s.intensity}`;
+      influencedBucketCounts.set(k, (influencedBucketCounts.get(k) ?? 0) + 1);
+    }
+    const influencedBucketSeen = new Map<string, number>();
+    const subgenreNodes = influencedSubs
       .map((s) => {
         const placement = subgenrePlacement.get(s.n);
         if (!placement) return null;
-        const r = wheelSubgenreRadius(s.intensity) + placement.rOffset;
-        const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, placement.angleDeg);
+        const bucketKey = `${s.parentA}|${s.intensity}`;
+        const bucketCount = influencedBucketCounts.get(bucketKey) ?? 1;
+        const bucketIndex = influencedBucketSeen.get(bucketKey) ?? 0;
+        influencedBucketSeen.set(bucketKey, bucketIndex + 1);
+        const spreadCenter = (bucketCount - 1) / 2;
+        const spreadIndex = bucketIndex - spreadCenter;
+        const spreadAngle = spreadIndex * 3.2;
+        const parentAngle = parentGenreAngleDeg(s.parentA);
+        let angle = placement.angleDeg + spreadAngle;
+        const hubDelta = normalizeDeltaDeg(angle, parentAngle);
+        if (Math.abs(hubDelta) < 7) {
+          angle += hubDelta >= 0 ? 7 - hubDelta : -7 - hubDelta;
+        }
+        const r =
+          wheelSubgenreRadius(s.intensity) + placement.rOffset + Math.abs(spreadIndex) * 3;
+        const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, angle);
         const node = byKey[`${s.parentA}|${s.intensity}`];
         if (!node) return null;
         return {
