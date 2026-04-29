@@ -386,7 +386,6 @@ export default function Card({
       : [];
 
   const STRIP_H = 17;
-  const STRIP_GAP = 2;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
   // Center of the genre/type strip from card frame bottom — anchor for grouping.
   const GENRE_STRIP_CENTER_Y = 156;
@@ -743,14 +742,14 @@ export default function Card({
             className={styles.trackTransitionStripIn}
             style={{
               background: t.themeColor,
-              top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
+              top: STRIP_TOP_BASE + i * STRIP_H,
             }}
           >
             <span className={styles.trackTransitionStripText}>{t.title}</span>
           </div>
           <div
             className={styles.trackTransitionStripInNotch}
-            style={{ top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
+            style={{ top: STRIP_TOP_BASE + i * STRIP_H }}
           />
         </React.Fragment>
       ))}
@@ -760,7 +759,7 @@ export default function Card({
           className={styles.trackTransitionStripOut}
           style={{
             background: t.themeColor,
-            top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
+            top: STRIP_TOP_BASE + i * STRIP_H,
           }}
         >
           <span className={styles.trackTransitionStripText}>{t.title}</span>

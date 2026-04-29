@@ -786,6 +786,7 @@
   height: 14px;
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.96);
+  transform: translateX(2px);
 }
 .genreTransitionStripIcon svg {
   width: 10px;
