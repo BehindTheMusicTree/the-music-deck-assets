@@ -17,10 +17,7 @@ import { buildCardTrackIndex } from "@/lib/cards";
 
 export function CardsSongsContent() {
   const cardTrackIndex = buildCardTrackIndex(DECK_SPOTLIGHT_CARDS);
-  const fourTetOpusBase = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 85)!;
-  const anatomyCard = {
-    ...fourTetOpusBase,
-  };
+  const anatomyCard = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 39)!;
 
   const intensityExamples: Array<{
     level: "pop" | "soft" | "experimental" | "hardcore";
@@ -110,7 +107,7 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "Border and full theme always come from the region theme (same rule as country-subgenre).",
-      card: DECK_SPOTLIGHT_CARDS.find((c) => c.id === 77)!,
+      card: WORLD_FLAG_CARDS.find((c) => c.id === 77)!,
       theme: worldThemeForCountry("Bretagne"),
     },
     {
@@ -141,8 +138,8 @@ export function CardsSongsContent() {
       right: "Genre-subgenre.",
       border:
         "Border fades from country flag (left) to subgenre/genre colour (right).",
-      card: WORLD_MIXED_CARDS[0],
-      theme: worldThemeForCountry(WORLD_MIXED_CARDS[0].country!),
+      card: WORLD_MIXED_CARDS.find((c) => c.id === 27)!,
+      theme: worldThemeForCountry("France"),
     },
     {
       key: "bleed",
@@ -151,8 +148,8 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "No border — artwork fills the card edge-to-edge. UI bands (type strip, ability, stats, footer) stay inset as in normal mode.",
-      card: WORLD_FLAG_CARDS[2],
-      theme: worldThemeForCountry(WORLD_FLAG_CARDS[2].country!),
+      card: WORLD_FLAG_CARDS.find((c) => c.id === 26)!,
+      theme: worldThemeForCountry("Bretagne"),
     },
   ];
 
@@ -209,47 +206,41 @@ export function CardsSongsContent() {
             {[
               [
                 "Header",
-                "Icon: Genre icon.\nTitle: Song title.\nArtist: Omit if the song is traditional with no attributed artist, or if rights are not cleared.\nPop: Integer 1-9.\nGlow: Scales with pop (same value used for award symbols).\nAlignment: If artist is missing, title is vertically centered.",
+                "Song title, artist, and popularity score (1–9 stars).",
               ],
               [
-                "Track Transition",
-                "Optional. Two right-pointing arrow strips overlapping the header/artwork boundary.\nOut (source of truth): Store links on the current card with `tracksOut` (array of card ids).\nIn (derived): Incoming links are auto-derived from other cards' `tracksOut`; do not duplicate as manual data.\nIn strip: Left strip shows the first derived incoming track. Out strip: Right strip shows the first outgoing track.\nColour: each strip uses the resolved genre theme of the linked track.\nValidation: Unknown ids in `tracksOut` throw an error when the track graph is built.\nGap: The two strips never touch; a clear zone separates them in the centre.",
+                "Track Transitions",
+                "Arrow strips showing musical lineage — which track this song leads from (left) and which it leads to (right). Each strip uses the linked track's genre colour.",
               ],
               [
                 "Genre Transitions",
-                "Optional. Mirrors the transition logic documented in Genres > Transitions.\nReference: use the same in/out graph rules as the Genres tab transition section.\nIn strip: Left strip lists incoming genre/intensity nodes (first visible item).\nOut strip: Right strip lists outgoing genre/intensity nodes (first visible item).\nColour: each strip uses the canonical colour of the referenced genre/intensity node.\nFilter rule: Exclude same-genre transitions that only change intensity.\nInfluence bridge: Some subgenres add bidirectional links via influence metadata (example: Turntablism influenced by Hip-Hop experimental).\nPurpose: Make genre navigation readable on-card while staying consistent with the global transition graph.",
+                "Strips showing neighbouring genres on the intensity spectrum — where this card sits in the broader genre graph.",
               ],
               [
                 "Artwork",
-                "Image: Required real asset image.\nPrompt: Required if AI-generated.\nDominant palette: Prefer genre colour (e.g. white/pink for Disco Pop).\nMood: Mystical.\nRights safety: Avoid copyrighted or overly identifiable elements when rights are not cleared (faces, brands, logos, signature items such as Michael Jackson's gold glove).",
+                "Full illustration with mood and palette matched to the card's genre.",
               ],
               [
                 "Type strip",
-                "Base: Parchment (#ede4cc).\nLeft side: Genre diamond + genre name.\nRight side: Subgenre name + subgenre diamond.\nTheme rule: Both diamonds and the full card chrome use the subgenre theme when one exists.\nReadability: Very light diamonds get a subtle dark border.",
+                "Genre and subgenre labels with colour diamonds. The subgenre diamond drives the card's full colour theme.",
               ],
               [
                 "Matchup strip",
-                "Base: Same parchment and clipped shape as the type strip, directly beneath it.\nLeft half: Reddish wash, lists weakness targets (colour diamond left, genre name right).\nRight half: Greenish wash, lists advantage targets (name left, diamond right, like the type strip).\nData source: lib/genres.ts (GENRE_BATTLE_MATCHUP).\nWorld cards: Pure world cards (no resolved genre) show an em dash on each side.",
+                "Battle matchups at a glance: weaknesses on the left, advantages on the right.",
+              ],
+              ["Ability box", "The card's unique ability name and its effect."],
+              [
+                "Popularity",
+                "Award symbols (1–9) representing the song's cultural reach.",
               ],
               [
-                "Ability box",
-                "Base: Parchment (#f4edd8).\nContent: Ability name + flavour description.",
+                "Intensity",
+                "Triangular gauge showing where the card falls on the pop-to-hardcore spectrum.",
               ],
-              [
-                "Stats Left - Popularity",
-                "Display: Award symbols only.\nNo text: No text label.\nNo number: No 1-9 numeric display.",
-              ],
-              [
-                "Stats Right - Intensity",
-                "Shape: Right triangle with the right angle on the right.\nBackground: Full triangle visible in dull grey.\nFill: Green-to-red gradient for 1/4 (pop) through 4/4 (hardcore).\nCursor: Vertical cursor marks the fill edge.\nPercentage: Fill percentage under cursor matches position (25%-100%).",
-              ],
-              [
-                "Footer",
-                "Year: Release year.\nRarity: SVG shape + rarity name.",
-              ],
+              ["Footer", "Release year and rarity symbol."],
               [
                 "Border",
-                "Mode normal: 10px solid border.\nMode bleed: No border; artwork bleeds to the card edge.\nColour rule (normal mode): Subgenre canonical colour if available, otherwise genre border colour.\nWorld cards (normal mode): Country flag in landscape.\nMixed World/Genre (normal mode): Fade from flag (left) to genre colour (right).",
+                "Coloured in the subgenre's canonical colour. World cards show the country flag. Bleed mode removes the border entirely.",
               ],
             ].map(([name, desc]) => (
               <div key={name} className="flex gap-3">

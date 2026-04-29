@@ -1,0 +1,23 @@
+import type { CardData } from "@/components/Card";
+import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
+
+export const PUERTO_RICO_CARDS: CardData[] = [
+  {
+    id: 36,
+    title: "Despacito",
+    artist: "Luis Fonsi feat. Daddy Yankee",
+    year: 2017,
+    genre: "Reggaeton",
+    country: "Puerto Rico",
+    ability: "Viral",
+    abilityDesc:
+      "+10 popularity when played after another World or Mainstream card.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.luiz-fonzi-despacito-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luiz-fonzi-despacito-v1.png"],
+    ...(artworkPromptFor(36) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Puerto Rico",
+  },
+];

@@ -196,6 +196,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#d8e4fc",
     parentA: "Electronic",
     intensity: "pop",
+    influence: {
+      genre: "Rock",
+      intensity: "pop",
+    },
   },
   {
     kind: "genre",
@@ -210,6 +214,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#f7b4ba",
     parentA: "Rock",
     intensity: "pop",
+    influence: {
+      genre: "Vintage",
+      intensity: "pop",
+    },
   },
   {
     kind: "genre",
@@ -217,6 +225,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#e8bcc4",
     parentA: "Rock",
     intensity: "pop",
+    influence: {
+      genre: "Classical",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -224,6 +236,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#e6c8c8",
     parentA: "Rock",
     intensity: "pop",
+    influence: {
+      genre: "Vintage",
+      intensity: "pop",
+    },
   },
   {
     kind: "genre",
@@ -238,6 +254,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#d0a4aa",
     parentA: "Rock",
     intensity: "soft",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -245,6 +265,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#c4a0a0",
     parentA: "Rock",
     intensity: "soft",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -302,6 +326,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#edd4a8",
     parentA: "Hip-Hop",
     intensity: "soft",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -309,6 +337,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#5ab848",
     parentA: "Reggae/Dub",
     intensity: "soft",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -341,6 +373,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#d18aad",
     parentA: "Disco/Funk",
     intensity: "soft",
+    influence: {
+      genre: "Vintage",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -348,6 +384,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#9a4024",
     parentA: "Rock",
     intensity: "experimental",
+    influence: {
+      genre: "Reggae/Dub",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -376,6 +416,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#843038",
     parentA: "Rock",
     intensity: "experimental",
+    influence: {
+      genre: "Classical",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -383,6 +427,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#28b870",
     parentA: "Reggae/Dub",
     intensity: "experimental",
+    influence: {
+      genre: "Electronic",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -431,6 +479,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#4030a0",
     parentA: "Electronic",
     intensity: "soft",
+    influence: {
+      genre: "Disco/Funk",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -438,6 +490,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#5b6ec8",
     parentA: "Electronic",
     intensity: "soft",
+    influence: {
+      genre: "Disco/Funk",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -452,6 +508,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#888888",
     parentA: "Vintage",
     intensity: "experimental",
+    influence: {
+      genre: "Classical",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -466,6 +526,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#6a5c68",
     parentA: "Vintage",
     intensity: "experimental",
+    influence: {
+      genre: "Classical",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -487,6 +551,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#843028",
     parentA: "Rock",
     intensity: "hardcore",
+    influence: {
+      genre: "Vintage",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -501,6 +569,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#4a060c",
     parentA: "Rock",
     intensity: "hardcore",
+    influence: {
+      genre: "Classical",
+      intensity: "hardcore",
+    },
   },
   {
     kind: "genre",
@@ -519,6 +591,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#1e1a24",
     parentA: "Vintage",
     intensity: "hardcore",
+    influence: {
+      genre: "Classical",
+      intensity: "hardcore",
+    },
   },
   {
     kind: "genre",
@@ -540,6 +616,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#c09028",
     parentA: "Hip-Hop",
     intensity: "experimental",
+    influence: {
+      genre: "Electronic",
+      intensity: "experimental",
+    },
   },
   {
     kind: "genre",
@@ -561,6 +641,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#6e5608",
     parentA: "Hip-Hop",
     intensity: "experimental",
+    influence: {
+      genre: "Electronic",
+      intensity: "hardcore",
+    },
   },
   {
     kind: "genre",
@@ -645,6 +729,10 @@ export const SUBGENRES: Subgenre[] = [
     color: "#4a3828",
     parentA: "Vintage",
     intensity: "soft",
+    influence: {
+      genre: "Classical",
+      intensity: "soft",
+    },
   },
   {
     kind: "genre",
@@ -687,5 +775,9 @@ export const SUBGENRES: Subgenre[] = [
     color: "#d2cdc2",
     parentA: "Vintage",
     intensity: "pop",
+    influence: {
+      genre: "Classical",
+      intensity: "soft",
+    },
   },
 ];

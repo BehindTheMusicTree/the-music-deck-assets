@@ -1,0 +1,53 @@
+import type { CardData } from "@/components/Card";
+import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
+
+export const MAINSTREAM_CARDS: CardData[] = [
+  {
+    id: 2,
+    title: "Billie Jean",
+    artist: "Michael Jackson",
+    year: 1982,
+    genre: "Disco Pop",
+    ability: "Crossover",
+    abilityDesc: "Gains +10 popularity when played after a dance track.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.billy-jean-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.billy-jean-v2.png"],
+    catalogNumber: 1,
+    catalogSeriesLabel: "Disco/Funk",
+  },
+  {
+    id: 78,
+    title: "Hakuna Matata",
+    artist: "The Lion King cast",
+    year: 1994,
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Banger",
+    artwork: `${ART}artwork.hakuna-matata-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.hakuna-matata-v1.png"],
+    ...(artworkPromptFor(78) ?? {}),
+    catalogNumber: 1,
+    catalogSeriesLabel: "Pop",
+  },
+  {
+    id: 101,
+    title: "The Great Pretender",
+    artist: "Freddie Mercury",
+    year: 1987,
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.freddy-mercury-the-great-pretender-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.freddy-mercury-the-great-pretender-v1.png"],
+    ...(artworkPromptFor(101) ?? {}),
+    catalogNumber: 2,
+    catalogSeriesLabel: "Pop",
+  },
+];

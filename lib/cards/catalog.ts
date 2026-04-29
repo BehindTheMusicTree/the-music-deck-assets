@@ -15,12 +15,8 @@ import {
 } from "@/lib/genres";
 import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE } from "./art-path";
-import {
-  DECK_SPOTLIGHT_CARDS,
-  MOCK_CARDS,
-  WORLD_FLAG_CARDS,
-  WORLD_MIXED_CARDS,
-} from "./examples";
+import { DECK_SPOTLIGHT_CARDS, MOCK_CARDS } from "./genre";
+import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
 import { buildCardTrackIndex } from "./track-graph";
 
 export type { CatalogSeriesType };
@@ -130,29 +126,9 @@ const SPOTLIGHT_CATALOG_META: Record<
   number,
   { kind: CatalogEntryKind; theme: GenreTheme }
 > = (() => {
-  const fr = themeForCountry("France");
-  const es = themeForCountry("Spain");
-  const dz = themeForCountry("Algeria");
-  const pr = themeForCountry("Puerto Rico");
-  const mx = themeForCountry("Mexico");
-  const rock = APP_GENRE_THEMES.Rock;
-  const base: Record<number, { kind: CatalogEntryKind; theme: GenreTheme }> = {
-    28: { kind: "Genre", theme: rock },
-    29: { kind: "Genre", theme: rock },
-    30: { kind: "World blend", theme: es },
-    31: { kind: "World", theme: fr },
-    32: { kind: "World", theme: fr },
-    33: { kind: "World blend", theme: fr },
-    34: { kind: "World", theme: mx },
-    35: { kind: "World", theme: dz },
-    36: { kind: "World", theme: pr },
-  };
-  for (const c of DECK_SPOTLIGHT_CARDS) {
-    if (c.id > 36) {
-      base[c.id] = spotlightMetaForCard(c);
-    }
-  }
-  return base;
+  return Object.fromEntries(
+    DECK_SPOTLIGHT_CARDS.map((c) => [c.id, spotlightMetaForCard(c)]),
+  );
 })();
 
 const rawSpotlightRows: RawCatalogRow[] = DECK_SPOTLIGHT_CARDS.map((card) => {

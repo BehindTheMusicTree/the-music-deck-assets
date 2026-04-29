@@ -194,6 +194,8 @@ type WheelChoice = {
   colour: string;
 };
 
+type PromptMode = "creation" | "modification";
+
 function formatIntensity(i: Intensity): string {
   return i.charAt(0).toUpperCase() + i.slice(1);
 }
@@ -222,6 +224,7 @@ export default function CardsArtworksSection() {
   });
   const [secondaryPromptChoice, setSecondaryPromptChoice] =
     useState<WheelChoice | null>(null);
+  const [promptMode, setPromptMode] = useState<PromptMode>("creation");
   const [promptSubject, setPromptSubject] = useState("");
   const [hoveredPromptSegment, setHoveredPromptSegment] = useState<
     string | null
@@ -268,6 +271,8 @@ export default function CardsArtworksSection() {
   const generatedPrompt = useMemo(() => {
     const base =
       "Vertical 2:3 high-detail illustration. Draw only within the top 40% of the frame where all key visual elements must be concentrated. Keep the bottom 60% mostly empty, soft, and out-of-focus (blurred atmosphere, minimal detail, no important subject matter) to preserve card UI readability. Subjects should have no resemblance to celebrities. No text, no symbols, no logos.";
+    const modificationBase =
+      "Keep the exact same structure and composition as the input image (same framing, subject placement, meme dispositions, and overall layout). Modify only selected elements while preserving the original scene architecture; style changes are allowed.";
     const primaryGuide = styleGuideForGenre(primaryPromptChoice.genre);
     const primary = `Primary style anchor with dominant colour ${primaryPromptChoice.colour}.${
       primaryGuide
@@ -284,11 +289,18 @@ export default function CardsArtworksSection() {
             : ""
         }`
       : "";
-    const subject = promptSubject.trim()
-      ? `Subject: ${promptSubject.trim()}.`
-      : "Subject: [Describe the scene, characters, action, and mood].";
-    return [base, primary, secondary, subject].filter(Boolean).join("\n\n");
-  }, [primaryPromptChoice, secondaryPromptChoice, promptSubject]);
+    const details =
+      promptMode === "modification"
+        ? promptSubject.trim()
+          ? `Modification: ${promptSubject.trim()}.`
+          : "Modification: [Describe exactly which elements change while keeping the same structure and composition as the input image]."
+        : promptSubject.trim()
+          ? `Subject: ${promptSubject.trim()}.`
+          : "Subject: [Describe the scene, characters, action, and mood].";
+    return [base, promptMode === "modification" ? modificationBase : "", primary, secondary, details]
+      .filter(Boolean)
+      .join("\n\n");
+  }, [primaryPromptChoice, promptMode, secondaryPromptChoice, promptSubject]);
 
   return (
     <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
@@ -837,19 +849,52 @@ export default function CardsArtworksSection() {
 
           <div className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-4 mb-4">
             <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
-              3. Sujet
+              3. Prompt mode
+            </div>
+            <div className="mb-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setPromptMode("creation")}
+                className={[
+                  "font-mono text-[11px] tracking-[0.08em] border rounded px-3 py-1.5",
+                  promptMode === "creation"
+                    ? "border-gold text-gold bg-white/5"
+                    : "border-ui-border text-muted hover:text-white",
+                ].join(" ")}
+              >
+                Creation prompt
+              </button>
+              <button
+                type="button"
+                onClick={() => setPromptMode("modification")}
+                className={[
+                  "font-mono text-[11px] tracking-[0.08em] border rounded px-3 py-1.5",
+                  promptMode === "modification"
+                    ? "border-gold text-gold bg-white/5"
+                    : "border-ui-border text-muted hover:text-white",
+                ].join(" ")}
+              >
+                Modification prompt
+              </button>
+            </div>
+            <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
+              4. {promptMode === "modification" ? "Modification" : "Subject"}
             </div>
             <textarea
               value={promptSubject}
               onChange={(e) => setPromptSubject(e.target.value)}
-              placeholder="Describe the scene subject, action, mood, setting..."
+              placeholder={
+                promptMode === "modification"
+                  ? "Describe what changes (elements, style, lighting, palette) while keeping the exact same structure and composition..."
+                  : "Describe the scene subject, action, mood, setting..."
+              }
               className="w-full min-h-[100px] rounded border border-ui-border bg-[#0f0f14] px-3 py-2 text-white/90 placeholder:text-muted/70"
             />
           </div>
 
           <div className="rounded border border-ui-border/70 bg-[#12121a]/45 px-4 py-4">
             <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
-              4. Generated prompt
+              5. Generated prompt
             </div>
             <pre className="whitespace-pre-wrap font-garamond text-[14px] leading-[1.6] text-white/90 m-0 p-3 rounded bg-[#0f0f14] border border-ui-border/80">
               {generatedPrompt}

@@ -6,6 +6,8 @@ import { scrollToCardsSection } from "@/lib/cards-nav-scroll";
 const SECTIONS = [
   { id: "overview", label: "Overview" },
   { id: "genre-wheel", label: "Wheel" },
+  { id: "genre-transitions", label: "Transitions" },
+  { id: "genre-mashup", label: "Mashup" },
   { id: "world-genres", label: "World" },
   { id: "genre-intensity", label: "Intensity" },
   { id: "genre-themes", label: "Themes" },

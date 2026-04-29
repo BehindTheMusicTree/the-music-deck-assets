@@ -153,23 +153,25 @@ export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
  * Circular genre chain for wheel outer ring only.
  * Mainstream is the hub and intentionally has no next pointer.
  */
+const NON_MAINSTREAM_WHEEL_ORDER: NonMainstreamGenreName[] = [
+  "Reggae/Dub",
+  "Electronic",
+  "Disco/Funk",
+  "Hip-Hop",
+  "Rock",
+  "Classical",
+  "Vintage",
+];
+
 export const GENRE_NEXT: Record<
   NonMainstreamGenreName,
   NonMainstreamGenreName
 > = (() => {
-  const order: NonMainstreamGenreName[] = [
-    "Reggae/Dub",
-    "Electronic",
-    "Disco/Funk",
-    "Hip-Hop",
-    "Rock",
-    "Classical",
-    "Vintage",
-  ];
   const out = {} as Record<NonMainstreamGenreName, NonMainstreamGenreName>;
-  for (let i = 0; i < order.length; i += 1) {
-    const current = order[i];
-    const next = order[(i + 1) % order.length];
+  for (let i = 0; i < NON_MAINSTREAM_WHEEL_ORDER.length; i += 1) {
+    const current = NON_MAINSTREAM_WHEEL_ORDER[i];
+    const next =
+      NON_MAINSTREAM_WHEEL_ORDER[(i + 1) % NON_MAINSTREAM_WHEEL_ORDER.length];
     out[current] = next;
   }
   return out;
@@ -461,37 +463,55 @@ export const GENRE_BATTLE_MATCHUP: Record<
     readonly advantageVs: readonly string[];
     readonly weakVs: readonly string[];
   }
-> = {
-  Mainstream: { advantageVs: [], weakVs: [] },
-  Rock: {
-    advantageVs: ["Classical", "Reggae/Dub"],
-    weakVs: ["Disco/Funk", "Vintage"],
-  },
-  Electronic: {
-    advantageVs: ["Vintage", "Classical"],
-    weakVs: ["Hip-Hop", "Metal"],
-  },
-  "Hip-Hop": {
-    advantageVs: ["Classical", "Metal"],
-    weakVs: ["Classical", "Vintage"],
-  },
-  "Disco/Funk": {
-    advantageVs: ["Metal", "Rock"],
-    weakVs: ["Classical", "Metal"],
-  },
-  "Reggae/Dub": {
-    advantageVs: ["Rock", "Metal"],
-    weakVs: ["Electronic", "Classical"],
-  },
-  Classical: {
-    advantageVs: ["Hip-Hop", "Disco/Funk"],
-    weakVs: ["Rock", "Electronic"],
-  },
-  Vintage: {
-    advantageVs: ["Electronic", "Hip-Hop"],
-    weakVs: ["Rock", "Metal"],
-  },
-};
+> = (() => {
+  const wheelGenres = [...NON_MAINSTREAM_WHEEL_ORDER];
+  const byGenre = new Map<NonMainstreamGenreName, number>(
+    wheelGenres.map((g, i) => [g, i]),
+  );
+  const influencedTargetsByGenre: Record<NonMainstreamGenreName, Set<GenreName>> =
+    Object.fromEntries(wheelGenres.map((g) => [g, new Set<GenreName>()])) as Record<
+      NonMainstreamGenreName,
+      Set<GenreName>
+    >;
+  for (const sub of GENRE_SUBGENRES) {
+    if (!sub.influence) continue;
+    influencedTargetsByGenre[sub.parentA].add(sub.influence.genre);
+  }
+  const atOffset = (
+    genre: NonMainstreamGenreName,
+    offset: number,
+  ): NonMainstreamGenreName => {
+    const start = byGenre.get(genre);
+    if (start === undefined) {
+      throw new Error(`Unknown wheel genre "${genre}"`);
+    }
+    const raw = (start + offset) % wheelGenres.length;
+    const idx = raw < 0 ? raw + wheelGenres.length : raw;
+    return wheelGenres[idx];
+  };
+  const out = {} as Record<
+    GenreName,
+    {
+      advantageVs: readonly string[];
+      weakVs: readonly string[];
+    }
+  >;
+  out.Mainstream = { advantageVs: [], weakVs: [] };
+  for (const genre of wheelGenres) {
+    const advantageVs: NonMainstreamGenreName[] = [
+      atOffset(genre, +2),
+      atOffset(genre, -3),
+    ];
+    const weakVsBase: NonMainstreamGenreName[] = [
+      atOffset(genre, -2),
+      atOffset(genre, +3),
+    ];
+    const removedWeaknesses = influencedTargetsByGenre[genre];
+    const weakVs = weakVsBase.filter((g) => !removedWeaknesses.has(g));
+    out[genre] = { advantageVs, weakVs };
+  }
+  return out;
+})();
 
 export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
   advantageVs: string[];
@@ -504,6 +524,14 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
     advantageVs: [...row.advantageVs],
     weakVs: [...row.weakVs],
   };
+}
+
+export function matchupIncomingFrom(genre: AppGenreName | undefined): string[] {
+  if (!genre) return [];
+  const target = genre as GenreName;
+  return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter((candidate) =>
+    GENRE_BATTLE_MATCHUP[candidate].advantageVs.includes(target),
+  );
 }
 
 // Wheel genre order (angular positions). Mainstream is the centre — not in this list.

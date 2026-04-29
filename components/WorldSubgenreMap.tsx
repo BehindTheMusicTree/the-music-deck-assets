@@ -579,10 +579,7 @@ export default function WorldSubgenreMap() {
         <p className="font-garamond italic text-muted leading-[1.45] m-0">
           Each country or region has a single pin at an approximate
           representative point; opening the pin lists every country-native
-          subgenre defined for that place. The base map uses{" "}
-          <span className="not-italic text-white/75">OpenStreetMap</span>{" "}
-          (standard tiles, Web Mercator). Unlike the colour wheel, only
-          geography is encoded — intensity rings do not apply here.
+          subgenre defined for that place.
         </p>
       </div>
 

@@ -47,6 +47,7 @@ export const ROCK_POP_TRANSITION_OUT: TransitionNode[] = [
   { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
   { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
   { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "New Wave", genre: "Electronic", intensity: "pop" },
 ];
 
 export const ROCK_POP_TRANSITION_IN: TransitionNode[] = [
@@ -64,6 +65,7 @@ export const ROCK_POP_TRANSITION_IN: TransitionNode[] = [
   { kind: "subgenre", subgenre: "Impressionist Classical", genre: "Classical", intensity: "soft" },
   { kind: "subgenre", subgenre: "Krautrock", genre: "Rock", intensity: "soft" },
   { kind: "subgenre", subgenre: "March", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "New Wave", genre: "Electronic", intensity: "pop" },
   { kind: "subgenre", subgenre: "Pop Rock", genre: "Rock", intensity: "pop" },
   { kind: "subgenre", subgenre: "R&B", genre: "Hip-Hop", intensity: "soft" },
   { kind: "subgenre", subgenre: "Sacred Choral", genre: "Classical", intensity: "soft" },

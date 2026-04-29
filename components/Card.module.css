@@ -657,7 +657,6 @@
    Strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top. */
 .transitionStrip {
   position: absolute;
-  top: calc(44px + 10px - (13px / 2));
   width: 103px;
   height: 13px;
   display: flex;

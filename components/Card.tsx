@@ -180,17 +180,6 @@ function CardArtwork({ card }: { card: CardData }) {
 // notch void shows the page background instead of the colored frame.
 // The trackOut strip's notch is INSIDE the card content (dark header) — no cut needed there;
 // the header shows naturally behind the strip's own clip-path void.
-// Coordinates are in the card's border-box (272×400, border-radius 16).
-// Strip top: 44px (header) + 10px (border) − 6.5px (half strip) = 47.5px; bottom = 60.5px.
-const _CARD_PATH_BASE =
-  "M 16 0 L 256 0 Q 272 0 272 16 L 272 384 Q 272 400 256 400 L 16 400 Q 0 400 0 384 L 0 16 Q 0 0 16 0 Z";
-// Left notch: x=0–8 (left border edge → tip), CCW so nonzero fill-rule punches a hole.
-const _NOTCH_LEFT = "M 0 47.5 L 0 60.5 L 8 54 Z";
-
-function cardNotchPath(hasLeft: boolean): string | undefined {
-  if (!hasLeft) return undefined;
-  return `path('${_CARD_PATH_BASE} ${_NOTCH_LEFT}')`;
-}
 
 export default function Card({
   card,
@@ -326,8 +315,12 @@ export default function Card({
     ? deriveTracksInFromTrackIndex(cardTrackIndex, card.id)
     : [];
   const tracksOut = row?.tracksOut ?? card.tracksOut ?? [];
-  const transitionIn = resolveTransitionTrack(tracksIn[0]);
-  const transitionOut = resolveTransitionTrack(tracksOut[0]);
+  const transitionsIn = tracksIn.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
+  const transitionsOut = tracksOut.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
+
+  const STRIP_H = 13;
+  const STRIP_GAP = 2;
+  const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -662,33 +655,29 @@ export default function Card({
   // Strips rendered as siblings of .card inside .cardFrame — never inside the card itself.
   const cardStrips = (
     <>
-      {transitionIn && (
+      {transitionsIn.map((t, i) => (
         <div
+          key={`in-${i}`}
           className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-          style={{ background: transitionIn.themeColor }}
+          style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
         >
-          <span className={styles.transitionStripText}>
-            {transitionIn.title}
-          </span>
+          <span className={styles.transitionStripText}>{t.title}</span>
         </div>
-      )}
-      {transitionOut && (
+      ))}
+      {transitionsOut.map((t, i) => (
         <div
+          key={`out-${i}`}
           className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-          style={{ background: transitionOut.themeColor }}
+          style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
         >
-          <span className={styles.transitionStripText}>
-            {transitionOut.title}
-          </span>
+          <span className={styles.transitionStripText}>{t.title}</span>
         </div>
-      )}
+      ))}
     </>
   );
 
   const staticClass = hoverLift ? "" : ` ${styles.cardStatic}`;
   const frameStaticClass = hoverLift ? "" : ` ${styles.cardFrameStatic}`;
-  const notchClipPath = cardNotchPath(!!transitionIn);
-
   const renderInnerCard = () =>
     card.artworkOverBorder ? (
       <div
@@ -787,7 +776,6 @@ export default function Card({
             backgroundOrigin: "padding-box, border-box, border-box",
             backgroundSize: `100% 100%, 100% 100%, ${flatShellFrameBgSize}`,
             backgroundPosition: `0% 0%, 0% 0%, ${worldFrameBackgroundPosition}`,
-            clipPath: notchClipPath,
           }}
         >
           {cardContent}
@@ -799,7 +787,7 @@ export default function Card({
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}
-          style={{ ...varStyle, clipPath: notchClipPath }}
+          style={varStyle}
         >
           {cardContent}
         </div>

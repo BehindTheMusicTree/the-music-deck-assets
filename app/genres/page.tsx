@@ -4,6 +4,7 @@ import GenreSubTabs from "@/components/GenreSubTabs";
 import GenreAssociations from "@/components/GenreAssociations";
 import GenreThemePreview from "@/components/GenreThemePreview";
 import GenreTransitionsWheel from "@/components/GenreTransitionsWheel";
+import GenreMashupWheel from "@/components/GenreMashupWheel";
 import IntensityGauge from "@/components/IntensityGauge";
 import {
   APP_GENRE_NAMES,
@@ -135,7 +136,7 @@ export default function GenresPage() {
         <div id="genre-wheel" className="w-full flex justify-center">
           <GenreWheel />
         </div>
-        <div className="w-full max-w-[1800px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-visible px-[18px] py-4">
+        <div id="genre-transitions" className="w-full max-w-[1800px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-visible px-[18px] py-4">
           <div className="section-title-sub mb-2">Transitions</div>
           <div className="mb-4 max-w-[900px]">
             <p className="font-garamond italic text-muted leading-[1.45] mb-2">
@@ -166,6 +167,28 @@ export default function GenresPage() {
             </ul>
           </div>
           <GenreTransitionsWheel />
+        </div>
+        <div id="genre-mashup" className="w-full max-w-[1800px] mt-3 mb-2.5 border border-ui-border rounded-[6px] bg-white/[0.02] overflow-visible px-[18px] py-4">
+          <div className="section-title-sub mb-2">Genre Mashups</div>
+          <div className="mb-4 max-w-[900px]">
+            <p className="font-garamond italic text-muted leading-[1.45] mb-2">
+              Matchup wheel rules are circular on the outer ring:
+            </p>
+            <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
+              <li>Mainstream has no advantage and no weakness.</li>
+              <li>
+                For genre A, advantage targets are A + 2 and A - 3 on the wheel.
+              </li>
+              <li>
+                For genre A, weakness targets are A - 2 and A + 3 on the wheel.
+              </li>
+              <li>
+                If a subgenre of A has influence genre X, X is removed from A weak
+                targets (when present).
+              </li>
+            </ul>
+          </div>
+          <GenreMashupWheel />
         </div>
 
         <div id="world-genres" className="w-full flex justify-center">

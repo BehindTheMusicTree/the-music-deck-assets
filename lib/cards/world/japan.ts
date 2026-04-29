@@ -1,0 +1,23 @@
+import type { CardData } from "@/components/Card";
+import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
+
+export const JAPAN_CARDS: CardData[] = [
+  {
+    id: 96,
+    title: "Tokyo Drift",
+    artist: "Teriyaki Boyz",
+    year: 2006,
+    genre: "Rap",
+    country: "Japan",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Banger",
+    artwork: `${ART}artwork.teriyaki-boys-tokyo-drift-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.teriyaki-boys-tokyo-drift-v1.png"],
+    ...(artworkPromptFor(96) ?? {}),
+    catalogNumber: 14,
+    catalogSeriesLabel: "Hip-Hop",
+  },
+];

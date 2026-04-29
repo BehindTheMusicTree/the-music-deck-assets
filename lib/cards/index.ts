@@ -20,12 +20,8 @@ export {
   WISHLIST_ENTRIES,
   WISHLIST_KINDS,
 } from "./wishlist";
-export {
-  DECK_SPOTLIGHT_CARDS,
-  MOCK_CARDS,
-  WORLD_FLAG_CARDS,
-  WORLD_MIXED_CARDS,
-} from "./examples";
+export { DECK_SPOTLIGHT_CARDS, MOCK_CARDS } from "./genre";
+export { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
 export { DEFAULT_PREVIEW_CARD } from "./preview-default";
 export { type CardRarity, CARD_RARITY_ORDER } from "./card-rarity";
 export {
