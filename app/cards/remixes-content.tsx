@@ -28,7 +28,7 @@ export function CardsRemixesContent() {
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
           <p className="font-garamond text-muted leading-[1.6] m-0">
             How remixes map to genre and subgenre themes, and any special rules
-            for type strip, border, and matchup — placeholder until the deck is
+            for Genre strip, border, and matchup — placeholder until the deck is
             specified.
           </p>
         </div>

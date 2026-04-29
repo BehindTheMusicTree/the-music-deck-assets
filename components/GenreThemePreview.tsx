@@ -50,7 +50,7 @@ function formatIntensityLabel(intensity: Intensity): string {
 
 /**
  * Rectangular flag swatch for World Themes table UI only — not used on {@link Card} (cards
- * always use the diamond .pipFlag for country identity on the type strip).
+ * always use the diamond .pipFlag for country identity on the Genre strip).
  */
 function CountryFlagSwatch({
   country,

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { displayGenreLabel, resolveThemeSelection } from "./genres";
 
 /**
- * Contract: `mirrorCountryTypeStripRight` only when the *right* type-strip label should echo
+ * Contract: `mirrorCountryTypeStripRight` only when the *right* Genre-strip label should echo
  * the same country pip/flag as the left. For world + *app genre* (e.g. ELECTRONIC), the right
  * pip is genre-coloured, so mirroring the country would wrongly show the flag twice.
  */

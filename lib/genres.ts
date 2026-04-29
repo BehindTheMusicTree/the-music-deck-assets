@@ -822,9 +822,9 @@ export interface ResolvedThemeSelection {
   fadeColor?: string;
   typeStripPrimaryBorder?: string;
   typeStripSubBorder?: string;
-  /** Why this row resolved — drives Card type-strip / frame behaviour without re-deriving. */
+  /** Why this row resolved — drives Card Genre-strip / frame behaviour without re-deriving. */
   selectionKind: ThemeSelectionKind;
-  /** When true, Card mirrors the country pip (diamond flag) or symbol on the right of the type strip. */
+  /** When true, Card mirrors the country pip (diamond flag) or symbol on the right of the Genre strip. */
   mirrorCountryTypeStripRight: boolean;
 }
 
@@ -845,7 +845,7 @@ export function displayGenreLabel(genre: AppGenreName): string {
  * @param g Canonical subgenre from `SUBGENRE_BY_NAME`, or an app-level genre
  *   (e.g. "Electronic" for World+genre, or a genre-only track with no subgenre name).
  * @param country For World, World blend, and World+genre.
- * For `world-genre-only`, `mirrorCountryTypeStripRight` is false so the right type-strip pip
+ * For `world-genre-only`, `mirrorCountryTypeStripRight` is false so the right Genre-strip pip
  * uses the genre border (ELECTRONIC, etc.), not a second country flag.
  */
 export function resolveThemeSelection({

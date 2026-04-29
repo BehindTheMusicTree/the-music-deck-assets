@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./Card.module.css";
 import IntensityGauge from "@/components/IntensityGauge";
@@ -110,7 +110,7 @@ const STRIP_NAME_FOR_GENRE: Record<string, string> = {
   Vintage: "Vintage",
 };
 
-/** Always returns two parts for a two-column type strip. */
+/** Always returns two parts for a two-column Genre strip. */
 function getTypeStripParts(
   leftLabel: string,
   rightLabel: string,
@@ -221,11 +221,6 @@ export default function Card({
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
-  const typeStripRef = useRef<HTMLDivElement>(null);
-  const cardFrameRef = useRef<HTMLDivElement>(null);
-  const [genreStripAnchorTop, setGenreStripAnchorTop] = useState<number | null>(
-    null,
-  );
   const titleScaleRef = useRef(1);
   const resolved: ResolvedThemeSelection = card.genre
     ? resolveThemeSelection({ genre: card.genre, country: card.country })
@@ -376,45 +371,10 @@ export default function Card({
   const STRIP_H = 17;
   const STRIP_GAP = 2;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
-  const GENRE_GAP_ABOVE_TYPE_STRIP = 3;
-  /** Either side may list fewer transitions — anchor each stack from the bottom above the type strip. */
-  const genreTransitionStripTop = (index: number, sideCount: number): number | null => {
-    if (genreStripAnchorTop == null || sideCount === 0) return null;
-    const bottomStripeTop =
-      genreStripAnchorTop - GENRE_GAP_ABOVE_TYPE_STRIP - STRIP_H;
-    return bottomStripeTop - (sideCount - 1 - index) * (STRIP_H + STRIP_GAP);
-  };
-  const genreStripRowCount = Math.max(
-    genreTransitionsIn.length,
-    genreTransitionsOut.length,
-  );
-
-  useLayoutEffect(() => {
-    if (genreStripRowCount === 0) return;
-    const frame = cardFrameRef.current;
-    const strip = typeStripRef.current;
-    if (!frame || !strip) return;
-    const measure = () => {
-      const ft = frame.getBoundingClientRect().top;
-      const st = strip.getBoundingClientRect().top;
-      setGenreStripAnchorTop(st - ft);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(frame);
-    ro.observe(strip);
-    return () => ro.disconnect();
-  }, [
-    genreStripRowCount,
-    card.id,
-    card.abilityDesc,
-    card.title,
-    card.pop,
-    transitionsIn.length,
-    transitionsOut.length,
-    small,
-    titleScale,
-  ]);
+  // Distance from frame bottom to first (bottom-most) genre transition stripe.
+  const GENRE_STRIP_BOTTOM_BASE = 121;
+  const genreTransitionStripBottom = (indexFromBottom: number): number =>
+    GENRE_STRIP_BOTTOM_BASE + indexFromBottom * (STRIP_H + STRIP_GAP);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -514,10 +474,10 @@ export default function Card({
         </div>
 
         {/*
-          Type strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
+          Genre strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
           flag swatch; that pattern is reserved for list/panel views (e.g. CountryFlagSwatch).
         */}
-        <div ref={typeStripRef} className={styles.typeStrip}>
+        <div className={styles.typeStrip}>
           <div className={styles.typeStripSide}>
             <>
               {pipLeftSymbol ? (
@@ -750,13 +710,18 @@ export default function Card({
   const cardStrips = (
     <>
       {transitionsIn.map((t, i) => (
-        <div
-          key={`in-${i}`}
-          className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-          style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
-        >
-          <span className={styles.transitionStripText}>{t.title}</span>
-        </div>
+        <React.Fragment key={`in-${i}`}>
+          <div
+            className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+            style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
+          >
+            <span className={styles.transitionStripText}>{t.title}</span>
+          </div>
+          <div
+            className={styles.transitionStripInNotch}
+            style={{ top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
+          />
+        </React.Fragment>
       ))}
       {transitionsOut.map((t, i) => (
         <div
@@ -767,50 +732,45 @@ export default function Card({
           <span className={styles.transitionStripText}>{t.title}</span>
         </div>
       ))}
-      {genreStripAnchorTop != null
-        ? genreTransitionsIn.map((t, i) => {
-            const top = genreTransitionStripTop(i, genreTransitionsIn.length);
-            if (top == null) return null;
-            return (
-              <div
-                key={`genre-in-${i}-${t.genre}-${t.intensity}`}
-                className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
-                style={{
-                  background: t.themeColor,
-                  top,
-                }}
-                title={`${t.genre} (${t.intensity})`}
-              >
-                <span
-                  className={styles.transitionStripIcon}
-                  dangerouslySetInnerHTML={{ __html: t.icon }}
-                />
-              </div>
-            );
-          })
-        : null}
-      {genreStripAnchorTop != null
-        ? genreTransitionsOut.map((t, i) => {
-            const top = genreTransitionStripTop(i, genreTransitionsOut.length);
-            if (top == null) return null;
-            return (
-              <div
-                key={`genre-out-${i}-${t.genre}-${t.intensity}`}
-                className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
-                style={{
-                  background: t.themeColor,
-                  top,
-                }}
-                title={`${t.genre} (${t.intensity})`}
-              >
-                <span
-                  className={styles.transitionStripIcon}
-                  dangerouslySetInnerHTML={{ __html: t.icon }}
-                />
-              </div>
-            );
-          })
-        : null}
+      {genreTransitionsIn.map((t, i) => (
+        <React.Fragment key={`genre-in-${i}-${t.genre}-${t.intensity}`}>
+          <div
+            className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+            style={{
+              background: t.themeColor,
+              top: "auto",
+              bottom: genreTransitionStripBottom(i),
+            }}
+            title={`${t.genre} (${t.intensity})`}
+          >
+            <span
+              className={styles.transitionStripIcon}
+              dangerouslySetInnerHTML={{ __html: t.icon }}
+            />
+          </div>
+          <div
+            className={styles.transitionStripInNotch}
+            style={{ top: "auto", bottom: genreTransitionStripBottom(i) }}
+          />
+        </React.Fragment>
+      ))}
+      {genreTransitionsOut.map((t, i) => (
+        <div
+          key={`genre-out-${i}-${t.genre}-${t.intensity}`}
+          className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
+          style={{
+            background: t.themeColor,
+            top: "auto",
+            bottom: genreTransitionStripBottom(i),
+          }}
+          title={`${t.genre} (${t.intensity})`}
+        >
+          <span
+            className={styles.transitionStripIcon}
+            dangerouslySetInnerHTML={{ __html: t.icon }}
+          />
+        </div>
+      ))}
     </>
   );
 
@@ -902,10 +862,7 @@ export default function Card({
         </div>
       </div>
     ) : flagStyle === "fade" && flagBg ? (
-      <div
-        ref={cardFrameRef}
-        className={`${styles.cardFrame}${frameStaticClass}`}
-      >
+      <div className={`${styles.cardFrame}${frameStaticClass}`}>
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}
@@ -924,10 +881,7 @@ export default function Card({
         {cardStrips}
       </div>
     ) : (
-      <div
-        ref={cardFrameRef}
-        className={`${styles.cardFrame}${frameStaticClass}`}
-      >
+      <div className={`${styles.cardFrame}${frameStaticClass}`}>
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}

@@ -147,7 +147,7 @@ export function CardsSongsContent() {
       left: "Country/region.",
       right: "Country-subgenre.",
       border:
-        "No border — artwork fills the card edge-to-edge. UI bands (type strip, ability, stats, footer) stay inset as in normal mode.",
+        "No border — artwork fills the card edge-to-edge. UI bands (Genre strip, ability, stats, footer) stay inset as in normal mode.",
       card: WORLD_FLAG_CARDS.find((c) => c.id === 26)!,
       theme: worldThemeForCountry("Bretagne"),
     },
@@ -162,7 +162,7 @@ export function CardsSongsContent() {
       </h2>
       <p className="font-garamond italic text-muted max-w-[600px] text-center mb-14">
         Each card adapts its colour theme to its genre. The frame anatomy —
-        header, artwork, type strip, ability box, stats, and footer — remains
+        header, artwork, Genre strip, ability box, stats, and footer — remains
         constant across all genres and rarities.
       </p>
 
@@ -221,7 +221,7 @@ export function CardsSongsContent() {
                 "Full illustration with mood and palette matched to the card's genre.",
               ],
               [
-                "Type strip",
+                "Genre strip",
                 "Genre and subgenre labels with colour diamonds. The subgenre diamond drives the card's full colour theme.",
               ],
               [
@@ -299,13 +299,13 @@ export function CardsSongsContent() {
                     <ul className="font-garamond text-muted text-[16px] leading-normal list-none pl-0 flex flex-col gap-0.5">
                       <li>
                         <span className="text-white">
-                          Type strip — primary:
+                          Genre strip — primary:
                         </span>{" "}
                         {item.left}
                       </li>
                       <li>
                         <span className="text-white">
-                          Type strip — secondary:
+                          Genre strip — secondary:
                         </span>{" "}
                         {item.right}
                       </li>

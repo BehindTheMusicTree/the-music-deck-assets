@@ -280,7 +280,7 @@
   z-index: 1;
 }
 
-/* Type strip — parchment with diamond-cut corners via clip-path */
+/* Genre strip — parchment with diamond-cut corners via clip-path */
 .typeStrip {
   position: relative;
   background: var(--gc-parch-strip, #ede4cc);
@@ -321,7 +321,7 @@
   justify-content: flex-end;
 }
 
-/* Matchup strip — below type strip: weak (reddish left), advantage (greenish right) */
+/* Matchup strip — below Genre strip: weak (reddish left), advantage (greenish right) */
 .matchupStrip {
   margin: 0 4px 4px;
   display: flex;
@@ -662,7 +662,7 @@
 /* Transition strips: siblings of .card inside .cardFrame (NOT children of .card).
    Coordinates are relative to .cardFrame = card border-box (272×400).
    Track-strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top.
-   Genre icon strips are positioned in JS just above the type strip (genre/subgenre band). */
+   Genre icon strips are positioned in JS just above the Genre strip (genre/subgenre band). */
 .transitionStrip {
   position: absolute;
   width: 103px;
@@ -683,9 +683,20 @@
     calc(100% - 7px) 0%,
     100% 50%,
     calc(100% - 7px) 100%,
-    0% 100%,
-    8px 50%
+    0% 100%
   );
+}
+/* Dark triangle overlaid at the strip's left end — always visible regardless of card border colour. */
+.transitionStripInNotch {
+  position: absolute;
+  left: 0;
+  width: 8px;
+  height: 17px;
+  background: #0a0a0e;
+  clip-path: polygon(0% 0%, 0% 100%, 100% 50%);
+  z-index: 21;
+  pointer-events: none;
+  transition: transform 0.15s;
 }
 /* Out strip (right): arrow tip protrudes 7px past card right border edge */
 .transitionStripOut {
@@ -700,11 +711,13 @@
     8px 50%
   );
 }
-/* Lift strips when .card hovers (strips are ~ siblings in .cardFrame). */
-.card:hover ~ .transitionStrip {
+/* Lift strips + notch when .card hovers (all are siblings in .cardFrame). */
+.card:hover ~ .transitionStrip,
+.card:hover ~ .transitionStripInNotch {
   transform: translateY(-4px);
 }
-.cardStatic.card:hover ~ .transitionStrip {
+.cardStatic.card:hover ~ .transitionStrip,
+.cardStatic.card:hover ~ .transitionStripInNotch {
   transform: none;
 }
 
@@ -743,8 +756,25 @@
   filter: none;
 }
 
+/* Genre strips only: readable silhouette on pale intensity fills */
+.transitionStripGenre .transitionStripIcon {
+  width: 11px;
+  height: 11px;
+  box-sizing: border-box;
+  border: 1px solid rgba(16, 12, 8, 0.52);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 254, 250, 0.35),
+    inset 0 0 0 0.5px rgba(255, 254, 250, 0.22);
+}
+
 .transitionStripIcon svg {
   width: 8px;
   height: 8px;
   display: block;
+}
+
+.transitionStripGenre .transitionStripIcon svg {
+  width: 7px;
+  height: 7px;
 }
