@@ -468,23 +468,39 @@ export function genreIntensityLinks(
   return direction === "out" ? genreIntensityOut(node) : genreIntensityIn(node);
 }
 
+function assertGenreIntensityNodeKnownForStripDisplay(n: GenreIntensityNode): void {
+  if (GENRE_NAMES.indexOf(n.genre) === -1) {
+    throw new Error(
+      `sortGenreIntensityNodesForStripDisplay: unknown genre ${JSON.stringify(n.genre)}`,
+    );
+  }
+  if (INTENSITY_ORDER.indexOf(n.intensity) === -1) {
+    throw new Error(
+      `sortGenreIntensityNodesForStripDisplay: unknown intensity ${JSON.stringify(n.intensity)}`,
+    );
+  }
+}
+
 function compareGenreIntensityNodesForStripDisplay(
   a: GenreIntensityNode,
   b: GenreIntensityNode,
 ): number {
   const ga = GENRE_NAMES.indexOf(a.genre);
   const gb = GENRE_NAMES.indexOf(b.genre);
-  const byGenre = (ga === -1 ? 999 : ga) - (gb === -1 ? 999 : gb);
+  const byGenre = ga - gb;
   if (byGenre !== 0) return byGenre;
   const ia = INTENSITY_ORDER.indexOf(a.intensity);
   const ib = INTENSITY_ORDER.indexOf(b.intensity);
-  return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  return ib - ia;
 }
 
-/** Card genre transition strips: grouped by {@link GENRE_NAMES} order; intensities ascending within each genre. */
+/** Card genre transition strips: grouped by {@link GENRE_NAMES} order; intensities descending within each genre. */
 export function sortGenreIntensityNodesForStripDisplay(
   nodes: GenreIntensityNode[],
 ): GenreIntensityNode[] {
+  for (const n of nodes) {
+    assertGenreIntensityNodeKnownForStripDisplay(n);
+  }
   return [...nodes].sort(compareGenreIntensityNodesForStripDisplay);
 }
 
