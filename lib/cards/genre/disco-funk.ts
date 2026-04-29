@@ -104,4 +104,21 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogNumber: 8,
     catalogSeriesLabel: "Disco/Funk",
   },
+  {
+    id: 116,
+    title: "A Fifth of Beethoven",
+    artist: "Walter Murphy",
+    year: 1976,
+    genre: "Disco",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.walter-murphy-a-fifth-of-beethoven-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.walter-murphy-a-fifth-of-beethoven-v1.png"],
+    ...(artworkPromptFor(116) ?? {}),
+    catalogNumber: 9,
+    catalogSeriesLabel: "Disco/Funk",
+  },
 ];

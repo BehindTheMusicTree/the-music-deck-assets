@@ -109,6 +109,7 @@ export const ARTWORK_CREATED_AT: Record<string, string> = {
   "artwork.vivaldi-winter-v1.png": "2026-04-23T13:45:17",
   "artwork.wagner-ride-of-the-valkyries-v1.png": "2026-04-23T13:45:17",
   "artwork.white-stripes-seven-nation-army-v1.png": "2026-04-23T13:45:17",
+  "artwork.walter-murphy-a-fifth-of-beethoven-v1.png": "2026-04-29T12:50:37",
   "artwork.without-me-v1.png": "2026-04-23T13:45:18",
   "artwork.zaho-mc-solar-caroline-v1.png": "2026-04-25T20:22:32",
 };
