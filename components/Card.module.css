@@ -659,12 +659,12 @@
   transform-origin: center;
 }
 
-/* Transition strips: siblings of .card inside .cardFrame (NOT children of .card).
-   Coordinates are relative to .cardFrame = card border-box (272×400).
-   Track-strip vertical midpoint aligns with header bottom: 44px content + 10px border = 54px from frame top.
-   Genre icon strips are positioned in JS just above the Genre strip (genre/subgenre band). */
-.transitionStrip {
+/* ─── Track transition strips ─────────────────────────────────────────────────
+   Siblings of .card inside .cardFrame. Vertical midpoint aligns with the header
+   bottom edge (44px content + 10px border = 54px from frame top).            */
+.trackTransitionStripIn {
   position: absolute;
+  left: 0;
   width: 103px;
   height: 17px;
   display: flex;
@@ -672,11 +672,7 @@
   justify-content: center;
   overflow: hidden;
   z-index: 20;
-  box-shadow: none;
   transition: transform 0.15s;
-}
-.transitionStripIn {
-  left: 0;
   padding: 0 10px 0 12px;
   clip-path: polygon(
     0% 0%,
@@ -686,21 +682,18 @@
     0% 100%
   );
 }
-/* Dark triangle overlaid at the strip's left end — always visible regardless of card border colour. */
-.transitionStripInNotch {
+/* Out strip: arrow tip protrudes 7px past the card's right border edge */
+.trackTransitionStripOut {
   position: absolute;
-  left: 0;
-  width: 8px;
-  height: 17px;
-  background: #0a0a0e;
-  clip-path: polygon(0% 0%, 0% 100%, 100% 50%);
-  z-index: 21;
-  pointer-events: none;
-  transition: transform 0.15s;
-}
-/* Out strip (right): arrow tip protrudes 7px past card right border edge */
-.transitionStripOut {
   right: -7px;
+  width: 103px;
+  height: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 20;
+  transition: transform 0.15s;
   padding: 0 10px 0 12px;
   clip-path: polygon(
     0% 0%,
@@ -711,17 +704,19 @@
     8px 50%
   );
 }
-/* Lift strips + notch when .card hovers (all are siblings in .cardFrame). */
-.card:hover ~ .transitionStrip,
-.card:hover ~ .transitionStripInNotch {
-  transform: translateY(-4px);
+/* Dark triangle overlaid at the in-strip's left end — always visible regardless of card border colour. */
+.trackTransitionStripInNotch {
+  position: absolute;
+  left: 0;
+  width: 8px;
+  height: 17px;
+  background: #0a0a0e;
+  clip-path: polygon(0% 0%, 0% 100%, 100% 50%);
+  z-index: 21;
+  pointer-events: none;
+  transition: transform 0.15s;
 }
-.cardStatic.card:hover ~ .transitionStrip,
-.cardStatic.card:hover ~ .transitionStripInNotch {
-  transform: none;
-}
-
-.transitionStripText {
+.trackTransitionStripText {
   display: block;
   width: 100%;
   font-family: "Space Mono", monospace;
@@ -738,36 +733,78 @@
   line-height: 1;
 }
 
-.transitionStripGenre {
+/* ─── Genre transition strips ─────────────────────────────────────────────────
+   Positioned in JS centered on the genre strip (genre/subgenre band).        */
+.genreTransitionStripIn {
+  position: absolute;
+  left: 0;
   width: 30px;
+  height: 17px;
   padding: 4px 2px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  overflow: hidden;
+  z-index: 20;
+  transition: transform 0.15s;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 7px) 0%,
+    100% 50%,
+    calc(100% - 7px) 100%,
+    0% 100%
+  );
 }
-
-.transitionStripIcon {
+.genreTransitionStripOut {
+  position: absolute;
+  right: -7px;
+  width: 30px;
+  height: 17px;
+  padding: 4px 2px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 20;
+  transition: transform 0.15s;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - 7px) 0%,
+    100% 50%,
+    calc(100% - 7px) 100%,
+    0% 100%,
+    8px 50%
+  );
+}
+.genreTransitionStripIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 9px;
-  height: 9px;
-  flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.96);
-  filter: none;
-}
-
-.transitionStripGenre .transitionStripIcon {
   width: 11px;
   height: 11px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.96);
 }
-
-.transitionStripIcon svg {
-  width: 8px;
-  height: 8px;
+.genreTransitionStripIcon svg {
+  width: 7px;
+  height: 7px;
   display: block;
 }
 
-.transitionStripGenre .transitionStripIcon svg {
-  width: 7px;
-  height: 7px;
+/* ─── Hover lift (all strip siblings in .cardFrame) ──────────────────────── */
+.card:hover ~ .trackTransitionStripIn,
+.card:hover ~ .trackTransitionStripOut,
+.card:hover ~ .trackTransitionStripInNotch,
+.card:hover ~ .genreTransitionStripIn,
+.card:hover ~ .genreTransitionStripOut {
+  transform: translateY(-4px);
+}
+.cardStatic.card:hover ~ .trackTransitionStripIn,
+.cardStatic.card:hover ~ .trackTransitionStripOut,
+.cardStatic.card:hover ~ .trackTransitionStripInNotch,
+.cardStatic.card:hover ~ .genreTransitionStripIn,
+.cardStatic.card:hover ~ .genreTransitionStripOut {
+  transform: none;
 }

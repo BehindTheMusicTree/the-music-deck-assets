@@ -740,16 +740,16 @@ export default function Card({
       {transitionsIn.map((t, i) => (
         <React.Fragment key={`in-${i}`}>
           <div
-            className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
+            className={styles.trackTransitionStripIn}
             style={{
               background: t.themeColor,
               top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
             }}
           >
-            <span className={styles.transitionStripText}>{t.title}</span>
+            <span className={styles.trackTransitionStripText}>{t.title}</span>
           </div>
           <div
-            className={styles.transitionStripInNotch}
+            className={styles.trackTransitionStripInNotch}
             style={{ top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
           />
         </React.Fragment>
@@ -757,13 +757,13 @@ export default function Card({
       {transitionsOut.map((t, i) => (
         <div
           key={`out-${i}`}
-          className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
+          className={styles.trackTransitionStripOut}
           style={{
             background: t.themeColor,
             top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
           }}
         >
-          <span className={styles.transitionStripText}>{t.title}</span>
+          <span className={styles.trackTransitionStripText}>{t.title}</span>
         </div>
       ))}
       {genreTransitionsIn.map((t, i) => {
@@ -772,7 +772,7 @@ export default function Card({
         return (
           <React.Fragment key={`genre-in-${i}-${t.genre}-${t.intensity}`}>
             <div
-              className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+              className={styles.genreTransitionStripIn}
               style={{
                 background: t.themeColor,
                 top: "auto",
@@ -782,13 +782,13 @@ export default function Card({
               title={`${t.genre} (${t.intensity})`}
             >
               <span
-                className={styles.transitionStripIcon}
+                className={styles.genreTransitionStripIcon}
                 style={iconSize ? { width: iconSize, height: iconSize } : undefined}
                 dangerouslySetInnerHTML={{ __html: t.icon }}
               />
             </div>
             <div
-              className={styles.transitionStripInNotch}
+              className={styles.trackTransitionStripInNotch}
               style={{ top: "auto", bottom: genreInStripBottom(i) }}
             />
           </React.Fragment>
@@ -800,7 +800,7 @@ export default function Card({
         return (
           <div
             key={`genre-out-${i}-${t.genre}-${t.intensity}`}
-            className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
+            className={styles.genreTransitionStripOut}
             style={{
               background: t.themeColor,
               top: "auto",
@@ -810,7 +810,7 @@ export default function Card({
             title={`${t.genre} (${t.intensity})`}
           >
             <span
-              className={styles.transitionStripIcon}
+              className={styles.genreTransitionStripIcon}
               style={iconSize ? { width: iconSize, height: iconSize } : undefined}
               dangerouslySetInnerHTML={{ __html: t.icon }}
             />

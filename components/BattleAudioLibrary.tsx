@@ -14,6 +14,9 @@ type SingleRow = {
   genre: string;
   intensity: string;
   country: string;
+  prompt: string;
+  fileSizeMb: number | null;
+  durationMin: number | null;
 };
 
 type ComboRow = {
@@ -23,6 +26,9 @@ type ComboRow = {
   right: string;
   leftType: SingleKind;
   rightType: SingleKind;
+  prompt: string;
+  fileSizeMb: number | null;
+  durationMin: number | null;
 };
 
 const INTENSITIES: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
@@ -56,10 +62,18 @@ function buildSingles(): SingleRow[] {
         genre,
         intensity,
         country: "",
+        prompt:
+          genre === "Rock" && intensity === "experimental"
+            ? "authored: Rock experimental (6-dimension prompt)"
+            : "",
+        fileSizeMb: null,
+        durationMin: null,
       });
     }
   }
-  for (const country of Object.keys(COUNTRY_DATA).sort((a, b) => a.localeCompare(b))) {
+  for (const country of Object.keys(COUNTRY_DATA).sort((a, b) =>
+    a.localeCompare(b),
+  )) {
     rows.push({
       key: tokenForCountry(country),
       kind: "country",
@@ -67,6 +81,9 @@ function buildSingles(): SingleRow[] {
       genre: "",
       intensity: "",
       country,
+      prompt: "",
+      fileSizeMb: null,
+      durationMin: null,
     });
   }
   return rows;
@@ -86,6 +103,9 @@ function buildCombinations(singles: SingleRow[]): ComboRow[] {
         right: right.label,
         leftType: left.kind,
         rightType: right.kind,
+        prompt: "",
+        fileSizeMb: null,
+        durationMin: null,
       });
     }
   }
@@ -105,6 +125,9 @@ export default function BattleAudioLibrary() {
     genre: "",
     intensity: "",
     country: "",
+    prompt: "",
+    fileSizeMb: "",
+    durationMin: "",
   });
 
   const [comboSortBy, setComboSortBy] = useState<keyof ComboRow>("key");
@@ -115,6 +138,9 @@ export default function BattleAudioLibrary() {
     right: "",
     leftType: "",
     rightType: "",
+    prompt: "",
+    fileSizeMb: "",
+    durationMin: "",
   });
 
   const filteredSingles = useMemo(() => {
@@ -124,8 +150,13 @@ export default function BattleAudioLibrary() {
         r.kind.toLowerCase().includes(singleFilters.kind.toLowerCase()) &&
         r.label.toLowerCase().includes(singleFilters.label.toLowerCase()) &&
         r.genre.toLowerCase().includes(singleFilters.genre.toLowerCase()) &&
-        r.intensity.toLowerCase().includes(singleFilters.intensity.toLowerCase()) &&
-        r.country.toLowerCase().includes(singleFilters.country.toLowerCase())
+        r.intensity
+          .toLowerCase()
+          .includes(singleFilters.intensity.toLowerCase()) &&
+        r.country.toLowerCase().includes(singleFilters.country.toLowerCase()) &&
+        r.prompt.toLowerCase().includes(singleFilters.prompt.toLowerCase()) &&
+        String(r.fileSizeMb ?? "").includes(singleFilters.fileSizeMb) &&
+        String(r.durationMin ?? "").includes(singleFilters.durationMin)
       );
     });
     return filtered.sort((a, b) => {
@@ -142,8 +173,15 @@ export default function BattleAudioLibrary() {
         r.key.toLowerCase().includes(comboFilters.key.toLowerCase()) &&
         r.left.toLowerCase().includes(comboFilters.left.toLowerCase()) &&
         r.right.toLowerCase().includes(comboFilters.right.toLowerCase()) &&
-        r.leftType.toLowerCase().includes(comboFilters.leftType.toLowerCase()) &&
-        r.rightType.toLowerCase().includes(comboFilters.rightType.toLowerCase())
+        r.leftType
+          .toLowerCase()
+          .includes(comboFilters.leftType.toLowerCase()) &&
+        r.rightType
+          .toLowerCase()
+          .includes(comboFilters.rightType.toLowerCase()) &&
+        r.prompt.toLowerCase().includes(comboFilters.prompt.toLowerCase()) &&
+        String(r.fileSizeMb ?? "").includes(comboFilters.fileSizeMb) &&
+        String(r.durationMin ?? "").includes(comboFilters.durationMin)
       );
     });
     return filtered.sort((a, b) => {
@@ -155,7 +193,8 @@ export default function BattleAudioLibrary() {
   }, [combos, comboFilters, comboSortBy, comboSortDir]);
 
   const toggleSingleSort = (field: keyof SingleRow) => {
-    if (singleSortBy === field) setSingleSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    if (singleSortBy === field)
+      setSingleSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else {
       setSingleSortBy(field);
       setSingleSortDir("asc");
@@ -163,36 +202,191 @@ export default function BattleAudioLibrary() {
   };
 
   const toggleComboSort = (field: keyof ComboRow) => {
-    if (comboSortBy === field) setComboSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    if (comboSortBy === field)
+      setComboSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else {
       setComboSortBy(field);
       setComboSortDir("asc");
     }
   };
 
+  const singlesTotalMb = useMemo(
+    () =>
+      filteredSingles.reduce(
+        (sum, row) =>
+          sum + (typeof row.fileSizeMb === "number" ? row.fileSizeMb : 0),
+        0,
+      ),
+    [filteredSingles],
+  );
+  const singlesTotalMin = useMemo(
+    () =>
+      filteredSingles.reduce(
+        (sum, row) =>
+          sum + (typeof row.durationMin === "number" ? row.durationMin : 0),
+        0,
+      ),
+    [filteredSingles],
+  );
+  const combosTotalMb = useMemo(
+    () =>
+      filteredCombos.reduce(
+        (sum, row) =>
+          sum + (typeof row.fileSizeMb === "number" ? row.fileSizeMb : 0),
+        0,
+      ),
+    [filteredCombos],
+  );
+  const combosTotalMin = useMemo(
+    () =>
+      filteredCombos.reduce(
+        (sum, row) =>
+          sum + (typeof row.durationMin === "number" ? row.durationMin : 0),
+        0,
+      ),
+    [filteredCombos],
+  );
+
+  const totalNeededTracks = singles.length + combos.length;
+  const singlesKnownSizeCount = filteredSingles.filter(
+    (r) => r.fileSizeMb != null,
+  ).length;
+  const singlesKnownDurationCount = filteredSingles.filter(
+    (r) => r.durationMin != null,
+  ).length;
+  const combosKnownSizeCount = filteredCombos.filter(
+    (r) => r.fileSizeMb != null,
+  ).length;
+  const combosKnownDurationCount = filteredCombos.filter(
+    (r) => r.durationMin != null,
+  ).length;
+  const totalKnownSizeCount = singlesKnownSizeCount + combosKnownSizeCount;
+  const totalKnownDurationCount =
+    singlesKnownDurationCount + combosKnownDurationCount;
+  const visibleTracks = filteredSingles.length + filteredCombos.length;
+  const visibleMb = singlesTotalMb + combosTotalMb;
+  const visibleMin = singlesTotalMin + combosTotalMin;
+
   return (
     <section className="max-w-[1100px]">
       <h2 className="section-title mb-2">Library</h2>
       <p className="font-garamond text-muted mb-6">
-        Required battle music inventory with filters and ordering in table headers.
+        Required battle music inventory with filters and ordering in table
+        headers.
       </p>
+
+      <div className="mb-10">
+        <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
+          Recap
+        </div>
+        <div className="overflow-auto rounded border border-ui-border/70 bg-[#12121a]/45">
+          <table className="w-full text-left min-w-[720px]">
+            <thead className="border-b border-ui-border/70">
+              <tr className="font-mono text-[11px] tracking-[0.08em] text-muted">
+                <th className="px-3 py-2">scope</th>
+                <th className="px-3 py-2">
+                  music count (visible / total needed)
+                </th>
+                <th className="px-3 py-2">total weight (MB)</th>
+                <th className="px-3 py-2">total duration (min)</th>
+              </tr>
+            </thead>
+            <tbody className="font-garamond text-sm text-white/90">
+              <tr className="border-b border-ui-border/30">
+                <td className="px-3 py-2">Singles</td>
+                <td className="px-3 py-2">
+                  {filteredSingles.length} / {singles.length}
+                </td>
+                <td className="px-3 py-2">
+                  {singlesTotalMb.toFixed(1)} (known {singlesKnownSizeCount}/
+                  {filteredSingles.length})
+                </td>
+                <td className="px-3 py-2">
+                  {singlesTotalMin.toFixed(1)} (known{" "}
+                  {singlesKnownDurationCount}/{filteredSingles.length})
+                </td>
+              </tr>
+              <tr className="border-b border-ui-border/30">
+                <td className="px-3 py-2">2-combinations</td>
+                <td className="px-3 py-2">
+                  {filteredCombos.length} / {combos.length}
+                </td>
+                <td className="px-3 py-2">
+                  {combosTotalMb.toFixed(1)} (known {combosKnownSizeCount}/
+                  {filteredCombos.length})
+                </td>
+                <td className="px-3 py-2">
+                  {combosTotalMin.toFixed(1)} (known {combosKnownDurationCount}/
+                  {filteredCombos.length})
+                </td>
+              </tr>
+              <tr>
+                <td className="px-3 py-2">Total</td>
+                <td className="px-3 py-2">
+                  {visibleTracks} / {totalNeededTracks}
+                </td>
+                <td className="px-3 py-2">
+                  {visibleMb.toFixed(1)} (known {totalKnownSizeCount}/
+                  {visibleTracks})
+                </td>
+                <td className="px-3 py-2">
+                  {visibleMin.toFixed(1)} (known {totalKnownDurationCount}/
+                  {visibleTracks})
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="mb-10">
         <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
           Singles ({filteredSingles.length})
         </div>
+        <div className="font-mono text-[11px] tracking-[0.08em] text-muted mb-2">
+          Total weight: {singlesTotalMb.toFixed(1)} MB (known{" "}
+          {singlesKnownSizeCount}/{filteredSingles.length}) · Total duration:{" "}
+          {singlesTotalMin.toFixed(1)} min (known {singlesKnownDurationCount}/
+          {filteredSingles.length})
+        </div>
         <div className="overflow-auto rounded border border-ui-border/70 bg-[#12121a]/45">
-          <table className="w-full text-left min-w-[980px]">
+          <table className="w-full text-left min-w-[1280px]">
             <thead className="border-b border-ui-border/70">
               <tr className="font-mono text-[11px] tracking-[0.08em] text-muted">
-                {(["key", "kind", "label", "genre", "intensity", "country"] as const).map((col) => (
+                {(
+                  [
+                    "key",
+                    "kind",
+                    "label",
+                    "genre",
+                    "intensity",
+                    "country",
+                    "prompt",
+                    "fileSizeMb",
+                    "durationMin",
+                  ] as const
+                ).map((col) => (
                   <th key={col} className="px-3 py-2 align-top">
-                    <button type="button" className="hover:text-white" onClick={() => toggleSingleSort(col)}>
-                      {col} {singleSortBy === col ? (singleSortDir === "asc" ? "↑" : "↓") : ""}
+                    <button
+                      type="button"
+                      className="hover:text-white"
+                      onClick={() => toggleSingleSort(col)}
+                    >
+                      {col}{" "}
+                      {singleSortBy === col
+                        ? singleSortDir === "asc"
+                          ? "↑"
+                          : "↓"
+                        : ""}
                     </button>
                     <input
                       value={singleFilters[col]}
-                      onChange={(e) => setSingleFilters((prev) => ({ ...prev, [col]: e.target.value }))}
+                      onChange={(e) =>
+                        setSingleFilters((prev) => ({
+                          ...prev,
+                          [col]: e.target.value,
+                        }))
+                      }
                       className="mt-1 w-full rounded border border-ui-border bg-[#0f0f14] px-2 py-1 text-[11px] text-white"
                       placeholder="filter"
                     />
@@ -202,13 +396,23 @@ export default function BattleAudioLibrary() {
             </thead>
             <tbody>
               {filteredSingles.map((row) => (
-                <tr key={row.key} className="border-b border-ui-border/30 font-garamond text-sm text-white/90">
+                <tr
+                  key={row.key}
+                  className="border-b border-ui-border/30 font-garamond text-sm text-white/90"
+                >
                   <td className="px-3 py-2 font-mono text-[11px]">{row.key}</td>
                   <td className="px-3 py-2">{row.kind}</td>
                   <td className="px-3 py-2">{row.label}</td>
                   <td className="px-3 py-2">{row.genre}</td>
                   <td className="px-3 py-2">{row.intensity}</td>
                   <td className="px-3 py-2">{row.country}</td>
+                  <td className="px-3 py-2">{row.prompt}</td>
+                  <td className="px-3 py-2">
+                    {row.fileSizeMb != null ? row.fileSizeMb.toFixed(1) : "—"}
+                  </td>
+                  <td className="px-3 py-2">
+                    {row.durationMin != null ? row.durationMin : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -220,18 +424,49 @@ export default function BattleAudioLibrary() {
         <div className="font-cinzel text-[12px] tracking-[0.12em] text-gold mb-2">
           2-combinations ({filteredCombos.length})
         </div>
+        <div className="font-mono text-[11px] tracking-[0.08em] text-muted mb-2">
+          Total weight: {combosTotalMb.toFixed(1)} MB (known{" "}
+          {combosKnownSizeCount}/{filteredCombos.length}) · Total duration:{" "}
+          {combosTotalMin.toFixed(1)} min (known {combosKnownDurationCount}/
+          {filteredCombos.length})
+        </div>
         <div className="overflow-auto rounded border border-ui-border/70 bg-[#12121a]/45">
-          <table className="w-full text-left min-w-[980px]">
+          <table className="w-full text-left min-w-[1280px]">
             <thead className="border-b border-ui-border/70">
               <tr className="font-mono text-[11px] tracking-[0.08em] text-muted">
-                {(["key", "left", "right", "leftType", "rightType"] as const).map((col) => (
+                {(
+                  [
+                    "key",
+                    "left",
+                    "right",
+                    "leftType",
+                    "rightType",
+                    "prompt",
+                    "fileSizeMb",
+                    "durationMin",
+                  ] as const
+                ).map((col) => (
                   <th key={col} className="px-3 py-2 align-top">
-                    <button type="button" className="hover:text-white" onClick={() => toggleComboSort(col)}>
-                      {col} {comboSortBy === col ? (comboSortDir === "asc" ? "↑" : "↓") : ""}
+                    <button
+                      type="button"
+                      className="hover:text-white"
+                      onClick={() => toggleComboSort(col)}
+                    >
+                      {col}{" "}
+                      {comboSortBy === col
+                        ? comboSortDir === "asc"
+                          ? "↑"
+                          : "↓"
+                        : ""}
                     </button>
                     <input
                       value={comboFilters[col]}
-                      onChange={(e) => setComboFilters((prev) => ({ ...prev, [col]: e.target.value }))}
+                      onChange={(e) =>
+                        setComboFilters((prev) => ({
+                          ...prev,
+                          [col]: e.target.value,
+                        }))
+                      }
                       className="mt-1 w-full rounded border border-ui-border bg-[#0f0f14] px-2 py-1 text-[11px] text-white"
                       placeholder="filter"
                     />
@@ -241,12 +476,22 @@ export default function BattleAudioLibrary() {
             </thead>
             <tbody>
               {filteredCombos.map((row) => (
-                <tr key={row.key} className="border-b border-ui-border/30 font-garamond text-sm text-white/90">
+                <tr
+                  key={row.key}
+                  className="border-b border-ui-border/30 font-garamond text-sm text-white/90"
+                >
                   <td className="px-3 py-2 font-mono text-[11px]">{row.key}</td>
                   <td className="px-3 py-2">{row.left}</td>
                   <td className="px-3 py-2">{row.right}</td>
                   <td className="px-3 py-2">{row.leftType}</td>
                   <td className="px-3 py-2">{row.rightType}</td>
+                  <td className="px-3 py-2">{row.prompt}</td>
+                  <td className="px-3 py-2">
+                    {row.fileSizeMb != null ? row.fileSizeMb.toFixed(1) : "—"}
+                  </td>
+                  <td className="px-3 py-2">
+                    {row.durationMin != null ? row.durationMin : "—"}
+                  </td>
                 </tr>
               ))}
             </tbody>
