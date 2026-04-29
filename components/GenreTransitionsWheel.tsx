@@ -213,7 +213,7 @@ export default function GenreTransitionsWheel() {
         const spreadCenter = (bucketCount - 1) / 2;
         const spreadIndex = bucketIndex - spreadCenter;
         const spreadAngle = spreadIndex * 3.2;
-        const parentAngle = parentGenreAngleDeg(s.parentA);
+        const parentAngle = parentGenreAngleDeg(s.parentA as GenreName);
         let angle = placement.angleDeg + spreadAngle;
         const hubDelta = normalizeDeltaDeg(angle, parentAngle);
         if (Math.abs(hubDelta) < 7) {
