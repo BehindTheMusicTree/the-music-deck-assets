@@ -111,24 +111,6 @@ export const FRANCE_CARDS: CardData[] = [
     catalogSeriesLabel: "Hip-Hop",
   },
   {
-    id: 90,
-    title: "Vois sur ton chemin",
-    artist: "BENNETT",
-    year: 2023,
-    genre: "Hard Techno",
-    country: "France",
-    ability: "Reserve",
-    abilityDesc: "Shipped catalogue entry.",
-    pop: 8,
-    rarity: "Classic",
-    artwork: `${ART}artwork.bennet-vois-sur-ton-chemin-v1.png`,
-    artworkCreatedAt:
-      ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
-    ...(artworkPromptFor(90) ?? {}),
-    catalogNumber: 15,
-    catalogSeriesLabel: "Electronic",
-  },
-  {
     id: 103,
     title: "Vois sur ton chemin",
     artist: "Les Choristes",
@@ -139,6 +121,7 @@ export const FRANCE_CARDS: CardData[] = [
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
     rarity: "Classic",
+    tracksOut: [90],
     artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],

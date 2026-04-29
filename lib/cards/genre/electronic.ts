@@ -213,6 +213,23 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogSeriesLabel: "Electronic",
   },
   {
+    id: 90,
+    title: "Vois sur ton chemin",
+    artist: "BENNETT",
+    year: 2023,
+    genre: "Hard Techno",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.bennet-vois-sur-ton-chemin-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
+    ...(artworkPromptFor(90) ?? {}),
+    catalogNumber: 15,
+    catalogSeriesLabel: "Electronic",
+  },
+  {
     id: 93,
     title: "Superstition",
     artist: "C2C",
