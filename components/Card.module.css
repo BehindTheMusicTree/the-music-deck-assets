@@ -782,14 +782,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 11px;
-  height: 11px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.96);
 }
 .genreTransitionStripIcon svg {
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   display: block;
 }
 

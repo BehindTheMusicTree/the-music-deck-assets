@@ -768,7 +768,7 @@ export default function Card({
       ))}
       {genreTransitionsIn.map((t, i) => {
         const light = isVeryLight(t.themeColor);
-        const iconSize = light && t.genre === "Rock" ? 13 : undefined;
+        const iconSize = t.genre === "Rock" ? 16 : undefined;
         return (
           <React.Fragment key={`genre-in-${i}-${t.genre}-${t.intensity}`}>
             <div
@@ -783,7 +783,9 @@ export default function Card({
             >
               <span
                 className={styles.genreTransitionStripIcon}
-                style={iconSize ? { width: iconSize, height: iconSize } : undefined}
+                style={
+                  iconSize ? { width: iconSize, height: iconSize } : undefined
+                }
                 dangerouslySetInnerHTML={{ __html: t.icon }}
               />
             </div>
@@ -796,7 +798,7 @@ export default function Card({
       })}
       {genreTransitionsOut.map((t, i) => {
         const light = isVeryLight(t.themeColor);
-        const iconSize = light && t.genre === "Rock" ? 13 : undefined;
+        const iconSize = light && t.genre === "Rock" ? 15 : undefined;
         return (
           <div
             key={`genre-out-${i}-${t.genre}-${t.intensity}`}
@@ -811,7 +813,9 @@ export default function Card({
           >
             <span
               className={styles.genreTransitionStripIcon}
-              style={iconSize ? { width: iconSize, height: iconSize } : undefined}
+              style={
+                iconSize ? { width: iconSize, height: iconSize } : undefined
+              }
               dangerouslySetInnerHTML={{ __html: t.icon }}
             />
           </div>
