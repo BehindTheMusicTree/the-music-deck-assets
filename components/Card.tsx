@@ -391,11 +391,11 @@ export default function Card({
   // Center of the genre/type strip from card frame bottom — anchor for grouping.
   const GENRE_STRIP_CENTER_Y = 156;
   const genreGroupBase = (count: number) =>
-    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((count - 1) * (STRIP_H + STRIP_GAP)) / 2;
+    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((count - 1) * STRIP_H) / 2;
   const genreInStripBottom = (i: number) =>
-    genreGroupBase(genreTransitionsIn.length) + i * (STRIP_H + STRIP_GAP);
+    genreGroupBase(genreTransitionsIn.length) + i * STRIP_H;
   const genreOutStripBottom = (i: number) =>
-    genreGroupBase(genreTransitionsOut.length) + i * (STRIP_H + STRIP_GAP);
+    genreGroupBase(genreTransitionsOut.length) + i * STRIP_H;
 
   useLayoutEffect(() => {
     const el = titleRef.current;
