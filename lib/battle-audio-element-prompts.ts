@@ -22,6 +22,24 @@ export type BattleAudioSelectable =
 // Authored genre · intensity prompts (add rows here as they are validated)
 // ---------------------------------------------------------------------------
 
+export const DISCO_FUNK_SOFT_PROMPT_LINES: BattleAudioSixLines = [
+  "Genre + sub-genre: Instrumental-leaning Disco with touches of nu-disco, funk-infused dance rock, and retro club energy. Focus on groove, rhythmic layering, and warm analog dance textures.",
+  "Tempo + groove: 120 BPM, classic disco tempo. Groove: four-on-the-floor kick, syncopated hi-hats, funky off-beat bass, and percussive guitar. Feels smooth, energetic, and irresistibly danceable.",
+  "Instruments + textures: Clean rhythm guitars with wah or muted strums, melodic and funky bass, shimmering strings or synths, brass stabs, electric piano, and layered percussion (congas, claps, shakers). Minimal or wordless vocal hooks only; no verses or sung lyrics.",
+  "Mood: Joyful, glamorous, and communal. A sense of celebration, nightlife, and vintage club fun. Never dark or aggressive—always uplifting and inclusive.",
+  "Structure + dynamics: Immediate groove intro, instrumental verse-chorus alternation, breakdowns with filtered or soloed elements, and a loop-friendly, energetic outro. Dynamic lifts for chorus and breakdowns.",
+  "Non-copyright references: General language of 70s/80s disco, nu-disco, and dancefloor instrumentals. No imitation of specific songs or artists. Captures the vibe of a classic, mostly-instrumental disco set.",
+];
+
+export const DISCO_FUNK_POP_PROMPT_LINES: BattleAudioSixLines = [
+  "Genre + sub-genre: Modern Pop Funk blending contemporary pop with classic funk and dance influences. Focus on infectious grooves, tight rhythm sections, and party-ready energy.",
+  "Tempo + groove: 115 BPM, bouncy and syncopated. Groove: punchy 4/4 with strong backbeat, syncopated guitar and bass, crisp claps, and percussive breaks. Feels playful, confident, and made for dancing.",
+  "Instruments + textures: Clean electric guitars with wah or muted funk riffs, slap or syncopated bass, bright brass stabs, glossy synths, punchy drums, and energetic vocal shouts or crowd responses. Polished, modern production with retro funk flavor.",
+  "Mood: Fun, bold, and charismatic. A sense of celebration, swagger, and communal joy. Never dark or aggressive—always upbeat and inclusive.",
+  "Structure + dynamics: Immediate groove intro, verse-chorus alternation with dynamic drops, breakdowns, and instrumental hooks. Big, loop-friendly chorus or outro with layered vocals and instrumental hits.",
+  "Non-copyright references: General language of 2010s/2020s pop-funk and dance-funk revival. No direct references to specific songs or artists. Captures the vibe of a modern, high-energy party anthem.",
+];
+
 export const ROCK_POP_PROMPT_LINES: BattleAudioSixLines = [
   "Genre + sub-genre: Pop Rock with influences from 80s/90s radio rock and modern chart-friendly pop. Emphasis on catchy hooks, upbeat energy, and accessible arrangements.",
   "Tempo + groove: 120 BPM, lively and steady. Groove: bright 4/4 with a strong backbeat, syncopated guitar or keyboard accents, and occasional handclaps or tambourine. Feels energetic, fun, and danceable.",
@@ -59,6 +77,8 @@ export const ROCK_HARDCORE_PROMPT_LINES: BattleAudioSixLines = [
 ];
 
 const GENRE_INTENSITY_REGISTRY: Record<string, BattleAudioSixLines> = {
+  "Rock|pop-funk": DISCO_FUNK_POP_PROMPT_LINES,
+  "Disco|classic": DISCO_FUNK_SOFT_PROMPT_LINES,
   "Rock|experimental": ROCK_EXPERIMENTAL_PROMPT_LINES,
   "Rock|hardcore": ROCK_HARDCORE_PROMPT_LINES,
   "Rock|soft": ROCK_SOFT_PROMPT_LINES,
