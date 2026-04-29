@@ -271,7 +271,7 @@
 }
 
 /* Panels above artwork */
-.typeStrip,
+.genreStrip,
 .matchupStrip,
 .ability,
 .stats,
@@ -281,11 +281,11 @@
 }
 
 /* Genre strip — parchment with diamond-cut corners via clip-path */
-.typeStrip {
+.genreStrip {
   position: relative;
   background: var(--gc-parch-strip, #ede4cc);
   padding: 6px 14px;
-  margin: 4px;
+  margin: 4px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -301,7 +301,7 @@
     0% 50%
   );
 }
-.typeText {
+.genreText {
   font-family: "Cinzel", serif;
   font-size: 8px;
   letter-spacing: 1.5px;
@@ -310,20 +310,20 @@
   position: relative;
   top: 1px;
 }
-.typeStripSide {
+.genreStripSide {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 /* Right column: subgenre text to the left of its diamond; cluster aligned to strip end */
-.typeStripSubSide {
+.genreStripSubSide {
   flex: 1;
   justify-content: flex-end;
 }
 
 /* Matchup strip — below Genre strip: weak (reddish left), advantage (greenish right) */
 .matchupStrip {
-  margin: 0 4px 4px;
+  margin: 0 40px 4px;
   display: flex;
   flex-shrink: 0;
   min-height: 22px;
@@ -756,16 +756,9 @@
   filter: none;
 }
 
-/* Genre strips only: readable silhouette on pale intensity fills */
 .transitionStripGenre .transitionStripIcon {
   width: 11px;
   height: 11px;
-  box-sizing: border-box;
-  border: 1px solid rgba(16, 12, 8, 0.52);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 0.5px rgba(255, 254, 250, 0.35),
-    inset 0 0 0 0.5px rgba(255, 254, 250, 0.22);
 }
 
 .transitionStripIcon svg {

@@ -208,7 +208,9 @@ export type TransitionSubgenreNode = {
   genre: NonMainstreamGenreName;
   intensity: Intensity;
 };
-export type TransitionNode = TransitionGenreIntensityNode | TransitionSubgenreNode;
+export type TransitionNode =
+  | TransitionGenreIntensityNode
+  | TransitionSubgenreNode;
 
 const INTENSITY_ORDER: Intensity[] = [
   "pop",
@@ -283,26 +285,29 @@ const GENRE_SUBGENRES = SUBGENRES.filter(
 const GENRE_SUBGENRE_BY_NAME = Object.fromEntries(
   GENRE_SUBGENRES.map((sub) => [sub.n, sub]),
 ) as Record<string, GenreSubgenre>;
-const INFLUENCE_MATCHING_SUBGENRES_BY_NODE: Record<string, string[]> =
-  (() => {
-    const map = new Map<string, string[]>();
-    for (const sub of GENRE_SUBGENRES) {
-      if (!sub.influence) continue;
-      const key = genreIntensityKey({
-        genre: sub.influence.genre,
-        intensity: sub.influence.intensity,
-      });
-      const current = map.get(key) ?? [];
-      current.push(sub.n);
-      map.set(key, current);
-    }
-    return Object.fromEntries(map.entries());
-  })();
+const INFLUENCE_MATCHING_SUBGENRES_BY_NODE: Record<string, string[]> = (() => {
+  const map = new Map<string, string[]>();
+  for (const sub of GENRE_SUBGENRES) {
+    if (!sub.influence) continue;
+    const key = genreIntensityKey({
+      genre: sub.influence.genre,
+      intensity: sub.influence.intensity,
+    });
+    const current = map.get(key) ?? [];
+    current.push(sub.n);
+    map.set(key, current);
+  }
+  return Object.fromEntries(map.entries());
+})();
 
 function toTransitionGenreIntensityNode(
   node: GenreIntensityNode,
 ): TransitionGenreIntensityNode {
-  return { kind: "genreIntensity", genre: node.genre, intensity: node.intensity };
+  return {
+    kind: "genreIntensity",
+    genre: node.genre,
+    intensity: node.intensity,
+  };
 }
 
 function toTransitionSubgenreNode(subgenre: string): TransitionSubgenreNode {
@@ -322,10 +327,15 @@ function baseGenreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
   if (node.genre === "Mainstream") {
     return uniqueGenreIntensity([
       { genre: "Mainstream", intensity: "pop" },
-      ...WHEEL_GENRES.map((g) => ({ genre: g.n, intensity: "pop" as Intensity })),
+      ...WHEEL_GENRES.map((g) => ({
+        genre: g.n,
+        intensity: "pop" as Intensity,
+      })),
     ]);
   }
-  const out: GenreIntensityNode[] = [{ genre: node.genre, intensity: node.intensity }];
+  const out: GenreIntensityNode[] = [
+    { genre: node.genre, intensity: node.intensity },
+  ];
   const up = nextIntensity(node.intensity);
   const down = previousIntensity(node.intensity);
   if (up) out.push({ genre: node.genre, intensity: up });
@@ -365,7 +375,9 @@ function transitionOutFromSubgenre(subgenre: string): TransitionNode[] {
     genre: sub.parentA,
     intensity: sub.intensity,
   };
-  const out: TransitionNode[] = [...transitionOutFromGenreIntensity(parentNode)];
+  const out: TransitionNode[] = [
+    ...transitionOutFromGenreIntensity(parentNode),
+  ];
   if (sub.influence) {
     out.push(
       toTransitionGenreIntensityNode({
@@ -538,8 +550,8 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
 export function matchupIncomingFrom(genre: AppGenreName | undefined): string[] {
   if (!genre) return [];
   const target = genre as GenreName;
-  return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter((candidate) =>
-    GENRE_BATTLE_MATCHUP[candidate].advantageVs.includes(target),
+  return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter(
+    (candidate) => GENRE_BATTLE_MATCHUP[candidate].advantageVs.includes(target),
   );
 }
 
@@ -820,8 +832,8 @@ export interface ResolvedThemeSelection {
   resolvedSubgenre?: string;
   flagStyle?: "fade";
   fadeColor?: string;
-  typeStripPrimaryBorder?: string;
-  typeStripSubBorder?: string;
+  genreStripPrimaryBorder?: string;
+  genreStripSubBorder?: string;
   /** Why this row resolved — drives Card Genre-strip / frame behaviour without re-deriving. */
   selectionKind: ThemeSelectionKind;
   /** When true, Card mirrors the country pip (diamond flag) or symbol on the right of the Genre strip. */
@@ -872,8 +884,8 @@ export function resolveThemeSelection({
       rightLabel: "—",
       ...frame,
       resolvedCountry: country,
-      typeStripPrimaryBorder: countryTheme!.border,
-      typeStripSubBorder: countryTheme!.border,
+      genreStripPrimaryBorder: countryTheme!.border,
+      genreStripSubBorder: countryTheme!.border,
       selectionKind: "world-country-only",
       mirrorCountryTypeStripRight: true,
     };
@@ -898,7 +910,7 @@ export function resolveThemeSelection({
         ...frame,
         resolvedCountry,
         resolvedSubgenre: g,
-        typeStripPrimaryBorder: resolvedTheme.border,
+        genreStripPrimaryBorder: resolvedTheme.border,
         selectionKind: "country-native",
         mirrorCountryTypeStripRight: true,
       };
@@ -928,8 +940,8 @@ export function resolveThemeSelection({
         resolvedSubgenre: g,
         flagStyle: "fade",
         fadeColor: resolvedColor,
-        typeStripPrimaryBorder: countryTheme!.border,
-        typeStripSubBorder: resolvedColor,
+        genreStripPrimaryBorder: countryTheme!.border,
+        genreStripSubBorder: resolvedColor,
         selectionKind: "world-blend-subgenre",
         mirrorCountryTypeStripRight: true,
       };
@@ -942,8 +954,8 @@ export function resolveThemeSelection({
       rightLabel: g,
       resolvedGenre: appGenre,
       resolvedSubgenre: g,
-      typeStripPrimaryBorder: undefined,
-      typeStripSubBorder: resolvedColor,
+      genreStripPrimaryBorder: undefined,
+      genreStripSubBorder: resolvedColor,
       selectionKind: "genre-subgenre",
       mirrorCountryTypeStripRight: false,
     };
@@ -979,8 +991,8 @@ export function resolveThemeSelection({
       resolvedGenre: appGenre,
       flagStyle: "fade",
       fadeColor: genreOnlyColor,
-      typeStripPrimaryBorder: countryTheme!.border,
-      typeStripSubBorder: genreOnlyColor,
+      genreStripPrimaryBorder: countryTheme!.border,
+      genreStripSubBorder: genreOnlyColor,
       selectionKind: "world-genre-only",
       mirrorCountryTypeStripRight: false,
     };
@@ -996,8 +1008,8 @@ export function resolveThemeSelection({
     leftLabel: displayGenreLabel(appGenre),
     rightLabel: "—",
     resolvedGenre: appGenre,
-    typeStripPrimaryBorder: resolvedTheme.border,
-    typeStripSubBorder: resolvedTheme.border,
+    genreStripPrimaryBorder: resolvedTheme.border,
+    genreStripSubBorder: resolvedTheme.border,
     selectionKind: "genre-only",
     mirrorCountryTypeStripRight: false,
   };

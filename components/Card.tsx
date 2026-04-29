@@ -21,7 +21,10 @@ import {
   type Intensity,
   WORLD_THEMES,
 } from "@/lib/genres";
-import { countryFlagForShell, countryPreferredCardShell } from "@/lib/countries";
+import {
+  countryFlagForShell,
+  countryPreferredCardShell,
+} from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import {
   deriveTracksInFromTrackIndex,
@@ -238,8 +241,9 @@ export default function Card({
     resolved.resolvedGenre as AppGenreName | undefined,
   );
   const stripLeftBorder =
-    resolved.typeStripPrimaryBorder ?? effectiveTheme.border;
-  const stripRightBorder = resolved.typeStripSubBorder ?? effectiveTheme.border;
+    resolved.genreStripPrimaryBorder ?? effectiveTheme.border;
+  const stripRightBorder =
+    resolved.genreStripSubBorder ?? effectiveTheme.border;
   const leftPipNeedsBorder = isVeryLight(stripLeftBorder);
   const rightPipNeedsBorder = isVeryLight(stripRightBorder);
   const countryTypePip = resolved.resolvedCountry
@@ -262,13 +266,14 @@ export default function Card({
 
   const worldFrameCountry = resolved.resolvedCountry;
   const preferredShell = countryPreferredCardShell(worldFrameCountry);
-  const preferredFlagVariant = countryFlagForShell(worldFrameCountry, preferredShell);
+  const preferredFlagVariant = countryFlagForShell(
+    worldFrameCountry,
+    preferredShell,
+  );
   const fallbackFlagLayer = resolved.frameBorder ?? effectiveTheme.frameBorder;
   const fallbackFlagBg = resolved.frameBg ?? effectiveTheme.frameBg;
-  const flagLayer =
-    preferredFlagVariant.border ?? fallbackFlagLayer;
-  const flagBg =
-    preferredFlagVariant.bg ?? fallbackFlagBg;
+  const flagLayer = preferredFlagVariant.border ?? fallbackFlagLayer;
+  const flagBg = preferredFlagVariant.bg ?? fallbackFlagBg;
   const flatShellFrameBorderSize = flatShellFlagBackgroundSize(flagLayer);
   const flatShellFrameBgSize = flatShellFlagBackgroundSize(flagBg);
   /**
@@ -328,16 +333,28 @@ export default function Card({
     ? deriveTracksInFromTrackIndex(cardTrackIndex, card.id)
     : [];
   const tracksOut = row?.tracksOut ?? card.tracksOut ?? [];
-  const transitionsIn = tracksIn.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
-  const transitionsOut = tracksOut.map(resolveTransitionTrack).filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionTrack>>[];
+  const transitionsIn = tracksIn
+    .map(resolveTransitionTrack)
+    .filter(Boolean) as NonNullable<
+    ReturnType<typeof resolveTransitionTrack>
+  >[];
+  const transitionsOut = tracksOut
+    .map(resolveTransitionTrack)
+    .filter(Boolean) as NonNullable<
+    ReturnType<typeof resolveTransitionTrack>
+  >[];
 
   const currentGenre = resolved.resolvedGenre;
   const currentIntensity: Intensity | undefined = (() => {
-    if (resolved.resolvedSubgenre) return subgenreIntensity(resolved.resolvedSubgenre);
+    if (resolved.resolvedSubgenre)
+      return subgenreIntensity(resolved.resolvedSubgenre);
     if (currentGenre) return appGenreIntensity(currentGenre as AppGenreName);
     return undefined;
   })();
-  const toGenreTransitionStrip = (n: { genre: string; intensity: Intensity }): GenreTransitionStrip => ({
+  const toGenreTransitionStrip = (n: {
+    genre: string;
+    intensity: Intensity;
+  }): GenreTransitionStrip => ({
     genre: n.genre,
     intensity: n.intensity,
     themeColor:
@@ -371,10 +388,14 @@ export default function Card({
   const STRIP_H = 17;
   const STRIP_GAP = 2;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
-  // Distance from frame bottom to first (bottom-most) genre transition stripe.
-  const GENRE_STRIP_BOTTOM_BASE = 121;
-  const genreTransitionStripBottom = (indexFromBottom: number): number =>
-    GENRE_STRIP_BOTTOM_BASE + indexFromBottom * (STRIP_H + STRIP_GAP);
+  // Center of the genre/type strip from card frame bottom — anchor for grouping.
+  const GENRE_STRIP_CENTER_Y = 156;
+  const genreGroupBase = (count: number) =>
+    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((count - 1) * (STRIP_H + STRIP_GAP)) / 2;
+  const genreInStripBottom = (i: number) =>
+    genreGroupBase(genreTransitionsIn.length) + i * (STRIP_H + STRIP_GAP);
+  const genreOutStripBottom = (i: number) =>
+    genreGroupBase(genreTransitionsOut.length) + i * (STRIP_H + STRIP_GAP);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -477,8 +498,8 @@ export default function Card({
           Genre strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
           flag swatch; that pattern is reserved for list/panel views (e.g. CountryFlagSwatch).
         */}
-        <div className={styles.typeStrip}>
-          <div className={styles.typeStripSide}>
+        <div className={styles.genreStrip}>
+          <div className={styles.genreStripSide}>
             <>
               {pipLeftSymbol ? (
                 pipLeftSymbol.svg ? (
@@ -522,11 +543,13 @@ export default function Card({
                   }}
                 />
               )}
-              <span className={styles.typeText}>{strip.left}</span>
+              <span className={styles.genreText}>{strip.left}</span>
             </>
           </div>
-          <div className={`${styles.typeStripSide} ${styles.typeStripSubSide}`}>
-            <span className={styles.typeText}>{strip.right}</span>
+          <div
+            className={`${styles.genreStripSide} ${styles.genreStripSubSide}`}
+          >
+            <span className={styles.genreText}>{strip.right}</span>
             {pipRightSymbol ? (
               pipRightSymbol.svg ? (
                 <span
@@ -590,7 +613,10 @@ export default function Card({
                 const color = matchupTargetDiamondColor(name);
                 const pipLight = isVeryLight(color);
                 return (
-                  <span key={`weak-${name}`} className={`${styles.matchupCluster} ${styles.matchupClusterWeak}`}>
+                  <span
+                    key={`weak-${name}`}
+                    className={`${styles.matchupCluster} ${styles.matchupClusterWeak}`}
+                  >
                     <span
                       className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
                     >
@@ -622,7 +648,10 @@ export default function Card({
                 const color = matchupTargetDiamondColor(name);
                 const pipLight = isVeryLight(color);
                 return (
-                  <span key={`adv-${name}`} className={`${styles.matchupCluster} ${styles.matchupClusterAdv}`}>
+                  <span
+                    key={`adv-${name}`}
+                    className={`${styles.matchupCluster} ${styles.matchupClusterAdv}`}
+                  >
                     <span
                       className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
                       style={{
@@ -702,7 +731,6 @@ export default function Card({
           </div>
         </div>
       </div>
-
     </>
   );
 
@@ -713,7 +741,10 @@ export default function Card({
         <React.Fragment key={`in-${i}`}>
           <div
             className={`${styles.transitionStrip} ${styles.transitionStripIn}`}
-            style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
+            style={{
+              background: t.themeColor,
+              top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
+            }}
           >
             <span className={styles.transitionStripText}>{t.title}</span>
           </div>
@@ -727,50 +758,65 @@ export default function Card({
         <div
           key={`out-${i}`}
           className={`${styles.transitionStrip} ${styles.transitionStripOut}`}
-          style={{ background: t.themeColor, top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP) }}
+          style={{
+            background: t.themeColor,
+            top: STRIP_TOP_BASE + i * (STRIP_H + STRIP_GAP),
+          }}
         >
           <span className={styles.transitionStripText}>{t.title}</span>
         </div>
       ))}
-      {genreTransitionsIn.map((t, i) => (
-        <React.Fragment key={`genre-in-${i}-${t.genre}-${t.intensity}`}>
+      {genreTransitionsIn.map((t, i) => {
+        const light = isVeryLight(t.themeColor);
+        const iconSize = light && t.genre === "Rock" ? 13 : undefined;
+        return (
+          <React.Fragment key={`genre-in-${i}-${t.genre}-${t.intensity}`}>
+            <div
+              className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+              style={{
+                background: t.themeColor,
+                top: "auto",
+                bottom: genreInStripBottom(i),
+                color: light ? "#1a0f05" : "rgba(255,255,255,0.96)",
+              }}
+              title={`${t.genre} (${t.intensity})`}
+            >
+              <span
+                className={styles.transitionStripIcon}
+                style={iconSize ? { width: iconSize, height: iconSize } : undefined}
+                dangerouslySetInnerHTML={{ __html: t.icon }}
+              />
+            </div>
+            <div
+              className={styles.transitionStripInNotch}
+              style={{ top: "auto", bottom: genreInStripBottom(i) }}
+            />
+          </React.Fragment>
+        );
+      })}
+      {genreTransitionsOut.map((t, i) => {
+        const light = isVeryLight(t.themeColor);
+        const iconSize = light && t.genre === "Rock" ? 13 : undefined;
+        return (
           <div
-            className={`${styles.transitionStrip} ${styles.transitionStripIn} ${styles.transitionStripGenre}`}
+            key={`genre-out-${i}-${t.genre}-${t.intensity}`}
+            className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
             style={{
               background: t.themeColor,
               top: "auto",
-              bottom: genreTransitionStripBottom(i),
+              bottom: genreOutStripBottom(i),
+              color: light ? "#1a0f05" : "rgba(255,255,255,0.96)",
             }}
             title={`${t.genre} (${t.intensity})`}
           >
             <span
               className={styles.transitionStripIcon}
+              style={iconSize ? { width: iconSize, height: iconSize } : undefined}
               dangerouslySetInnerHTML={{ __html: t.icon }}
             />
           </div>
-          <div
-            className={styles.transitionStripInNotch}
-            style={{ top: "auto", bottom: genreTransitionStripBottom(i) }}
-          />
-        </React.Fragment>
-      ))}
-      {genreTransitionsOut.map((t, i) => (
-        <div
-          key={`genre-out-${i}-${t.genre}-${t.intensity}`}
-          className={`${styles.transitionStrip} ${styles.transitionStripOut} ${styles.transitionStripGenre}`}
-          style={{
-            background: t.themeColor,
-            top: "auto",
-            bottom: genreTransitionStripBottom(i),
-          }}
-          title={`${t.genre} (${t.intensity})`}
-        >
-          <span
-            className={styles.transitionStripIcon}
-            dangerouslySetInnerHTML={{ __html: t.icon }}
-          />
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 

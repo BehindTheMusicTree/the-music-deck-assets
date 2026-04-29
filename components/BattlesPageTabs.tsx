@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import BattlesSubTabs from "@/components/BattlesSubTabs";
+import BattleAudioPromptBuilder from "@/components/BattleAudioPromptBuilder";
+import BattleAudioLibrary from "@/components/BattleAudioLibrary";
 
 type BattlesTab = "overview" | "audio";
 
@@ -194,6 +196,7 @@ function BattlesOverview() {
 }
 
 function BattlesAudio() {
+  const [audioTab, setAudioTab] = useState<"overview" | "library">("overview");
   return (
     <div className="min-h-[calc(100vh-56px)] bg-bg px-6 py-12 sm:py-[60px] max-w-4xl mx-auto">
       <div className="page-kicker mb-4">Game</div>
@@ -203,6 +206,31 @@ function BattlesAudio() {
         designer, not player-facing UX.
       </p>
 
+      <nav className="mb-8 border-b border-ui-border/70">
+        <div className="flex items-center gap-1 -mx-1 overflow-x-auto [&::-webkit-scrollbar]:h-0">
+          {[
+            { id: "overview", label: "Overview" },
+            { id: "library", label: "Library" },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setAudioTab(id as "overview" | "library")}
+              className={[
+                "tab-font-13 whitespace-nowrap font-mono tracking-[0.12em] px-2.5 sm:px-3 py-2 no-underline border-b-2 -mb-px transition-colors",
+                audioTab === id
+                  ? "text-gold border-gold"
+                  : "text-muted border-transparent hover:text-white hover:border-ui-border",
+              ].join(" ")}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {audioTab === "overview" ? (
+        <>
       <section className="mb-10 max-w-[760px]">
         <h2 className="section-title mb-2">1) Battle audio strategy</h2>
         <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
@@ -246,24 +274,12 @@ function BattlesAudio() {
       </section>
 
       <section className="max-w-[760px]">
-        <h2 className="section-title mb-2">4) Generated AI prompt</h2>
-        <div className="font-mono text-[11px] tracking-[0.12em] text-muted mb-3">Selection builder</div>
-        <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5 mb-6">
-          <li>Wheel A: genre-intensity nodes.</li>
-          <li>Wheel B: genre-intensity nodes (second selector).</li>
-          <li>Countries grid: all available countries (target 50).</li>
-          <li>Exactly two selected elements are required.</li>
-          <li>Allowed pairs: 2 genre-intensity, 2 countries, or 1 genre-intensity + 1 country.</li>
-        </ul>
-
-        <div className="font-mono text-[11px] tracking-[0.12em] text-muted mb-3">Prompt output</div>
-        <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
-          <li>Normalise the selected pair for deterministic naming and lookup.</li>
-          <li>Generate a battle music prompt with fixed duration 3:00.</li>
-          <li>Include style blend, intensity profile, instrumentation hints, and energy arc constraints.</li>
-          <li>Expose a copy action for direct use in the generation pipeline.</li>
-        </ul>
+        <BattleAudioPromptBuilder />
       </section>
+        </>
+      ) : (
+        <BattleAudioLibrary />
+      )}
     </div>
   );
 }
