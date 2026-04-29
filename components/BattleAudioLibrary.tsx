@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { COUNTRY_DATA } from "@/lib/countries";
+import { genreIntensityPromptTextOrEmpty } from "@/lib/battle-audio-element-prompts";
 import { GENRE_NAMES, type Intensity } from "@/lib/genres";
 
 type SingleKind = "genreIntensity" | "country";
@@ -62,10 +63,7 @@ function buildSingles(): SingleRow[] {
         genre,
         intensity,
         country: "",
-        prompt:
-          genre === "Rock" && intensity === "experimental"
-            ? "authored: Rock experimental (6-dimension prompt)"
-            : "",
+        prompt: genreIntensityPromptTextOrEmpty(genre, intensity),
         fileSizeMb: null,
         durationMin: null,
       });
