@@ -341,10 +341,10 @@
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
-  gap: 4px 5px;
+  gap: 2px;
   padding: 4px 5px;
 }
 .matchupWeak {
@@ -361,6 +361,13 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  width: 100%;
+}
+.matchupClusterWeak {
+  justify-content: flex-end;
+}
+.matchupClusterAdv {
+  justify-content: flex-start;
 }
 .matchupName {
   font-family: "Cinzel", serif;
@@ -368,7 +375,7 @@
   letter-spacing: 0.6px;
   color: #2a1c10;
   line-height: 1;
-  max-width: 72px;
+  max-width: 68px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

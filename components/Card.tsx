@@ -536,7 +536,12 @@ export default function Card({
                 const color = matchupTargetDiamondColor(name);
                 const pipLight = isVeryLight(color);
                 return (
-                  <span key={`weak-${name}`} className={styles.matchupCluster}>
+                  <span key={`weak-${name}`} className={`${styles.matchupCluster} ${styles.matchupClusterWeak}`}>
+                    <span
+                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
+                    >
+                      {matchupGenreDisplayLabel(name)}
+                    </span>
                     <span
                       className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
                       style={{
@@ -546,11 +551,6 @@ export default function Card({
                           : "none",
                       }}
                     />
-                    <span
-                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
-                    >
-                      {matchupGenreDisplayLabel(name)}
-                    </span>
                   </span>
                 );
               })
@@ -568,12 +568,7 @@ export default function Card({
                 const color = matchupTargetDiamondColor(name);
                 const pipLight = isVeryLight(color);
                 return (
-                  <span key={`adv-${name}`} className={styles.matchupCluster}>
-                    <span
-                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
-                    >
-                      {matchupGenreDisplayLabel(name)}
-                    </span>
+                  <span key={`adv-${name}`} className={`${styles.matchupCluster} ${styles.matchupClusterAdv}`}>
                     <span
                       className={`${styles.matchupPip} ${small ? styles.matchupPipSm : ""}`}
                       style={{
@@ -583,6 +578,11 @@ export default function Card({
                           : "none",
                       }}
                     />
+                    <span
+                      className={`${styles.matchupName} ${small ? styles.matchupNameSm : ""}`}
+                    >
+                      {matchupGenreDisplayLabel(name)}
+                    </span>
                   </span>
                 );
               })
