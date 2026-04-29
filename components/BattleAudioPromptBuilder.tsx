@@ -9,6 +9,7 @@ import {
   type Intensity,
   type NonMainstreamGenreName,
 } from "@/lib/genres";
+import { battleAudioElementPromptBlock } from "@/lib/battle-audio-element-prompts";
 
 type SelectorId = "first" | "second";
 
@@ -106,44 +107,10 @@ function intensityDescriptor(i: Intensity): string {
 }
 
 function promptBlockForElement(el: BattleElement): PromptBlock {
-  if (el.kind === "genreIntensity" && el.genre === "Rock" && el.intensity === "experimental") {
-    return {
-      title: "Rock · experimental",
-      lines: [
-        "Genre + sub-genre: experimental alternative rock with art-rock edges (2000s/2010s underground spirit).",
-        "Tempo + groove: 124 BPM, tight binary pulse with unstable syncopated accents and occasional metric tension.",
-        "Instruments + textures: fuzz electric guitars, gritty bass, punchy acoustic drums, saturated analogue synth layers, noisy transitions, fragmented FX tails.",
-        "Mood: dark, introspective, and volatile, with controlled chaos and nervous forward motion.",
-        "Structure + dynamics: sparse intro -> progressive tension build -> disruptive impact section -> unstable plateau -> sharp but loop-safe release.",
-        "Non-copyright references: post-2000s alternative/art-rock scene language, experimental indie club energy, no direct song or artist imitation.",
-      ],
-    };
-  }
-
-  if (el.kind === "country") {
-    return {
-      title: `${el.country} · country layer`,
-      lines: [
-        `Genre + sub-genre: battle-ready hybrid layer inspired by ${el.country} regional identity.`,
-        "Tempo + groove: inherit tempo from pair context; lock to competitive, readable rhythmic grid.",
-        `Instruments + textures: regional tonal cues inspired by ${el.country}, modernised for game mix clarity.`,
-        "Mood: identity-forward, cinematic, and cohesive with battle intensity.",
-        "Structure + dynamics: supportive phrasing blocks that can blend and loop cleanly in crossfades.",
-        "Non-copyright references: regional scene/era colour only, no direct melody quotation or artist imitation.",
-      ],
-    };
-  }
-
+  const block = battleAudioElementPromptBlock(el);
   return {
-    title: shortLabel(el),
-    lines: [
-      `Genre + sub-genre: ${el.kind === "genreIntensity" ? `${el.genre} / ${el.intensity}` : "country identity layer"} (to be authored).`,
-      "Tempo + groove: to be authored.",
-      "Instruments + textures: to be authored.",
-      "Mood: to be authored.",
-      "Structure + dynamics: to be authored.",
-      "Non-copyright references: to be authored.",
-    ],
+    title: block.title,
+    lines: [...block.lines] as PromptBlock["lines"],
   };
 }
 
