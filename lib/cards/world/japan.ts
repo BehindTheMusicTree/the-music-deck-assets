@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const JAPAN_CARDS: CardData[] = [
   {
+    catalogNumber: 14,
     id: 96,
     title: "Tokyo Drift",
     artist: "Teriyaki Boyz",
@@ -17,6 +18,5 @@ export const JAPAN_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.teriyaki-boys-tokyo-drift-v1.png"],
     ...(artworkPromptFor(96) ?? {}),
-    catalogNumber: 14,
   },
 ];

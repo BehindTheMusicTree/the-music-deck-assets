@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT } from "../_card-helpers";
 
 export const NETHERLANDS_CARDS: CardData[] = [
   {
+    catalogNumber: 13,
     id: 94,
     title: "Drank & Drugs",
     artist: "Lil Kleine & Ronnie Flex",
@@ -16,6 +17,5 @@ export const NETHERLANDS_CARDS: CardData[] = [
     artwork: `${ART}artwork.lil-kleine-drank-drugs-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.lil-kleine-drank-drugs-v1.png"],
-    catalogNumber: 13,
   },
 ];

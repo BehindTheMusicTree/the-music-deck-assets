@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const RUSSIA_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 98,
     title: "Kalinka",
     artist: "Ivan Larionov",
@@ -17,7 +18,6 @@ export const RUSSIA_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.ivan-larionov-kalinka-v1.png"],
     ...(artworkPromptFor(98) ?? {}),
-    catalogNumber: 1,
   },
   {
     id: 99,

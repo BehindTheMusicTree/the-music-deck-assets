@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const SPAIN_CARDS: CardData[] = [
   {
+    catalogNumber: 2,
     id: 25,
     title: "Cannabis",
     artist: "Ska-P",
@@ -16,7 +17,6 @@ export const SPAIN_CARDS: CardData[] = [
     country: "Spain",
     artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ska-p-cannabis-v1.png"],
-    catalogNumber: 2,
   },
   {
     id: 30,

@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const USA_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 20,
     title: "Take Me Home, Country Roads",
     artist: "John Denver",
@@ -16,9 +17,9 @@ export const USA_CARDS: CardData[] = [
     artwork: `${ART}artwork.take-me-home-country-roads-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.take-me-home-country-roads-v1.png"],
-    catalogNumber: 1,
   },
   {
+    catalogNumber: 3,
     id: 21,
     title: "Amazing Grace",
     artist: "Traditional",
@@ -32,9 +33,9 @@ export const USA_CARDS: CardData[] = [
     artwork: `${ART}artwork.amazing-grace-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.amazing-grace-v1.png"],
     ...(artworkPromptFor(21) ?? {}),
-    catalogNumber: 3,
   },
   {
+    catalogNumber: 2,
     id: 76,
     title: "Take Five",
     artist: "The Golden Gate Quartet",
@@ -49,10 +50,11 @@ export const USA_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.golden-gate-quartet-take-five-v1.png"],
     ...(artworkPromptFor(76) ?? {}),
-    catalogNumber: 2,
   },
   {
+    catalogNumber: 7,
     id: 100,
+    tracksOut: [101],
     title: "The Great Pretender",
     artist: "The Platters",
     year: 1955,
@@ -60,13 +62,11 @@ export const USA_CARDS: CardData[] = [
     country: "USA",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
-    tracksOut: [101],
     pop: 9,
     rarity: "Classic",
     artwork: `${ART}artwork.the-platters-the-great-pretender-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-platters-the-great-pretender-v1.png"],
     ...(artworkPromptFor(100) ?? {}),
-    catalogNumber: 7,
   },
 ];

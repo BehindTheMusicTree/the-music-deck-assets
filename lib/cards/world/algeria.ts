@@ -24,7 +24,7 @@ export const ALGERIA_CARDS: CardData[] = [
     catalogNumber: 2,
     id: 82,
     title: "Shaft",
-    artist: "Malik Adouane",
+    artist: "",
     year: 1993,
     country: "Algeria",
     genre: "Disco",

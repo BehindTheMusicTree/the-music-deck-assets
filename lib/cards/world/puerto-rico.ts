@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const PUERTO_RICO_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 36,
     title: "Despacito",
     artist: "Luis Fonsi feat. Daddy Yankee",
@@ -17,6 +18,5 @@ export const PUERTO_RICO_CARDS: CardData[] = [
     artwork: `${ART}artwork.luiz-fonzi-despacito-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luiz-fonzi-despacito-v1.png"],
     ...(artworkPromptFor(36) ?? {}),
-    catalogNumber: 1,
   },
 ];

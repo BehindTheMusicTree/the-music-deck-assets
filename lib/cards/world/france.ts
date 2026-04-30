@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const FRANCE_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 23,
     title: "La Marseillaise",
     artist: "Rouget de Lisle",
@@ -17,9 +18,9 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.rouget-de-lisle-la-marseillaise-v1.png"],
     ...(artworkPromptFor(23) ?? {}),
-    catalogNumber: 1,
   },
   {
+    catalogNumber: 1,
     id: 24,
     title: "Les Lacs du Connemara",
     artist: "Michel Sardou",
@@ -34,9 +35,9 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.michel-sardou-les-lacs-du-connemara-v1.png"],
     ...(artworkPromptFor(24) ?? {}),
-    catalogNumber: 1,
   },
   {
+    catalogNumber: 2,
     id: 27,
     title: "Bande Organisée",
     artist: "13 Organisé",
@@ -52,26 +53,26 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.13-organises-bande-organisee-v1.png"],
     ...(artworkPromptFor(27) ?? {}),
-    catalogNumber: 2,
   },
   {
+    catalogNumber: 2,
     id: 31,
+    artworkOffsetY: -35,
     title: "Les Corons",
     artist: "Pierre Bachelet",
     year: 1982,
     genre: "French Variety",
     country: "France",
     ability: "Terril",
-    artworkOffsetY: -35,
     abilityDesc:
       "French World cards gain +5 power while this card remains in play.",
     pop: 7,
     rarity: "Classic",
     artwork: `${ART}artwork.les-corons-lens-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.les-corons-lens-v1.png"],
-    catalogNumber: 2,
   },
   {
+    catalogNumber: 3,
     id: 32,
     title: "C'est magnifique",
     artist: "Luis Mariano",
@@ -85,7 +86,6 @@ export const FRANCE_CARDS: CardData[] = [
     artwork: `${ART}artwork.luis-mariano-cest-magnifique-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.luis-mariano-cest-magnifique-v1.png"],
-    catalogNumber: 3,
   },
   {
     id: 33,

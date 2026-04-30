@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const GERMANY_CARDS: CardData[] = [
   {
+    catalogNumber: 15,
     id: 95,
     title: "Ich geh heut nicht mehr tanzen",
     artist: "Jannen May & ENNIO",
@@ -19,6 +20,5 @@ export const GERMANY_CARDS: CardData[] = [
         "artwork.hannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png"
       ],
     ...(artworkPromptFor(95) ?? {}),
-    catalogNumber: 15,
   },
 ];

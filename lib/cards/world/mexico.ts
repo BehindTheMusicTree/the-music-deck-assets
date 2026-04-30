@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT } from "../_card-helpers";
 
 export const MEXICO_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 34,
     title: "La Cucaracha",
     artist: "Traditional (Mexico)",
@@ -16,6 +17,5 @@ export const MEXICO_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.la-cucaracha-v1.png"],
-    catalogNumber: 1,
   },
 ];

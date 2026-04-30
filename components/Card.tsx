@@ -226,8 +226,11 @@ export default function Card({
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
   const [titleScale, setTitleScale] = useState(1);
+  const [genreStripCenterTop, setGenreStripCenterTop] = useState(243);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleScaleRef = useRef(1);
+  const cardFrameRef = useRef<HTMLDivElement>(null);
+  const genreStripRef = useRef<HTMLDivElement>(null);
   const resolved: ResolvedThemeSelection = card.genre
     ? resolveThemeSelection({ genre: card.genre, country: card.country })
     : {
@@ -392,23 +395,22 @@ export default function Card({
   const STRIP_H = 19;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
   const GENRE_STRIP_STEP = STRIP_H - 1;
-  // Center of the genre/type strip from card frame bottom — anchor for grouping.
-  const GENRE_STRIP_CENTER_Y = 157;
   const genreInCount = Math.max(genreTransitionsIn.length, 1);
   const genreOutCount = Math.max(genreTransitionsOut.length, 1);
-  const genreInGroupBase =
-    GENRE_STRIP_CENTER_Y -
+  const snappedGenreStripCenterTop = Math.round(genreStripCenterTop);
+  const genreInGroupTop =
+    snappedGenreStripCenterTop -
     STRIP_H / 2 -
     ((genreInCount - 1) * GENRE_STRIP_STEP) / 2;
-  const genreOutGroupBase =
-    GENRE_STRIP_CENTER_Y -
+  const genreOutGroupTop =
+    snappedGenreStripCenterTop -
     STRIP_H / 2 -
     ((genreOutCount - 1) * GENRE_STRIP_STEP) / 2;
   // Snap to whole pixels to avoid sub-pixel anti-alias seams between strips.
-  const genreInStripBottom = (i: number) =>
-    Math.round(genreInGroupBase + i * GENRE_STRIP_STEP);
-  const genreOutStripBottom = (i: number) =>
-    Math.round(genreOutGroupBase + i * GENRE_STRIP_STEP);
+  const genreInStripTop = (i: number) =>
+    Math.round(genreInGroupTop + i * GENRE_STRIP_STEP);
+  const genreOutStripTop = (i: number) =>
+    Math.round(genreOutGroupTop + i * GENRE_STRIP_STEP);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -450,6 +452,36 @@ export default function Card({
     }
     return () => observer.disconnect();
   }, [card.title, card.artist, small]);
+
+  useLayoutEffect(() => {
+    const frameEl = cardFrameRef.current;
+    const stripEl = genreStripRef.current;
+    if (!frameEl || !stripEl) return;
+
+    const recompute = () => {
+      const frameRect = frameEl.getBoundingClientRect();
+      const stripRect = stripEl.getBoundingClientRect();
+      const centerFromTop = stripRect.top - frameRect.top + stripRect.height / 2;
+      // getBoundingClientRect() includes CSS transforms (scale). Convert back to
+      // the frame's unscaled CSS pixels because strip positioning uses `bottom`.
+      const scaleY =
+        frameEl.offsetHeight > 0 ? frameRect.height / frameEl.offsetHeight : 1;
+      const centerFromTopCssPx =
+        scaleY > 0 ? centerFromTop / scaleY : centerFromTop;
+      const rounded = Math.round(centerFromTopCssPx);
+      setGenreStripCenterTop((prev) => (prev === rounded ? prev : rounded));
+    };
+
+    recompute();
+    const observer = new ResizeObserver(() => recompute());
+    observer.observe(frameEl);
+    observer.observe(stripEl);
+    window.addEventListener("resize", recompute);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", recompute);
+    };
+  }, [small, card.id]);
 
   const cardContent = (
     <>
@@ -511,7 +543,7 @@ export default function Card({
           Genre strip: only .pip / .pipFlag (diamond) for country — never a large rectangular
           flag swatch; that pattern is reserved for list/panel views (e.g. CountryFlagSwatch).
         */}
-        <div className={styles.genreStrip}>
+        <div ref={genreStripRef} className={styles.genreStrip}>
           <div className={styles.genreStripSide}>
             <>
               {pipLeftSymbol ? (
@@ -804,8 +836,8 @@ export default function Card({
               className={styles.genreTransitionStripIn}
               style={{
                 background: t.themeColor,
-                top: "auto",
-                bottom: genreInStripBottom(i),
+                top: genreInStripTop(i),
+                bottom: "auto",
                 color: light ? "#1a0f05" : "rgba(255,255,255,0.96)",
               }}
               title={`${t.genre} (${t.intensity})`}
@@ -820,7 +852,7 @@ export default function Card({
             </div>
             <div
               className={styles.trackTransitionStripInNotch}
-              style={{ top: "auto", bottom: genreInStripBottom(i) }}
+              style={{ top: genreInStripTop(i), bottom: "auto" }}
             />
           </React.Fragment>
         );
@@ -834,8 +866,8 @@ export default function Card({
             className={styles.genreTransitionStripOut}
             style={{
               background: t.themeColor,
-              top: "auto",
-              bottom: genreOutStripBottom(i),
+              top: genreOutStripTop(i),
+              bottom: "auto",
               color: light ? "#1a0f05" : "rgba(255,255,255,0.96)",
             }}
             title={`${t.genre} (${t.intensity})`}
@@ -941,7 +973,7 @@ export default function Card({
         </div>
       </div>
     ) : flagStyle === "fade" && flagBg ? (
-      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+      <div ref={cardFrameRef} className={`${styles.cardFrame}${frameStaticClass}`}>
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}
@@ -960,7 +992,7 @@ export default function Card({
         {cardStrips}
       </div>
     ) : (
-      <div className={`${styles.cardFrame}${frameStaticClass}`}>
+      <div ref={cardFrameRef} className={`${styles.cardFrame}${frameStaticClass}`}>
         <div
           data-card-ui
           className={`${styles.card}${staticClass}`}

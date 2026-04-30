@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const BRETAGNE_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 26,
     title: "Tri Martolod",
     artist: "Traditional",
@@ -18,7 +19,6 @@ export const BRETAGNE_CARDS: CardData[] = [
     artworkOverBorder: true,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.tri-martolod-v1.png"],
     ...(artworkPromptFor(26) ?? {}),
-    catalogNumber: 1,
   },
   {
     id: 50,

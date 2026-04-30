@@ -3,9 +3,10 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const ITALY_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 52,
-    title: "Bella Ciao",
     tracksOut: [7],
+    title: "Bella Ciao",
     year: 1880,
     genre: "Italian Folk",
     country: "Italy",
@@ -16,7 +17,6 @@ export const ITALY_CARDS: CardData[] = [
     artwork: `${ART}artwork.bella-ciao-original-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bella-ciao-original-v1.png"],
     ...(artworkPromptFor(52) ?? {}),
-    catalogNumber: 1,
   },
   {
     id: 69,
