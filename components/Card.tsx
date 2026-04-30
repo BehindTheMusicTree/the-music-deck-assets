@@ -520,15 +520,13 @@ export default function Card({
     <>
       {/* Header */}
       <div className={styles.header}>
-        <div className={styles.headerLeft}>
+        <div
+          className={styles.headerLeft}
+          style={transitionsIn.length > 0 ? { transform: "translateY(-2px)" } : undefined}
+        >
           <span
             className={styles.headerIcon}
-            dangerouslySetInnerHTML={{
-              __html: effectiveTheme.icon.replace(
-                /currentColor/g,
-                effectiveTheme.textMain,
-              ),
-            }}
+            dangerouslySetInnerHTML={{ __html: effectiveTheme.icon }}
           />
           <div
             className={`${styles.titleGroup} ${!card.artist ? styles.titleGroupSolo : ""}`}
