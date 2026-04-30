@@ -6,7 +6,7 @@ export const NETHERLANDS_CARDS: CardData[] = [
     catalogNumber: 13,
     id: 94,
     title: "Drank & Drugs",
-    artist: "Lil Kleine & Ronnie Flex",
+    artist: "",
     year: 2015,
     genre: "Hip-House",
     country: "Netherlands",

@@ -6,7 +6,7 @@ export const JAPAN_CARDS: CardData[] = [
     catalogNumber: 14,
     id: 96,
     title: "Tokyo Drift",
-    artist: "Teriyaki Boyz",
+    artist: "",
     year: 2006,
     genre: "Rap",
     country: "Japan",

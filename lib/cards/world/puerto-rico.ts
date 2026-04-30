@@ -6,7 +6,7 @@ export const PUERTO_RICO_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 36,
     title: "Despacito",
-    artist: "Luis Fonsi feat. Daddy Yankee",
+    artist: "",
     year: 2017,
     genre: "Reggaeton",
     country: "Puerto Rico",

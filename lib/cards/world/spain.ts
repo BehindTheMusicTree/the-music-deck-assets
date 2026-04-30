@@ -6,7 +6,7 @@ export const SPAIN_CARDS: CardData[] = [
     catalogNumber: 2,
     id: 25,
     title: "Cannabis",
-    artist: "Ska-P",
+    artist: "",
     year: 1998,
     genre: "Ska Punk",
     ability: "Contraband",

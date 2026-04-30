@@ -21,7 +21,7 @@ export const ITALY_CARDS: CardData[] = [
   {
     id: 69,
     title: "Blue (Da Ba Dee)",
-    artist: "Eiffel 65",
+    artist: "",
     year: 1999,
     genre: "Nu Italo",
     country: "Italy",

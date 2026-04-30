@@ -6,7 +6,7 @@ export const SWITZERLAND_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 97,
     title: "E gschänkte Tag",
-    artist: "Jodlerklub Oberhofen",
+    artist: "",
     year: 1980,
     genre: "Yodel",
     country: "Switzerland",
