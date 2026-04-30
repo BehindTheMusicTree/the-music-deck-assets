@@ -809,7 +809,7 @@ export default function Card({
               title={`${t.genre} (${t.intensity})`}
             >
               <span
-                className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
+                className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Classical" ? ` ${styles.genreTransitionStripIconClassical}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
                 style={
                   iconSize ? { width: iconSize, height: iconSize } : undefined
                 }
@@ -839,7 +839,7 @@ export default function Card({
             title={`${t.genre} (${t.intensity})`}
           >
             <span
-              className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
+              className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Classical" ? ` ${styles.genreTransitionStripIconClassical}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
               style={
                 iconSize ? { width: iconSize, height: iconSize } : undefined
               }
