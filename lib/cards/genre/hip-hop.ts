@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const HIP_HOP_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 5,
     title: "HUMBLE.",
     artist: "Kendrick Lamar",
@@ -17,10 +18,10 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.kendrick-lamar-humble-v1.png"],
     ...(artworkPromptFor(5) ?? {}),
-    catalogNumber: 1,
     catalogSeriesLabel: "Hip-Hop",
   },
   {
+    catalogNumber: 4,
     id: 40,
     title: "Au DD",
     artist: "PNL",
@@ -32,10 +33,10 @@ export const HIP_HOP_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.pnl-au-dd-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.pnl-au-dd-v1.png"],
-    catalogNumber: 4,
     catalogSeriesLabel: "Hip-Hop",
   },
   {
+    catalogNumber: 5,
     id: 41,
     title: "Maria Maria",
     artist: "Santana feat. The Product G&B",
@@ -49,10 +50,10 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.carlos-santana-maria-maria-v1.png"],
     ...(artworkPromptFor(41) ?? {}),
-    catalogNumber: 5,
     catalogSeriesLabel: "Hip-Hop",
   },
   {
+    catalogNumber: 6,
     id: 44,
     title: "Lose Yourself",
     artist: "Eminem",
@@ -65,7 +66,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artwork: `${ART}artwork.eminem-lose-yourself-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eminem-lose-yourself-v1.png"],
     ...(artworkPromptFor(44) ?? {}),
-    catalogNumber: 6,
     catalogSeriesLabel: "Hip-Hop",
   },
   {

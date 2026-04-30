@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const CLASSICAL_CARDS: CardData[] = [
   {
+    catalogNumber: 2,
     id: 38,
     tracksOut: [39],
     title: "God Save the King",
@@ -15,7 +16,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artwork: `${ART}artwork.god-save-the-king-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-save-the-king-v1.png"],
     ...(artworkPromptFor(38) ?? {}),
-    catalogNumber: 2,
     catalogSeriesLabel: "Classical",
   },
   {

@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const ROCK_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 1,
     title: "Bohemian Rhapsody",
     artist: "Queen",
@@ -14,7 +15,6 @@ export const ROCK_CARDS: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.bohemian-rhapsody-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bohemian-rhapsody-v2.png"],
-    catalogNumber: 1,
     catalogSeriesLabel: "Rock",
   },
   {

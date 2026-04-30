@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const REGGAE_DUB_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 4,
     title: "Is This Love",
     artist: "Bob Marley",
@@ -14,7 +15,6 @@ export const REGGAE_DUB_CARDS: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.is-this-love-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.is-this-love-v1.png"],
-    catalogNumber: 1,
     catalogSeriesLabel: "Reggae/Dub",
   },
   {

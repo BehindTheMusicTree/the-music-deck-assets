@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const MAINSTREAM_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 2,
     title: "Billie Jean",
     artist: "Michael Jackson",
@@ -14,10 +15,10 @@ export const MAINSTREAM_CARDS: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.billy-jean-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.billy-jean-v2.png"],
-    catalogNumber: 1,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 1,
     id: 78,
     title: "Hakuna Matata",
     artist: "The Lion King cast",
@@ -30,10 +31,10 @@ export const MAINSTREAM_CARDS: CardData[] = [
     artwork: `${ART}artwork.hakuna-matata-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.hakuna-matata-v1.png"],
     ...(artworkPromptFor(78) ?? {}),
-    catalogNumber: 1,
     catalogSeriesLabel: "Pop",
   },
   {
+    catalogNumber: 2,
     id: 101,
     title: "The Great Pretender",
     artist: "Freddie Mercury",
@@ -47,7 +48,6 @@ export const MAINSTREAM_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.freddy-mercury-the-great-pretender-v1.png"],
     ...(artworkPromptFor(101) ?? {}),
-    catalogNumber: 2,
     catalogSeriesLabel: "Pop",
   },
 ];

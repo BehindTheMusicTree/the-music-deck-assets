@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const VINTAGE_CARDS: CardData[] = [
   {
+    catalogNumber: 1,
     id: 7,
     title: "Ride of the Valkyries",
     artist: "Wagner",
@@ -16,7 +17,6 @@ export const VINTAGE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.wagner-ride-of-the-valkyries-v1.png"],
     ...(artworkPromptFor(7) ?? {}),
-    catalogNumber: 1,
     catalogSeriesLabel: "Vintage",
   },
   {
