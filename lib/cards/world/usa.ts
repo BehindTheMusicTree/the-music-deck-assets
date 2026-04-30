@@ -24,7 +24,7 @@ export const USA_CARDS: CardData[] = [
     title: "Amazing Grace",
     artist: "Traditional",
     year: "1779",
-    genre: "Cantique",
+    genre: "Gospel",
     ability: "Redemption",
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     pop: 7,

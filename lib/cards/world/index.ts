@@ -1,5 +1,5 @@
 import type { CardData } from "@/components/Card";
-import { deriveCatalogSeriesLabel } from "../_card-helpers";
+import { isCountrySubgenre } from "@/lib/genres";
 import { ALGERIA_CARDS } from "./algeria";
 import { BRETAGNE_CARDS } from "./bretagne";
 import { FRANCE_CARDS } from "./france";
@@ -30,10 +30,18 @@ const ALL_WORLD_CARDS: CardData[] = [
   ...RUSSIA_CARDS,
 ];
 
+function isWorldCountrySeriesCard(c: CardData): boolean {
+  const genre = c.genre?.trim();
+  if (!genre) {
+    throw new Error(`World card "${c.title}" (id ${c.id}): genre required`);
+  }
+  return isCountrySubgenre(genre);
+}
+
 export const WORLD_FLAG_CARDS: CardData[] = ALL_WORLD_CARDS.filter(
-  (c) => deriveCatalogSeriesLabel(c) === c.country,
+  isWorldCountrySeriesCard,
 );
 
 export const WORLD_MIXED_CARDS: CardData[] = ALL_WORLD_CARDS.filter(
-  (c) => deriveCatalogSeriesLabel(c) !== c.country,
+  (c) => !isWorldCountrySeriesCard(c),
 );

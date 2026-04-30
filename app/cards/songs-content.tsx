@@ -73,9 +73,10 @@ export function CardsSongsContent() {
 
   const greatPretenderWorld =
     WORLD_FLAG_CARDS.find((c) => c.id === 100) ??
+    WORLD_MIXED_CARDS.find((c) => c.id === 100) ??
     (() => {
       throw new Error(
-        "WORLD_FLAG_CARDS must include The Great Pretender (id 100)",
+        "World catalogue must include The Great Pretender (id 100)",
       );
     })();
   const pistolsGodSaveTheQueen = genreExample(29);

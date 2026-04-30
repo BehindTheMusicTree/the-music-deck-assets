@@ -7,7 +7,7 @@ export const ROCK_CARDS: CardData[] = [
     id: 1,
     title: "Bohemian Rhapsody",
     year: "1975",
-    genre: "Pop Rock",
+    genre: "Opera Rock",
     ability: "Anthemic",
     abilityDesc: "Doubles momentum on any track with a guitar solo.",
     pop: 9,
