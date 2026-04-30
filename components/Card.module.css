@@ -2,6 +2,10 @@
    .card inside this frame so their protrusion is not clipped by the card itself. */
 .cardFrame {
   position: relative;
+  /* Match .card width so absolute strips (e.g. genreTransitionStripOut: right: -7px)
+     align to the card’s right border. Without this, a narrow parent (e.g. .wrapSm 149px
+     in `small` mode) shrinks the containing block and strips sit ~mid-card. */
+  width: 272px;
   flex-shrink: 0;
   cursor: pointer;
 }
