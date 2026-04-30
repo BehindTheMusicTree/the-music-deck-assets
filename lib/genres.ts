@@ -46,11 +46,15 @@ export const GENRE_INTENSITY_GRADIENT = 1.9;
  * Minimum white-mix separation that keeps pop and soft distinct when
  * GENRE_PASTELIZATION is set to 0.
  */
-export const GENRE_POP_SOFT_MIN_SEPARATION = 0.1;
-/** Direct knob for experimental darkness (higher = darker). */
-export const GENRE_EXPERIMENTAL_DARKEN = 0.15;
-/** Direct knob for hardcore darkness (higher = darker). */
-export const GENRE_HARDCORE_DARKEN = 0.25;
+/**
+ * Intensity darken ladder.
+ * - negative => lighter than base (mixed with white)
+ * - positive => darker than base (mixed with black)
+ */
+export const GENRE_POP_DARKEN = -0.37;
+export const GENRE_STEP_POP_TO_SOFT_DARKEN = 0.32;
+export const GENRE_STEP_SOFT_TO_EXPERIMENTAL_DARKEN = 0.28;
+export const GENRE_STEP_EXPERIMENTAL_TO_HARDCORE_DARKEN = 0.34;
 
 // ---------------------------------------------------------------------------
 // Genre themes
@@ -703,6 +707,11 @@ function mixedWithBlack(hex: string, amount: number): string {
   return mixHex(hex, "#000000", amount);
 }
 
+function applyDarken(hex: string, amount: number): string {
+  if (amount < 0) return mixedWithWhite(hex, -amount);
+  return mixedWithBlack(hex, amount);
+}
+
 type CountryName = keyof typeof COUNTRY_DATA;
 
 // Only genre-subgenres can drive a derived subgenre color/theme.
@@ -757,25 +766,25 @@ export function genreIntensityColor(
   intensity: Intensity,
 ): string {
   const base = GENRE_THEMES[genre].border;
-  const minPopLift = GENRE_POP_SOFT_MIN_SEPARATION * GENRE_INTENSITY_GRADIENT;
-  const minSoftLift = minPopLift * 0.28;
-  if (intensity === "pop")
-    return mixedWithWhite(
-      base,
-      minPopLift + 0.45 * GENRE_PASTELIZATION * GENRE_INTENSITY_GRADIENT,
-    );
-  if (intensity === "soft")
-    return mixedWithWhite(
-      base,
-      minSoftLift +
-        0.32 * GENRE_PASTELIZATION * (0.8 + 0.2 * GENRE_INTENSITY_GRADIENT),
-    );
-  if (intensity === "experimental")
-    return mixedWithBlack(
-      base,
-      GENRE_EXPERIMENTAL_DARKEN * (0.85 + 0.15 * GENRE_INTENSITY_GRADIENT),
-    );
-  return mixedWithBlack(base, GENRE_HARDCORE_DARKEN * GENRE_INTENSITY_GRADIENT);
+  const popPastelLift = 0.45 * GENRE_PASTELIZATION * GENRE_INTENSITY_GRADIENT;
+  const softPastelLift =
+    0.32 * GENRE_PASTELIZATION * (0.8 + 0.2 * GENRE_INTENSITY_GRADIENT);
+
+  const popDarken = GENRE_POP_DARKEN - popPastelLift;
+  const softDarken = popDarken + GENRE_STEP_POP_TO_SOFT_DARKEN - softPastelLift;
+  const experimentalDarken =
+    softDarken + GENRE_STEP_SOFT_TO_EXPERIMENTAL_DARKEN;
+  const hardcoreDarken =
+    experimentalDarken + GENRE_STEP_EXPERIMENTAL_TO_HARDCORE_DARKEN;
+
+  const byIntensity: Record<Intensity, number> = {
+    pop: popDarken,
+    soft: softDarken,
+    experimental: experimentalDarken,
+    hardcore: hardcoreDarken,
+  };
+
+  return applyDarken(base, byIntensity[intensity]);
 }
 
 function resolvedGenreSubgenreColor(sub: GenreSubgenre): string {
