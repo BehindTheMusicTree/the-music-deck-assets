@@ -1,9 +1,15 @@
 import Link from "next/link";
 import Card, { type CardData } from "@/components/Card";
-import GenreTransitionsWheel from "@/components/genres/GenreTransitionsWheel";
 import {
   type AppGenreName,
   APP_GENRE_THEMES,
+  appGenreIntensity,
+  genreIntensityIn,
+  genreIntensityOut,
+  resolveThemeSelection,
+  sortGenreIntensityNodesForStripDisplay,
+  subgenreIntensity,
+  type GenreName,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 import {
@@ -76,14 +82,14 @@ export function CardsSongsContent() {
     theme: (typeof APP_GENRE_THEMES)[AppGenreName];
   }> = [
     {
-      key: "mainstream-pop",
-      label: "Mainstream (pop hub)",
-      card: genreExample(2),
+      key: "mainstream-shape-of-you",
+      label: "Mainstream — Shape of You (pop hub)",
+      card: { ...genreExample(49), genre: "Mainstream" },
       theme: APP_GENRE_THEMES.Mainstream,
     },
     {
-      key: "rock-experimental",
-      label: "Rock (experimental)",
+      key: "rock-soft",
+      label: "Rock (soft)",
       card: genreExample(1),
       theme: APP_GENRE_THEMES.Rock,
     },
@@ -100,6 +106,30 @@ export function CardsSongsContent() {
       theme: APP_GENRE_THEMES.Classical,
     },
   ];
+  const genreTransitionExamplesWithLinks = genreTransitionExamples.map((item) => {
+    if (item.key === "mainstream-shape-of-you") {
+      const node = { genre: "Mainstream" as GenreName, intensity: "pop" as const };
+      return {
+        ...item,
+        transitionsIn: sortGenreIntensityNodesForStripDisplay(genreIntensityIn(node)),
+        transitionsOut: sortGenreIntensityNodesForStripDisplay(genreIntensityOut(node)),
+      };
+    }
+    const resolved = item.card.genre
+      ? resolveThemeSelection({ genre: item.card.genre, country: item.card.country })
+      : null;
+    const genreName = resolved?.resolvedGenre as GenreName | undefined;
+    if (!genreName) return { ...item, transitionsIn: [], transitionsOut: [] };
+    const intensity = resolved?.resolvedSubgenre
+      ? subgenreIntensity(resolved.resolvedSubgenre)
+      : appGenreIntensity(genreName as AppGenreName);
+    const node = { genre: genreName, intensity };
+    return {
+      ...item,
+      transitionsIn: sortGenreIntensityNodesForStripDisplay(genreIntensityIn(node)),
+      transitionsOut: sortGenreIntensityNodesForStripDisplay(genreIntensityOut(node)),
+    };
+  });
 
   const themeRuleExamples: Array<{
     key: string;
@@ -405,11 +435,11 @@ export function CardsSongsContent() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {genreTransitionExamples.map((item) => (
+          {genreTransitionExamplesWithLinks.map((item) => (
             <div key={item.key} className="flex flex-col items-center gap-2">
               <div
                 style={{
-                  width: 306,
+                  width: 314,
                   height: 440,
                   overflow: "hidden",
                 }}
@@ -426,10 +456,41 @@ export function CardsSongsContent() {
               <div className="font-mono tracking-[1px] text-muted text-center">
                 {item.label}
               </div>
+              <div className="w-full max-w-[306px] rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-hidden">
+                <div className="grid grid-cols-2 border-b border-ui-border">
+                  <div className="font-mono text-[11px] tracking-[1px] text-gold/90 px-2 py-1.5 border-r border-ui-border">
+                    In
+                  </div>
+                  <div className="font-mono text-[11px] tracking-[1px] text-gold/90 px-2 py-1.5">
+                    Out
+                  </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-2 py-1.5 border-r border-ui-border">
+                    {item.transitionsIn.map((n) => (
+                      <div
+                        key={`in-${item.key}-${n.genre}-${n.intensity}`}
+                        className="font-mono text-[10px] leading-[1.3] text-muted"
+                      >
+                        {n.genre} ({n.intensity})
+                      </div>
+                    ))}
+                  </div>
+                  <div className="px-2 py-1.5">
+                    {item.transitionsOut.map((n) => (
+                      <div
+                        key={`out-${item.key}-${n.genre}-${n.intensity}`}
+                        className="font-mono text-[10px] leading-[1.3] text-muted"
+                      >
+                        {n.genre} ({n.intensity})
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        <GenreTransitionsWheel />
       </div>
 
       <div id="advantage-weakness" className="w-full max-w-[1100px] mb-14">
@@ -500,7 +561,7 @@ export function CardsSongsContent() {
               <div key={note} className="flex flex-col items-center gap-2">
                 <div
                   style={{
-                    width: 306,
+                    width: 314,
                     height: 440,
                     overflow: "hidden",
                   }}
@@ -547,7 +608,7 @@ export function CardsSongsContent() {
               <div key={level} className="flex flex-col items-center gap-2">
                 <div
                   style={{
-                    width: 306,
+                    width: 314,
                     height: 440,
                     overflow: "hidden",
                   }}
@@ -578,7 +639,7 @@ export function CardsSongsContent() {
             <div key={rarity} className="flex flex-col items-center gap-2">
               <div
                 style={{
-                  width: 306,
+                  width: 314,
                   height: 440,
                   overflow: "hidden",
                 }}

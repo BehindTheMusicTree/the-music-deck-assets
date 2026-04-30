@@ -6,7 +6,7 @@ export const MAINSTREAM_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 78,
     title: "Hakuna Matata",
-    artist: "",
+    // ...artist supprimé
     year: 1994,
     genre: "Mainstream",
     ability: "Reserve",
@@ -21,7 +21,7 @@ export const MAINSTREAM_CARDS: CardData[] = [
     catalogNumber: 2,
     id: 101,
     title: "The Great Pretender",
-    artist: "",
+    // ...artist supprimé
     year: 1987,
     genre: "Mainstream",
     ability: "Reserve",
@@ -37,7 +37,7 @@ export const MAINSTREAM_CARDS: CardData[] = [
     catalogNumber: 3,
     id: 49,
     title: "Shape of You",
-    artist: "",
+    // ...artist supprimé
     year: 2017,
     genre: "Mainstream",
     ability: "Reserve",
@@ -51,7 +51,7 @@ export const MAINSTREAM_CARDS: CardData[] = [
     catalogNumber: 4,
     id: 43,
     title: "My Heart Will Go On",
-    artist: "",
+    // ...artist supprimé
     year: 1997,
     genre: "Mainstream",
     ability: "Reserve",

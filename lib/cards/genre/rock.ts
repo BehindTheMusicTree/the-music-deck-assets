@@ -6,7 +6,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 1,
     title: "Bohemian Rhapsody",
-    artist: "Queen",
+    // ...artist supprimé
     year: 1975,
     genre: "Pop Rock",
     ability: "Anthemic",
@@ -21,7 +21,7 @@ export const ROCK_CARDS: CardData[] = [
     id: 28,
     artworkOffsetY: -25,
     title: "All You Need Is Love",
-    artist: "The Beatles",
+    // ...artist supprimé
     year: 1968,
     genre: "Pop Rock",
     ability: "Coda",
@@ -35,7 +35,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 4,
     id: 29,
     title: "God Save the Queen",
-    artist: "Sex Pistols",
+    // ...artist supprimé
     year: 1977,
     genre: "Punk",
     ability: "Anarchy",
@@ -51,7 +51,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 5,
     id: 51,
     title: "Stairway to Heaven",
-    artist: "Led Zeppelin",
+    // ...artist supprimé
     year: 1971,
     genre: "Prog Rock",
     ability: "Reserve",
@@ -66,7 +66,7 @@ export const ROCK_CARDS: CardData[] = [
     id: 63,
     catalogNumber: 6,
     title: "Suck My Kiss",
-    artist: "Red Hot Chili Peppers",
+    // ...artist supprimé
     year: 1991,
     genre: "Pop Rock",
     ability: "Reserve",
@@ -82,7 +82,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 7,
     id: 68,
     title: "Seven Nation Army",
-    artist: "The White Stripes",
+    // ...artist supprimé
     year: 2003,
     genre: "Alternative Rock",
     ability: "Reserve",
@@ -98,7 +98,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 8,
     id: 71,
     title: "Enter Sandman",
-    artist: "Metallica",
+    // ...artist supprimé
     year: 1991,
     genre: "Metal",
     ability: "Reserve",
@@ -114,7 +114,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 9,
     id: 74,
     title: "Smells Like Teen Spirit",
-    artist: "Nirvana",
+    // ...artist supprimé
     year: 1991,
     genre: "Grunge",
     ability: "Reserve",
@@ -129,7 +129,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 10,
     id: 75,
     title: "Money",
-    artist: "Pink Floyd",
+    // ...artist supprimé
     year: 1973,
     genre: "Prog Rock",
     ability: "Reserve",
@@ -143,7 +143,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 11,
     id: 80,
     title: "Guerrilla Radio",
-    artist: "Rage Against the Machine",
+    // ...artist supprimé
     year: 1999,
     genre: "Pop Rock",
     ability: "Reserve",
@@ -159,7 +159,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 12,
     id: 83,
     title: "Woman to Woman",
-    artist: "Joe Cocker",
+    // ...artist supprimé
     year: 1972,
     genre: "Soul Rock",
     ability: "Reserve",
@@ -175,7 +175,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 13,
     id: 87,
     title: "Africa",
-    artist: "Toto",
+    // ...artist supprimé
     year: 1982,
     genre: "Pop Rock",
     ability: "Savanna stack",
@@ -192,7 +192,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 14,
     id: 92,
     title: "Superstition",
-    artist: "Jeff Beck",
+    // ...artist supprimé
     year: 1972,
     genre: "Hard Rock",
     ability: "Reserve",
@@ -208,7 +208,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 16,
     id: 102,
     title: "In the End",
-    artist: "Linkin Park",
+    // ...artist supprimé
     year: 2000,
     genre: "Pop Rock",
     ability: "Reserve",
@@ -224,7 +224,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 17,
     id: 105,
     title: "I Shot the Sheriff",
-    artist: "Eric Clapton",
+    // ...artist supprimé
     year: 1974,
     genre: "Blues Rock",
     ability: "Reserve",
@@ -240,7 +240,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 18,
     id: 106,
     title: "Vitamin C",
-    artist: "",
+    // ...artist supprimé
     year: 1972,
     genre: "Krautrock",
     ability: "Reserve",
@@ -257,7 +257,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 19,
     id: 110,
     title: "Mad World",
-    artist: "Gary Jules",
+    // ...artist supprimé
     year: 2001,
     genre: "Chamber Pop",
     ability: "Reserve",

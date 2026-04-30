@@ -637,7 +637,7 @@
 }
 .wrapSm {
   /* Include the right-side out-strip protrusion in the small card footprint. */
-  width: 153px;
+  width: 157px;
   height: 220px;
   overflow: hidden;
   flex-shrink: 0;
@@ -820,11 +820,27 @@
   height: 12px;
 }
 .genreTransitionStripIconClassical svg {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
+}
+.trackTransitionStripIconClassical svg {
+  width: 14px;
+  height: 14px;
+}
+.genreTransitionStripIconClassical {
+  transform: translateX(4px);
+}
+.trackTransitionStripIconClassical {
+  transform: translateX(2px);
+}
+.genreTransitionStripIconElectronic {
+  transform: translateX(3px);
+}
+.trackTransitionStripIconElectronic {
+  transform: translateX(1px);
 }
 .genreTransitionStripIconHipHop {
-  transform: translateX(1px);
+  transform: translateX(1.5px);
 }
 
 /* ─── Hover lift (all strip siblings in .cardFrame) ──────────────────────── */

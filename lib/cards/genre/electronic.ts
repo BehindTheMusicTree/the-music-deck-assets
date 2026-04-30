@@ -6,7 +6,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 3,
     title: "One More Time",
-    artist: "Daft Punk",
+    // ...artist supprimé
     year: 2000,
     genre: "House",
     ability: "Loop Sync",
@@ -22,7 +22,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 2,
     id: 37,
     title: "Sky and Sand",
-    artist: "Paul Kalkbrenner",
+    // ...artist supprimé
     year: 2008,
     genre: "Minimal",
     ability: "Reserve",
@@ -38,7 +38,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 3,
     id: 42,
     title: "Levels",
-    artist: "Avicii",
+    // ...artist supprimé
     year: 2011,
     genre: "EDM",
     ability: "Reserve",
@@ -53,7 +53,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 4,
     id: 45,
     title: "Gangnam Style",
-    artist: "PSY",
+    // ...artist supprimé
     year: 2012,
     genre: "Electropop",
     ability: "Reserve",
@@ -68,7 +68,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 5,
     id: 46,
     title: "Poker Face",
-    artist: "Lady Gaga",
+    // ...artist supprimé
     year: 2008,
     genre: "Dance Pop",
     ability: "Reserve",
@@ -84,7 +84,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     id: 111,
     tracksOut: [113],
     title: "Harder, Better, Faster, Stronger",
-    artist: "Daft Punk",
+    // ...artist supprimé
     year: 2001,
     genre: "French House",
     ability: "Reserve",
@@ -116,7 +116,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
     catalogNumber: 9,
     id: 59,
     title: "Sandstorm",
-    artist: "Darude",
+    // ...artist supprimé
     year: 1999,
     genre: "EDM",
     ability: "Reserve",
