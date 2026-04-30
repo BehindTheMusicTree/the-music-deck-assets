@@ -166,7 +166,9 @@ function isVeryLight(hex: string) {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   const luminance = (r * 299 + g * 587 + b * 114) / 1000;
-  return luminance > 205;
+  const isHipHopLikeYellow = r >= 170 && g >= 120 && b <= 80 && luminance >= 115;
+  if (isHipHopLikeYellow) return true;
+  return luminance > 200;
 }
 
 function CardArtwork({ card }: { card: CardData }) {
