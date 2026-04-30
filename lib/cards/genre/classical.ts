@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const CLASSICAL_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Classical";
+
+export const CLASSICAL_CARDS: CardData[] = ([
   {
     catalogNumber: 2,
     id: 38,
@@ -16,7 +18,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artwork: `${ART}artwork.god-save-the-king-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-save-the-king-v1.png"],
     ...(artworkPromptFor(38) ?? {}),
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 39,
@@ -32,7 +33,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-save-the-queen-v1.png"],
     ...(artworkPromptFor(39) ?? {}),
     catalogNumber: 3,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 54,
@@ -49,7 +49,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-spring-v1.png"],
     ...(artworkPromptFor(54) ?? {}),
     catalogNumber: 4,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 55,
@@ -66,7 +65,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-summer-v1.png"],
     ...(artworkPromptFor(55) ?? {}),
     catalogNumber: 5,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 56,
@@ -83,7 +81,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-autumn-v1.png"],
     ...(artworkPromptFor(56) ?? {}),
     catalogNumber: 6,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 57,
@@ -100,7 +97,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.vivaldi-winter-v1.png"],
     ...(artworkPromptFor(57) ?? {}),
     catalogNumber: 7,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 65,
@@ -116,7 +112,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.mozart-requiem-lacrimosa-v1.png"],
     catalogNumber: 8,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 66,
@@ -132,7 +127,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.verdi-dies-irae-v1.png"],
     ...(artworkPromptFor(66) ?? {}),
     catalogNumber: 9,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 72,
@@ -151,7 +145,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     ...(artworkPromptFor(72) ?? {}),
     artworkOffsetY: -25,
     catalogNumber: 10,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 73,
@@ -166,6 +159,5 @@ export const CLASSICAL_CARDS: CardData[] = [
     artwork: `${ART}artwork.carmina-burana-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.carmina-burana-v1.png"],
     catalogNumber: 11,
-    catalogSeriesLabel: "Classical",
   },
-];
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

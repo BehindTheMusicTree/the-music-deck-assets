@@ -48,9 +48,9 @@ export const GENRE_INTENSITY_GRADIENT = 1.9;
  */
 export const GENRE_POP_SOFT_MIN_SEPARATION = 0.1;
 /** Direct knob for experimental darkness (higher = darker). */
-export const GENRE_EXPERIMENTAL_DARKEN = 0.06;
+export const GENRE_EXPERIMENTAL_DARKEN = 0.15;
 /** Direct knob for hardcore darkness (higher = darker). */
-export const GENRE_HARDCORE_DARKEN = 0.3;
+export const GENRE_HARDCORE_DARKEN = 0.25;
 
 // ---------------------------------------------------------------------------
 // Genre themes

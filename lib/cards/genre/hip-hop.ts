@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const HIP_HOP_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Hip-Hop";
+
+export const HIP_HOP_CARDS: CardData[] = ([
   {
     catalogNumber: 1,
     id: 5,
@@ -18,7 +20,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.kendrick-lamar-humble-v1.png"],
     ...(artworkPromptFor(5) ?? {}),
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     catalogNumber: 4,
@@ -33,7 +34,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.pnl-au-dd-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.pnl-au-dd-v1.png"],
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     catalogNumber: 5,
@@ -50,7 +50,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.carlos-santana-maria-maria-v1.png"],
     ...(artworkPromptFor(41) ?? {}),
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     catalogNumber: 6,
@@ -66,7 +65,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artwork: `${ART}artwork.eminem-lose-yourself-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eminem-lose-yourself-v1.png"],
     ...(artworkPromptFor(44) ?? {}),
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 48,
@@ -83,7 +81,6 @@ export const HIP_HOP_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.sicko-mode-travis-scott-v1.png"],
     ...(artworkPromptFor(48) ?? {}),
     catalogNumber: 7,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 67,
@@ -100,7 +97,6 @@ export const HIP_HOP_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.justin-timberlake-cry-me-a-river-v1.png"],
     ...(artworkPromptFor(67) ?? {}),
     catalogNumber: 9,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 70,
@@ -115,7 +111,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artwork: `${ART}artwork.without-me-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.without-me-v1.png"],
     catalogNumber: 10,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 79,
@@ -133,7 +128,6 @@ export const HIP_HOP_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.dr-dre-tupac-california-love-v1.png"],
     ...(artworkPromptFor(79) ?? {}),
     catalogNumber: 11,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 88,
@@ -149,7 +143,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.dr-dre-next-episode-v1.png"],
     ...(artworkPromptFor(88) ?? {}),
     catalogNumber: 12,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 107,
@@ -168,7 +161,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkOffsetY: -40,
     ...(artworkPromptFor(107) ?? {}),
     catalogNumber: 17,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 113,
@@ -184,7 +176,6 @@ export const HIP_HOP_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.kanye-west-stronger-v1.png"],
     ...(artworkPromptFor(113) ?? {}),
     catalogNumber: 16,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 115,
@@ -201,6 +192,5 @@ export const HIP_HOP_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.nwa-straight-outta-compton-v1.png"],
     ...(artworkPromptFor(115) ?? {}),
     catalogNumber: 18,
-    catalogSeriesLabel: "Hip-Hop",
   },
-];
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

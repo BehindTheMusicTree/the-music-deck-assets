@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const VINTAGE_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Vintage";
+
+export const VINTAGE_CARDS: CardData[] = ([
   {
     catalogNumber: 1,
     id: 7,
@@ -17,7 +19,6 @@ export const VINTAGE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.wagner-ride-of-the-valkyries-v1.png"],
     ...(artworkPromptFor(7) ?? {}),
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 8,
@@ -33,7 +34,6 @@ export const VINTAGE_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.miles-davis-so-what-v1.png"],
     ...(artworkPromptFor(8) ?? {}),
     catalogNumber: 2,
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 61,
@@ -49,7 +49,6 @@ export const VINTAGE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v1.png"],
     catalogNumber: 4,
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 62,
@@ -65,7 +64,6 @@ export const VINTAGE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v2.png"],
     catalogNumber: 5,
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 89,
@@ -82,7 +80,6 @@ export const VINTAGE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
     artworkOffsetY: -20,
     catalogNumber: 6,
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 114,
@@ -100,6 +97,5 @@ export const VINTAGE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.the-winstons-amen-brother-v1.png"],
     ...(artworkPromptFor(114) ?? {}),
     catalogNumber: 18,
-    catalogSeriesLabel: "Vintage",
   },
-];
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

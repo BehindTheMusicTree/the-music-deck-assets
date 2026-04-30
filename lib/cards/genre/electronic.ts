@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const ELECTRONIC_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Electronic";
+
+export const ELECTRONIC_CARDS: CardData[] = ([
   {
     catalogNumber: 1,
     id: 3,
@@ -17,7 +19,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.daft-punk-one-more-time-v1.png"],
     ...(artworkPromptFor(3) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 2,
@@ -34,7 +35,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.paul-karlkbrenner-sky-and-sand-v1.png"],
     ...(artworkPromptFor(37) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 3,
@@ -50,7 +50,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.avicii-levels-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.avicii-levels-v1.png"],
     ...(artworkPromptFor(42) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 4,
@@ -66,7 +65,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.psy-gagnam-style-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.psy-gagnam-style-v1.png"],
     ...(artworkPromptFor(45) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 5,
@@ -82,22 +80,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.lady-gaga-poker-face-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lady-gaga-poker-face-v1.png"],
     ...(artworkPromptFor(46) ?? {}),
-    catalogSeriesLabel: "Electronic",
-  },
-  {
-    catalogNumber: 6,
-    id: 49,
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    year: 2017,
-    genre: "Electropop",
-    ability: "Reserve",
-    abilityDesc: "Shipped catalogue entry.",
-    pop: 9,
-    rarity: "Legendary",
-    artwork: `${ART}artwork.shape-of-you-v1.png`,
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shape-of-you-v1.png"],
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 7,
@@ -114,7 +96,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bella-ciao-casa-de-papel-v1.png"],
     ...(artworkPromptFor(53) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 8,
@@ -130,7 +111,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.taylor-swift-shake-it-off-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.taylor-swift-shake-it-off-v1.png"],
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 9,
@@ -146,7 +126,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.darude-sandstorm-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.darude-sandstorm-v1.png"],
     ...(artworkPromptFor(59) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 11,
@@ -163,7 +142,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.shaft-malik-adouane-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shaft-malik-adouane-v1.png"],
     ...(artworkPromptFor(82) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 12,
@@ -179,7 +157,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.eric-prydz-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.eric-prydz-opus-v1.png"],
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 13,
@@ -195,7 +172,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     rarity: "Classic",
     artwork: `${ART}artwork.four-tet-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.four-tet-opus-v1.png"],
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 14,
@@ -210,7 +186,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.lunatic-opus-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.lunatic-opus-v1.png"],
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 15,
@@ -227,7 +202,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bennet-vois-sur-ton-chemin-v1.png"],
     ...(artworkPromptFor(90) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 16,
@@ -243,7 +217,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.c2c-superstition-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.c2c-superstition-v1.png"],
     ...(artworkPromptFor(93) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 17,
@@ -261,7 +234,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.adam-beyer-loosing-your-mind-v1.png"],
     ...(artworkPromptFor(108) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 18,
@@ -279,7 +251,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.tears-for-fears-mad-world-v1.png"],
     ...(artworkPromptFor(109) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 19,
@@ -295,7 +266,6 @@ export const ELECTRONIC_CARDS: CardData[] = [
     artwork: `${ART}artwork.gary-jules-mad-world-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.gary-jules-mad-world-v1.png"],
     ...(artworkPromptFor(110) ?? {}),
-    catalogSeriesLabel: "Electronic",
   },
   {
     catalogNumber: 20,
@@ -314,6 +284,5 @@ export const ELECTRONIC_CARDS: CardData[] = [
       ARTWORK_CREATED_AT[
         "artwork.daft-punk-harder-better-faster-stronger-v1.png"
       ],
-    catalogSeriesLabel: "Electronic",
   },
-];
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

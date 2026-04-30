@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const DISCO_FUNK_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Disco/Funk";
+
+export const DISCO_FUNK_CARDS: CardData[] = ([
   {
     catalogNumber: 2,
     id: 6,
@@ -15,7 +17,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.night-fever-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.night-fever-v1.png"],
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 4,
@@ -32,7 +33,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
     ...(artworkPromptFor(43) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 5,
@@ -49,7 +49,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.michael-jackson-thriller-v1.png"],
     ...(artworkPromptFor(47) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 6,
@@ -67,7 +66,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artwork: `${ART}artwork.isaac-hays-shaft-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.isaac-hays-shaft-v1.png"],
     ...(artworkPromptFor(81) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 7,
@@ -85,7 +83,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.stevie-wonder-superstition-v1.png"],
     ...(artworkPromptFor(91) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 8,
@@ -103,7 +100,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.cola-bottle-baby-edwin-birdsong-v1.png"],
     ...(artworkPromptFor(112) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     catalogNumber: 9,
@@ -120,6 +116,19 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.walter-murphy-a-fifth-of-beethoven-v1.png"],
     ...(artworkPromptFor(116) ?? {}),
-    catalogSeriesLabel: "Disco/Funk",
   },
-];
+  {
+    catalogNumber: 10,
+    id: 2,
+    title: "Billie Jean",
+    artist: "Michael Jackson",
+    year: 1982,
+    genre: "Disco Pop",
+    ability: "Crossover",
+    abilityDesc: "Gains +10 popularity when played after a dance track.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.billy-jean-v2.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.billy-jean-v2.png"],
+  },
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

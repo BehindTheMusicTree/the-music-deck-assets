@@ -1,7 +1,9 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-export const ROCK_CARDS: CardData[] = [
+const CATALOG_SERIES_LABEL = "Rock";
+
+export const ROCK_CARDS: CardData[] = ([
   {
     catalogNumber: 1,
     id: 1,
@@ -15,7 +17,6 @@ export const ROCK_CARDS: CardData[] = [
     rarity: "Legendary",
     artwork: `${ART}artwork.bohemian-rhapsody-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bohemian-rhapsody-v2.png"],
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 28,
@@ -31,7 +32,6 @@ export const ROCK_CARDS: CardData[] = [
     artwork: `${ART}artwork.beatles-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.beatles-v1.png"],
     catalogNumber: 3,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 29,
@@ -48,7 +48,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-sex-pistols-god-save-the-queen-v1.png"],
     catalogNumber: 4,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 51,
@@ -64,7 +63,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.led-zeppelin-v1.png"],
     ...(artworkPromptFor(51) ?? {}),
     catalogNumber: 5,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 63,
@@ -81,7 +79,6 @@ export const ROCK_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.red-hot-chili-peppers-suck-my-kiss-v1.png"],
     ...(artworkPromptFor(63) ?? {}),
     catalogNumber: 6,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 68,
@@ -98,7 +95,6 @@ export const ROCK_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.white-stripes-seven-nation-army-v1.png"],
     ...(artworkPromptFor(68) ?? {}),
     catalogNumber: 7,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 71,
@@ -115,7 +111,6 @@ export const ROCK_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.metallica-enter-sandman-v1.png"],
     ...(artworkPromptFor(71) ?? {}),
     catalogNumber: 8,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 74,
@@ -131,7 +126,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.smells-like-teen-spirit-v2.png"],
     catalogNumber: 9,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 75,
@@ -146,7 +140,6 @@ export const ROCK_CARDS: CardData[] = [
     artwork: `${ART}artwork.money-v2.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.money-v2.png"],
     catalogNumber: 10,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 80,
@@ -163,7 +156,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ratm-guerilla-radio-v1.png"],
     ...(artworkPromptFor(80) ?? {}),
     catalogNumber: 11,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 83,
@@ -180,7 +172,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.joe-cocker-woman-to-woman-v1.png"],
     catalogNumber: 12,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 87,
@@ -198,7 +189,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkOffsetY: -30,
     ...(artworkPromptFor(87) ?? {}),
     catalogNumber: 13,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 92,
@@ -215,7 +205,6 @@ export const ROCK_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.jeff-beck-superstition-v1.png"],
     ...(artworkPromptFor(92) ?? {}),
     catalogNumber: 14,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 102,
@@ -232,7 +221,6 @@ export const ROCK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.linkin-park-in-the-end-v1.png"],
     catalogNumber: 16,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 105,
@@ -249,7 +237,6 @@ export const ROCK_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.eric-clapton-i-shot-the-sherif-v1.png"],
     ...(artworkPromptFor(105) ?? {}),
     catalogNumber: 17,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 106,
@@ -267,6 +254,5 @@ export const ROCK_CARDS: CardData[] = [
     artworkOffsetY: -25,
     ...(artworkPromptFor(106) ?? {}),
     catalogNumber: 18,
-    catalogSeriesLabel: "Rock",
   },
-];
+] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));
