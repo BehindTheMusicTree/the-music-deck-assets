@@ -47,6 +47,10 @@ export const GENRE_INTENSITY_GRADIENT = 1.9;
  * GENRE_PASTELIZATION is set to 0.
  */
 export const GENRE_POP_SOFT_MIN_SEPARATION = 0.1;
+/** Direct knob for experimental darkness (higher = darker). */
+export const GENRE_EXPERIMENTAL_DARKEN = 0.06;
+/** Direct knob for hardcore darkness (higher = darker). */
+export const GENRE_HARDCORE_DARKEN = 0.3;
 
 // ---------------------------------------------------------------------------
 // Genre themes
@@ -769,9 +773,9 @@ export function genreIntensityColor(
   if (intensity === "experimental")
     return mixedWithBlack(
       base,
-      0.15 * (0.85 + 0.15 * GENRE_INTENSITY_GRADIENT),
+      GENRE_EXPERIMENTAL_DARKEN * (0.85 + 0.15 * GENRE_INTENSITY_GRADIENT),
     );
-  return mixedWithBlack(base, 0.38 * GENRE_INTENSITY_GRADIENT);
+  return mixedWithBlack(base, GENRE_HARDCORE_DARKEN * GENRE_INTENSITY_GRADIENT);
 }
 
 function resolvedGenreSubgenreColor(sub: GenreSubgenre): string {

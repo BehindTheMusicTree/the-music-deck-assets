@@ -52,7 +52,9 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 6,
     id: 81,
+    tracksOut: [82],
     title: "Shaft",
     artist: "Isaac Hayes",
     year: 1971,
@@ -65,7 +67,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artwork: `${ART}artwork.isaac-hays-shaft-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.isaac-hays-shaft-v1.png"],
     ...(artworkPromptFor(81) ?? {}),
-    catalogNumber: 6,
     catalogSeriesLabel: "Disco/Funk",
   },
   {

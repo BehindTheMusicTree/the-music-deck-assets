@@ -4,13 +4,13 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 export const CLASSICAL_CARDS: CardData[] = [
   {
     id: 38,
+    tracksOut: [39],
     title: "God Save the King",
     year: 1745,
     genre: "Anthem",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 5,
-    tracksOut: [39],
     rarity: "Banger",
     artwork: `${ART}artwork.god-save-the-king-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.god-save-the-king-v1.png"],
@@ -36,6 +36,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   },
   {
     id: 54,
+    tracksOut: [55],
     title: "Spring (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: 1725,
@@ -52,6 +53,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   },
   {
     id: 55,
+    tracksOut: [56],
     title: "Summer (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: 1725,
@@ -68,6 +70,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   },
   {
     id: 56,
+    tracksOut: [57],
     title: "Autumn (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: 1725,
@@ -84,6 +87,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   },
   {
     id: 57,
+    tracksOut: [54],
     title: "Winter (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: 1725,
@@ -132,6 +136,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   },
   {
     id: 72,
+    tracksOut: [116],
     title: "Symphony No. 5",
     artist: "Ludwig van Beethoven",
     year: 1808,
@@ -139,7 +144,6 @@ export const CLASSICAL_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    tracksOut: [116],
     rarity: "Legendary",
     artwork: `${ART}artwork.beethoven-symphony-no-5-v1.png`,
     artworkCreatedAt:
