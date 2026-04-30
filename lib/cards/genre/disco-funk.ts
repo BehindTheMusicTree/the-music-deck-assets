@@ -3,6 +3,7 @@ import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
 export const DISCO_FUNK_CARDS: CardData[] = [
   {
+    catalogNumber: 2,
     id: 6,
     title: "Night Fever",
     artist: "Bee Gees",
@@ -14,10 +15,10 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     rarity: "Banger",
     artwork: `${ART}artwork.night-fever-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.night-fever-v1.png"],
-    catalogNumber: 2,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 4,
     id: 43,
     title: "My Heart Will Go On",
     artist: "Celine Dion",
@@ -31,10 +32,10 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
     ...(artworkPromptFor(43) ?? {}),
-    catalogNumber: 4,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 5,
     id: 47,
     title: "Thriller",
     artist: "Michael Jackson",
@@ -48,7 +49,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.michael-jackson-thriller-v1.png"],
     ...(artworkPromptFor(47) ?? {}),
-    catalogNumber: 5,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
@@ -70,25 +70,27 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 7,
     id: 91,
+    tracksOut: [93, 92],
     title: "Superstition",
     artist: "Stevie Wonder",
     year: 1972,
     genre: "Funk Soul",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
-    tracksOut: [93, 92],
     pop: 9,
     rarity: "Legendary",
     artwork: `${ART}artwork.stevie-wonder-superstition-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.stevie-wonder-superstition-v1.png"],
     ...(artworkPromptFor(91) ?? {}),
-    catalogNumber: 7,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 8,
     id: 112,
+    tracksOut: [111],
     title: "Cola Bottle Baby",
     artist: "Edwin Birdsong",
     year: 1979,
@@ -96,16 +98,15 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    tracksOut: [111],
     rarity: "Classic",
     artwork: `${ART}artwork.cola-bottle-baby-edwin-birdsong-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.cola-bottle-baby-edwin-birdsong-v1.png"],
     ...(artworkPromptFor(112) ?? {}),
-    catalogNumber: 8,
     catalogSeriesLabel: "Disco/Funk",
   },
   {
+    catalogNumber: 9,
     id: 116,
     title: "A Fifth of Beethoven",
     artist: "Walter Murphy",
@@ -119,7 +120,6 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.walter-murphy-a-fifth-of-beethoven-v1.png"],
     ...(artworkPromptFor(116) ?? {}),
-    catalogNumber: 9,
     catalogSeriesLabel: "Disco/Funk",
   },
 ];
