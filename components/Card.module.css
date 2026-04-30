@@ -793,6 +793,10 @@
   height: 10px;
   display: block;
 }
+.genreTransitionStripIconRock svg {
+  width: 12px;
+  height: 12px;
+}
 
 /* ─── Hover lift (all strip siblings in .cardFrame) ──────────────────────── */
 .card:hover ~ .trackTransitionStripIn,

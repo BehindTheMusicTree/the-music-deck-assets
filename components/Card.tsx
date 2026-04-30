@@ -783,7 +783,7 @@ export default function Card({
               title={`${t.genre} (${t.intensity})`}
             >
               <span
-                className={styles.genreTransitionStripIcon}
+                className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}`}
                 style={
                   iconSize ? { width: iconSize, height: iconSize } : undefined
                 }
@@ -813,7 +813,7 @@ export default function Card({
             title={`${t.genre} (${t.intensity})`}
           >
             <span
-              className={styles.genreTransitionStripIcon}
+              className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}`}
               style={
                 iconSize ? { width: iconSize, height: iconSize } : undefined
               }
