@@ -36,10 +36,10 @@ describe("resolveThemeSelection", () => {
     expect(r.rightLabel).toBe("Pop");
   });
 
-  it("world-blend-subgenre: subgenre on right — mirror country identity on both sides", () => {
+  it("world-blend-subgenre: subgenre on right — do not mirror country to the right", () => {
     const r = resolveThemeSelection({ genre: "Rap", country: "France" });
     expect(r.selectionKind).toBe("world-blend-subgenre");
-    expect(r.mirrorCountryTypeStripRight).toBe(true);
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
     expect(r.leftLabel).toBe("France");
     expect(r.rightLabel).toBe("Rap");
   });
@@ -66,5 +66,14 @@ describe("resolveThemeSelection", () => {
     expect(r.selectionKind).toBe("genre-only");
     expect(r.mirrorCountryTypeStripRight).toBe(false);
     expect(r.leftLabel).toBe(displayGenreLabel("Rock"));
+    expect(r.rightLabel).toBe("—");
+  });
+
+  it("genre-only: Mainstream uses Pop on left and Mainstream on right", () => {
+    const r = resolveThemeSelection({ genre: "Mainstream" });
+    expect(r.selectionKind).toBe("genre-only");
+    expect(r.mirrorCountryTypeStripRight).toBe(false);
+    expect(r.leftLabel).toBe("Pop");
+    expect(r.rightLabel).toBe("Mainstream");
   });
 });

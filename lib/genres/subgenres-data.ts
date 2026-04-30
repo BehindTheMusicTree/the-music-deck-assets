@@ -427,6 +427,12 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Nu Italo",
+    parentA: "Electronic",
+    intensity: "soft",
+  },
+  {
+    kind: "genre",
     n: "House",
     parentA: "Electronic",
     intensity: "soft",

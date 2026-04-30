@@ -5,7 +5,7 @@ export const ITALY_CARDS: CardData[] = [
   {
     catalogNumber: 1,
     id: 52,
-    tracksOut: [7],
+    tracksOut: [5],
     title: "Bella Ciao",
     year: 1880,
     genre: "Italian Folk",
@@ -23,7 +23,7 @@ export const ITALY_CARDS: CardData[] = [
     title: "Blue (Da Ba Dee)",
     artist: "Eiffel 65",
     year: 1999,
-    genre: "Electropop",
+    genre: "Nu Italo",
     country: "Italy",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",

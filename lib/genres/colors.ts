@@ -420,7 +420,7 @@ export function resolveThemeSelection({
         genreStripPrimaryBorder: countryTheme!.border,
         genreStripSubBorder: resolvedColor,
         selectionKind: "world-blend-subgenre",
-        mirrorCountryTypeStripRight: true,
+        mirrorCountryTypeStripRight: false,
       };
     }
 
@@ -483,7 +483,7 @@ export function resolveThemeSelection({
     theme: resolvedTheme,
     displayGenre: displayGenreLabel(appGenre),
     leftLabel: displayGenreLabel(appGenre),
-    rightLabel: "—",
+    rightLabel: appGenre === "Mainstream" ? "Mainstream" : "—",
     resolvedGenre: appGenre,
     genreStripPrimaryBorder: resolvedTheme.border,
     genreStripSubBorder: resolvedTheme.border,
