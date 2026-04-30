@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { countryFlagForShell, countryPreferredCardShell } from "./countries";
-import { resolveThemeSelection } from "./genres";
+import { resolveThemeSelection } from "./genre-colors";
 
 function includesHexColor(css: string, hex: string): boolean {
   const upper = hex.toUpperCase();

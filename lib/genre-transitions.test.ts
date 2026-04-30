@@ -9,7 +9,7 @@ import {
   transitionOut,
   type TransitionGenreIntensityNode,
   type TransitionNode,
-} from "./genres";
+} from "./genre-model";
 import { GENRE_NAMES } from "./genre-names";
 import {
   MAINSTREAM_POP_TRANSITION_IN,

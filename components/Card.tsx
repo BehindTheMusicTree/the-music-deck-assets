@@ -44,6 +44,8 @@ export interface TransitionTrack {
   artist?: string;
   /** Genre canonical border colour used as the strip background. */
   themeColor: string;
+  /** Genre icon SVG string. */
+  icon: string;
 }
 
 type GenreTransitionStrip = {
@@ -328,6 +330,7 @@ export default function Card({
       title: ref.title,
       artist: ref.artist,
       themeColor: resolvedRefTheme.border,
+      icon: resolvedRefTheme.icon,
     };
   };
   const row = cardTrackIndex?.[card.id];
@@ -747,6 +750,10 @@ export default function Card({
               top: STRIP_TOP_BASE + i * STRIP_H,
             }}
           >
+            <span
+              className={styles.trackTransitionStripIcon}
+              dangerouslySetInnerHTML={{ __html: t.icon }}
+            />
             <span className={styles.trackTransitionStripText}>{t.title}</span>
           </div>
           <div
@@ -764,6 +771,10 @@ export default function Card({
             top: STRIP_TOP_BASE + i * STRIP_H,
           }}
         >
+          <span
+            className={styles.trackTransitionStripIcon}
+            dangerouslySetInnerHTML={{ __html: t.icon }}
+          />
           <span className={styles.trackTransitionStripText}>{t.title}</span>
         </div>
       ))}

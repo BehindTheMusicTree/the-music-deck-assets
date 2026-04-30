@@ -51,6 +51,7 @@ export const ROCK_CARDS: CardData[] = (
         ARTWORK_CREATED_AT["artwork.the-sex-pistols-god-save-the-queen-v1.png"],
     },
     {
+      catalogNumber: 5,
       id: 51,
       title: "Stairway to Heaven",
       artist: "Led Zeppelin",
@@ -63,10 +64,10 @@ export const ROCK_CARDS: CardData[] = (
       artwork: `${ART}artwork.led-zeppelin-v1.png`,
       artworkCreatedAt: ARTWORK_CREATED_AT["artwork.led-zeppelin-v1.png"],
       ...(artworkPromptFor(51) ?? {}),
-      catalogNumber: 5,
     },
     {
       id: 63,
+      catalogNumber: 6,
       title: "Suck My Kiss",
       artist: "Red Hot Chili Peppers",
       year: 1991,
@@ -79,9 +80,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.red-hot-chili-peppers-suck-my-kiss-v1.png"],
       ...(artworkPromptFor(63) ?? {}),
-      catalogNumber: 6,
     },
     {
+      catalogNumber: 7,
       id: 68,
       title: "Seven Nation Army",
       artist: "The White Stripes",
@@ -95,9 +96,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.white-stripes-seven-nation-army-v1.png"],
       ...(artworkPromptFor(68) ?? {}),
-      catalogNumber: 7,
     },
     {
+      catalogNumber: 8,
       id: 71,
       title: "Enter Sandman",
       artist: "Metallica",
@@ -111,9 +112,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.metallica-enter-sandman-v1.png"],
       ...(artworkPromptFor(71) ?? {}),
-      catalogNumber: 8,
     },
     {
+      catalogNumber: 9,
       id: 74,
       title: "Smells Like Teen Spirit",
       artist: "Nirvana",
@@ -126,9 +127,9 @@ export const ROCK_CARDS: CardData[] = (
       artwork: `${ART}artwork.smells-like-teen-spirit-v2.png`,
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.smells-like-teen-spirit-v2.png"],
-      catalogNumber: 9,
     },
     {
+      catalogNumber: 10,
       id: 75,
       title: "Money",
       artist: "Pink Floyd",
@@ -140,9 +141,9 @@ export const ROCK_CARDS: CardData[] = (
       rarity: "Legendary",
       artwork: `${ART}artwork.money-v2.png`,
       artworkCreatedAt: ARTWORK_CREATED_AT["artwork.money-v2.png"],
-      catalogNumber: 10,
     },
     {
+      catalogNumber: 11,
       id: 80,
       title: "Guerrilla Radio",
       artist: "Rage Against the Machine",
@@ -157,9 +158,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.ratm-guerilla-radio-v1.png"],
       ...(artworkPromptFor(80) ?? {}),
-      catalogNumber: 11,
     },
     {
+      catalogNumber: 12,
       id: 83,
       title: "Woman to Woman",
       artist: "Joe Cocker",
@@ -173,9 +174,9 @@ export const ROCK_CARDS: CardData[] = (
       artwork: `${ART}artwork.joe-cocker-woman-to-woman-v1.png`,
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.joe-cocker-woman-to-woman-v1.png"],
-      catalogNumber: 12,
     },
     {
+      catalogNumber: 13,
       id: 87,
       title: "Africa",
       artist: "Toto",
@@ -190,9 +191,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt: ARTWORK_CREATED_AT["artwork.toto-africa-v1.png"],
       artworkOffsetY: -30,
       ...(artworkPromptFor(87) ?? {}),
-      catalogNumber: 13,
     },
     {
+      catalogNumber: 14,
       id: 92,
       title: "Superstition",
       artist: "Jeff Beck",
@@ -206,9 +207,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.jeff-beck-superstition-v1.png"],
       ...(artworkPromptFor(92) ?? {}),
-      catalogNumber: 14,
     },
     {
+      catalogNumber: 16,
       id: 102,
       title: "In the End",
       artist: "Linkin Park",
@@ -222,9 +223,9 @@ export const ROCK_CARDS: CardData[] = (
       artwork: `${ART}artwork.linkin-park-in-the-end-v1.png`,
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.linkin-park-in-the-end-v1.png"],
-      catalogNumber: 16,
     },
     {
+      catalogNumber: 17,
       id: 105,
       title: "I Shot the Sheriff",
       artist: "Eric Clapton",
@@ -238,9 +239,9 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt:
         ARTWORK_CREATED_AT["artwork.eric-clapton-i-shot-the-sherif-v1.png"],
       ...(artworkPromptFor(105) ?? {}),
-      catalogNumber: 17,
     },
     {
+      catalogNumber: 18,
       id: 106,
       title: "Vitamin C",
       artist: "Can",
@@ -255,7 +256,6 @@ export const ROCK_CARDS: CardData[] = (
       artworkCreatedAt: ARTWORK_CREATED_AT["artwork.can-vitamine-c-v1.png"],
       artworkOffsetY: -25,
       ...(artworkPromptFor(106) ?? {}),
-      catalogNumber: 18,
     },
   ] as CardData[]
 ).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));

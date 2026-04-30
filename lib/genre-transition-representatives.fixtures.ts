@@ -1,4 +1,4 @@
-import type { TransitionNode } from "./genres";
+import type { TransitionNode } from "./genre-model";
 
 /**
  * Canonical sorted transition graph snapshots for five representatives:

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { displayGenreLabel, resolveThemeSelection } from "./genres";
+import { displayGenreLabel } from "./genre-model";
+import { resolveThemeSelection } from "./genre-colors";
 
 /**
  * Contract: `mirrorCountryTypeStripRight` only when the *right* Genre-strip label should echo

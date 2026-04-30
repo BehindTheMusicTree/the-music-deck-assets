@@ -665,15 +665,16 @@
 .trackTransitionStripIn {
   position: absolute;
   left: 0;
-  width: 103px;
+  width: 128px;
   height: 17px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 3px;
   overflow: hidden;
   z-index: 20;
   transition: transform 0.15s;
-  padding: 0 10px 0 12px;
+  padding: 0 10px 0 14px;
   clip-path: polygon(
     0% 0%,
     calc(100% - 7px) 0%,
@@ -686,15 +687,16 @@
 .trackTransitionStripOut {
   position: absolute;
   right: -7px;
-  width: 103px;
+  width: 128px;
   height: 17px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 3px;
   overflow: hidden;
   z-index: 20;
   transition: transform 0.15s;
-  padding: 0 10px 0 12px;
+  padding: 0 10px 0 14px;
   clip-path: polygon(
     0% 0%,
     calc(100% - 7px) 0%,
@@ -716,14 +718,29 @@
   pointer-events: none;
   transition: transform 0.15s;
 }
+.trackTransitionStripIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  color: rgba(255, 255, 255, 0.92);
+}
+.trackTransitionStripIcon svg {
+  width: 9px;
+  height: 9px;
+  display: block;
+}
 .trackTransitionStripText {
   display: block;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   font-family: "Space Mono", monospace;
   font-size: 6px;
   letter-spacing: 0.4px;
   color: rgba(255, 255, 255, 0.92);
-  text-align: center;
+  text-align: left;
   text-shadow:
     0 0 4px rgba(0, 0, 0, 0.9),
     0 1px 2px rgba(0, 0, 0, 0.7);
