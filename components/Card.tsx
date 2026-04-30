@@ -393,7 +393,7 @@ export default function Card({
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
   const GENRE_STRIP_STEP = STRIP_H - 1;
   // Center of the genre/type strip from card frame bottom — anchor for grouping.
-  const GENRE_STRIP_CENTER_Y = 156;
+  const GENRE_STRIP_CENTER_Y = 157;
   const genreInCount = Math.max(genreTransitionsIn.length, 1);
   const genreOutCount = Math.max(genreTransitionsOut.length, 1);
   const genreInGroupBase =

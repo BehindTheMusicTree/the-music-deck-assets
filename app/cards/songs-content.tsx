@@ -69,6 +69,38 @@ export function CardsSongsContent() {
       };
     });
 
+  const genreTransitionExamples: Array<{
+    key: string;
+    label: string;
+    card: CardData;
+    theme: (typeof APP_GENRE_THEMES)[AppGenreName];
+  }> = [
+    {
+      key: "mainstream-pop",
+      label: "Mainstream (pop hub)",
+      card: genreExample(2),
+      theme: APP_GENRE_THEMES.Mainstream,
+    },
+    {
+      key: "rock-experimental",
+      label: "Rock (experimental)",
+      card: genreExample(1),
+      theme: APP_GENRE_THEMES.Rock,
+    },
+    {
+      key: "electronic-hardcore",
+      label: "Electronic (hardcore)",
+      card: genreExample(8),
+      theme: APP_GENRE_THEMES.Electronic,
+    },
+    {
+      key: "classical-experimental",
+      label: "Classical (experimental)",
+      card: genreExample(7),
+      theme: APP_GENRE_THEMES.Classical,
+    },
+  ];
+
   const themeRuleExamples: Array<{
     key: string;
     title: string;
@@ -351,7 +383,9 @@ export function CardsSongsContent() {
         <div className="section-title mb-2">Genre Transitions</div>
         <div className="mb-4 max-w-[900px]">
           <p className="font-garamond italic text-muted leading-[1.45] mb-2">
-            A transition node is a genre and intensity pair. Out transitions follow the same graph used on cards.
+            This section summarises the same transition graph documented in Genres:
+            each node is a genre and intensity pair, links are directional, and
+            card strips visualise those legal in and out moves.
           </p>
           <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
             <li>Mainstream (pop) links to every genre at pop intensity.</li>
@@ -359,6 +393,41 @@ export function CardsSongsContent() {
             <li>Neighbour genres are reachable at the same intensity and at one step lower.</li>
             <li>Influence bridges from some subgenres add extra bidirectional links.</li>
           </ul>
+          <p className="font-garamond italic text-muted leading-[1.45] mt-3 mb-0">
+            Full rule reference:{" "}
+            <Link
+              href="/genres#genre-transitions"
+              className="text-gold underline-offset-2 hover:underline"
+            >
+              Genres — Transitions
+            </Link>
+            .
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {genreTransitionExamples.map((item) => (
+            <div key={item.key} className="flex flex-col items-center gap-2">
+              <div
+                style={{
+                  width: 306,
+                  height: 440,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    transform: "scale(2)",
+                    transformOrigin: "top left",
+                  }}
+                >
+                  <Card card={item.card} theme={item.theme} small />
+                </div>
+              </div>
+              <div className="font-mono tracking-[1px] text-muted text-center">
+                {item.label}
+              </div>
+            </div>
+          ))}
         </div>
         <GenreTransitionsWheel />
       </div>
