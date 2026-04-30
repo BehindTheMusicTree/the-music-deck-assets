@@ -28,6 +28,26 @@ export type {
 } from "./genre-subgenres-data";
 export { intensityLevelIndex, SUBGENRES } from "./genre-subgenres-data";
 
+/**
+ * Single tuning knob for genre colour pastelisation.
+ * - 0   => no pastel lift (most primary/saturated look)
+ * - 1   => legacy pastel lift levels
+ * - >1  => extra pastel
+ */
+export const GENRE_PASTELIZATION = 0.0;
+/**
+ * Single tuning knob for intensity spread from pop -> hardcore.
+ * - 1   => legacy spread
+ * - >1  => stronger contrast between light/pop and dark/hardcore
+ * - <1  => flatter intensity contrast
+ */
+export const GENRE_INTENSITY_GRADIENT = 1.9;
+/**
+ * Minimum white-mix separation that keeps pop and soft distinct when
+ * GENRE_PASTELIZATION is set to 0.
+ */
+export const GENRE_POP_SOFT_MIN_SEPARATION = 0.1;
+
 // ---------------------------------------------------------------------------
 // Genre themes
 // ---------------------------------------------------------------------------
@@ -468,7 +488,9 @@ export function genreIntensityLinks(
   return direction === "out" ? genreIntensityOut(node) : genreIntensityIn(node);
 }
 
-function assertGenreIntensityNodeKnownForStripDisplay(n: GenreIntensityNode): void {
+function assertGenreIntensityNodeKnownForStripDisplay(
+  n: GenreIntensityNode,
+): void {
   if (GENRE_NAMES.indexOf(n.genre) === -1) {
     throw new Error(
       `sortGenreIntensityNodesForStripDisplay: unknown genre ${JSON.stringify(n.genre)}`,
@@ -669,8 +691,6 @@ export function subgenreTheme(color: string, base: GenreTheme): GenreTheme {
   };
 }
 
-const INFLUENCE_WEIGHT = 0.33;
-
 function mixedWithWhite(hex: string, amount: number): string {
   return mixHex(hex, "#ffffff", amount);
 }
@@ -733,20 +753,30 @@ export function genreIntensityColor(
   intensity: Intensity,
 ): string {
   const base = GENRE_THEMES[genre].border;
-  if (intensity === "pop") return mixedWithWhite(base, 0.55);
-  if (intensity === "soft") return mixedWithWhite(base, 0.32);
-  if (intensity === "experimental") return mixedWithBlack(base, 0.12);
-  return mixedWithBlack(base, 0.38);
+  const minPopLift = GENRE_POP_SOFT_MIN_SEPARATION * GENRE_INTENSITY_GRADIENT;
+  const minSoftLift = minPopLift * 0.28;
+  if (intensity === "pop")
+    return mixedWithWhite(
+      base,
+      minPopLift + 0.45 * GENRE_PASTELIZATION * GENRE_INTENSITY_GRADIENT,
+    );
+  if (intensity === "soft")
+    return mixedWithWhite(
+      base,
+      minSoftLift +
+        0.32 * GENRE_PASTELIZATION * (0.8 + 0.2 * GENRE_INTENSITY_GRADIENT),
+    );
+  if (intensity === "experimental")
+    return mixedWithBlack(
+      base,
+      0.15 * (0.85 + 0.15 * GENRE_INTENSITY_GRADIENT),
+    );
+  return mixedWithBlack(base, 0.38 * GENRE_INTENSITY_GRADIENT);
 }
 
 function resolvedGenreSubgenreColor(sub: GenreSubgenre): string {
-  const baseColor = genreIntensityColor(sub.parentA, sub.intensity);
-  if (!sub.influence) return baseColor;
-  const influenceColor = genreIntensityColor(
-    sub.influence.genre,
-    sub.influence.intensity,
-  );
-  return mixHex(baseColor, influenceColor, INFLUENCE_WEIGHT);
+  if (sub.color && /^#[0-9a-fA-F]{6}$/.test(sub.color)) return sub.color;
+  return genreIntensityColor(sub.parentA, sub.intensity);
 }
 
 export function matchupTargetDiamondColor(name: string): string {

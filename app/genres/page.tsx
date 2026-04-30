@@ -12,8 +12,10 @@ import {
   APP_GENRE_THEMES,
   SUBGENRE_COLOR,
   appGenreIntensity,
+  genreIntensityColor,
   displayGenreLabel,
   intensityLevelIndex,
+  type NonMainstreamGenreName,
 } from "@/lib/genres";
 
 export const metadata: Metadata = { title: "Genres" };
@@ -52,26 +54,36 @@ export default function GenresPage() {
             </p>
           </div>
 
-          {/* Spectrum row: Electronic */}
           <div className="px-[18px] pb-4">
-            <div className="section-title-sub mb-2">Example — Electronic</div>
-            <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
-              {(["Electropop", "EDM", "Techno", "Psytrance"] as const).map(
-                (label) => {
-                  const bg = SUBGENRE_COLOR[label];
-                  return (
-                    <div
-                      key={label}
-                      className="flex-1 flex items-center justify-center font-mono tracking-[1px]"
-                      style={{ background: bg, color: textOnBg(bg) }}
-                    >
-                      {label}
-                    </div>
-                  );
-                },
-              )}
+            <div className="section-title-sub mb-2">All 7 genres</div>
+            <div className="flex flex-col gap-2.5">
+              {APP_GENRE_NAMES.filter(
+                (genre): genre is NonMainstreamGenreName => genre !== "Mainstream",
+              ).map((genre) => (
+                <div key={genre} className="grid grid-cols-[140px_1fr] gap-2 items-center">
+                  <div className="font-mono tracking-[1px] text-white/85">
+                    {displayGenreLabel(genre)}
+                  </div>
+                  <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
+                    {(["pop", "soft", "experimental", "hardcore"] as const).map(
+                      (intensity) => {
+                        const bg = genreIntensityColor(genre, intensity);
+                        return (
+                          <div
+                            key={`${genre}-${intensity}`}
+                            className="flex-1 flex items-center justify-center font-mono tracking-[1px]"
+                            style={{ background: bg, color: textOnBg(bg) }}
+                          >
+                            {intensity.toUpperCase()}
+                          </div>
+                        );
+                      },
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between mt-1 px-0.5">
+            <div className="flex justify-between mt-2 px-[142px]">
               <span className="font-mono  text-muted opacity-50 tracking-[1px]">
                 ← POP INTENSITY
               </span>

@@ -628,7 +628,7 @@ export default function Card({
                       style={{
                         background: color,
                         border: pipLight
-                          ? "1px solid rgba(20, 16, 10, 0.45)"
+                          ? "0.75px solid rgba(20, 16, 10, 0.45)"
                           : "none",
                       }}
                     />
@@ -658,7 +658,7 @@ export default function Card({
                       style={{
                         background: color,
                         border: pipLight
-                          ? "1px solid rgba(20, 16, 10, 0.45)"
+                          ? "0.75px solid rgba(20, 16, 10, 0.45)"
                           : "none",
                       }}
                     />
