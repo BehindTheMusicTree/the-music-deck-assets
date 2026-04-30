@@ -259,6 +259,16 @@ export const SUBGENRES: Subgenre[] = [
   },
   {
     kind: "genre",
+    n: "Opera Rock",
+    parentA: "Rock",
+    intensity: "experimental",
+    influence: {
+      genre: "Classical",
+      intensity: "hardcore",
+    },
+  },
+  {
+    kind: "genre",
     n: "EDM",
     parentA: "Electronic",
     intensity: "soft",

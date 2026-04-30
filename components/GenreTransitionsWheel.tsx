@@ -525,11 +525,11 @@ export default function GenreTransitionsWheel() {
         ))}
       </svg>
 
-      <aside className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto">
+      <aside className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-[#d7cdb8] px-4 py-3 bg-[#f3eddf]/95 text-[#1f1b14] overflow-y-auto">
         {hoveredNode ? (
           <>
             {hovered?.subgenreLabel ? (
-              <div className="font-mono text-[15px] text-muted uppercase tracking-[0.08em] mb-1">
+              <div className="font-mono text-[15px] text-[#625947] uppercase tracking-[0.08em] mb-1">
                 Subgenre: {hovered.subgenreLabel}
               </div>
             ) : null}
@@ -571,7 +571,7 @@ export default function GenreTransitionsWheel() {
             </ul>
           </>
         ) : (
-          <div className="font-mono text-[18px] text-muted">
+          <div className="font-mono text-[18px] text-[#625947]">
             Hover a genre/intensity sector or a subgenre dot to display transition
             arrows.
           </div>

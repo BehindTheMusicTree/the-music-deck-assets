@@ -6,8 +6,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 1,
     id: 1,
     title: "Bohemian Rhapsody",
-    // ...artist supprimé
-    year: 1975,
+    year: "1975",
     genre: "Pop Rock",
     ability: "Anthemic",
     abilityDesc: "Doubles momentum on any track with a guitar solo.",
@@ -21,9 +20,8 @@ export const ROCK_CARDS: CardData[] = [
     id: 28,
     artworkOffsetY: -25,
     title: "All You Need Is Love",
-    // ...artist supprimé
-    year: 1968,
-    genre: "Pop Rock",
+    year: "1968",
+    genre: "Opera Rock",
     ability: "Coda",
     abilityDesc: "Draws a second card if popularity is 9.",
     pop: 9,
@@ -35,8 +33,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 4,
     id: 29,
     title: "God Save the Queen",
-    // ...artist supprimé
-    year: 1977,
+    year: "1977",
     genre: "Punk",
     ability: "Anarchy",
     abilityDesc:
@@ -51,8 +48,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 5,
     id: 51,
     title: "Stairway to Heaven",
-    // ...artist supprimé
-    year: 1971,
+    year: "1971",
     genre: "Prog Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -66,8 +62,7 @@ export const ROCK_CARDS: CardData[] = [
     id: 63,
     catalogNumber: 6,
     title: "Suck My Kiss",
-    // ...artist supprimé
-    year: 1991,
+    year: "1991",
     genre: "Pop Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -82,8 +77,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 7,
     id: 68,
     title: "Seven Nation Army",
-    // ...artist supprimé
-    year: 2003,
+    year: "2003",
     genre: "Alternative Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -98,8 +92,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 8,
     id: 71,
     title: "Enter Sandman",
-    // ...artist supprimé
-    year: 1991,
+    year: "1991",
     genre: "Metal",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -114,8 +107,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 9,
     id: 74,
     title: "Smells Like Teen Spirit",
-    // ...artist supprimé
-    year: 1991,
+    year: "1991",
     genre: "Grunge",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -129,8 +121,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 10,
     id: 75,
     title: "Money",
-    // ...artist supprimé
-    year: 1973,
+    year: "1973",
     genre: "Prog Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -143,8 +134,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 11,
     id: 80,
     title: "Guerrilla Radio",
-    // ...artist supprimé
-    year: 1999,
+    year: "1999",
     genre: "Pop Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -159,8 +149,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 12,
     id: 83,
     title: "Woman to Woman",
-    // ...artist supprimé
-    year: 1972,
+    year: "1972",
     genre: "Soul Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -175,8 +164,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 13,
     id: 87,
     title: "Africa",
-    // ...artist supprimé
-    year: 1982,
+    year: "1982",
     genre: "Pop Rock",
     ability: "Savanna stack",
     abilityDesc:
@@ -192,8 +180,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 14,
     id: 92,
     title: "Superstition",
-    // ...artist supprimé
-    year: 1972,
+    year: "1972",
     genre: "Hard Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -208,8 +195,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 16,
     id: 102,
     title: "In the End",
-    // ...artist supprimé
-    year: 2000,
+    year: "2000",
     genre: "Pop Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -224,8 +210,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 17,
     id: 105,
     title: "I Shot the Sheriff",
-    // ...artist supprimé
-    year: 1974,
+    year: "1974",
     genre: "Blues Rock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -240,8 +225,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 18,
     id: 106,
     title: "Vitamin C",
-    // ...artist supprimé
-    year: 1972,
+    year: "1972",
     genre: "Krautrock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -257,8 +241,7 @@ export const ROCK_CARDS: CardData[] = [
     catalogNumber: 19,
     id: 110,
     title: "Mad World",
-    // ...artist supprimé
-    year: 2001,
+    year: "2001",
     genre: "Chamber Pop",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",

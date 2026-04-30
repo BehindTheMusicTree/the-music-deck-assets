@@ -11,11 +11,7 @@ import {
   type Subgenre,
 } from "./subgenres-data";
 
-export type {
-  AppGenreName,
-  GenreName,
-  NonMainstreamGenreName,
-} from "./names";
+export type { AppGenreName, GenreName, NonMainstreamGenreName } from "./names";
 export { APP_GENRE_NAMES, GENRE_NAMES } from "./names";
 
 export type {
@@ -112,7 +108,9 @@ function transitionNodeKey(n: TransitionNode): string {
   return `s|${n.subgenre}`;
 }
 
-function uniqueGenreIntensity(nodes: GenreIntensityNode[]): GenreIntensityNode[] {
+function uniqueGenreIntensity(
+  nodes: GenreIntensityNode[],
+): GenreIntensityNode[] {
   const seen = new Set<string>();
   const out: GenreIntensityNode[] = [];
   for (const n of nodes) {
@@ -234,7 +232,9 @@ function baseGenreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
   return uniqueGenreIntensity(out);
 }
 
-function transitionOutFromGenreIntensity(node: GenreIntensityNode): TransitionNode[] {
+function transitionOutFromGenreIntensity(
+  node: GenreIntensityNode,
+): TransitionNode[] {
   const out: TransitionNode[] = baseGenreIntensityOut(node).map(
     toTransitionGenreIntensityNode,
   );
@@ -253,7 +253,9 @@ function transitionOutFromSubgenre(subgenre: string): TransitionNode[] {
     genre: sub.parentA,
     intensity: sub.intensity,
   };
-  const out: TransitionNode[] = [...transitionOutFromGenreIntensity(parentNode)];
+  const out: TransitionNode[] = [
+    ...transitionOutFromGenreIntensity(parentNode),
+  ];
   if (sub.influence) {
     out.push(
       toTransitionGenreIntensityNode({
@@ -305,23 +307,31 @@ export function subgenreTransitionIn(subgenre: string): TransitionNode[] {
   return transitionIn(toTransitionSubgenreNode(subgenre));
 }
 
-export function genreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
+export function genreIntensityOut(
+  node: GenreIntensityNode,
+): GenreIntensityNode[] {
   return transitionOut({
     kind: "genreIntensity",
     genre: node.genre,
     intensity: node.intensity,
   })
-    .filter((n): n is TransitionGenreIntensityNode => n.kind === "genreIntensity")
+    .filter(
+      (n): n is TransitionGenreIntensityNode => n.kind === "genreIntensity",
+    )
     .map((n) => ({ genre: n.genre, intensity: n.intensity }));
 }
 
-export function genreIntensityIn(node: GenreIntensityNode): GenreIntensityNode[] {
+export function genreIntensityIn(
+  node: GenreIntensityNode,
+): GenreIntensityNode[] {
   return transitionIn({
     kind: "genreIntensity",
     genre: node.genre,
     intensity: node.intensity,
   })
-    .filter((n): n is TransitionGenreIntensityNode => n.kind === "genreIntensity")
+    .filter(
+      (n): n is TransitionGenreIntensityNode => n.kind === "genreIntensity",
+    )
     .map((n) => ({ genre: n.genre, intensity: n.intensity }));
 }
 
@@ -332,7 +342,9 @@ export function genreIntensityLinks(
   return direction === "out" ? genreIntensityOut(node) : genreIntensityIn(node);
 }
 
-function assertGenreIntensityNodeKnownForStripDisplay(n: GenreIntensityNode): void {
+function assertGenreIntensityNodeKnownForStripDisplay(
+  n: GenreIntensityNode,
+): void {
   if (GENRE_NAMES.indexOf(n.genre) === -1) {
     throw new Error(
       `sortGenreIntensityNodesForStripDisplay: unknown genre ${JSON.stringify(n.genre)}`,
@@ -428,8 +440,8 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
 export function matchupIncomingFrom(genre: AppGenreName | undefined): string[] {
   if (!genre) return [];
   const target = genre as GenreName;
-  return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter((candidate) =>
-    GENRE_BATTLE_MATCHUP[candidate].advantageVs.includes(target),
+  return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter(
+    (candidate) => GENRE_BATTLE_MATCHUP[candidate].advantageVs.includes(target),
   );
 }
 
@@ -462,7 +474,7 @@ export function appGenreIntensity(genre: AppGenreName): Intensity {
   if (GENRE_NAMES.indexOf(genre as GenreName) === -1) {
     throw new Error(`Unknown app genre "${genre}"`);
   }
-  return "soft";
+  return genre === "Mainstream" ? "pop" : "soft";
 }
 
 export function canonicalCountryFromSubgenre(subgenre: string): string {

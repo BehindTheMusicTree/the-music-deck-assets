@@ -135,9 +135,9 @@ function buildPrompt(a: BattleElement, b: BattleElement, normalizedKey: string):
     `Pair key (deterministic lookup): ${normalizedKey}.`,
     "Element prompts to combine:",
     formatPromptBlock(aBlock),
-    "",
+    ",
     formatPromptBlock(bBlock),
-    "",
+    ",
     `Blend target summary: ${shortLabel(a)} + ${shortLabel(b)}.`,
     `Intensity profile emphasis: ${a.kind === "genreIntensity" ? intensityDescriptor(a.intensity) : "identity-forward"} + ${
       b.kind === "genreIntensity" ? intensityDescriptor(b.intensity) : "identity-forward"

@@ -62,7 +62,7 @@ function buildSingles(): SingleRow[] {
         label: `${genre} · ${intensity}`,
         genre,
         intensity,
-        country: "",
+        country: ",
         prompt: genreIntensityPromptTextOrEmpty(genre, intensity),
         fileSizeMb: null,
         durationMin: null,
@@ -76,10 +76,10 @@ function buildSingles(): SingleRow[] {
       key: tokenForCountry(country),
       kind: "country",
       label: `${country} (country)`,
-      genre: "",
-      intensity: "",
+      genre: ",
+      intensity: ",
       country,
-      prompt: "",
+      prompt: ",
       fileSizeMb: null,
       durationMin: null,
     });
@@ -101,7 +101,7 @@ function buildCombinations(singles: SingleRow[]): ComboRow[] {
         right: right.label,
         leftType: left.kind,
         rightType: right.kind,
-        prompt: "",
+        prompt: ",
         fileSizeMb: null,
         durationMin: null,
       });
@@ -118,26 +118,26 @@ export default function BattleAudioLibrary() {
   const [singleSortDir, setSingleSortDir] = useState<SortDir>("asc");
   const [singleFilters, setSingleFilters] = useState({
     key: "",
-    kind: "",
+    kind: ",
     label: "",
-    genre: "",
-    intensity: "",
-    country: "",
-    prompt: "",
-    fileSizeMb: "",
+    genre: ",
+    intensity: ",
+    country: ",
+    prompt: ",
+    fileSizeMb: ",
     durationMin: "",
   });
 
   const [comboSortBy, setComboSortBy] = useState<keyof ComboRow>("key");
   const [comboSortDir, setComboSortDir] = useState<SortDir>("asc");
   const [comboFilters, setComboFilters] = useState({
-    key: "",
-    left: "",
-    right: "",
-    leftType: "",
-    rightType: "",
-    prompt: "",
-    fileSizeMb: "",
+    key: ",
+    left: ",
+    right: ",
+    leftType: ",
+    rightType: ",
+    prompt: ",
+    fileSizeMb: ",
     durationMin: "",
   });
 

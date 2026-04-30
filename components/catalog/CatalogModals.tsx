@@ -79,16 +79,17 @@ export function CatalogEntryDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-start justify-center sm:items-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-100 overflow-y-auto bg-black/70 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="catalog-entry-detail-title"
       onClick={onClose}
     >
-      <div
-        className="max-w-5xl w-full my-4 sm:my-8 rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="flex min-h-full justify-center px-4 pb-12 pt-[max(1.25rem,calc(env(safe-area-inset-top,0px)+1rem))] sm:items-center sm:px-6 sm:py-12 sm:pb-14 sm:pt-[max(1.5rem,calc(env(safe-area-inset-top,0px)+1.25rem))] items-start">
+        <div
+          className="max-w-5xl w-full rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
+          onClick={(e) => e.stopPropagation()}
+        >
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           <div
             className="shrink-0 mx-auto lg:mx-0 bg-[#0a0a0e]"
@@ -199,6 +200,7 @@ export function CatalogEntryDetailModal({
         >
           Close
         </button>
+        </div>
       </div>
     </div>
   );

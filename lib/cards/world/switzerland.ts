@@ -5,9 +5,9 @@ export const SWITZERLAND_CARDS: CardData[] = [
   {
     catalogNumber: 1,
     id: 97,
-    title: "E gschänkte Tag",
+    title: "Zäuerli d’Appenzell (Appenzell natural yodel)",
     artist: "",
-    year: 1980,
+    year: "18th century",
     genre: "Yodel",
     country: "Switzerland",
     ability: "Reserve",

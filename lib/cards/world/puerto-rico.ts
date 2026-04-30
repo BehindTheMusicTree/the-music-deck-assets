@@ -7,7 +7,7 @@ export const PUERTO_RICO_CARDS: CardData[] = [
     id: 36,
     title: "Despacito",
     artist: "",
-    year: 2017,
+    year: "2017",
     genre: "Reggaeton",
     country: "Puerto Rico",
     ability: "Viral",

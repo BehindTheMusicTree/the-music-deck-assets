@@ -111,7 +111,9 @@ function spotlightMetaForCard(card: CardData): {
 } {
   const g = card.genre;
   if (!g) {
-    throw new Error(`Spotlight card "${card.title}" (${card.id}) must set genre`);
+    throw new Error(
+      `Spotlight card "${card.title}" (${card.id}) must set genre`,
+    );
   }
   if (isCountrySubgenre(g)) {
     const expected = canonicalCountryFromSubgenre(g);
@@ -131,7 +133,9 @@ function spotlightMetaForCard(card: CardData): {
   }
   const r = resolveThemeSelection({ genre: g });
   if (!r.resolvedGenre) {
-    throw new Error(`Spotlight "${card.title}": no resolved app genre for "${g}"`);
+    throw new Error(
+      `Spotlight "${card.title}": no resolved app genre for "${g}"`,
+    );
   }
   return {
     kind: "Genre",
@@ -170,13 +174,14 @@ const rawLaMacarena: RawCatalogRow = {
     id: 9101,
     title: "La Macarena",
     artist: "Los Del Rio",
-    year: 1993,
+    year: "1993",
     ability: "Festival Pulse",
     abilityDesc: "Gain +10 popularity when played after a World card.",
     pop: 9,
     rarity: "Classic",
     artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
-    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
     country: "Spain",
     genre: "Electronic",
     catalogNumber: 17,
@@ -239,7 +244,10 @@ function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
   );
 }
 
-function inferCatalogSeriesType(country: string | undefined, label: string): CatalogSeriesType {
+function inferCatalogSeriesType(
+  country: string | undefined,
+  label: string,
+): CatalogSeriesType {
   return country != null && label === country ? "country" : "genre";
 }
 
@@ -275,8 +283,14 @@ const rawCatalogRows: RawCatalogRow[] = [
 
 /** Normalised title|artist key for deduplicating wishlist rows against the shipped deck. */
 export function normCatalogKey(title: string, artist?: string): string {
-  const t = title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  const a = (artist ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const t = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  const a = (artist ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
   return `${t}|${a}`;
 }
 

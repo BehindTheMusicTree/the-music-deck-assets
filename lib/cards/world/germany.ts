@@ -7,7 +7,7 @@ export const GERMANY_CARDS: CardData[] = [
     id: 95,
     title: "Ich geh heut nicht mehr tanzen",
     artist: "Jannen May & ENNIO",
-    year: 2016,
+    year: "2016",
     genre: "Pop Rock",
     country: "Germany",
     ability: "Reserve",

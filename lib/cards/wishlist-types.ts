@@ -6,7 +6,7 @@ export type WishlistCardDef = {
   id: number;
   title: string;
   artist?: string;
-  year: number;
+  year: string;
   kind: "Genre" | "World" | "World blend" | "World + genre" | "Planned";
   /** Subgenre, or an app-level genre when the card is World+genre only. */
   genre?: string;

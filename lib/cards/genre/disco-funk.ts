@@ -6,8 +6,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogNumber: 2,
     id: 6,
     title: "Night Fever",
-    // ...artist supprimé
-    year: 1977,
+    year: "1977",
     genre: "Disco",
     ability: "Groove",
     abilityDesc: "Boosts all Funk cards on the field by +5 popularity.",
@@ -20,8 +19,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogNumber: 4,
     id: 2,
     title: "Billie Jean",
-    // ...artist supprimé
-    year: 1982,
+    year: "1982",
     genre: "Disco Pop",
     ability: "Crossover",
     abilityDesc: "Gains +10 popularity when played after a dance track.",
@@ -34,8 +32,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogNumber: 5,
     id: 47,
     title: "Thriller",
-    // ...artist supprimé
-    year: 1982,
+    year: "1982",
     genre: "Disco Pop",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -51,8 +48,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     id: 81,
     tracksOut: [82],
     title: "Shaft",
-    // ...artist supprimé
-    year: 1971,
+    year: "1971",
     genre: "Disco",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -68,8 +64,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     id: 91,
     tracksOut: [93, 92],
     title: "Superstition",
-    // ...artist supprimé
-    year: 1972,
+    year: "1972",
     genre: "Funk Soul",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -85,8 +80,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     id: 112,
     tracksOut: [111],
     title: "Cola Bottle Baby",
-    // ...artist supprimé
-    year: 1979,
+    year: "1979",
     genre: "Funk Soul",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
@@ -101,8 +95,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
     catalogNumber: 9,
     id: 116,
     title: "A Fifth of Beethoven",
-    // ...artist supprimé
-    year: 1976,
+    year: "1976",
     genre: "Disco",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",

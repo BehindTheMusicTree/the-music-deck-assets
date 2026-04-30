@@ -29,9 +29,104 @@ function genreExample(id: number): CardData {
   return card;
 }
 
+function assertCardGenre(card: CardData, context: string): string {
+  const g = card.genre?.trim();
+  if (!g) throw new Error(`${context}: missing genre`);
+  return g;
+}
+
+function assertCardCountry(card: CardData, context: string): string {
+  const c = card.country?.trim();
+  if (!c) throw new Error(`${context}: missing country`);
+  return c;
+}
+
 export function CardsSongsContent() {
   const cardTrackIndex = CATALOG_CARD_TRACK_INDEX;
   const anatomyCard = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 39)!;
+  const takeFiveWorldFlag =
+    WORLD_FLAG_CARDS.find((c) => c.id === 76) ??
+    (() => {
+      throw new Error("WORLD_FLAG_CARDS must include Take Five (id 76)");
+    })();
+  /** Shipped catalogue cards with no `tracksOut` and no peers pointing in — strips stay empty. */
+  const noCatalogTrackTransitionExamples = [
+    {
+      key: "no-track-rock",
+      caption: "Bohemian Rhapsody — no track edges in the catalogue graph.",
+      card: genreExample(1),
+      theme: APP_GENRE_THEMES.Rock,
+    },
+    {
+      key: "no-track-mainstream",
+      caption: "Shape of You — same (genre strips still follow transition rules).",
+      card: genreExample(49),
+      theme: APP_GENRE_THEMES.Mainstream,
+    },
+    {
+      key: "no-track-world",
+      caption: "Take Five — world row with empty track transition strips.",
+      card: takeFiveWorldFlag,
+      theme: worldThemeForCountry("USA"),
+    },
+  ] as const;
+
+  const greatPretenderWorld =
+    WORLD_FLAG_CARDS.find((c) => c.id === 100) ??
+    (() => {
+      throw new Error(
+        "WORLD_FLAG_CARDS must include The Great Pretender (id 100)",
+      );
+    })();
+  const pistolsGodSaveTheQueen = genreExample(29);
+  const classicalGodSaveTheQueen = genreExample(39);
+  const vivaldiSpring = genreExample(54);
+
+  const catalogTrackEdgeShapeExamples = [
+    {
+      key: "track-one-in-no-out",
+      caption:
+        "One incoming, no outgoing — Sex Pistols’ God Save the Queen only receives the classical anthem link.",
+      card: pistolsGodSaveTheQueen,
+      theme: resolveThemeSelection({
+        genre: assertCardGenre(
+          pistolsGodSaveTheQueen,
+          "Sex Pistols God Save the Queen",
+        ),
+      }).theme,
+    },
+    {
+      key: "track-one-out-no-in",
+      caption:
+        "One outgoing, no incoming — The Great Pretender lists the next row only.",
+      card: greatPretenderWorld,
+      theme: resolveThemeSelection({
+        genre: assertCardGenre(greatPretenderWorld, "The Great Pretender"),
+        country: assertCardCountry(greatPretenderWorld, "The Great Pretender"),
+      }).theme,
+    },
+    {
+      key: "track-in-and-out",
+      caption:
+        "Both strips — Vivaldi’s Spring receives Winter (in) and hands off to Summer (out).",
+      card: vivaldiSpring,
+      theme: resolveThemeSelection({
+        genre: assertCardGenre(vivaldiSpring, "Vivaldi Spring"),
+      }).theme,
+    },
+    {
+      key: "track-same-neighbour-in-out",
+      caption:
+        "Same neighbour on In and Out — classical God Save the Queen swaps edges with God Save the King and also links forward to the punk track.",
+      card: classicalGodSaveTheQueen,
+      theme: resolveThemeSelection({
+        genre: assertCardGenre(
+          classicalGodSaveTheQueen,
+          "Classical God Save the Queen",
+        ),
+      }).theme,
+    },
+  ];
 
   const intensityExamples: Array<{
     level: "pop" | "soft" | "experimental" | "hardcore";
@@ -106,30 +201,46 @@ export function CardsSongsContent() {
       theme: APP_GENRE_THEMES.Classical,
     },
   ];
-  const genreTransitionExamplesWithLinks = genreTransitionExamples.map((item) => {
-    if (item.key === "mainstream-shape-of-you") {
-      const node = { genre: "Mainstream" as GenreName, intensity: "pop" as const };
+  const genreTransitionExamplesWithLinks = genreTransitionExamples.map(
+    (item) => {
+      if (item.key === "mainstream-shape-of-you") {
+        const node = {
+          genre: "Mainstream" as GenreName,
+          intensity: "pop" as const,
+        };
+        return {
+          ...item,
+          transitionsIn: sortGenreIntensityNodesForStripDisplay(
+            genreIntensityIn(node),
+          ),
+          transitionsOut: sortGenreIntensityNodesForStripDisplay(
+            genreIntensityOut(node),
+          ),
+        };
+      }
+      const resolved = item.card.genre
+        ? resolveThemeSelection({
+            genre: item.card.genre,
+            country: item.card.country,
+          })
+        : null;
+      const genreName = resolved?.resolvedGenre as GenreName | undefined;
+      if (!genreName) return { ...item, transitionsIn: [], transitionsOut: [] };
+      const intensity = resolved?.resolvedSubgenre
+        ? subgenreIntensity(resolved.resolvedSubgenre)
+        : appGenreIntensity(genreName as AppGenreName);
+      const node = { genre: genreName, intensity };
       return {
         ...item,
-        transitionsIn: sortGenreIntensityNodesForStripDisplay(genreIntensityIn(node)),
-        transitionsOut: sortGenreIntensityNodesForStripDisplay(genreIntensityOut(node)),
+        transitionsIn: sortGenreIntensityNodesForStripDisplay(
+          genreIntensityIn(node),
+        ),
+        transitionsOut: sortGenreIntensityNodesForStripDisplay(
+          genreIntensityOut(node),
+        ),
       };
-    }
-    const resolved = item.card.genre
-      ? resolveThemeSelection({ genre: item.card.genre, country: item.card.country })
-      : null;
-    const genreName = resolved?.resolvedGenre as GenreName | undefined;
-    if (!genreName) return { ...item, transitionsIn: [], transitionsOut: [] };
-    const intensity = resolved?.resolvedSubgenre
-      ? subgenreIntensity(resolved.resolvedSubgenre)
-      : appGenreIntensity(genreName as AppGenreName);
-    const node = { genre: genreName, intensity };
-    return {
-      ...item,
-      transitionsIn: sortGenreIntensityNodesForStripDisplay(genreIntensityIn(node)),
-      transitionsOut: sortGenreIntensityNodesForStripDisplay(genreIntensityOut(node)),
-    };
-  });
+    },
+  );
 
   const themeRuleExamples: Array<{
     key: string;
@@ -409,19 +520,128 @@ export function CardsSongsContent() {
         </div>
       </div>
 
-      <div id="genre-transitions" className="w-full max-w-[1800px] mb-14 border border-ui-border rounded-[6px] bg-white/2 overflow-visible px-[18px] py-4">
+      <div id="track-transitions" className="w-full max-w-[1100px] mb-14">
+        <div className="section-title mb-5">Track Transitions</div>
+        <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 mb-6">
+          <p className="font-garamond text-muted leading-[1.6] mb-3">
+            Track transitions are card-to-card links used by the transition
+            strips. They are directional and built from each card&apos;s
+            outgoing list. If card B appears in A&apos;s outgoing list, then A
+            appears in B&apos;s incoming list — the graph is consistent both ways.
+            The same pair can link both directions: B may sit on A&apos;s out strip
+            and on A&apos;s in strip when each card lists the other in{" "}
+            <code>tracksOut</code>. A card may have several incoming links, several
+            outgoing links, or none on either side — counts are independent.
+          </p>
+          <p className="font-garamond text-muted leading-[1.6] mb-0">
+            Cards below are real catalogue rows with{" "}
+            <strong className="font-semibold text-foreground/90">
+              no track transitions
+            </strong>
+            : they omit <code>tracksOut</code> and nothing else targets them, so
+            both strips render empty while genre transitions behave as usual.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+          {noCatalogTrackTransitionExamples.map((item) => (
+            <div key={item.key} className="flex flex-col items-center gap-2">
+              <div
+                style={{
+                  width: 314,
+                  height: 440,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    transform: "scale(2)",
+                    transformOrigin: "top left",
+                  }}
+                >
+                  <Card
+                    card={item.card}
+                    theme={item.theme}
+                    small
+                    cardTrackIndex={cardTrackIndex}
+                  />
+                </div>
+              </div>
+              <div className="font-mono tracking-[1px] text-muted text-center max-w-[320px]">
+                {item.caption}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 mb-6">
+          <p className="font-garamond text-muted leading-[1.6] mb-0">
+            The shipped catalogue also includes asymmetric wiring: one-way stubs,
+            simple chains, and reciprocal pairs where the same row appears on
+            both strips because each lists the other in{" "}
+            <code>tracksOut</code>.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {catalogTrackEdgeShapeExamples.map((item) => (
+            <div key={item.key} className="flex flex-col items-center gap-2">
+              <div
+                style={{
+                  width: 314,
+                  height: 440,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    transform: "scale(2)",
+                    transformOrigin: "top left",
+                  }}
+                >
+                  <Card
+                    card={item.card}
+                    theme={item.theme}
+                    small
+                    cardTrackIndex={cardTrackIndex}
+                  />
+                </div>
+              </div>
+              <div className="font-mono tracking-[1px] text-muted text-center max-w-[320px]">
+                {item.caption}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div
+        id="genre-transitions"
+        className="w-full max-w-[1800px] mb-14 border border-ui-border rounded-[6px] bg-white/2 overflow-visible px-[18px] py-4"
+      >
         <div className="section-title mb-2">Genre Transitions</div>
         <div className="mb-4 max-w-[900px]">
           <p className="font-garamond italic text-muted leading-[1.45] mb-2">
-            This section summarises the same transition graph documented in Genres:
-            each node is a genre and intensity pair, links are directional, and
-            card strips visualise those legal in and out moves.
+            This section summarises the same transition graph documented in
+            Genres: each node is a genre and intensity pair, links are
+            directional, and card strips visualise those legal in and out moves.
           </p>
           <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
             <li>Mainstream (pop) links to every genre at pop intensity.</li>
-            <li>Each non-mainstream node links to itself and to adjacent intensities.</li>
-            <li>Neighbour genres are reachable at the same intensity and at one step lower.</li>
-            <li>Influence bridges from some subgenres add extra bidirectional links.</li>
+            <li>
+              Each non-mainstream node links to itself and to adjacent
+              intensities.
+            </li>
+            <li>
+              Neighbour genres are reachable at the same intensity and at one
+              step lower.
+            </li>
+            <li>
+              Influence bridges from some subgenres add extra bidirectional
+              links.
+            </li>
+            <li>
+              Card strips list cross-genre legal moves; same-genre intensity
+              progression is always implied even when not listed.
+            </li>
           </ul>
           <p className="font-garamond italic text-muted leading-[1.45] mt-3 mb-0">
             Full rule reference:{" "}

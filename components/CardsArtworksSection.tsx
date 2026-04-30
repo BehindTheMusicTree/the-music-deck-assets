@@ -297,7 +297,13 @@ export default function CardsArtworksSection() {
         : promptSubject.trim()
           ? `Subject: ${promptSubject.trim()}.`
           : "Subject: [Describe the scene, characters, action, and mood].";
-    return [base, promptMode === "modification" ? modificationBase : "", primary, secondary, details]
+    return [
+      base,
+      promptMode === "modification" ? modificationBase : ",
+      primary,
+      secondary,
+      details,
+    ]
       .filter(Boolean)
       .join("\n\n");
   }, [primaryPromptChoice, promptMode, secondaryPromptChoice, promptSubject]);

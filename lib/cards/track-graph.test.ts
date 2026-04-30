@@ -9,7 +9,7 @@ const cards: CardData[] = [
   {
     id: 1,
     title: "A",
-    year: 2000,
+    year: "2000,
     ability: "Reserve",
     abilityDesc: "Test",
     pop: 5,
@@ -19,7 +19,7 @@ const cards: CardData[] = [
   {
     id: 2,
     title: "B",
-    year: 2001,
+    year: "2001,
     ability: "Reserve",
     abilityDesc: "Test",
     pop: 5,
@@ -29,7 +29,7 @@ const cards: CardData[] = [
   {
     id: 3,
     title: "C",
-    year: 2002,
+    year: "2002,
     ability: "Reserve",
     abilityDesc: "Test",
     pop: 5,

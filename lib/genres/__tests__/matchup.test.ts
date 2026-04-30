@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { matchupIncomingFrom, matchupTargetsForAppGenre } from "../model";
+import {
+  appGenreIntensity,
+  matchupIncomingFrom,
+  matchupTargetsForAppGenre,
+} from "../model";
 
 describe("genre mashup matchup rules", () => {
   it("Mainstream has no advantage and no weakness", () => {
@@ -32,5 +36,9 @@ describe("genre mashup matchup rules", () => {
   it("incoming is computed from all outgoing advantages", () => {
     // Rock is targeted by Reggae/Dub and Disco/Funk from +2/-3 rule.
     expect(matchupIncomingFrom("Rock")).toEqual(["Reggae/Dub", "Disco/Funk"]);
+  });
+
+  it("Mainstream app intensity is pop for transition graph lookups", () => {
+    expect(appGenreIntensity("Mainstream")).toBe("pop");
   });
 });

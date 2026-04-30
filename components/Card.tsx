@@ -59,7 +59,7 @@ export interface CardData {
   id: number;
   title: string;
   artist?: string;
-  year: number;
+  year: string;
   /** Subgenre, or a parent app genre (e.g. "Electronic" on World+genre) when not a subgenre name. */
   genre?: string;
   ability: string;

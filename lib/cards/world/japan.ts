@@ -7,7 +7,7 @@ export const JAPAN_CARDS: CardData[] = [
     id: 96,
     title: "Tokyo Drift",
     artist: "",
-    year: 2006,
+    year: "2006",
     genre: "Rap",
     country: "Japan",
     ability: "Reserve",

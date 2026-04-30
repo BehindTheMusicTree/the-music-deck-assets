@@ -7,7 +7,7 @@ export const NETHERLANDS_CARDS: CardData[] = [
     id: 94,
     title: "Drank & Drugs",
     artist: "",
-    year: 2015,
+    year: "2015",
     genre: "Hip-House",
     country: "Netherlands",
     ability: "Reserve",

@@ -365,20 +365,20 @@ export default function GenreMashupWheel() {
         ))}
       </svg>
 
-      <aside className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-ui-border/80 px-4 py-3 bg-[#12121a]/70 overflow-y-auto">
+      <aside className="xl:sticky xl:top-24 w-full xl:w-[560px] h-[720px] rounded border border-[#d7cdb8] px-4 py-3 bg-[#f3eddf]/95 text-[#1f1b14] overflow-y-auto">
         {hoveredGenre ? (
           <>
             {hovered.subgenreLabel ? (
-              <div className="font-mono text-[15px] text-muted uppercase tracking-[0.08em] mb-1">
+              <div className="font-mono text-[15px] text-[#625947] uppercase tracking-[0.08em] mb-1">
                 Subgenre: {hovered.subgenreLabel}
               </div>
             ) : null}
             <div className="font-mono text-[20px] uppercase tracking-[0.08em]">{hoveredGenre}</div>
-            <div className="font-mono text-[12px] text-muted uppercase tracking-[0.08em] mb-2">
+            <div className="font-mono text-[12px] text-[#625947] uppercase tracking-[0.08em] mb-2">
               Selected ring: {hoveredIntensity}
             </div>
             {hovered.subgenreInfluence ? (
-              <div className="font-mono text-[13px] text-muted mb-2">
+              <div className="font-mono text-[13px] text-[#625947] mb-2">
                 Influence: {hovered.subgenreInfluence.genre} ({hovered.subgenreInfluence.intensity})
               </div>
             ) : null}
@@ -400,7 +400,7 @@ export default function GenreMashupWheel() {
             </ul>
           </>
         ) : (
-          <div className="font-mono text-[18px] text-muted">
+          <div className="font-mono text-[18px] text-[#625947]">
             Hover a sector or node to display genre mashup relationships.
           </div>
         )}

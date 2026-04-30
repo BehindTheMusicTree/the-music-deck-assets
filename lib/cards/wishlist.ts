@@ -49,7 +49,7 @@ function wishlistDefToInterim(d: WishlistCardDef): WishlistInterim {
     id: d.id,
     title: d.title,
     artist: d.artist,
-    year: d.year,
+    year: "d.year",
     genre: d.genre,
     country: d.country,
     ability: d.ability,

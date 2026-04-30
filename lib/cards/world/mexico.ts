@@ -7,7 +7,7 @@ export const MEXICO_CARDS: CardData[] = [
     id: 34,
     title: "La Cucaracha",
     artist: "",
-    year: 1880,
+    year: "1880",
     genre: "Mexican Folk",
     country: "Mexico",
     ability: "Reserve",
