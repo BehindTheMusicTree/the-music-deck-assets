@@ -5,7 +5,7 @@ export const SWITZERLAND_CARDS: CardData[] = [
   {
     catalogNumber: 1,
     id: 97,
-    title: "Zäuerli d’Appenzell (Appenzell natural yodel)",
+    title: "Zäuerli d’Appenzell (Appenzell yodel)",
     artist: "",
     year: "18th century",
     genre: "Yodel",

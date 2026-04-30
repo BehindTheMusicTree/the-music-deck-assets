@@ -204,6 +204,7 @@
   font-family: "Cormorant Garamond", serif;
   font-style: italic;
   font-size: 10px;
+  line-height: 1.2;
   letter-spacing: 0.4px;
   color: var(--gc-text-body);
   white-space: nowrap;
