@@ -397,20 +397,18 @@ export default function Card({
   const GENRE_STRIP_STEP = STRIP_H - 1;
   const genreInCount = Math.max(genreTransitionsIn.length, 1);
   const genreOutCount = Math.max(genreTransitionsOut.length, 1);
-  const snappedGenreStripCenterTop = Math.round(genreStripCenterTop);
   const genreInGroupTop =
-    snappedGenreStripCenterTop -
+    genreStripCenterTop -
     STRIP_H / 2 -
     ((genreInCount - 1) * GENRE_STRIP_STEP) / 2;
   const genreOutGroupTop =
-    snappedGenreStripCenterTop -
+    genreStripCenterTop -
     STRIP_H / 2 -
     ((genreOutCount - 1) * GENRE_STRIP_STEP) / 2;
-  // Snap to whole pixels to avoid sub-pixel anti-alias seams between strips.
   const genreInStripTop = (i: number) =>
-    Math.round(genreInGroupTop + i * GENRE_STRIP_STEP);
+    genreInGroupTop + i * GENRE_STRIP_STEP;
   const genreOutStripTop = (i: number) =>
-    Math.round(genreOutGroupTop + i * GENRE_STRIP_STEP);
+    genreOutGroupTop + i * GENRE_STRIP_STEP;
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -468,8 +466,9 @@ export default function Card({
         frameEl.offsetHeight > 0 ? frameRect.height / frameEl.offsetHeight : 1;
       const centerFromTopCssPx =
         scaleY > 0 ? centerFromTop / scaleY : centerFromTop;
-      const rounded = Math.round(centerFromTopCssPx);
-      setGenreStripCenterTop((prev) => (prev === rounded ? prev : rounded));
+      setGenreStripCenterTop((prev) =>
+        Math.abs(prev - centerFromTopCssPx) < 0.01 ? prev : centerFromTopCssPx,
+      );
     };
 
     recompute();
