@@ -287,22 +287,6 @@ export function CardsSongsContent() {
         </div>
       </div>
 
-      <div id="genre-transitions" className="w-full max-w-[1800px] mb-14 border border-ui-border rounded-[6px] bg-white/2 overflow-visible px-[18px] py-4">
-        <div className="section-title mb-2">Genre Transitions</div>
-        <div className="mb-4 max-w-[900px]">
-          <p className="font-garamond italic text-muted leading-[1.45] mb-2">
-            A transition node is a genre and intensity pair. Out transitions follow the same graph used on cards.
-          </p>
-          <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
-            <li>Mainstream (pop) links to every genre at pop intensity.</li>
-            <li>Each non-mainstream node links to itself and to adjacent intensities.</li>
-            <li>Neighbour genres are reachable at the same intensity and at one step lower.</li>
-            <li>Influence bridges from some subgenres add extra bidirectional links.</li>
-          </ul>
-        </div>
-        <GenreTransitionsWheel />
-      </div>
-
       <div id="theme" className="w-full max-w-[1100px] mb-14">
         <div className="section-title mb-5">Theme</div>
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 flex flex-col gap-4">
@@ -361,6 +345,22 @@ export function CardsSongsContent() {
             </ul>
           </div>
         </div>
+      </div>
+
+      <div id="genre-transitions" className="w-full max-w-[1800px] mb-14 border border-ui-border rounded-[6px] bg-white/2 overflow-visible px-[18px] py-4">
+        <div className="section-title mb-2">Genre Transitions</div>
+        <div className="mb-4 max-w-[900px]">
+          <p className="font-garamond italic text-muted leading-[1.45] mb-2">
+            A transition node is a genre and intensity pair. Out transitions follow the same graph used on cards.
+          </p>
+          <ul className="list-disc pl-6 font-garamond italic text-muted leading-[1.45]">
+            <li>Mainstream (pop) links to every genre at pop intensity.</li>
+            <li>Each non-mainstream node links to itself and to adjacent intensities.</li>
+            <li>Neighbour genres are reachable at the same intensity and at one step lower.</li>
+            <li>Influence bridges from some subgenres add extra bidirectional links.</li>
+          </ul>
+        </div>
+        <GenreTransitionsWheel />
       </div>
 
       <div id="advantage-weakness" className="w-full max-w-[1100px] mb-14">

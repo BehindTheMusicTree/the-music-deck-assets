@@ -393,20 +393,22 @@ export default function Card({
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
   const GENRE_STRIP_STEP = STRIP_H - 1;
   // Center of the genre/type strip from card frame bottom — anchor for grouping.
-  // Use the max of in/out counts so matching indices always share the same bottom value.
   const GENRE_STRIP_CENTER_Y = 156;
-  const maxGenreCount = Math.max(
-    genreTransitionsIn.length,
-    genreTransitionsOut.length,
-    1,
-  );
-  const genreGroupBase =
-    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((maxGenreCount - 1) * GENRE_STRIP_STEP) / 2;
+  const genreInCount = Math.max(genreTransitionsIn.length, 1);
+  const genreOutCount = Math.max(genreTransitionsOut.length, 1);
+  const genreInGroupBase =
+    GENRE_STRIP_CENTER_Y -
+    STRIP_H / 2 -
+    ((genreInCount - 1) * GENRE_STRIP_STEP) / 2;
+  const genreOutGroupBase =
+    GENRE_STRIP_CENTER_Y -
+    STRIP_H / 2 -
+    ((genreOutCount - 1) * GENRE_STRIP_STEP) / 2;
   // Snap to whole pixels to avoid sub-pixel anti-alias seams between strips.
   const genreInStripBottom = (i: number) =>
-    Math.round(genreGroupBase + i * GENRE_STRIP_STEP);
+    Math.round(genreInGroupBase + i * GENRE_STRIP_STEP);
   const genreOutStripBottom = (i: number) =>
-    Math.round(genreGroupBase + i * GENRE_STRIP_STEP);
+    Math.round(genreOutGroupBase + i * GENRE_STRIP_STEP);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
