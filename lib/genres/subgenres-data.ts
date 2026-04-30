@@ -1,5 +1,5 @@
 import { COUNTRY_DATA } from "@/lib/countries";
-import type { GenreName, NonMainstreamGenreName } from "./genre-names";
+import type { GenreName, NonMainstreamGenreName } from "./names";
 
 export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
 
@@ -619,7 +619,7 @@ export const SUBGENRES: Subgenre[] = [
     kind: "genre",
     n: "Opera",
     parentA: "Classical",
-    intensity: "experimental",
+    intensity: "hardcore",
   },
   {
     kind: "genre",

@@ -17,7 +17,6 @@ export const USA_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.take-me-home-country-roads-v1.png"],
     catalogNumber: 1,
-    catalogSeriesLabel: "USA",
   },
   {
     id: 21,
@@ -34,7 +33,6 @@ export const USA_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.amazing-grace-v1.png"],
     ...(artworkPromptFor(21) ?? {}),
     catalogNumber: 3,
-    catalogSeriesLabel: "Vintage",
   },
   {
     id: 76,
@@ -52,7 +50,6 @@ export const USA_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.golden-gate-quartet-take-five-v1.png"],
     ...(artworkPromptFor(76) ?? {}),
     catalogNumber: 2,
-    catalogSeriesLabel: "USA",
   },
   {
     id: 100,
@@ -71,6 +68,5 @@ export const USA_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.the-platters-the-great-pretender-v1.png"],
     ...(artworkPromptFor(100) ?? {}),
     catalogNumber: 7,
-    catalogSeriesLabel: "Vintage",
   },
 ];

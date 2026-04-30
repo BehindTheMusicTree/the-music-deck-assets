@@ -18,6 +18,5 @@ export const PUERTO_RICO_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.luiz-fonzi-despacito-v1.png"],
     ...(artworkPromptFor(36) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "Puerto Rico",
   },
 ];

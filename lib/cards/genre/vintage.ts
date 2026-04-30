@@ -1,29 +1,29 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-const CATALOG_SERIES_LABEL = "Vintage";
-
-export const VINTAGE_CARDS: CardData[] = ([
+export const VINTAGE_CARDS: CardData[] = [
   {
-    catalogNumber: 1,
-    id: 7,
-    title: "Ride of the Valkyries",
-    artist: "Wagner",
-    year: 1876,
-    genre: "Soul",
-    ability: "Fortissimo",
-    abilityDesc: "Deals damage in three separate strikes of 60% power each.",
-    pop: 6,
+    catalogNumber: 18,
+    id: 114,
+    tracksOut: [115],
+    title: "Amen, Brother",
+    artist: "The Winstons",
+    year: 1969,
+    genre: "Early Funk",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
     rarity: "Legendary",
-    artwork: `${ART}artwork.wagner-ride-of-the-valkyries-v1.png`,
+    artwork: `${ART}artwork.the-winstons-amen-brother-v1.png`,
     artworkCreatedAt:
-      ARTWORK_CREATED_AT["artwork.wagner-ride-of-the-valkyries-v1.png"],
-    ...(artworkPromptFor(7) ?? {}),
+      ARTWORK_CREATED_AT["artwork.the-winstons-amen-brother-v1.png"],
+    ...(artworkPromptFor(114) ?? {}),
   },
   {
+    catalogNumber: 2,
     id: 8,
     title: "So What",
-    artist: "Miles Davis",
+    artist: "",
     year: 1959,
     genre: "Jazz",
     ability: "Modal",
@@ -33,9 +33,9 @@ export const VINTAGE_CARDS: CardData[] = ([
     artwork: `${ART}artwork.miles-davis-so-what-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.miles-davis-so-what-v1.png"],
     ...(artworkPromptFor(8) ?? {}),
-    catalogNumber: 2,
   },
   {
+    catalogNumber: 4,
     id: 61,
     title: "These Boots Are Made for Walkin'",
     artist: "Nancy Sinatra",
@@ -48,9 +48,9 @@ export const VINTAGE_CARDS: CardData[] = ([
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v1.png"],
-    catalogNumber: 4,
   },
   {
+    catalogNumber: 5,
     id: 62,
     title: "These Boots Are Made for Walkin' (alt)",
     artist: "Nancy Sinatra",
@@ -63,9 +63,9 @@ export const VINTAGE_CARDS: CardData[] = ([
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v2.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v2.png"],
-    catalogNumber: 5,
   },
   {
+    catalogNumber: 6,
     id: 89,
     title: "The Edge",
     artist: "David McCallum",
@@ -79,23 +79,21 @@ export const VINTAGE_CARDS: CardData[] = ([
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],
     artworkOffsetY: -20,
-    catalogNumber: 6,
   },
   {
-    id: 114,
-    title: "Amen, Brother",
-    artist: "The Winstons",
-    year: 1969,
-    genre: "Early Funk",
+    catalogNumber: 7,
+    id: 53,
+    title: "Bella Ciao",
+    artist: "",
+    year: 2017,
+    genre: "Choral",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    tracksOut: [115],
-    rarity: "Legendary",
-    artwork: `${ART}artwork.the-winstons-amen-brother-v1.png`,
+    rarity: "Banger",
+    artwork: `${ART}artwork.bella-ciao-casa-de-papel-v1.png`,
     artworkCreatedAt:
-      ARTWORK_CREATED_AT["artwork.the-winstons-amen-brother-v1.png"],
-    ...(artworkPromptFor(114) ?? {}),
-    catalogNumber: 18,
+      ARTWORK_CREATED_AT["artwork.bella-ciao-casa-de-papel-v1.png"],
+    ...(artworkPromptFor(53) ?? {}),
   },
-] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));
+] as CardData[];

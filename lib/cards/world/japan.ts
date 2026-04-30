@@ -18,6 +18,5 @@ export const JAPAN_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.teriyaki-boys-tokyo-drift-v1.png"],
     ...(artworkPromptFor(96) ?? {}),
     catalogNumber: 14,
-    catalogSeriesLabel: "Hip-Hop",
   },
 ];

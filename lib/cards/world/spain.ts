@@ -17,7 +17,6 @@ export const SPAIN_CARDS: CardData[] = [
     artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ska-p-cannabis-v1.png"],
     catalogNumber: 2,
-    catalogSeriesLabel: "Rock",
   },
   {
     id: 30,
@@ -34,7 +33,6 @@ export const SPAIN_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.las-ketchup-the-ketchup-song-v1.png"],
     catalogNumber: 3,
-    catalogSeriesLabel: "Disco/Funk",
   },
   {
     id: 64,
@@ -50,6 +48,5 @@ export const SPAIN_CARDS: CardData[] = [
     artwork: `${ART}artwork.me-gustas-tu-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.me-gustas-tu-v1.png"],
     catalogNumber: 2,
-    catalogSeriesLabel: "Reggae/Dub",
   },
 ];

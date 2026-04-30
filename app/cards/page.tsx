@@ -1,4 +1,4 @@
-import CardsPageShell from "@/components/CardsPageShell";
+import CardsPageShell from "@/components/cards/CardsPageShell";
 import { CardsSongsContent } from "@/app/cards/songs-content";
 import { CardsRemixesContent } from "@/app/cards/remixes-content";
 import type { Metadata } from "next";

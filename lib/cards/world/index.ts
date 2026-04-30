@@ -1,4 +1,5 @@
 import type { CardData } from "@/components/Card";
+import { deriveCatalogSeriesLabel } from "../_card-helpers";
 import { ALGERIA_CARDS } from "./algeria";
 import { BRETAGNE_CARDS } from "./bretagne";
 import { FRANCE_CARDS } from "./france";
@@ -30,9 +31,9 @@ const ALL_WORLD_CARDS: CardData[] = [
 ];
 
 export const WORLD_FLAG_CARDS: CardData[] = ALL_WORLD_CARDS.filter(
-  (c) => c.catalogSeriesLabel === c.country,
+  (c) => deriveCatalogSeriesLabel(c) === c.country,
 );
 
 export const WORLD_MIXED_CARDS: CardData[] = ALL_WORLD_CARDS.filter(
-  (c) => c.catalogSeriesLabel !== c.country,
+  (c) => deriveCatalogSeriesLabel(c) !== c.country,
 );

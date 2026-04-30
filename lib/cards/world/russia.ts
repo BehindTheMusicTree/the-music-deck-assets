@@ -18,7 +18,6 @@ export const RUSSIA_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.ivan-larionov-kalinka-v1.png"],
     ...(artworkPromptFor(98) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "Russia",
   },
   {
     id: 99,
@@ -36,6 +35,5 @@ export const RUSSIA_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.red-army-choir-kalinka-v1.png"],
     ...(artworkPromptFor(99) ?? {}),
     catalogNumber: 2,
-    catalogSeriesLabel: "Russia",
   },
 ];

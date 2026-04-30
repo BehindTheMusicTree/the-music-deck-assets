@@ -83,8 +83,7 @@ export interface CardData {
   country?: string;
   /** Track ids this card transitions into (successors in a DJ transition). */
   tracksOut?: number[];
-  /** Shipped deck only: catalogue series label and number within that series. */
-  catalogSeriesLabel?: string;
+  /** Shipped deck only: catalogue number within the derived series. */
   catalogNumber?: number;
 }
 
@@ -390,16 +389,24 @@ export default function Card({
         ).map(toGenreTransitionStrip)
       : [];
 
-  const STRIP_H = 17;
+  const STRIP_H = 19;
   const STRIP_TOP_BASE = 44 + 10 - STRIP_H / 2;
+  const GENRE_STRIP_STEP = STRIP_H - 1;
   // Center of the genre/type strip from card frame bottom — anchor for grouping.
+  // Use the max of in/out counts so matching indices always share the same bottom value.
   const GENRE_STRIP_CENTER_Y = 156;
-  const genreGroupBase = (count: number) =>
-    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((count - 1) * STRIP_H) / 2;
+  const maxGenreCount = Math.max(
+    genreTransitionsIn.length,
+    genreTransitionsOut.length,
+    1,
+  );
+  const genreGroupBase =
+    GENRE_STRIP_CENTER_Y - STRIP_H / 2 - ((maxGenreCount - 1) * GENRE_STRIP_STEP) / 2;
+  // Snap to whole pixels to avoid sub-pixel anti-alias seams between strips.
   const genreInStripBottom = (i: number) =>
-    genreGroupBase(genreTransitionsIn.length) + i * STRIP_H;
+    Math.round(genreGroupBase + i * GENRE_STRIP_STEP);
   const genreOutStripBottom = (i: number) =>
-    genreGroupBase(genreTransitionsOut.length) + i * STRIP_H;
+    Math.round(genreGroupBase + i * GENRE_STRIP_STEP);
 
   useLayoutEffect(() => {
     const el = titleRef.current;
@@ -741,13 +748,16 @@ export default function Card({
   // Strips rendered as siblings of .card inside .cardFrame — never inside the card itself.
   const cardStrips = (
     <>
-      {transitionsIn.map((t, i) => (
+      {transitionsIn.map((t, i) => {
+        const light = isVeryLight(t.themeColor);
+        return (
         <React.Fragment key={`in-${i}`}>
           <div
             className={styles.trackTransitionStripIn}
             style={{
               background: t.themeColor,
               top: STRIP_TOP_BASE + i * STRIP_H,
+              color: light ? "#1a0f05" : "rgba(255,255,255,0.92)",
             }}
           >
             <span
@@ -761,14 +771,18 @@ export default function Card({
             style={{ top: STRIP_TOP_BASE + i * STRIP_H }}
           />
         </React.Fragment>
-      ))}
-      {transitionsOut.map((t, i) => (
+        );
+      })}
+      {transitionsOut.map((t, i) => {
+        const light = isVeryLight(t.themeColor);
+        return (
         <div
           key={`out-${i}`}
           className={styles.trackTransitionStripOut}
           style={{
             background: t.themeColor,
             top: STRIP_TOP_BASE + i * STRIP_H,
+            color: light ? "#1a0f05" : "rgba(255,255,255,0.92)",
           }}
         >
           <span
@@ -777,7 +791,8 @@ export default function Card({
           />
           <span className={styles.trackTransitionStripText}>{t.title}</span>
         </div>
-      ))}
+        );
+      })}
       {genreTransitionsIn.map((t, i) => {
         const light = isVeryLight(t.themeColor);
         const iconSize = t.genre === "Rock" ? 16 : undefined;
@@ -794,7 +809,7 @@ export default function Card({
               title={`${t.genre} (${t.intensity})`}
             >
               <span
-                className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}`}
+                className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
                 style={
                   iconSize ? { width: iconSize, height: iconSize } : undefined
                 }
@@ -824,7 +839,7 @@ export default function Card({
             title={`${t.genre} (${t.intensity})`}
           >
             <span
-              className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}`}
+              className={`${styles.genreTransitionStripIcon}${t.genre === "Rock" ? ` ${styles.genreTransitionStripIconRock}` : ""}${t.genre === "Hip-Hop" ? ` ${styles.genreTransitionStripIconHipHop}` : ""}`}
               style={
                 iconSize ? { width: iconSize, height: iconSize } : undefined
               }

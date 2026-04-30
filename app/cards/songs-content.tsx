@@ -6,17 +6,24 @@ import {
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 import {
-  MOCK_CARDS,
+  ALL_GENRE_CARDS,
   DECK_SPOTLIGHT_CARDS,
   WORLD_FLAG_CARDS,
   WORLD_MIXED_CARDS,
+  CATALOG_CARD_TRACK_INDEX,
   CARD_ARTWORK_BASE,
   CARD_RARITY_ORDER,
 } from "@/lib/cards";
-import { buildCardTrackIndex } from "@/lib/cards";
+
+const allGenreCardsById = new Map(ALL_GENRE_CARDS.map((c) => [c.id, c]));
+function genreExample(id: number): CardData {
+  const card = allGenreCardsById.get(id);
+  if (!card) throw new Error(`Missing genre example card id ${id}`);
+  return card;
+}
 
 export function CardsSongsContent() {
-  const cardTrackIndex = buildCardTrackIndex(DECK_SPOTLIGHT_CARDS);
+  const cardTrackIndex = CATALOG_CARD_TRACK_INDEX;
   const anatomyCard = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 39)!;
 
   const intensityExamples: Array<{
@@ -25,23 +32,23 @@ export function CardsSongsContent() {
   }> = [
     {
       level: "pop",
-      card: { ...MOCK_CARDS.Mainstream, id: 9701, title: "Intensity Pop" },
+      card: { ...genreExample(2), id: 9701, title: "Intensity Pop" },
     },
     {
       level: "soft",
-      card: { ...MOCK_CARDS.Rock, id: 9702, title: "Intensity Soft" },
+      card: { ...genreExample(1), id: 9702, title: "Intensity Soft" },
     },
     {
       level: "experimental",
       card: {
-        ...MOCK_CARDS.Electronic,
+        ...genreExample(3),
         id: 9703,
         title: "Intensity Experimental",
       },
     },
     {
       level: "hardcore",
-      card: { ...MOCK_CARDS.Vintage, id: 9704, title: "Intensity Hardcore" },
+      card: { ...genreExample(8), id: 9704, title: "Intensity Hardcore" },
     },
   ];
 
@@ -52,7 +59,7 @@ export function CardsSongsContent() {
       return {
         note,
         card: {
-          ...MOCK_CARDS.Rock,
+          ...genreExample(1),
           id: 9800 + note,
           title: `Popularity ${note}`,
           pop,
@@ -77,7 +84,7 @@ export function CardsSongsContent() {
       right: "Disco Pop.",
       border:
         "Border uses the subgenre-derived colour theme (no country flag layer).",
-      card: MOCK_CARDS.Mainstream,
+      card: genreExample(2),
       theme: APP_GENRE_THEMES.Mainstream,
     },
     {
@@ -87,7 +94,7 @@ export function CardsSongsContent() {
       right: "House.",
       border:
         "Border uses the subgenre-derived colour theme (no country flag layer).",
-      card: MOCK_CARDS.Electronic,
+      card: genreExample(3),
       theme: APP_GENRE_THEMES.Electronic,
     },
     {
@@ -497,7 +504,7 @@ export function CardsSongsContent() {
                   }}
                 >
                   <Card
-                    card={{ ...MOCK_CARDS.Rock, rarity }}
+                    card={{ ...genreExample(1), rarity }}
                     theme={APP_GENRE_THEMES.Rock}
                     small
                   />

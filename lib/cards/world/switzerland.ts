@@ -17,6 +17,5 @@ export const SWITZERLAND_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.e-gschankte-tag-v1.png"],
     ...(artworkPromptFor(97) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "Switzerland",
   },
 ];

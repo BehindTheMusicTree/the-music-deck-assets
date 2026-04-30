@@ -1,4 +1,4 @@
-import CardsArtworksSection from "@/components/CardsArtworksSection";
+import CardsArtworksSection from "@/components/cards/CardsArtworksSection";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Artworks" };
 

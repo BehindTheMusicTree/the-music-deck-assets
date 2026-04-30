@@ -1,2 +1,1 @@
-export * from "./genre-model";
-export * from "./genre-colors";
+export * from "./genres/index";

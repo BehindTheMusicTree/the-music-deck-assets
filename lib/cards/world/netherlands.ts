@@ -17,6 +17,5 @@ export const NETHERLANDS_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.lil-kleine-drank-drugs-v1.png"],
     catalogNumber: 13,
-    catalogSeriesLabel: "Hip-Hop",
   },
 ];

@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import CatalogCard from "@/components/CatalogCard";
-import WishlistDeckTable from "@/components/WishlistDeckTable";
+import CatalogCard from "@/components/catalog/CatalogCard";
+import WishlistDeckTable from "@/components/catalog/WishlistDeckTable";
+import CatalogSourceTabs from "@/components/catalog/CatalogSourceTabs";
+import CatalogLayoutToolbar from "@/components/catalog/CatalogLayoutToolbar";
+import CatalogSeriesSummaryTable from "@/components/catalog/CatalogSeriesSummaryTable";
+import {
+  CatalogArtworkPromptModal,
+  CatalogEntryDetailModal,
+} from "@/components/catalog/CatalogModals";
 import {
   type CatalogEntry,
   CATALOG_ENTRIES,
@@ -13,8 +20,7 @@ import {
   formatCatalogIntensity,
 } from "@/lib/cards";
 import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
-import type { Intensity } from "@/lib/genres";
-import { intensityLevelIndex } from "@/lib/genres";
+import { type Intensity, intensityLevelIndex } from "@/lib/genres/subgenres-data";
 
 type SortKey =
   | "id"
@@ -46,15 +52,6 @@ const sortBtnActive = "border-gold/50 text-gold";
 /** Prior grid used scale(0.58) on the small card; this is 4× that preview size. */
 const CATALOG_GRID_THUMB_SCALE = 0.58 * 4;
 
-/** Full card is 272×400; detail modal uses 2×. */
-const CATALOG_CARD_NATIVE_W = 272;
-const CATALOG_CARD_NATIVE_H = 400;
-const CATALOG_DETAIL_CARD_SCALE = 2;
-const CATALOG_DETAIL_CARD_BOX_W =
-  CATALOG_CARD_NATIVE_W * CATALOG_DETAIL_CARD_SCALE;
-const CATALOG_DETAIL_CARD_BOX_H =
-  CATALOG_CARD_NATIVE_H * CATALOG_DETAIL_CARD_SCALE;
-
 const INTENSITY_VALUES: readonly Intensity[] = [
   "pop",
   "soft",
@@ -66,21 +63,6 @@ function artworkBasename(artworkUrl: string | undefined): string {
   if (!artworkUrl) return "";
   const parts = artworkUrl.split("/");
   return parts[parts.length - 1] ?? artworkUrl;
-}
-
-function trackRefsLabel(
-  ids: number[] | undefined,
-  byId: Record<number, { title: string; artist?: string }>,
-): string {
-  if (!ids || ids.length === 0) return "—";
-  return ids
-    .map((id) => {
-      const t = byId[id];
-      if (!t) return String(id);
-      const artist = t.artist?.trim();
-      return `${id} · ${t.title}${artist ? ` — ${artist}` : ""}`;
-    })
-    .join(" | ");
 }
 
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
@@ -486,56 +468,17 @@ export default function CatalogDeckTable({
     for (const e of CATALOG_ENTRIES) byId.set(e.card.id, e);
     return byId;
   }, []);
-
-  const viewToggleBtn =
-    "px-3 py-1.5 font-cinzel text-[10px] sm:text-[11px] tracking-[0.14em] rounded-[4px] transition-colors";
-  const viewToggleInactive =
-    "text-muted hover:text-white/90 hover:bg-white/5 border border-transparent";
-  const viewToggleActive =
-    "text-gold bg-gold/10 border border-gold/35 shadow-[inset_0_0_0_1px_rgba(200,160,64,0.12)]";
-
   return (
     <div className={["w-full min-w-0", className].filter(Boolean).join(" ")}>
-      <div
-        className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5 mb-4"
-        role="tablist"
-        aria-label="Catalog source"
-      >
-        <button
-          type="button"
-          className={[
-            viewToggleBtn,
-            catalogPanel === "deck" ? viewToggleActive : viewToggleInactive,
-          ].join(" ")}
-          role="tab"
-          aria-selected={catalogPanel === "deck"}
-          id="catalog-tab-deck"
-          aria-controls="catalog-panel-deck"
-          onClick={() => {
-            setCatalogPanel("deck");
-          }}
-        >
-          Shipped deck
-        </button>
-        <button
-          type="button"
-          className={[
-            viewToggleBtn,
-            catalogPanel === "wishlist" ? viewToggleActive : viewToggleInactive,
-          ].join(" ")}
-          role="tab"
-          aria-selected={catalogPanel === "wishlist"}
-          id="catalog-tab-wishlist"
-          aria-controls="catalog-panel-wishlist"
-          onClick={() => {
-            setCatalogPanel("wishlist");
-            setCatalogEntryDetail(null);
-            setArtworkPromptModal(null);
-          }}
-        >
-          Wishlist
-        </button>
-      </div>
+      <CatalogSourceTabs
+        catalogPanel={catalogPanel}
+        onSelectDeck={() => setCatalogPanel("deck")}
+        onSelectWishlist={() => {
+          setCatalogPanel("wishlist");
+          setCatalogEntryDetail(null);
+          setArtworkPromptModal(null);
+        }}
+      />
 
       {catalogPanel === "wishlist" ? (
         <div
@@ -551,42 +494,16 @@ export default function CatalogDeckTable({
           role="tabpanel"
           aria-labelledby="catalog-tab-deck"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3 min-w-0">
-            <div
-              className="inline-flex items-center gap-0.5 rounded-md border border-ui-border bg-[#12121a]/55 p-0.5"
-              role="group"
-              aria-label="Catalog layout"
-            >
-              <button
-                type="button"
-                className={[
-                  viewToggleBtn,
-                  viewMode === "table" ? viewToggleActive : viewToggleInactive,
-                ].join(" ")}
-                aria-pressed={viewMode === "table"}
-                onClick={() => {
-                  setViewMode("table");
-                  setCatalogEntryDetail(null);
-                }}
-              >
-                Table
-              </button>
-              <button
-                type="button"
-                className={[
-                  viewToggleBtn,
-                  viewMode === "grid" ? viewToggleActive : viewToggleInactive,
-                ].join(" ")}
-                aria-pressed={viewMode === "grid"}
-                onClick={() => setViewMode("grid")}
-              >
-                Grid
-              </button>
-            </div>
-            <span className="font-mono text-[11px] text-muted tabular-nums shrink-0">
-              {visibleRows.length} card{visibleRows.length === 1 ? "" : "s"}
-            </span>
-          </div>
+          <CatalogLayoutToolbar
+            viewMode={viewMode}
+            visibleCount={visibleRows.length}
+            onSelectTable={() => {
+              setViewMode("table");
+              setCatalogEntryDetail(null);
+            }}
+            onSelectGrid={() => setViewMode("grid")}
+          />
+          <CatalogSeriesSummaryTable entries={CATALOG_ENTRIES} />
 
           <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
             <table className="w-full min-w-[1820px] border-collapse text-left">
@@ -1303,194 +1220,20 @@ export default function CatalogDeckTable({
             </p>
           ) : null}
 
-          {catalogEntryDetail !== null ? (
-            <div
-              className="fixed inset-0 z-100 flex items-start justify-center sm:items-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm overflow-y-auto"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="catalog-entry-detail-title"
-              onClick={() => setCatalogEntryDetail(null)}
-            >
-              <div
-                className="max-w-5xl w-full my-4 sm:my-8 rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {(() => {
-                  const d = catalogEntryDetail;
-                  const c = d.card;
-                  const detailLine = (label: string, value: string) => (
-                    <div className="grid grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] gap-x-3 gap-y-1 text-[13px] sm:text-[14px]">
-                      <dt className="font-cinzel text-[9px] sm:text-[10px] tracking-[0.12em] text-muted uppercase shrink-0 pt-0.5">
-                        {label}
-                      </dt>
-                      <dd className="font-garamond text-white/90 min-w-0 wrap-break-word m-0">
-                        {value}
-                      </dd>
-                    </div>
-                  );
-                  return (
-                    <>
-                      <div className="flex flex-col lg:flex-row gap-8 items-start">
-                        <div
-                          className="shrink-0 mx-auto lg:mx-0 bg-[#0a0a0e]"
-                          style={{
-                            width: CATALOG_DETAIL_CARD_BOX_W,
-                            height: CATALOG_DETAIL_CARD_BOX_H,
-                            position: "relative",
-                          }}
-                        >
-                          <div
-                            style={{
-                              position: "absolute",
-                              left: "50%",
-                              top: 0,
-                              width: CATALOG_CARD_NATIVE_W,
-                              height: CATALOG_CARD_NATIVE_H,
-                              transform: "translateX(-50%) scale(2)",
-                              transformOrigin: "top center",
-                            }}
-                          >
-                            <CatalogCard
-                              card={c}
-                              theme={d.theme}
-                              enableZoom={false}
-                              hoverLift={false}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0 w-full">
-                          <h2
-                            id="catalog-entry-detail-title"
-                            className="font-cinzel text-sm sm:text-base tracking-[0.14em] text-gold mb-1"
-                          >
-                            {c.title}
-                          </h2>
-                          <p className="font-garamond text-muted text-[15px] mb-5">
-                            {c.artist ?? "—"} · {c.year}
-                          </p>
-                          <dl className="flex flex-col gap-2.5 mb-6">
-                            {detailLine("Catalogue №", String(d.catalogNumber))}
-                            {detailLine("Card ID", String(c.id))}
-                            {detailLine("Era", d.catalogEra)}
-                            {detailLine("Series", d.catalogSeriesLabel)}
-                            {detailLine(
-                              "Series bucket",
-                              d.catalogSeriesType === "country"
-                                ? "By country / region"
-                                : "By genre",
-                            )}
-                            {detailLine("Type", d.kind)}
-                            {detailLine("App genre", d.catalogGenreLabel)}
-                            {detailLine("Genre line", c.genre ?? "—")}
-                            {detailLine("Country / region", c.country ?? "—")}
-                            {detailLine(
-                              "Tracks in",
-                              trackRefsLabel(
-                                deriveTracksInFromTrackIndex(
-                                  CATALOG_CARD_TRACK_INDEX,
-                                  c.id,
-                                ),
-                                CATALOG_CARD_TRACK_INDEX,
-                              ),
-                            )}
-                            {detailLine(
-                              "Tracks out",
-                              trackRefsLabel(
-                                CATALOG_CARD_TRACK_INDEX[c.id]?.tracksOut,
-                                CATALOG_CARD_TRACK_INDEX,
-                              ),
-                            )}
-                            {detailLine(
-                              "Intensity",
-                              formatCatalogIntensity(d.catalogIntensity),
-                            )}
-                            {detailLine("Popularity", String(c.pop))}
-                            {detailLine("Rarity", c.rarity)}
-                            {detailLine(
-                              "Artwork file",
-                              c.artwork ? artworkBasename(c.artwork) : "—",
-                            )}
-                            {detailLine(
-                              "Art created",
-                              c.artworkCreatedAt?.trim()
-                                ? formatArtworkCreatedAtDisplay(
-                                    c.artworkCreatedAt.trim(),
-                                  )
-                                : "—",
-                            )}
-                          </dl>
-                          <div className="rounded-md border border-ui-border/80 bg-[#0f0f14]/40 px-3 py-3">
-                            <div className="font-cinzel text-[10px] tracking-[0.14em] text-gold mb-1">
-                              Ability
-                            </div>
-                            <p className="font-garamond text-white/95 text-[15px] m-0">
-                              {c.ability}
-                            </p>
-                            <p className="font-garamond text-muted text-[13px] leading-relaxed mt-2 m-0">
-                              {c.abilityDesc}
-                            </p>
-                          </div>
-                          {effectiveArtworkPrompt(c) ? (
-                            <button
-                              type="button"
-                              className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
-                              onClick={() => {
-                                setCatalogEntryDetail(null);
-                                setArtworkPromptModal(
-                                  effectiveArtworkPrompt(c),
-                                );
-                              }}
-                            >
-                              View full artwork prompt
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className="mt-8 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5 w-full sm:w-auto"
-                        onClick={() => setCatalogEntryDetail(null)}
-                      >
-                        Close
-                      </button>
-                    </>
-                  );
-                })()}
-              </div>
-            </div>
-          ) : null}
+          <CatalogEntryDetailModal
+            entry={catalogEntryDetail}
+            effectiveArtworkPrompt={effectiveArtworkPrompt}
+            onClose={() => setCatalogEntryDetail(null)}
+            onOpenArtworkPrompt={(text) => {
+              setCatalogEntryDetail(null);
+              setArtworkPromptModal(text);
+            }}
+          />
 
-          {artworkPromptModal !== null ? (
-            <div
-              className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="catalog-artwork-prompt-title"
-              onClick={() => setArtworkPromptModal(null)}
-            >
-              <div
-                className="max-w-2xl w-full max-h-[min(85vh,800px)] overflow-y-auto rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2
-                  id="catalog-artwork-prompt-title"
-                  className="font-cinzel text-xs sm:text-sm tracking-[0.18em] text-gold mb-4"
-                >
-                  Artwork prompt
-                </h2>
-                <div className="font-garamond sm:text-[15px] text-white/90 whitespace-pre-wrap wrap-break-word leading-relaxed">
-                  {artworkPromptModal}
-                </div>
-                <button
-                  type="button"
-                  className="mt-6 font-mono tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5"
-                  onClick={() => setArtworkPromptModal(null)}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          ) : null}
+          <CatalogArtworkPromptModal
+            text={artworkPromptModal}
+            onClose={() => setArtworkPromptModal(null)}
+          />
         </div>
       )}
     </div>

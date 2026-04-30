@@ -17,7 +17,7 @@ import {
   WHEEL_VIEWBOX_Y_TRIM,
   WHEEL_VIEW_SIZE,
   wheelSubgenreRadius,
-} from "@/lib/genre-wheel-geometry";
+} from "@/lib/genres/wheel-geometry";
 import {
   GENRE_THEMES,
   WHEEL_GENRES,
@@ -31,7 +31,7 @@ import type {
   Intensity,
   NonMainstreamGenreName,
 } from "@/lib/genres";
-import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
+import { computeWheelSubgenrePlacements } from "@/lib/genres/wheel-layout";
 
 type WheelTileFocus =
   | {

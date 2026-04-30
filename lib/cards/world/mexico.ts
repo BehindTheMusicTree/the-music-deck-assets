@@ -17,6 +17,5 @@ export const MEXICO_CARDS: CardData[] = [
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.la-cucaracha-v1.png"],
     catalogNumber: 1,
-    catalogSeriesLabel: "Mexico",
   },
 ];

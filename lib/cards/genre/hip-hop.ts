@@ -1,8 +1,6 @@
 import type { CardData } from "@/components/Card";
 import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
 
-const CATALOG_SERIES_LABEL = "Hip-Hop";
-
 export const HIP_HOP_CARDS: CardData[] = ([
   {
     catalogNumber: 1,
@@ -193,4 +191,4 @@ export const HIP_HOP_CARDS: CardData[] = ([
     ...(artworkPromptFor(115) ?? {}),
     catalogNumber: 18,
   },
-] as CardData[]).map((c) => ({ ...c, catalogSeriesLabel: CATALOG_SERIES_LABEL }));
+] as CardData[]);

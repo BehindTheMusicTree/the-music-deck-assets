@@ -19,7 +19,6 @@ export const BRETAGNE_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.tri-martolod-v1.png"],
     ...(artworkPromptFor(26) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "Bretagne",
   },
   {
     id: 50,
@@ -37,7 +36,6 @@ export const BRETAGNE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.danau-latribu-de-dana-v1.png"],
     ...(artworkPromptFor(50) ?? {}),
     catalogNumber: 8,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 77,
@@ -54,6 +52,5 @@ export const BRETAGNE_CARDS: CardData[] = [
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.bro-gozh-ma-zadou-v1.png"],
     ...(artworkPromptFor(77) ?? {}),
     catalogNumber: 2,
-    catalogSeriesLabel: "Bretagne",
   },
 ];

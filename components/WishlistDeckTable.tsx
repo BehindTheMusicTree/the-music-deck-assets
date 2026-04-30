@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import CatalogCard from "@/components/CatalogCard";
+import CatalogCard from "@/components/catalog/CatalogCard";
 import {
   CARD_RARITY_ORDER,
   CATALOG_CARD_TRACK_INDEX,

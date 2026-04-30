@@ -23,8 +23,8 @@ import {
   WHEEL_VIEWBOX_Y_TRIM,
   WHEEL_VIEW_SIZE,
   wheelSubgenreRadius,
-} from "@/lib/genre-wheel-geometry";
-import { computeWheelSubgenrePlacements } from "@/lib/wheel-subgenre-layout";
+} from "@/lib/genres/wheel-geometry";
+import { computeWheelSubgenrePlacements } from "@/lib/genres/wheel-layout";
 
 type Node = {
   genre: GenreName;

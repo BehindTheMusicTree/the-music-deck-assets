@@ -15,7 +15,8 @@ import {
 } from "@/lib/genres";
 import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE } from "./art-path";
-import { DECK_SPOTLIGHT_CARDS, MOCK_CARDS } from "./genre";
+import { deriveCatalogSeriesLabel } from "./_card-helpers";
+import { ALL_GENRE_CARDS, DECK_SPOTLIGHT_CARDS } from "./genre";
 import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
 import { buildCardTrackIndex } from "./track-graph";
 
@@ -36,9 +37,9 @@ export type CatalogEntry = {
   kind: CatalogEntryKind;
   card: CardData;
   theme: GenreTheme;
-  /** Inferred: "country" when catalogSeriesLabel === card.country, else "genre". */
+  /** Inferred: "country" when series label equals country, else "genre". */
   catalogSeriesType: CatalogSeriesType;
-  /** Copied from `card.catalogSeriesLabel`. */
+  /** Derived from card `genre`/`country`. */
   catalogSeriesLabel: string;
   /** Copied from `card.catalogNumber` (per-series index from shipped meta). */
   catalogNumber: number;
@@ -57,10 +58,26 @@ export type RawCatalogRow = {
   theme: GenreTheme;
 };
 
-const mockGenreKeys = Object.keys(MOCK_CARDS) as AppGenreName[];
+const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<AppGenreName, number> = {
+  Rock: 1,
+  Mainstream: 2,
+  Electronic: 3,
+  "Reggae/Dub": 4,
+  "Hip-Hop": 5,
+  "Disco/Funk": 6,
+  Classical: 7,
+  Vintage: 8,
+};
 
-const rawGenreRows: RawCatalogRow[] = mockGenreKeys.map((g) => {
-  const card = MOCK_CARDS[g];
+const _allGenreCardsById = new Map(ALL_GENRE_CARDS.map((c) => [c.id, c]));
+
+const rawGenreRows: RawCatalogRow[] = (
+  Object.keys(CATALOG_GENRE_REPRESENTATIVE_IDS) as AppGenreName[]
+).map((g) => {
+  const card = _allGenreCardsById.get(CATALOG_GENRE_REPRESENTATIVE_IDS[g]);
+  if (!card) {
+    throw new Error(`Missing genre representative card for "${g}"`);
+  }
   return {
     rowKey: `genre-${card.id}`,
     kind: "Genre",
@@ -163,7 +180,6 @@ const rawLaMacarena: RawCatalogRow = {
     country: "Spain",
     genre: "Electronic",
     catalogNumber: 17,
-    catalogSeriesLabel: "Electronic",
   },
   theme: themeForCountry("Spain"),
 };
@@ -223,26 +239,25 @@ function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
   );
 }
 
-function inferCatalogSeriesType(card: CardData): CatalogSeriesType {
-  return card.country != null && card.catalogSeriesLabel === card.country
-    ? "country"
-    : "genre";
+function inferCatalogSeriesType(country: string | undefined, label: string): CatalogSeriesType {
+  return country != null && label === country ? "country" : "genre";
 }
 
 function catalogEntryFromRow(row: RawCatalogRow): CatalogEntry {
   const { card } = row;
-  if (card.catalogNumber == null || !card.catalogSeriesLabel) {
+  if (card.catalogNumber == null) {
     throw new Error(
-      `Shipped card "${card.title}" (id ${card.id}): set catalogNumber and catalogSeriesLabel directly on the card definition`,
+      `Shipped card "${card.title}" (id ${card.id}): set catalogNumber on the card definition`,
     );
   }
+  const catalogSeriesLabel = deriveCatalogSeriesLabel(card);
   return {
     rowKey: row.rowKey,
     kind: row.kind,
     card,
     theme: row.theme,
-    catalogSeriesType: inferCatalogSeriesType(card),
-    catalogSeriesLabel: card.catalogSeriesLabel,
+    catalogSeriesType: inferCatalogSeriesType(card.country, catalogSeriesLabel),
+    catalogSeriesLabel,
     catalogNumber: card.catalogNumber,
     catalogGenreLabel: catalogGenreLabel(row),
     catalogIntensity: catalogCardIntensity(row),

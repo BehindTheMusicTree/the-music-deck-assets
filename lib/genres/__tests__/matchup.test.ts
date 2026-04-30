@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchupIncomingFrom, matchupTargetsForAppGenre } from "./genre-model";
+import { matchupIncomingFrom, matchupTargetsForAppGenre } from "../model";
 
 describe("genre mashup matchup rules", () => {
   it("Mainstream has no advantage and no weakness", () => {

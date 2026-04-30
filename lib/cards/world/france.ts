@@ -18,7 +18,6 @@ export const FRANCE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.rouget-de-lisle-la-marseillaise-v1.png"],
     ...(artworkPromptFor(23) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "Classical",
   },
   {
     id: 24,
@@ -36,7 +35,6 @@ export const FRANCE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.michel-sardou-les-lacs-du-connemara-v1.png"],
     ...(artworkPromptFor(24) ?? {}),
     catalogNumber: 1,
-    catalogSeriesLabel: "France",
   },
   {
     id: 27,
@@ -55,7 +53,6 @@ export const FRANCE_CARDS: CardData[] = [
       ARTWORK_CREATED_AT["artwork.13-organises-bande-organisee-v1.png"],
     ...(artworkPromptFor(27) ?? {}),
     catalogNumber: 2,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 31,
@@ -73,7 +70,6 @@ export const FRANCE_CARDS: CardData[] = [
     artwork: `${ART}artwork.les-corons-lens-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.les-corons-lens-v1.png"],
     catalogNumber: 2,
-    catalogSeriesLabel: "France",
   },
   {
     id: 32,
@@ -90,7 +86,6 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.luis-mariano-cest-magnifique-v1.png"],
     catalogNumber: 3,
-    catalogSeriesLabel: "France",
   },
   {
     id: 33,
@@ -108,7 +103,6 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.zaho-mc-solar-caroline-v1.png"],
     catalogNumber: 3,
-    catalogSeriesLabel: "Hip-Hop",
   },
   {
     id: 103,
@@ -126,6 +120,5 @@ export const FRANCE_CARDS: CardData[] = [
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],
     catalogNumber: 8,
-    catalogSeriesLabel: "Vintage",
   },
 ];

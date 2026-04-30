@@ -1,6 +1,6 @@
 import type { GenreTheme } from "@/lib/card-theme-types";
 import { COUNTRY_DATA, countryFlagForShell } from "@/lib/countries";
-import type { AppGenreName, GenreName, NonMainstreamGenreName } from "./genre-model";
+import type { AppGenreName, GenreName, NonMainstreamGenreName } from "./model";
 import {
   appGenreFromSubgenre,
   appGenreIntensity,
@@ -10,7 +10,7 @@ import {
   SUBGENRES,
   type Intensity,
   type GenreSubgenre,
-} from "./genre-model";
+} from "./model";
 
 /**
  * Single tuning knob for genre colour pastelisation.
@@ -124,16 +124,16 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M1 8L3 8L5 3L7 13L9 5L11 11L13 8L15 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   },
   "Hip-Hop": {
-    border: "#c8960a",
+    border: "#f2cf00",
     headerBg: "#140e00",
-    textMain: "#f0b800",
-    textBody: "#c89000",
-    parchStrip: parchFromBorder("#c8960a").strip,
-    parchAbility: parchFromBorder("#c8960a").ability,
-    barPop: ["#7a5400", "#f0b000"],
-    barExp: ["#503800", "#c08800"],
-    barGlowPop: "rgba(240,176,0,.8)",
-    barGlowExp: "rgba(192,136,0,.75)",
+    textMain: "#ffe766",
+    textBody: "#f6d21c",
+    parchStrip: parchFromBorder("#f2cf00").strip,
+    parchAbility: parchFromBorder("#f2cf00").ability,
+    barPop: ["#9a7300", "#ffd900"],
+    barExp: ["#664b00", "#e7bf00"],
+    barGlowPop: "rgba(255,217,0,.85)",
+    barGlowExp: "rgba(231,191,0,.78)",
     icon: '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M10.5 5.5Q10.5 3.5 8 3.5Q5.5 3.5 5.5 6Q5.5 8 8 8Q10.5 8 10.5 10.5Q10.5 12.5 8 12.5Q5.5 12.5 5.5 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="8" y1="12.5" x2="8" y2="14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   },
   "Disco/Funk": {

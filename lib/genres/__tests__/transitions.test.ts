@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { GenreName } from "./genre-names";
-import type { Intensity } from "./genre-subgenres-data";
+import type { GenreName } from "../names";
+import type { Intensity } from "../subgenres-data";
 import {
   allGenreIntensityNodes,
   genreIntensityIn,
@@ -9,8 +9,8 @@ import {
   transitionOut,
   type TransitionGenreIntensityNode,
   type TransitionNode,
-} from "./genre-model";
-import { GENRE_NAMES } from "./genre-names";
+} from "../model";
+import { GENRE_NAMES } from "../names";
 import {
   MAINSTREAM_POP_TRANSITION_IN,
   MAINSTREAM_POP_TRANSITION_OUT,
@@ -22,7 +22,7 @@ import {
   ROCK_POP_TRANSITION_OUT,
   ROCK_SOFT_TRANSITION_IN,
   ROCK_SOFT_TRANSITION_OUT,
-} from "./genre-transition-representatives.fixtures";
+} from "../__fixtures__/transition-representatives.fixtures";
 
 function genreIntensityKey(n: { genre: string; intensity: string }): string {
   return `${n.genre}|${n.intensity}`;

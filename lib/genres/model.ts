@@ -3,28 +3,28 @@ import {
   type AppGenreName,
   type GenreName,
   type NonMainstreamGenreName,
-} from "./genre-names";
+} from "./names";
 import {
   SUBGENRES,
   type GenreSubgenre,
   type Intensity,
   type Subgenre,
-} from "./genre-subgenres-data";
+} from "./subgenres-data";
 
 export type {
   AppGenreName,
   GenreName,
   NonMainstreamGenreName,
-} from "./genre-names";
-export { APP_GENRE_NAMES, GENRE_NAMES } from "./genre-names";
+} from "./names";
+export { APP_GENRE_NAMES, GENRE_NAMES } from "./names";
 
 export type {
   CountrySubgenre,
   GenreSubgenre,
   Intensity,
   Subgenre,
-} from "./genre-subgenres-data";
-export { intensityLevelIndex, SUBGENRES } from "./genre-subgenres-data";
+} from "./subgenres-data";
+export { intensityLevelIndex, SUBGENRES } from "./subgenres-data";
 
 const NON_MAINSTREAM_WHEEL_ORDER: NonMainstreamGenreName[] = [
   "Reggae/Dub",

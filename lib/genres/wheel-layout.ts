@@ -1,11 +1,11 @@
-import { GENRE_THEMES, WHEEL_GENRES, WORLD_THEMES } from "@/lib/genres";
+import { GENRE_THEMES, WHEEL_GENRES, WORLD_THEMES } from "./index";
 import type {
   GenreName,
   GenreSubgenre,
   Intensity,
   Subgenre,
-} from "@/lib/genres";
-import { WHEEL_SUBGENRE_RADIAL_STAGGER } from "@/lib/genre-wheel-geometry";
+} from "./index";
+import { WHEEL_SUBGENRE_RADIAL_STAGGER } from "./wheel-geometry";
 
 export type WheelSubgenrePlacement = {
   /** Absolute angle in degrees (same convention as `GenreWheel` polar math). */

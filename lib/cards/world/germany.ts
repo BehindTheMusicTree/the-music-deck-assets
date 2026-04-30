@@ -20,6 +20,5 @@ export const GERMANY_CARDS: CardData[] = [
       ],
     ...(artworkPromptFor(95) ?? {}),
     catalogNumber: 15,
-    catalogSeriesLabel: "Rock",
   },
 ];

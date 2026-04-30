@@ -1,4 +1,4 @@
-import type { Intensity } from "@/lib/genres";
+import type { Intensity } from "./index";
 
 /** SVG coordinate width (square canvas); geometry is centred at `WHEEL_CX` / `WHEEL_CY`. */
 export const WHEEL_VIEW_SIZE = 2400;

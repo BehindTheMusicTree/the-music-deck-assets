@@ -1,4 +1,4 @@
-import type { TransitionNode } from "./genre-model";
+import type { TransitionNode } from "../model";
 
 /**
  * Canonical sorted transition graph snapshots for five representatives:
@@ -6,7 +6,7 @@ import type { TransitionNode } from "./genre-model";
  * Order matches {@link transitionNodesSortedKey} (genre-intensity keys before subgenre keys).
  *
  * Regenerate when graph rules or subgenre data change:
- * `npx tsx` scripts in genre-transitions.test.ts maintenance comment (same sort key).
+ * `npx tsx` scripts in __tests__/transitions.test.ts maintenance comment (same sort key).
  */
 export const MAINSTREAM_POP_TRANSITION_OUT: TransitionNode[] = [
   { kind: "genreIntensity", genre: "Classical", intensity: "pop" },

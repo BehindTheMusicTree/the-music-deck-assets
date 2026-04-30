@@ -1,11 +1,11 @@
-import GenreWheel from "@/components/GenreWheel";
-import WorldSubgenreMap from "@/components/WorldSubgenreMap";
-import GenreSubTabs from "@/components/GenreSubTabs";
-import GenreAssociations from "@/components/GenreAssociations";
-import GenreThemePreview from "@/components/GenreThemePreview";
-import GenreTransitionsWheel from "@/components/GenreTransitionsWheel";
-import GenreMashupWheel from "@/components/GenreMashupWheel";
-import IntensityGauge from "@/components/IntensityGauge";
+import GenreWheel from "@/components/genres/GenreWheel";
+import WorldSubgenreMap from "@/components/genres/WorldSubgenreMap";
+import GenreSubTabs from "@/components/genres/GenreSubTabs";
+import GenreAssociations from "@/components/genres/GenreAssociations";
+import GenreThemePreview from "@/components/genres/GenreThemePreview";
+import GenreTransitionsWheel from "@/components/genres/GenreTransitionsWheel";
+import GenreMashupWheel from "@/components/genres/GenreMashupWheel";
+import IntensityGauge from "@/components/genres/IntensityGauge";
 import type { Metadata } from "next";
 import {
   APP_GENRE_NAMES,

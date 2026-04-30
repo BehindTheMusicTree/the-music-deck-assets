@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CatalogDeckTable from "@/components/CatalogDeckTable";
+import CatalogDeckTable from "@/components/catalog/CatalogDeckTable";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Catalog" };
 
