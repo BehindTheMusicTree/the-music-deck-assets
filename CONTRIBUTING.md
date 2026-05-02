@@ -61,13 +61,13 @@ Use **`pnpm lint`**, **`pnpm test`**, and **`pnpm build`** from the root before 
 
 This repo does not ship the full Git Flow automation described in hear-the-music-tree-api (no local **`branch-protection`** workflow yet). Recommended conventions stay compatible if you add protection later:
 
-| Branch | Role |
-|--------|------|
-| **`main`** | Integrated, deployable default |
-| **`develop`** | Optional integration branch if your team uses Git Flow |
-| **`feature/<name>`** | Features |
-| **`chore/<name>`** | Tooling, CI, deps |
-| **`fix/<name>`** or **`hotfix/<name>`** | Bugfixes |
+| Branch                                  | Role                                                   |
+| --------------------------------------- | ------------------------------------------------------ |
+| **`main`**                              | Integrated, deployable default                         |
+| **`develop`**                           | Optional integration branch if your team uses Git Flow |
+| **`feature/<name>`**                    | Features                                               |
+| **`chore/<name>`**                      | Tooling, CI, deps                                      |
+| **`fix/<name>`** or **`hotfix/<name>`** | Bugfixes                                               |
 
 Prefer **`feature/…`** and **`chore/…`** prefixes so policies can match sibling repos later.
 
@@ -101,27 +101,27 @@ Before opening a PR:
 
 ## GitHub Actions
 
-| Workflow | Role |
-|----------|------|
-| [`ci.yml`](.github/workflows/ci.yml) | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build. |
-| [`publish.yml`](.github/workflows/publish.yml) | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
-| [`build-and-push.yml`](.github/workflows/build-and-push.yml) | Reusable Docker Hub build for **`apps/api`**. |
+| Workflow                                                     | Role                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ci.yml`](.github/workflows/ci.yml)                         | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build.                                                                                                                                                         |
+| [`publish.yml`](.github/workflows/publish.yml)               | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
+| [`build-and-push.yml`](.github/workflows/build-and-push.yml) | Reusable Docker Hub build for **`apps/api`**.                                                                                                                                                                                                |
 
 **GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`publish.yml`](.github/workflows/publish.yml) maps `main` / prerelease tags → **`STAGING`**, stable release tags → **`PROD`**, while the slug passed to org workflows remains **`staging`** / **`prod`**.
 
 **Variables / secrets per environment** (same shapes as [github-workflows README](https://github.com/BehindTheMusicTree/github-workflows/blob/main/README.md#webhook-call-redeployment-webhook), plus this repo’s Docker/tag vars):
 
-| Kind | Name | Purpose |
-|------|------|--------|
-| Variable | **`DOCKERHUB_USERNAME`** | Docker Hub namespace |
-| Variable | **`TMD_API_IMAGE_REPO`** | Image repo name (without namespace) |
-| Variable | **`TMD_API_APP_NAME`** | Tag filename on server: `{REDEPLOYMENT_ROOT}-{env}/scripts/<name>-tag` |
-| Variable | **`REDEPLOYMENT_ROOT`** | e.g. **`/var/webhook/redeployment-the-music-deck-admin`** — must match [**BehindTheMusicTree/infrastructure**](https://github.com/BehindTheMusicTree/infrastructure) **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_ROOT`** ([Music Deck admin stack README](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md)) |
-| Variable | **`REDEPLOYMENT_HOOK_ID_BASE`** | Same string as infra **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** (URLs **`/hooks/<base>-staging`** / **`/hooks/<base>-prod`**) |
-| Variable | **`SERVER_HOST`** | VPS host for webhook + SSH (see workflows README) |
-| Secret | **`DOCKERHUB_ACCESS_TOKEN`** | Docker Hub push |
-| Secret | **`REDEPLOYMENT_WEBHOOK_PORT`** | Webhook daemon port |
-| Secret | **`REDEPLOYMENT_WEBHOOK_SECRET_STAGING`**, **`REDEPLOYMENT_WEBHOOK_SECRET_PROD`** | Same values as infra **`THE_MUSIC_DECK_ADMIN_WEBHOOK_SECRET_*`** |
+| Kind     | Name                                                                              | Purpose                                                                                                                                                                                                                                                                                                                                                                 |
+| -------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable | **`DOCKERHUB_USERNAME`**                                                          | Docker Hub namespace                                                                                                                                                                                                                                                                                                                                                    |
+| Variable | **`TMD_ADMIN_API_IMAGE_REPO`**                                                    | Image repo name (without namespace)                                                                                                                                                                                                                                                                                                                                     |
+| Variable | **`TMD_ADMIN_API_APP_NAME`**                                                      | Tag filename on server: `{REDEPLOYMENT_ROOT}-{env}/scripts/<name>-tag`                                                                                                                                                                                                                                                                                                  |
+| Variable | **`REDEPLOYMENT_ROOT`**                                                           | e.g. **`/var/webhook/redeployment-the-music-deck-admin`** — must match [**BehindTheMusicTree/infrastructure**](https://github.com/BehindTheMusicTree/infrastructure) **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_ROOT`** ([Music Deck admin stack README](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md)) |
+| Variable | **`REDEPLOYMENT_HOOK_ID_BASE`**                                                   | Same string as infra **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** (URLs **`/hooks/<base>-staging`** / **`/hooks/<base>-prod`**)                                                                                                                                                                                                                                 |
+| Variable | **`SERVER_HOST`**                                                                 | VPS host for webhook + SSH (see workflows README)                                                                                                                                                                                                                                                                                                                       |
+| Secret   | **`DOCKERHUB_ACCESS_TOKEN`**                                                      | Docker Hub push                                                                                                                                                                                                                                                                                                                                                         |
+| Secret   | **`REDEPLOYMENT_WEBHOOK_PORT`**                                                   | Webhook daemon port                                                                                                                                                                                                                                                                                                                                                     |
+| Secret   | **`REDEPLOYMENT_WEBHOOK_SECRET_STAGING`**, **`REDEPLOYMENT_WEBHOOK_SECRET_PROD`** | Same values as infra **`THE_MUSIC_DECK_ADMIN_WEBHOOK_SECRET_*`**                                                                                                                                                                                                                                                                                                        |
 
 [`publish.yml`](.github/workflows/publish.yml) follows [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): **`set-image-tag-on-server.yml@main`** and **`call-redeployment-webhook.yml@v0.2.0`** (bump the webhook ref when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release). Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
 

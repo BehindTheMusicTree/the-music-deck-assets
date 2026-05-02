@@ -91,7 +91,7 @@ jobs:
         run: |
           missing=""
           [ -z "${REDEPLOYMENT_ROOT}" ] && missing="${missing} REDEPLOYMENT_ROOT"
-          [ -z "${TMD_API_APP_NAME}" ] && missing="${missing} TMD_API_APP_NAME"
+          [ -z "${TMD_ADMIN_API_APP_NAME}" ] && missing="${missing} TMD_ADMIN_API_APP_NAME"
           [ -z "${REDEPLOYMENT_HOOK_ID_BASE}" ] && missing="${missing} REDEPLOYMENT_HOOK_ID_BASE"
           if [ -n "$missing" ]; then
             echo "ERROR: Set org-level (or this repo) Variables:$missing"
@@ -101,7 +101,7 @@ jobs:
           fi
         env:
           REDEPLOYMENT_ROOT: ${{ vars.REDEPLOYMENT_ROOT }}
-          TMD_API_APP_NAME: ${{ vars.TMD_API_APP_NAME }}
+          TMD_ADMIN_API_APP_NAME: ${{ vars.TMD_ADMIN_API_APP_NAME }}
           REDEPLOYMENT_HOOK_ID_BASE: ${{ vars.REDEPLOYMENT_HOOK_ID_BASE }}
 
   set-version-api:
@@ -111,7 +111,7 @@ jobs:
     with:
       env: ${{ needs.determine-version.outputs.env }}
       tag: ${{ needs.determine-version.outputs.image_tag }}
-      app_name: ${{ vars.TMD_API_APP_NAME }}
+      app_name: ${{ vars.TMD_ADMIN_API_APP_NAME }}
     secrets: inherit
 
   redeploy-webhook-call:
