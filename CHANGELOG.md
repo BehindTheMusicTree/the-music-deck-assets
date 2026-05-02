@@ -54,7 +54,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
-- **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.2.0`** with **`hook_id_base`**. API image pushes to **GHCR** (`ghcr.io/<GHCR_IMAGE_NAMESPACE>/<TMD_ADMIN_API_APP_NAME>:<tag>`) with **`GITHUB_TOKEN`** and **`packages: write`**; Docker Hub removed. Preflight **`check-pinned-tags`** (deploy vars only; no DB/AFP pins).
+- **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.3.0`** with **`hook_id_base`**. API image pushes to **GHCR** (`ghcr.io/<GHCR_IMAGE_NAMESPACE>/<TMD_ADMIN_API_APP_NAME>:<tag>`) with **`GITHUB_TOKEN`** and **`packages: write`**; Docker Hub removed. Preflight **`check-pinned-tags`** (deploy vars only; no DB/AFP pins). **`call-redeployment-webhook`** uses **`TMD_ADMIN_WEBHOOK_SECRET_*`** when **`hook_id_base`** matches **`vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** — publish now requires that variable and passes it as **`hook_id_base`** (not **`REDEPLOYMENT_HOOK_ID_BASE`** alone).
 
 ### Documentation
 

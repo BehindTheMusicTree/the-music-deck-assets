@@ -63,9 +63,9 @@ From the repository root (see [`apps/api/Dockerfile`](apps/api/Dockerfile)):
 docker build -f apps/api/Dockerfile .
 ```
 
-Release automation lives in [`.github/workflows/publish.yml`](.github/workflows/publish.yml): **GitHub Container Registry** build ([`build-and-push.yml`](.github/workflows/build-and-push.yml)), then [BehindTheMusicTree/github-workflows **`set-image-tag-on-server`**](https://github.com/BehindTheMusicTree/github-workflows) (**`@main`**) and **`call-redeployment-webhook`** (**`@v0.2.0`**), aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). Root **`VERSION`** drives semver metadata when publishing image tag **`staging`** from **`main`**.
+Release automation lives in [`.github/workflows/publish.yml`](.github/workflows/publish.yml): **GitHub Container Registry** build ([`build-and-push.yml`](.github/workflows/build-and-push.yml)), then [BehindTheMusicTree/github-workflows **`set-image-tag-on-server`**](https://github.com/BehindTheMusicTree/github-workflows) (**`@main`**) and **`call-redeployment-webhook`** (**`@v0.3.0`**), aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). Root **`VERSION`** drives semver metadata when publishing image tag **`staging`** from **`main`**.
 
-**VPS / webhook:** Configure GitHub Environments **`STAGING`** and **`PROD`** (uppercase) plus **`REDEPLOYMENT_*`**, **`GHCR_IMAGE_NAMESPACE`**, **`TMD_ADMIN_API_APP_NAME`**, and related secrets documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) so hook URLs and image pulls match [infrastructure **The Music Deck admin** redeploy tree](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md).
+**VPS / webhook:** Configure GitHub Environments **`STAGING`** and **`PROD`** (uppercase) plus **`REDEPLOYMENT_*`**, **`TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`**, **`TMD_ADMIN_WEBHOOK_SECRET_*`**, **`GHCR_IMAGE_NAMESPACE`**, **`TMD_ADMIN_API_APP_NAME`**, and related secrets documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) so hook URLs and image pulls match [infrastructure **The Music Deck admin** redeploy tree](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md).
 
 ---
 

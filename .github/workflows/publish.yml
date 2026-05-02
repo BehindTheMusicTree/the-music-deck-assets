@@ -96,17 +96,17 @@ jobs:
           missing=""
           [ -z "${REDEPLOYMENT_ROOT}" ] && missing="${missing} REDEPLOYMENT_ROOT"
           [ -z "${TMD_ADMIN_API_APP_NAME}" ] && missing="${missing} TMD_ADMIN_API_APP_NAME"
-          [ -z "${REDEPLOYMENT_HOOK_ID_BASE}" ] && missing="${missing} REDEPLOYMENT_HOOK_ID_BASE"
+          [ -z "${TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE}" ] && missing="${missing} TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE"
           if [ -n "$missing" ]; then
             echo "ERROR: Set org-level (or this repo) Variables:$missing"
             echo "Example REDEPLOYMENT_ROOT=/var/webhook/redeployment-the-music-deck-admin (match BehindTheMusicTree/infrastructure)"
-            echo "Example REDEPLOYMENT_HOOK_ID_BASE=the-music-deck-admin-redeploy (same value as infra TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE)"
+            echo "Example TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE=the-music-deck-admin-redeploy (same value as infra; required so call-redeployment-webhook uses TMD_ADMIN_WEBHOOK_SECRET_*)"
             exit 1
           fi
         env:
           REDEPLOYMENT_ROOT: ${{ vars.REDEPLOYMENT_ROOT }}
           TMD_ADMIN_API_APP_NAME: ${{ vars.TMD_ADMIN_API_APP_NAME }}
-          REDEPLOYMENT_HOOK_ID_BASE: ${{ vars.REDEPLOYMENT_HOOK_ID_BASE }}
+          TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE: ${{ vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE }}
 
   set-version-api:
     name: Set API version on server
@@ -122,8 +122,8 @@ jobs:
     name: Redeploy webhook
     needs:
       [build-and-push, set-version-api, check-pinned-tags, determine-version]
-    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v0.2.0
+    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v0.3.0
     with:
       env: ${{ needs.determine-version.outputs.env }}
-      hook_id_base: ${{ vars.REDEPLOYMENT_HOOK_ID_BASE }}
+      hook_id_base: ${{ vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE }}
     secrets: inherit
