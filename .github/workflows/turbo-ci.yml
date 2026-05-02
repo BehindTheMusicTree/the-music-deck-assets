@@ -1,4 +1,4 @@
-name: CI
+name: Turbo CI
 
 on:
   push:
@@ -6,14 +6,15 @@ on:
   pull_request:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: turbo-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  ci:
+  lint-test-build:
+    name: Lint, test, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5.0.1
 
       - uses: pnpm/action-setup@v4
         with:

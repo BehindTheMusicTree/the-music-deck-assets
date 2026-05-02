@@ -1,4 +1,4 @@
-name: Build
+name: API image (GHCR)
 
 on:
   workflow_call:
@@ -12,11 +12,11 @@ on:
         required: true
         type: string
       image_tag:
-        description: "Docker image tag to push (e.g. 1.2.3 for release, staging for staging)"
+        description: "Image tag to push (e.g. staging on main, semver on release tags)"
         required: true
         type: string
       environment:
-        description: "Deployment environment (STAGING or PROD) for secrets/vars"
+        description: "GitHub Environment (STAGING or PROD) for vars/secrets"
         required: false
         type: string
         default: STAGING
@@ -26,8 +26,8 @@ permissions:
   packages: write
 
 jobs:
-  build-and-push-to-ghcr:
-    name: Push to GHCR
+  docker-build-push:
+    name: Docker build & push
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment || 'STAGING' }}
@@ -54,7 +54,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker image
+      - name: Build and push image
         env:
           IMAGE_FULL_NAME: ghcr.io/${{ vars.GHCR_IMAGE_NAMESPACE }}/${{ vars.TMD_ADMIN_API_APP_NAME }}:${{ env.IMAGE_TAG }}
         uses: docker/build-push-action@v6

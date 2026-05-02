@@ -2,7 +2,7 @@
 
 Thanks for your interest in improving **the-music-deck-admin**.
 
-This repo holds the charter / admin Next.js app, supporting libraries, and a small Nest API. Day-to-day development matches patterns used in sibling repos such as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): semantic versioning via **`VERSION`**, **`CHANGELOG.md`**, Git Flow–friendly branching, and a **`publish`** workflow that pushes Docker images and triggers infrastructure redeploys.
+This repo holds the charter / admin Next.js app, supporting libraries, and a small Nest API. Day-to-day development matches patterns used in sibling repos such as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): semantic versioning via **`VERSION`**, **`CHANGELOG.md`**, Git Flow–friendly branching, and an **`API release`** workflow ([`api-release.yml`](.github/workflows/api-release.yml)) that pushes the API container to GHCR and triggers infrastructure redeploys.
 
 ## Table of contents
 
@@ -103,11 +103,11 @@ Before opening a PR:
 
 | Workflow                                                     | Role                                                                                                                                                                                                                                         |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ci.yml`](.github/workflows/ci.yml)                         | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build.                                                                                                                                                         |
-| [`publish.yml`](.github/workflows/publish.yml)               | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
-| [`build-and-push.yml`](.github/workflows/build-and-push.yml) | Reusable **GHCR** build for **`apps/api`** (same pattern as hear-the-music-tree-api: `GITHUB_TOKEN` + **`packages: write`**). |
+| [`turbo-ci.yml`](.github/workflows/turbo-ci.yml)             | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build (Turborepo).                                                                                                                                              |
+| [`api-release.yml`](.github/workflows/api-release.yml)       | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
+| [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml) | Reusable **GHCR** Docker build for **`apps/api`** (`GITHUB_TOKEN` + **`packages: write`**). Called only from **`api-release.yml`**.                                                                                                          |
 
-**GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`publish.yml`](.github/workflows/publish.yml) maps `main` / prerelease tags → **`STAGING`**, stable release tags → **`PROD`**, while the slug passed to org workflows remains **`staging`** / **`prod`**.
+**GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`api-release.yml`](.github/workflows/api-release.yml) maps `main` / prerelease tags → **`STAGING`**, stable release tags → **`PROD`**, while the slug passed to org workflows remains **`staging`** / **`prod`**.
 
 **Variables / secrets per environment** (same shapes as [github-workflows README](https://github.com/BehindTheMusicTree/github-workflows/blob/main/README.md#webhook-call-redeployment-webhook), plus GHCR + tag vars — mirror [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api) **`GHCR_IMAGE_NAMESPACE`**):
 
@@ -121,9 +121,9 @@ Before opening a PR:
 | Secret   | **`REDEPLOYMENT_WEBHOOK_PORT`**                                                   | Webhook daemon port. |
 | Secret   | **`TMD_ADMIN_WEBHOOK_SECRET_STAGING`**, **`TMD_ADMIN_WEBHOOK_SECRET_PROD`**       | Same values as infra **`TMD_ADMIN_WEBHOOK_SECRET_*`** (Music Deck admin hooks). |
 
-**GHCR push** uses the workflow’s **`GITHUB_TOKEN`** (no Docker Hub token). The repository needs **Packages** write access for workflows (see **`permissions`** in [`publish.yml`](.github/workflows/publish.yml) / [`build-and-push.yml`](.github/workflows/build-and-push.yml)); the package must allow **`GITHUB_TOKEN`** or the org’s default **Actions** access to **GitHub Packages**.
+**GHCR push** uses the workflow’s **`GITHUB_TOKEN`** (no Docker Hub token). The repository needs **Packages** write access for workflows (see **`permissions`** in [`api-release.yml`](.github/workflows/api-release.yml) / [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml)); the package must allow **`GITHUB_TOKEN`** or the org’s default **Actions** access to **GitHub Packages**.
 
-[`publish.yml`](.github/workflows/publish.yml) follows [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): **`set-image-tag-on-server.yml@main`** and **`call-redeployment-webhook.yml@v0.3.0`** (bump the webhook ref when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release). Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
+[`api-release.yml`](.github/workflows/api-release.yml) follows [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): **`set-image-tag-on-server.yml@main`** and **`call-redeployment-webhook.yml@v0.3.0`** (bump the webhook ref when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release). Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
 
 ## Releasing (maintainers)
 
@@ -139,7 +139,7 @@ Before opening a PR:
 
    **Prerelease example:** **`v0.2.0-rc.1`** (hyphen in the tag body → GitHub Environment **`STAGING`**). **Stable:** **`v0.2.0`** → **`PROD`**.
 
-5. **`publish`** runs from the tag (and already ran from **`main`** with image tag **`staging`**).
+5. **`API release`** ([`api-release.yml`](.github/workflows/api-release.yml)) runs from the tag (and already ran from **`main`** with image tag **`staging`**).
 
 There is no **`bump-my-version`** wiring here yet; bump **`VERSION`** and changelog manually or add tooling in a follow-up PR.
 
