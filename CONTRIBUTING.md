@@ -1,105 +1,148 @@
-# Contributing
+# Contributing guidelines
 
-This repository contains the design system and assets for The Music Deck. It is maintained by a solo developer. Contributions and suggestions are welcome.
+Thanks for your interest in improving **the-music-deck-admin**.
 
-## Table of Contents
+This repo holds the charter / admin Next.js app, supporting libraries, and a small Nest API. Day-to-day development matches patterns used in sibling repos such as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): semantic versioning via **`VERSION`**, **`CHANGELOG.md`**, Git Flow–friendly branching, and a **`publish`** workflow that pushes Docker images and triggers infrastructure redeploys.
 
-- [Development Workflow](#development-workflow)
-  - [Setup](#setup)
+## Table of contents
+
+- [Contributors and maintainers](#contributors-and-maintainers)
+- [Development workflow](#development-workflow)
+  - [Prerequisites](#prerequisites)
+  - [Install and run](#install-and-run)
   - [Branching](#branching)
-  - [Committing](#committing)
-  - [Pull Requests](#pull-requests)
-- [Changelog](#changelog)
-- [Keeping in Sync with the Game Repo](#keeping-in-sync-with-the-game-repo)
-- [License](#license)
+  - [Testing and lint](#testing-and-lint)
+  - [Commits](#commits)
+  - [Pull requests](#pull-requests)
+- [GitHub Actions](#github-actions)
+- [Releasing (maintainers)](#releasing-maintainers)
 
-## Development Workflow
+## Contributors and maintainers
 
-### Setup
+**Contributors** open issues, propose PRs, improve docs, and help validate behavior.
 
-**Prerequisites:** Node.js 20+, npm, Git.
+**Maintainers** review merges, cut releases, keep **`VERSION`** / changelog aligned, and manage CI secrets (Docker Hub, server SSH, redeploy webhook).
+
+Even maintainers should land changes through PRs when multiple people touch the repo; protect **`main`** in GitHub if that matches your team rules.
+
+## Development workflow
+
+### Prerequisites
+
+- **Node.js 22** (aligned with Docker images for `apps/api`)
+- **pnpm 10.33.x** — enforced via [`package.json`](package.json) `packageManager`; enable via [Corepack](https://nodejs.org/api/corepack.html): `corepack enable`
+
+### Install and run
+
+From the repository root:
 
 ```bash
-git clone https://github.com/mignot/the-music-deck-assets.git
-cd the-music-deck-assets
-npm install
-npm run dev
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-Charter app runs at [http://localhost:3000](http://localhost:3000).
+Turbo runs **`dev`** in all workspace packages that define it (typically `apps/web` and optionally `apps/api`).
+
+**Web app only:**
+
+```bash
+pnpm --filter web dev
+```
+
+**API only:**
+
+```bash
+pnpm --filter api start:dev
+```
+
+Use **`pnpm lint`**, **`pnpm test`**, and **`pnpm build`** from the root before pushing substantive changes.
 
 ### Branching
 
-We follow Git Flow:
+This repo does not ship the full Git Flow automation described in hear-the-music-tree-api (no local **`branch-protection`** workflow yet). Recommended conventions stay compatible if you add protection later:
 
-| Branch | Purpose |
-|---|---|
-| `main` | Stable, published state |
-| `develop` | Integration branch — all work merges here |
-| `feature/<name>` | New charter sections, components, assets |
-| `fix/<name>` | Corrections to colours, docs, or visuals |
-| `chore/<name>` | Maintenance, dependencies, tooling |
+| Branch | Role |
+|--------|------|
+| **`main`** | Integrated, deployable default |
+| **`develop`** | Optional integration branch if your team uses Git Flow |
+| **`feature/<name>`** | Features |
+| **`chore/<name>`** | Tooling, CI, deps |
+| **`fix/<name>`** or **`hotfix/<name>`** | Bugfixes |
 
-No direct commits to `main` or `develop`.
+Prefer **`feature/…`** and **`chore/…`** prefixes so policies can match sibling repos later.
+
+### Testing and lint
 
 ```bash
-git checkout develop
-git pull origin develop
-git checkout -b feature/add-card-anatomy-page
+pnpm lint
+pnpm test
+pnpm build
 ```
 
-### Committing
+- **`apps/web`**: ESLint, Vitest, Next.js production build.
+- **`apps/api`**: ESLint; **Jest** + **Supertest** for HTTP-level checks (e.g. `GET /health`).
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+### Commits
 
-```
-<type>(<scope>): <summary>
-```
+Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
 
-| Type | Use for |
-|---|---|
-| `feat` | New charter section, component, or asset |
-| `fix` | Correction to a colour, doc, or visual |
-| `docs` | Documentation update |
-| `chore` | Maintenance / dependencies |
-| `style` | Formatting only |
+`<type>(<optional-scope>): <imperative summary>`
 
-**Examples:**
-- `feat(genres): add subgenre colour blending section`
-- `fix(palette): correct gold token hex value`
-- `docs(genres): update Metal subgenre description`
-- `chore: update Next.js to 16.x`
+Examples: `feat(catalog): add deck export`, `fix(wishlist): pass through card year`, `ci: pin pnpm in Dockerfile`.
 
-Rules: imperative mood, under 70 characters, lowercase type and scope.
+### Pull requests
 
-### Pull Requests
+Before opening a PR:
 
-1. Ensure your branch is up to date with `develop`
-2. Run `npm run build` — must pass with no errors
-3. Update `CHANGELOG.md` under `[Unreleased]`
-4. Open a PR targeting `develop`
-5. Use the same `type(scope): summary` format for the PR title
+1. **Lint / test / build** pass locally.
+2. **`CHANGELOG.md`**: add bullets under **`[Unreleased]`** (see changelog guidelines at the top of that file).
+3. Describe intent, link issues (**Fixes #nnn**), and call out breaking changes.
+4. Use PR titles in conventional style (same shape as commits).
 
-**Pre-PR checklist:**
-- [ ] `npm run build` passes
-- [ ] All text is in English
-- [ ] `CHANGELOG.md` updated
-- [ ] No accidental commits (`.env`, large binaries)
+## GitHub Actions
 
-## Changelog
+| Workflow | Role |
+|----------|------|
+| [`ci.yml`](.github/workflows/ci.yml) | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build. |
+| [`publish.yml`](.github/workflows/publish.yml) | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
+| [`build-and-push.yml`](.github/workflows/build-and-push.yml) | Reusable Docker Hub build for **`apps/api`**. |
 
-Update `CHANGELOG.md` with every PR. Add entries to the `[Unreleased]` section. See [CHANGELOG.md](CHANGELOG.md) for format examples.
+**GitHub Environments** (repository **Settings → Environments**): create **`staging`** and **`prod`** (lowercase). [`publish.yml`](.github/workflows/publish.yml) and [BehindTheMusicTree/github-workflows **`call-redeployment-webhook`**](https://github.com/BehindTheMusicTree/github-workflows/blob/main/.github/workflows/call-redeployment-webhook.yml) attach reusable jobs to those names — **`STAGING`/`PROD` uppercase will not work**.
 
-## Keeping in Sync with the Game Repo
+**Variables / secrets per environment** (same shapes as [github-workflows README](https://github.com/BehindTheMusicTree/github-workflows/blob/main/README.md#webhook-call-redeployment-webhook), plus this repo’s Docker/tag vars):
 
-`app/globals.css` in `the-music-deck` (the game repo) is the **source of truth for genre colours**. When colours change there, update the charter here:
+| Kind | Name | Purpose |
+|------|------|--------|
+| Variable | **`DOCKERHUB_USERNAME`** | Docker Hub namespace |
+| Variable | **`MD_API_IMAGE_REPO`** | Image repo name (without namespace) |
+| Variable | **`MD_API_APP_NAME`** | Tag filename on server: `{REDEPLOYMENT_ROOT}-{env}/scripts/<name>-tag` |
+| Variable | **`REDEPLOYMENT_ROOT`** | e.g. **`/var/webhook/redeployment-the-music-deck-admin`** — must match [**BehindTheMusicTree/infrastructure**](https://github.com/BehindTheMusicTree/infrastructure) **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_ROOT`** ([Music Deck admin stack README](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md)) |
+| Variable | **`REDEPLOYMENT_HOOK_ID_BASE`** | Same string as infra **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** (URLs **`/hooks/<base>-staging`** / **`/hooks/<base>-prod`**) |
+| Variable | **`SERVER_HOST`** | VPS host for webhook + SSH (see workflows README) |
+| Secret | **`DOCKERHUB_ACCESS_TOKEN`** | Docker Hub push |
+| Secret | **`REDEPLOYMENT_WEBHOOK_PORT`** | Webhook daemon port |
+| Secret | **`REDEPLOYMENT_WEBHOOK_SECRET_STAGING`**, **`REDEPLOYMENT_WEBHOOK_SECRET_PROD`** | Same values as infra **`THE_MUSIC_DECK_ADMIN_WEBHOOK_SECRET_*`** |
 
-1. Update `GenreWheel.tsx` — the `GENRES` array and any subgenre hex values
-2. Update `docs/genres.md` and `docs/charte-graphique.md`
+[`publish.yml`](.github/workflows/publish.yml) pins **`set-image-tag-on-server`** and **`call-redeployment-webhook`** to the **same** **`@v…`** tag; bump both when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release. Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
 
+## Releasing (maintainers)
 
-Never define colours only in this repo and expect the game to follow — the sync direction is game → assets.
+1. Merge everything intended for the release into **`main`**.
+2. Update **`CHANGELOG.md`**: move **`[Unreleased]`** notes into **`## [x.y.z] - YYYY-MM-DD`**.
+3. Set **`VERSION`** at the repo root to **`x.y.z`** (no `v` prefix in the file).
+4. Tag **`vx.y.z`** on **`main`** and push tags:
 
-## License
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
 
-All contributions are made under the project's license. You retain authorship of your code.
+   **Prerelease example:** **`v0.2.0-rc.1`** (hyphen in the tag body → GitHub Environment **`staging`**). **Stable:** **`v0.2.0`** → **`prod`**.
+
+5. **`publish`** runs from the tag (and already ran from **`main`** with image tag **`staging`**).
+
+There is no **`bump-my-version`** wiring here yet; bump **`VERSION`** and changelog manually or add tooling in a follow-up PR.
+
+---
+
+Questions or infra tweaks are best tracked as GitHub issues with enough context to reproduce or validate.

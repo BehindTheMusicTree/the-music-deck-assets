@@ -1,0 +1,66 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      commit_hash:
+        description: "Commit hash to build from (optional)"
+        required: false
+        type: string
+      app_version:
+        description: "App version (build-arg APP_VERSION for display in container)"
+        required: true
+        type: string
+      image_tag:
+        description: "Docker image tag to push (e.g. 1.2.3 for release, staging for staging)"
+        required: true
+        type: string
+      environment:
+        description: "GitHub Environment name (e.g. staging, prod) for secrets/vars"
+        required: false
+        type: string
+        default: staging
+
+env:
+  DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+
+jobs:
+  build-and-push-to-dockerhub:
+    name: Push to Docker Hub
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment || 'staging' }}
+    env:
+      APP_VERSION: ${{ inputs.app_version }}
+      IMAGE_TAG: ${{ inputs.image_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.commit_hash || github.sha }}
+
+      - name: Check required vars and secrets
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          MD_API_IMAGE_REPO: ${{ vars.MD_API_IMAGE_REPO }}
+          MD_API_APP_NAME: ${{ vars.MD_API_APP_NAME }}
+          DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+        run: bash scripts/check-workflow-env.sh DOCKERHUB_USERNAME MD_API_IMAGE_REPO MD_API_APP_NAME DOCKERHUB_ACCESS_TOKEN
+
+      - name: Login to Dockerhub
+        run: |
+          echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | \
+          docker login -u "${{ vars.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build and Push Docker image
+        env:
+          IMAGE_FULL_NAME: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.MD_API_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_FULL_NAME }}
+          build-args: |
+            APP_VERSION=${{ inputs.app_version }}

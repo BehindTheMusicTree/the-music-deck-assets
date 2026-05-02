@@ -1,0 +1,203 @@
+import type { TransitionNode } from "../model";
+
+/**
+ * Canonical sorted transition graph snapshots for five representatives:
+ * Mainstream pop + Rock at pop / soft / experimental / hardcore.
+ * Order matches {@link transitionNodesSortedKey} (genre-intensity keys before subgenre keys).
+ *
+ * Regenerate when graph rules or subgenre data change:
+ * `npx tsx` scripts in __tests__/transitions.test.ts maintenance comment (same sort key).
+ */
+export const MAINSTREAM_POP_TRANSITION_OUT: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Disco/Funk", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Electronic", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Reggae/Dub", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Vintage", intensity: "pop" },
+];
+
+export const MAINSTREAM_POP_TRANSITION_IN: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Disco/Funk", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Electronic", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Reggae/Dub", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Vintage", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Chamber Pop", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Choral", genre: "Vintage", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Dance Pop", genre: "Electronic", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Disco Pop", genre: "Disco/Funk", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Doo-wop", genre: "Vintage", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Early Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Electropop", genre: "Electronic", intensity: "pop" },
+  { kind: "subgenre", subgenre: "New Wave", genre: "Electronic", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Soul Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Traditional Pop", genre: "Vintage", intensity: "pop" },
+];
+
+export const ROCK_POP_TRANSITION_OUT: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "New Wave", genre: "Electronic", intensity: "pop" },
+];
+
+export const ROCK_POP_TRANSITION_IN: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Blues Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Chamber Pop", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Early Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Hip-House", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Impressionist Classical", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Krautrock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "March", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "New Wave", genre: "Electronic", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "R&B", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Sacred Choral", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Serenade", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Soft Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Soul Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Waltz", genre: "Classical", intensity: "soft" },
+];
+
+export const ROCK_SOFT_TRANSITION_OUT: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+];
+
+export const ROCK_SOFT_TRANSITION_IN: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "pop" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Alternative Hip-Hop", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Alternative Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Anthem", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Ballet", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Baroque Classical", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Blues Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Chamber Pop", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Cloud Rap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Early Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Hip-House", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Impressionist Classical", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Krautrock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "March", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Opera Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Pop Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Post Grunge", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Prog Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Progressive Hip-Hop", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Punk Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "R&B", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Rap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Romantic Classical", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Sacred Choral", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Serenade", genre: "Classical", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Ska Punk", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Soft Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Soul Rock", genre: "Rock", intensity: "pop" },
+  { kind: "subgenre", subgenre: "Symphonic Showpiece", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Trap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Waltz", genre: "Classical", intensity: "soft" },
+];
+
+export const ROCK_EXPERIMENTAL_TRANSITION_OUT: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "soft" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+];
+
+export const ROCK_EXPERIMENTAL_TRANSITION_IN: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Alternative Hip-Hop", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Alternative Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Anthem", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Ballet", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Baroque Classical", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Blues Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Cloud Rap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Gangsta Rap", genre: "Hip-Hop", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Grunge", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Hard Rock", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Krautrock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Metal", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Nu Metal", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Opera", genre: "Classical", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Opera Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Post Grunge", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Prog Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Progressive Hip-Hop", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Punk", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Punk Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Rap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Romantic Classical", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Ska Punk", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Soft Rock", genre: "Rock", intensity: "soft" },
+  { kind: "subgenre", subgenre: "Symphonic Showpiece", genre: "Classical", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Trap", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Virtuoso Piano", genre: "Classical", intensity: "hardcore" },
+];
+
+export const ROCK_HARDCORE_TRANSITION_OUT: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Classical", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "hardcore" },
+];
+
+export const ROCK_HARDCORE_TRANSITION_IN: TransitionNode[] = [
+  { kind: "genreIntensity", genre: "Classical", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Hip-Hop", intensity: "hardcore" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "experimental" },
+  { kind: "genreIntensity", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Alternative Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Gangsta Rap", genre: "Hip-Hop", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Grunge", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Hard Rock", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Metal", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Nu Metal", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Opera", genre: "Classical", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Opera Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Post Grunge", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Prog Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Punk", genre: "Rock", intensity: "hardcore" },
+  { kind: "subgenre", subgenre: "Punk Rock", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Ska Punk", genre: "Rock", intensity: "experimental" },
+  { kind: "subgenre", subgenre: "Virtuoso Piano", genre: "Classical", intensity: "hardcore" },
+];

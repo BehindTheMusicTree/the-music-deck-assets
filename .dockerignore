@@ -1,0 +1,12 @@
+.git
+.github
+.next
+**/.next
+**/dist
+node_modules
+**/node_modules
+.turbo
+*.md
+docs
+.cursor
+.vscode

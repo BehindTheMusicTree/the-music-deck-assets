@@ -1,71 +1,103 @@
-# The Music Deck — Assets & Design Charter
+# The Music Deck — Admin & charter
 
-Design system, visual charter, and creative assets for [The Music Deck](https://github.com/mignot/the-music-deck) — a music-themed card game.
+Design system, visual charter, and supporting tooling for [The Music Deck](https://github.com/mignot/the-music-deck) — a music-themed card game.
 
-This repository is independent from the game codebase. It serves as the single source of truth for visual identity, genre colour palette, card artwork prompts, and UI references.
+This repository is separate from the game client. It holds the interactive charter (Next.js), card/catalog reference UI, and a small Nest API used for future admin or backend features.
 
 ---
 
-## Charter App
+## Monorepo layout
 
-An interactive Next.js app documenting the full design system.
+| Path | Role |
+|------|------|
+| [`apps/web`](apps/web) | Next.js 16 charter / admin UI (Turbopack dev, Vitest, ESLint) |
+| [`apps/api`](apps/api) | NestJS API (`/health`), Docker image built from repo root |
+| [`packages/`](packages/) | Reserved for shared workspace packages |
+
+Tooling: **pnpm** workspaces + **Turborepo**. Node **22** matches the API Docker image.
+
+---
+
+## Prerequisites
+
+- [Node.js 22](https://nodejs.org/)
+- [pnpm 10.33.x](https://pnpm.io/) — enable via Corepack: `corepack enable`
+
+---
+
+## Commands (repository root)
 
 ```bash
-npm install
-npm run dev
+pnpm install --frozen-lockfile   # after clone or lockfile change
+pnpm dev                         # turbo: runs dev scripts in packages
+pnpm lint
+pnpm test
+pnpm build
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+**Web app only** (charter on [http://localhost:3000](http://localhost:3000)):
 
-| Route | Content |
-|---|---|
-| `/` | Index — all sections |
-| `/palette` | Base design tokens and UI colours |
-| `/genres` | Genre colour wheel with subgenres |
-| `/typography` | Cinzel, Cormorant Garamond, Space Mono |
-| `/rarities` | Legendary, Epic, Rare, Common |
-
----
-
-## Structure
-
+```bash
+pnpm --filter web dev
 ```
-app/                   Next.js charter pages
-components/            Shared UI components (GenreWheel, etc.)
-docs/                  Product design documentation
-public/
-  charte-graphique/    Static HTML references (genre cards, etc.)
-  cards/               Card artworks, examples, AI prompts
-  ui/                  Card back, booster pack visuals
+
+**API only**:
+
+```bash
+pnpm --filter api start:dev
 ```
 
 ---
 
-## Docs
+## CI
 
-All product design documentation lives in `docs/`. Start with [`docs/INDEX.md`](docs/INDEX.md).
-
-Key documents:
-- [`genres.md`](docs/genres.md) — genre archetypes, colours, strengths & weaknesses
-- [`charte-graphique.md`](docs/charte-graphique.md) — full visual charter reference
-- [`card-system.md`](docs/card-system.md) — card anatomy and stats
-- [`battle-system.md`](docs/battle-system.md) — combat rules
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes to `main` and on pull requests: frozen install, **lint**, **test**, **build**.
 
 ---
 
-## Colour System
+## API Docker image
 
-`app/globals.css` is the source of truth for design tokens in this repo. Genre colours are defined per `.g-*` class in the game repo's `globals.css` and documented here in the charter app.
+From the repository root (see [`apps/api/Dockerfile`](apps/api/Dockerfile)):
 
-When colours change in the game repo, update the charter here to stay in sync.
+```bash
+docker build -f apps/api/Dockerfile .
+```
+
+Release automation lives in [`.github/workflows/publish.yml`](.github/workflows/publish.yml): Docker Hub build ([`build-and-push.yml`](.github/workflows/build-and-push.yml)), then [BehindTheMusicTree/github-workflows **`set-image-tag-on-server`**](https://github.com/BehindTheMusicTree/github-workflows) and **`call-redeployment-webhook`** (pinned to the same tag). Root **`VERSION`** drives semver metadata when publishing image tag **`staging`** from **`main`**.
+
+**VPS / webhook:** Configure GitHub Environments **`staging`** and **`prod`** (lowercase) plus **`REDEPLOYMENT_*`** vars/secrets documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) so hook URLs and secrets match [infrastructure **The Music Deck admin** redeploy tree](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md).
 
 ---
 
-## Relationship to the Game Repo
+## Repository structure (high level)
+
+```
+apps/web/
+  app/              Next.js App Router pages
+  components/       UI (GenreWheel, catalog tables, etc.)
+  lib/              Card data, genres, helpers
+  public/cards/     Artworks, prompts, examples
+apps/api/
+  src/              Nest modules (e.g. HealthController)
+docs/               Product design docs — start at docs/INDEX.md
+```
+
+Design tokens for the charter live in **`apps/web/app/globals.css`**. Genre `.g-*` classes stay aligned with the game repo’s `globals.css` when colours change.
+
+---
+
+## Docs & contributing
+
+- Product docs: [`docs/INDEX.md`](docs/INDEX.md)
+- Contributor setup and releases: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Release notes: [`CHANGELOG.md`](CHANGELOG.md)
+
+---
+
+## Relationship to the game repo
 
 | Concern | Lives in |
-|---|---|
-| Genre CSS variables (`.g-*`) | `the-music-deck` → `app/globals.css` |
-| Colour documentation & charter | `the-music-deck-assets` (this repo) |
-| Card artwork & AI prompts | `the-music-deck-assets` → `public/cards/` |
-| Game logic, screens, components | `the-music-deck` |
+|---------|----------|
+| Genre CSS variables (`.g-*`) in production game | `the-music-deck` → app `globals.css` |
+| Charter, palette docs, card artwork prompts | This repo → `apps/web`, `public/cards/` |
+| Game logic and player UI | `the-music-deck` |

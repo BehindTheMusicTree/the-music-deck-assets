@@ -1,32 +1,14 @@
 {
-  "name": "the-music-deck-assets",
-  "version": "0.1.0",
+  "name": "the-music-deck-admin",
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:webpack": "next dev --webpack",
-    "build": "next build",
-    "start": "next start",
-    "launch": "next build && next start",
-    "lint": "eslint",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "maplibre-gl": "^5.24.0",
-    "next": "16.2.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5",
-    "vitest": "^3.2.4"
+    "turbo": "^2.5.4"
   }
 }
