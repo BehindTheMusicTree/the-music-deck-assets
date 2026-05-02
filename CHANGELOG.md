@@ -54,7 +54,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
-- **CI — publish**: GitHub Environment names aligned to lowercase **`staging`** / **`prod`** (matches **`call-redeployment-webhook`** protect rules). Preflight step requires **`REDEPLOYMENT_HOOK_ID_BASE`**. **`set-image-tag-on-server`** and **`call-redeployment-webhook`** pinned to **`@v0.1.6`**; **`images: "{}"`** passed explicitly. Bump both pins together when upgrading [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows); webhook body must start with **`Redeployment accepted`** (matches infra **`hooks.json`** **`response-message`** defaults).
+- **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.2.0`** with **`hook_id_base`**. Docker/tag repo variables renamed **`MD_*`** → **`TMD_*`**. Preflight job renamed **`check-pinned-tags`** (deploy vars only; no DB/AFP pins).
 
 ### Documentation
 

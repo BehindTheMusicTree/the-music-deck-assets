@@ -107,15 +107,15 @@ Before opening a PR:
 | [`publish.yml`](.github/workflows/publish.yml) | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
 | [`build-and-push.yml`](.github/workflows/build-and-push.yml) | Reusable Docker Hub build for **`apps/api`**. |
 
-**GitHub Environments** (repository **Settings → Environments**): create **`staging`** and **`prod`** (lowercase). [`publish.yml`](.github/workflows/publish.yml) and [BehindTheMusicTree/github-workflows **`call-redeployment-webhook`**](https://github.com/BehindTheMusicTree/github-workflows/blob/main/.github/workflows/call-redeployment-webhook.yml) attach reusable jobs to those names — **`STAGING`/`PROD` uppercase will not work**.
+**GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`publish.yml`](.github/workflows/publish.yml) maps `main` / prerelease tags → **`STAGING`**, stable release tags → **`PROD`**, while the slug passed to org workflows remains **`staging`** / **`prod`**.
 
 **Variables / secrets per environment** (same shapes as [github-workflows README](https://github.com/BehindTheMusicTree/github-workflows/blob/main/README.md#webhook-call-redeployment-webhook), plus this repo’s Docker/tag vars):
 
 | Kind | Name | Purpose |
 |------|------|--------|
 | Variable | **`DOCKERHUB_USERNAME`** | Docker Hub namespace |
-| Variable | **`MD_API_IMAGE_REPO`** | Image repo name (without namespace) |
-| Variable | **`MD_API_APP_NAME`** | Tag filename on server: `{REDEPLOYMENT_ROOT}-{env}/scripts/<name>-tag` |
+| Variable | **`TMD_API_IMAGE_REPO`** | Image repo name (without namespace) |
+| Variable | **`TMD_API_APP_NAME`** | Tag filename on server: `{REDEPLOYMENT_ROOT}-{env}/scripts/<name>-tag` |
 | Variable | **`REDEPLOYMENT_ROOT`** | e.g. **`/var/webhook/redeployment-the-music-deck-admin`** — must match [**BehindTheMusicTree/infrastructure**](https://github.com/BehindTheMusicTree/infrastructure) **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_ROOT`** ([Music Deck admin stack README](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md)) |
 | Variable | **`REDEPLOYMENT_HOOK_ID_BASE`** | Same string as infra **`THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** (URLs **`/hooks/<base>-staging`** / **`/hooks/<base>-prod`**) |
 | Variable | **`SERVER_HOST`** | VPS host for webhook + SSH (see workflows README) |
@@ -123,7 +123,7 @@ Before opening a PR:
 | Secret | **`REDEPLOYMENT_WEBHOOK_PORT`** | Webhook daemon port |
 | Secret | **`REDEPLOYMENT_WEBHOOK_SECRET_STAGING`**, **`REDEPLOYMENT_WEBHOOK_SECRET_PROD`** | Same values as infra **`THE_MUSIC_DECK_ADMIN_WEBHOOK_SECRET_*`** |
 
-[`publish.yml`](.github/workflows/publish.yml) pins **`set-image-tag-on-server`** and **`call-redeployment-webhook`** to the **same** **`@v…`** tag; bump both when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release. Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
+[`publish.yml`](.github/workflows/publish.yml) follows [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): **`set-image-tag-on-server.yml@main`** and **`call-redeployment-webhook.yml@v0.2.0`** (bump the webhook ref when adopting a newer [**github-workflows**](https://github.com/BehindTheMusicTree/github-workflows) release). Webhook success bodies must start with **`Redeployment accepted`** once infrastructure **`generate-hooks-json.sh`** is deployed (see github-workflows **Expected Webhook Response**).
 
 ## Releasing (maintainers)
 
@@ -137,7 +137,7 @@ Before opening a PR:
    git push origin v0.1.0
    ```
 
-   **Prerelease example:** **`v0.2.0-rc.1`** (hyphen in the tag body → GitHub Environment **`staging`**). **Stable:** **`v0.2.0`** → **`prod`**.
+   **Prerelease example:** **`v0.2.0-rc.1`** (hyphen in the tag body → GitHub Environment **`STAGING`**). **Stable:** **`v0.2.0`** → **`PROD`**.
 
 5. **`publish`** runs from the tag (and already ran from **`main`** with image tag **`staging`**).
 

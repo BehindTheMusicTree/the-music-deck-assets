@@ -16,10 +16,10 @@ on:
         required: true
         type: string
       environment:
-        description: "GitHub Environment name (e.g. staging, prod) for secrets/vars"
+        description: "Deployment environment (STAGING or PROD) for secrets/vars"
         required: false
         type: string
-        default: staging
+        default: STAGING
 
 env:
   DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
@@ -29,7 +29,7 @@ jobs:
     name: Push to Docker Hub
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.environment || 'staging' }}
+      name: ${{ inputs.environment || 'STAGING' }}
     env:
       APP_VERSION: ${{ inputs.app_version }}
       IMAGE_TAG: ${{ inputs.image_tag }}
@@ -43,10 +43,10 @@ jobs:
       - name: Check required vars and secrets
         env:
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
-          MD_API_IMAGE_REPO: ${{ vars.MD_API_IMAGE_REPO }}
-          MD_API_APP_NAME: ${{ vars.MD_API_APP_NAME }}
+          TMD_API_IMAGE_REPO: ${{ vars.TMD_API_IMAGE_REPO }}
+          TMD_API_APP_NAME: ${{ vars.TMD_API_APP_NAME }}
           DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-        run: bash scripts/check-workflow-env.sh DOCKERHUB_USERNAME MD_API_IMAGE_REPO MD_API_APP_NAME DOCKERHUB_ACCESS_TOKEN
+        run: bash scripts/check-workflow-env.sh DOCKERHUB_USERNAME TMD_API_IMAGE_REPO TMD_API_APP_NAME DOCKERHUB_ACCESS_TOKEN
 
       - name: Login to Dockerhub
         run: |
@@ -55,7 +55,7 @@ jobs:
 
       - name: Build and Push Docker image
         env:
-          IMAGE_FULL_NAME: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.MD_API_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+          IMAGE_FULL_NAME: ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.TMD_API_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
         uses: docker/build-push-action@v6
         with:
           context: .

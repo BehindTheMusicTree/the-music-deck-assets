@@ -1,7 +1,6 @@
 # yaml-language-server: $schema=https://gist.githubusercontent.com/sargunv/c2ca41a08391cd06feaad97aece309e4/raw/empty-json-schema.json
-# Same pattern as hear-the-music-tree-api: main or prerelease tag → staging; stable release tag → prod.
-# GitHub Environment names must be lowercase `staging` / `prod` — matches BehindTheMusicTree/github-workflows
-# call-redeployment-webhook (per-job `environment:`). Pin reusable workflows together; bump when contract changes.
+# Aligned with hear-the-music-tree-api: main or prerelease tag → STAGING + staging; release tag → PROD + prod.
+# `deployment_environment` is the GitHub Environment (STAGING / PROD); `env` is the slug passed to org workflows (staging / prod).
 name: Publish
 
 on:
@@ -41,17 +40,17 @@ jobs:
                 echo "app_version=$VERSION"
                 echo "image_tag=$VERSION"
                 echo "env=staging"
-                echo "deployment_environment=staging"
+                echo "deployment_environment=STAGING"
               } >> "$GITHUB_OUTPUT"
-              echo "Prerelease/dev tag -> staging"
+              echo "Prerelease/dev tag -> STAGING, staging"
             else
               {
                 echo "app_version=$VERSION"
                 echo "image_tag=$VERSION"
                 echo "env=prod"
-                echo "deployment_environment=prod"
+                echo "deployment_environment=PROD"
               } >> "$GITHUB_OUTPUT"
-              echo "Release tag -> prod"
+              echo "Release tag -> PROD, production"
             fi
           elif [[ "$GITHUB_REF" == refs/heads/main ]]; then
             VERSION=$(tr -d '[:space:]' < VERSION)
@@ -63,9 +62,9 @@ jobs:
               echo "app_version=${VERSION}-staging"
               echo "image_tag=staging"
               echo "env=staging"
-              echo "deployment_environment=staging"
+              echo "deployment_environment=STAGING"
             } >> "$GITHUB_OUTPUT"
-            echo "Main push -> staging"
+            echo "Main push -> STAGING, staging"
           else
             echo "Error: Unsupported ref '$GITHUB_REF'."
             echo "Only 'main' branch or tags matching 'v*' are supported."
@@ -82,45 +81,45 @@ jobs:
       environment: ${{ needs.determine-version.outputs.deployment_environment }}
     secrets: inherit
 
-  check-deploy-vars:
+  check-pinned-tags:
     name: Check deploy vars
     runs-on: ubuntu-latest
     needs: [determine-version]
     environment: ${{ needs.determine-version.outputs.deployment_environment }}
     steps:
-      - name: Require deploy vars (tag path + webhook hook id)
+      - name: Require deploy and app-name vars (set-image-tag-on-server)
         run: |
           missing=""
           [ -z "${REDEPLOYMENT_ROOT}" ] && missing="${missing} REDEPLOYMENT_ROOT"
-          [ -z "${MD_API_APP_NAME}" ] && missing="${missing} MD_API_APP_NAME"
+          [ -z "${TMD_API_APP_NAME}" ] && missing="${missing} TMD_API_APP_NAME"
           [ -z "${REDEPLOYMENT_HOOK_ID_BASE}" ] && missing="${missing} REDEPLOYMENT_HOOK_ID_BASE"
           if [ -n "$missing" ]; then
-            echo "ERROR: Set Variables on this environment (or org/repo):$missing"
+            echo "ERROR: Set org-level (or this repo) Variables:$missing"
             echo "Example REDEPLOYMENT_ROOT=/var/webhook/redeployment-the-music-deck-admin (match BehindTheMusicTree/infrastructure)"
             echo "Example REDEPLOYMENT_HOOK_ID_BASE=the-music-deck-admin-redeploy (match infra THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE)"
             exit 1
           fi
         env:
           REDEPLOYMENT_ROOT: ${{ vars.REDEPLOYMENT_ROOT }}
-          MD_API_APP_NAME: ${{ vars.MD_API_APP_NAME }}
+          TMD_API_APP_NAME: ${{ vars.TMD_API_APP_NAME }}
           REDEPLOYMENT_HOOK_ID_BASE: ${{ vars.REDEPLOYMENT_HOOK_ID_BASE }}
 
   set-version-api:
     name: Set API version on server
-    needs: [build-and-push, determine-version, check-deploy-vars]
-    uses: BehindTheMusicTree/github-workflows/.github/workflows/set-image-tag-on-server.yml@v0.1.6
+    needs: [build-and-push, determine-version, check-pinned-tags]
+    uses: BehindTheMusicTree/github-workflows/.github/workflows/set-image-tag-on-server.yml@main
     with:
       env: ${{ needs.determine-version.outputs.env }}
       tag: ${{ needs.determine-version.outputs.image_tag }}
-      app_name: ${{ vars.MD_API_APP_NAME }}
+      app_name: ${{ vars.TMD_API_APP_NAME }}
     secrets: inherit
 
   redeploy-webhook-call:
     name: Redeploy webhook
     needs:
-      [build-and-push, set-version-api, check-deploy-vars, determine-version]
-    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v0.1.6
+      [build-and-push, set-version-api, check-pinned-tags, determine-version]
+    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v0.2.0
     with:
       env: ${{ needs.determine-version.outputs.env }}
-      images: "{}"
+      hook_id_base: ${{ vars.REDEPLOYMENT_HOOK_ID_BASE }}
     secrets: inherit
