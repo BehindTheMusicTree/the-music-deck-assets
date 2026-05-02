@@ -54,7 +54,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
-- **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.2.0`** with **`hook_id_base`**. Docker/tag repo variables renamed **`MD_*`** → **`TMD_*`**. Preflight job renamed **`check-pinned-tags`** (deploy vars only; no DB/AFP pins).
+- **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.2.0`** with **`hook_id_base`**. API image pushes to **GHCR** (`ghcr.io/<GHCR_IMAGE_NAMESPACE>/<TMD_ADMIN_API_APP_NAME>:<tag>`) with **`GITHUB_TOKEN`** and **`packages: write`**; Docker Hub removed. Preflight **`check-pinned-tags`** (deploy vars only; no DB/AFP pins).
 
 ### Documentation
 
@@ -74,7 +74,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
-- **Publish pipeline**: Mirrors [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api) — [`publish.yml`](.github/workflows/publish.yml) resolves environment from `main` vs `v*` tags (prerelease hyphen → staging, stable tag → prod), calls reusable [`build-and-push.yml`](.github/workflows/build-and-push.yml) (Docker Hub), then [`BehindTheMusicTree/github-workflows`](https://github.com/BehindTheMusicTree/github-workflows) **`set-image-tag-on-server`** and **`call-redeployment-webhook`** (same pattern as the API repo).
+- **Publish pipeline**: Mirrors [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api) — [`publish.yml`](.github/workflows/publish.yml) resolves environment from `main` vs `v*` tags (prerelease hyphen → staging, stable tag → prod), calls reusable [`build-and-push.yml`](.github/workflows/build-and-push.yml) (GHCR), then [`BehindTheMusicTree/github-workflows`](https://github.com/BehindTheMusicTree/github-workflows) **`set-image-tag-on-server`** and **`call-redeployment-webhook`** (same pattern as the API repo).
 
 ### Documentation
 

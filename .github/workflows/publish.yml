@@ -11,6 +11,10 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: read
+  packages: write
+
 concurrency:
   group: publish-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -96,7 +100,7 @@ jobs:
           if [ -n "$missing" ]; then
             echo "ERROR: Set org-level (or this repo) Variables:$missing"
             echo "Example REDEPLOYMENT_ROOT=/var/webhook/redeployment-the-music-deck-admin (match BehindTheMusicTree/infrastructure)"
-            echo "Example REDEPLOYMENT_HOOK_ID_BASE=the-music-deck-admin-redeploy (match infra THE_MUSIC_DECK_ADMIN_REDEPLOYMENT_HOOK_ID_BASE)"
+            echo "Example REDEPLOYMENT_HOOK_ID_BASE=the-music-deck-admin-redeploy (same value as infra TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE)"
             exit 1
           fi
         env:
