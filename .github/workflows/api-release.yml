@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=https://gist.githubusercontent.com/sargunv/c2ca41a08391cd06feaad97aece309e4/raw/empty-json-schema.json
-# API image + server tag + redeploy (aligned with hear-the-music-tree-api publish flow).
+# API image + server tag + redeploy.
+# Branch pushes: `develop` → staging; `main` → prod. Tags `v*`: prerelease → staging, stable → prod.
 # `deployment_environment` = GitHub Environment STAGING / PROD; `env` = slug for org workflows (staging / prod).
 name: API release
 
@@ -7,7 +8,7 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, develop]
     tags:
       - "v*"
 
@@ -56,7 +57,7 @@ jobs:
               } >> "$GITHUB_OUTPUT"
               echo "Release tag -> PROD, production"
             fi
-          elif [[ "$GITHUB_REF" == refs/heads/main ]]; then
+          elif [[ "$GITHUB_REF" == refs/heads/develop ]]; then
             VERSION=$(tr -d '[:space:]' < VERSION)
             if [ -z "$VERSION" ]; then
               echo "Error: VERSION file is empty or missing."
@@ -68,10 +69,23 @@ jobs:
               echo "env=staging"
               echo "deployment_environment=STAGING"
             } >> "$GITHUB_OUTPUT"
-            echo "Main push -> STAGING, staging"
+            echo "develop push -> STAGING, staging"
+          elif [[ "$GITHUB_REF" == refs/heads/main ]]; then
+            VERSION=$(tr -d '[:space:]' < VERSION)
+            if [ -z "$VERSION" ]; then
+              echo "Error: VERSION file is empty or missing."
+              exit 1
+            fi
+            {
+              echo "app_version=${VERSION}-prod"
+              echo "image_tag=prod"
+              echo "env=prod"
+              echo "deployment_environment=PROD"
+            } >> "$GITHUB_OUTPUT"
+            echo "main push -> PROD, prod"
           else
             echo "Error: Unsupported ref '$GITHUB_REF'."
-            echo "Only 'main' branch or tags matching 'v*' are supported."
+            echo "Only branches 'main', 'develop', or tags matching 'v*' are supported."
             exit 1
           fi
 

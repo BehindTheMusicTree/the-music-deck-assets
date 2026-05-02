@@ -103,11 +103,11 @@ Before opening a PR:
 
 | Workflow                                                     | Role                                                                                                                                                                                                                                         |
 | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`turbo-ci.yml`](.github/workflows/turbo-ci.yml)             | On **`push`** to **`main`** and **pull_request**: frozen install, lint, test, build (Turborepo).                                                                                                                                              |
-| [`api-release.yml`](.github/workflows/api-release.yml)       | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`main`**, or tags **`v*`**: resolves staging vs prod, builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
+| [`turbo-ci.yml`](.github/workflows/turbo-ci.yml)             | On **`push`** to **`main`** / **`develop`** and **pull_request**: frozen install, lint, test, build (Turborepo).                                                                                                                              |
+| [`api-release.yml`](.github/workflows/api-release.yml)       | On **`workflow_dispatch`**, **`workflow_call`**, **`push`** to **`develop`** (staging) or **`main`** (prod), or tags **`v*`**: builds API image, sets remote tag files, calls redeploy webhook (same reusable workflows as hear-the-music-tree-api). |
 | [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml) | Reusable **GHCR** Docker build for **`apps/api`** (`GITHUB_TOKEN` + **`packages: write`**). Called only from **`api-release.yml`**.                                                                                                          |
 
-**GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`api-release.yml`](.github/workflows/api-release.yml) maps `main` / prerelease tags → **`STAGING`**, stable release tags → **`PROD`**, while the slug passed to org workflows remains **`staging`** / **`prod`**.
+**GitHub Environments** (repository **Settings → Environments**): create **`STAGING`** and **`PROD`** (uppercase), same as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). [`api-release.yml`](.github/workflows/api-release.yml) maps **`develop`** pushes → **`STAGING`** (image tag **`staging`**), **`main`** pushes → **`PROD`** (image tag **`prod`**); prerelease **`v*`** tags → **`STAGING`**, stable **`v*`** tags → **`PROD`**. Org workflows still use slug **`staging`** / **`prod`**.
 
 **Variables / secrets per environment** (same shapes as [github-workflows README](https://github.com/BehindTheMusicTree/github-workflows/blob/main/README.md#webhook-call-redeployment-webhook), plus GHCR + tag vars — mirror [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api) **`GHCR_IMAGE_NAMESPACE`**):
 
@@ -139,7 +139,7 @@ Before opening a PR:
 
    **Prerelease example:** **`v0.2.0-rc.1`** (hyphen in the tag body → GitHub Environment **`STAGING`**). **Stable:** **`v0.2.0`** → **`PROD`**.
 
-5. **`API release`** ([`api-release.yml`](.github/workflows/api-release.yml)) runs from the tag (and already ran from **`main`** with image tag **`staging`**).
+5. **`API release`** runs from the tag; day-to-day **`develop`** pushes deploy **staging**, **`main`** pushes deploy **prod** (see [`api-release.yml`](.github/workflows/api-release.yml)).
 
 There is no **`bump-my-version`** wiring here yet; bump **`VERSION`** and changelog manually or add tooling in a follow-up PR.
 

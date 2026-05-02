@@ -54,6 +54,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
+- **API release**: **`develop`** pushes deploy **staging** (GHCR tag **`staging`**); **`main`** pushes deploy **prod** (GHCR tag **`prod`**). **`v*`** tags unchanged (prerelease → staging, stable → prod).
 - **CI — API release**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.3.0`** with **`hook_id_base`**. API image pushes to **GHCR** (`ghcr.io/<GHCR_IMAGE_NAMESPACE>/<TMD_ADMIN_API_APP_NAME>:<tag>`) with **`GITHUB_TOKEN`** and **`packages: write`**; Docker Hub removed. Preflight **`deploy-preflight`** (deploy vars only; no DB/AFP pins). **`call-redeployment-webhook`** uses **`TMD_ADMIN_WEBHOOK_SECRET_*`** when **`hook_id_base`** matches **`vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** — workflow requires that variable and passes it as **`hook_id_base`** (not **`REDEPLOYMENT_HOOK_ID_BASE`** alone).
 - **CI**: Renamed workflows for clarity — [`turbo-ci.yml`](.github/workflows/turbo-ci.yml) (workspace lint/test/build), [`api-release.yml`](.github/workflows/api-release.yml) (image + tags + redeploy), [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml) (reusable Docker build); removed **`ci.yml`**, **`publish.yml`**, **`build-and-push.yml`**.
 
@@ -67,7 +68,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 ### Added
 
 - **Monorepo**: [pnpm](https://pnpm.io/) workspace with [Turborepo](https://turbo.build/) — `apps/web` (Next.js charter/admin UI), `apps/api` (NestJS starter with `/health`), shared tooling from repository root.
-- **Root `VERSION`**: Single source for semver used when publishing **`staging`** images from `main` (suffix `{VERSION}-staging` as container metadata).
+- **Root `VERSION`**: Single source for semver used for container **`app_version`** metadata on branch and tag builds (later: **`develop`** → staging, **`main`** → prod).
 
 ### CI
 
@@ -75,7 +76,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
-- **API release pipeline**: Mirrors [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api) — [`api-release.yml`](.github/workflows/api-release.yml) resolves environment from `main` vs `v*` tags (prerelease hyphen → staging, stable tag → prod), calls reusable [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml) (GHCR), then [`BehindTheMusicTree/github-workflows`](https://github.com/BehindTheMusicTree/github-workflows) **`set-image-tag-on-server`** and **`call-redeployment-webhook`** (same pattern as the API repo).
+- **API release pipeline**: [`api-release.yml`](.github/workflows/api-release.yml) calls [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml) (GHCR), then [`BehindTheMusicTree/github-workflows`](https://github.com/BehindTheMusicTree/github-workflows) **`set-image-tag-on-server`** and **`call-redeployment-webhook`**. (Branch mapping was later updated: **`develop`** → staging, **`main`** → prod; **`v*`** tags keep prerelease vs stable.)
 
 ### Documentation
 
