@@ -56,6 +56,8 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Changed
 
+- **Ops — Sync env to server**: **`sync-*`** jobs wait for **both** fragment builds before any SSH upload; per environment **DB** sync runs before **API** sync to avoid pushing one half when the other build failed and to align with redeploy **apply** order (rerun if API SSH fails after DB).
+
 - **Ops — Sync env to server**: Postgres fragment includes **`POSTGRES_APP_*`**; API fragment sends **`TMD_ADMIN_SYNC_DATABASE_*`** only. **`DATABASE_URL`** (infra **`TMD_ADMIN_DATABASE_URL_*`** secrets or composed host + **`POSTGRES_DB`** + sync), **`CORS_ORIGINS`** (**`TMD_ADMIN_CORS_ORIGINS_*`** vars), and **`PORT`** are applied on the VPS by **BehindTheMusicTree/infrastructure** **`apply-tmd-admin-env-from-sync.sh`** from **`scripts/.env`**. Requires **`docker-entrypoint-initdb.d`** for first **`PGDATA`** init. See **CONTRIBUTING** and infra README.
 
 - **Ops — Sync env to server**: Postgres fragment **`app_name`** uses **`TMD_ADMIN_API_APP_NAME` + `DB_APP_NAME_SUFFIX`** (no hardcoded **`_db`**). **`build-api-fragment`** and **`build-db-fragment`** require **`DB_APP_NAME_SUFFIX`** so the workflow fails fast when it is missing or empty.

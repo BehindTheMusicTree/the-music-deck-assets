@@ -6,6 +6,7 @@
 # Postgres fragment basename: TMD_ADMIN_API_APP_NAME + DB_APP_NAME_SUFFIX (same GitHub Variable as infrastructure / hear-the-music-tree-api; required, no default).
 # DB fragment: POSTGRES_* = bootstrap superuser; POSTGRES_APP_* = Nest DATABASE_URL role (docker-entrypoint-initdb.d on first PGDATA init — see infrastructure).
 # Nest PORT is set on the server from infrastructure only (TMD_ADMIN_API_LISTEN_PORT in scripts/.env); do not put PORT in this fragment.
+# Sync jobs: both fragments must build before any SSH upload; per env, DB sync runs before API (same order as apply-tmd-admin-env-from-sync on redeploy). Rerun workflow if API SSH fails after DB succeeded.
 name: Sync env to server
 
 on:
@@ -135,7 +136,7 @@ jobs:
 
   sync-api-staging:
     name: Sync API env (staging)
-    needs: [build-api-fragment]
+    needs: [build-api-fragment, build-db-fragment, sync-db-staging]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/sync-env-to-server.yml@main
     with:
       sync_env: staging
@@ -145,7 +146,7 @@ jobs:
 
   sync-api-prod:
     name: Sync API env (prod)
-    needs: [build-api-fragment]
+    needs: [build-api-fragment, build-db-fragment, sync-db-prod]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/sync-env-to-server.yml@main
     with:
       sync_env: prod
@@ -155,7 +156,7 @@ jobs:
 
   sync-db-staging:
     name: Sync DB env (staging)
-    needs: [build-db-fragment]
+    needs: [build-api-fragment, build-db-fragment]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/sync-env-to-server.yml@main
     with:
       sync_env: staging
@@ -165,7 +166,7 @@ jobs:
 
   sync-db-prod:
     name: Sync DB env (prod)
-    needs: [build-db-fragment]
+    needs: [build-api-fragment, build-db-fragment]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/sync-env-to-server.yml@main
     with:
       sync_env: prod
