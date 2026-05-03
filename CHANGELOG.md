@@ -67,7 +67,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 ### Documentation
 
 - **README**: Updated for the pnpm/Turborepo layout (`apps/web`, `apps/api`), root scripts, and Docker build entrypoint; **Sync env** pointer and corrected workflow filenames (**`api-release.yml`**, **`api-image-ghcr.yml`**, **`turbo-ci.yml`**).
-- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DB_APP_USER_PASSWORD`**, **`TMD_ADMIN_DB_POSTGRES_USER_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres bootstrap + app user + db / **`TMD_ADMIN_NODE_ENV`**); **`PORT`**, **`CORS_ORIGINS`**, and **`DATABASE_URL`** overrides documented as **infrastructure** Server setup only; workflow table aligned with repo filenames.
+- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DB_APP_USER_PASSWORD`**, **`TMD_ADMIN_DB_SUPERUSER_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres bootstrap + app user + db / **`TMD_ADMIN_NODE_ENV`**); **`PORT`**, **`CORS_ORIGINS`**, and **`DATABASE_URL`** overrides documented as **infrastructure** Server setup only; workflow table aligned with repo filenames.
 
 ## [0.1.0] - 2026-05-01
 

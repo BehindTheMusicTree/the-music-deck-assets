@@ -89,8 +89,8 @@ jobs:
           TMD_ADMIN_API_APP_NAME: ${{ vars.TMD_ADMIN_API_APP_NAME }}
           DB_APP_NAME_SUFFIX: ${{ vars.DB_APP_NAME_SUFFIX }}
           TMD_ADMIN_DB_POSTGRES_DB_NAME: ${{ vars.TMD_ADMIN_DB_POSTGRES_DB_NAME }}
-          TMD_ADMIN_DB_POSTGRES_USER: ${{ vars.TMD_ADMIN_DB_POSTGRES_USER }}
-          TMD_ADMIN_DB_POSTGRES_USER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_POSTGRES_USER_PASSWORD }}
+          TMD_ADMIN_DB_SUPERUSER_USERNAME: ${{ vars.TMD_ADMIN_DB_SUPERUSER_USERNAME }}
+          TMD_ADMIN_DB_SUPERUSER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_SUPERUSER_PASSWORD }}
           TMD_ADMIN_DB_APP_USER: ${{ vars.TMD_ADMIN_DB_APP_USER }}
           TMD_ADMIN_DB_APP_USER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_APP_USER_PASSWORD }}
         run: |
@@ -102,12 +102,12 @@ jobs:
             exit 1
           fi
           db_app_name="${api}${DB_APP_NAME_SUFFIX}"
-          pg_user="${TMD_ADMIN_DB_POSTGRES_USER:-postgres}"
+          pg_user="${TMD_ADMIN_DB_SUPERUSER_USERNAME:-postgres}"
           pg_db="${TMD_ADMIN_DB_POSTGRES_DB_NAME:-app}"
           app_user="${TMD_ADMIN_DB_APP_USER:-tmd_admin_app}"
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
-            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY TMD_ADMIN_DB_POSTGRES_USER_PASSWORD
+            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY TMD_ADMIN_DB_SUPERUSER_PASSWORD
             TMD_ADMIN_DB_APP_USER_PASSWORD
           )
           missing=()
@@ -119,7 +119,7 @@ jobs:
             echo "ERROR: Missing required vars or secrets: ${missing[*]}"
             exit 1
           fi
-          pw="$(printf '%s' "${TMD_ADMIN_DB_POSTGRES_USER_PASSWORD}" | tr -d '\n\r')"
+          pw="$(printf '%s' "${TMD_ADMIN_DB_SUPERUSER_PASSWORD}" | tr -d '\n\r')"
           app_pw="$(printf '%s' "${TMD_ADMIN_DB_APP_USER_PASSWORD}" | tr -d '\n\r')"
           printf '%s\n' "POSTGRES_USER=${pg_user}" "POSTGRES_DB=${pg_db}" >> fragment.env
           printf 'POSTGRES_PASSWORD=%s\n' "${pw}" >> fragment.env
