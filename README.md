@@ -51,7 +51,7 @@ pnpm --filter api start:dev
 
 ## CI
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes to `main` and on pull requests: frozen install, **lint**, **test**, **build**.
+[`.github/workflows/turbo-ci.yml`](.github/workflows/turbo-ci.yml) runs on pushes to **`main`** / **`develop`** and on pull requests: frozen install, **lint**, **test**, **build**.
 
 ---
 
@@ -63,9 +63,11 @@ From the repository root (see [`apps/api/Dockerfile`](apps/api/Dockerfile)):
 docker build -f apps/api/Dockerfile .
 ```
 
-Release automation lives in [`.github/workflows/publish.yml`](.github/workflows/publish.yml): **GitHub Container Registry** build ([`build-and-push.yml`](.github/workflows/build-and-push.yml)), then [BehindTheMusicTree/github-workflows **`set-image-tag-on-server`**](https://github.com/BehindTheMusicTree/github-workflows) (**`@main`**) and **`call-redeployment-webhook`** (**`@v0.3.0`**), aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). Root **`VERSION`** drives semver metadata when publishing image tag **`staging`** from **`main`**.
+Release automation lives in [`.github/workflows/api-release.yml`](.github/workflows/api-release.yml): **GitHub Container Registry** build ([`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml)), then [BehindTheMusicTree/github-workflows **`set-image-tag-on-server`**](https://github.com/BehindTheMusicTree/github-workflows) (**`@main`**) and **`call-redeployment-webhook`** (**`@v0.3.0`**), aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api). Root **`VERSION`** drives semver metadata when publishing image tag **`staging`** from **`main`**.
 
-**VPS / webhook:** Configure GitHub Environments **`STAGING`** and **`PROD`** (uppercase) plus **`REDEPLOYMENT_*`**, **`TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`**, **`TMD_ADMIN_WEBHOOK_SECRET_*`**, **`GHCR_IMAGE_NAMESPACE`**, **`TMD_ADMIN_API_APP_NAME`**, and related secrets documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) so hook URLs and image pulls match [infrastructure **The Music Deck admin** redeploy tree](https://github.com/BehindTheMusicTree/infrastructure/blob/main/webhook/redeployment/the-music-deck-admin/README.md).
+**Sync env (manual):** [`.github/workflows/sync-env-to-server.yml`](.github/workflows/sync-env-to-server.yml) pushes API + Postgres compose fragments to the VPS (same **`sync-env-to-server`** as hear-the-music-tree-api): bootstrap **`POSTGRES_*`**, app-role **`POSTGRES_APP_*`**, and **`TMD_ADMIN_SYNC_DATABASE_*`** for DB URL credentials only. **`DATABASE_URL`**, **`CORS_ORIGINS`**, and **`PORT`** are merged on the server by **infrastructure** **`apply-tmd-admin-env-from-sync.sh`** from **`scripts/.env`** (Ansible / Server setup). Run from **Actions → Sync env to server** after changing secrets. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+**VPS / webhook:** Configure GitHub Environments **`STAGING`** and **`PROD`** (uppercase) plus **`REDEPLOYMENT_*`**, **`TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`**, **`TMD_ADMIN_WEBHOOK_SECRET_*`**, **`GHCR_IMAGE_NAMESPACE`**, **`TMD_ADMIN_API_APP_NAME`**, **`DB_APP_NAME_SUFFIX`**, and related secrets documented in [`CONTRIBUTING.md`](CONTRIBUTING.md) so hook URLs and image pulls match [infrastructure **The Music Deck admin** redeploy tree](https://github.com/BehindTheMusicTree/infrastructure/blob/main/deploy/redeployment/the-music-deck-admin/README.md).
 
 ---
 
