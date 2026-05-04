@@ -12,13 +12,13 @@ import {
 } from "@/components/catalog/CatalogModals";
 import {
   type CatalogEntry,
-  CATALOG_ENTRIES,
-  CATALOG_CARD_TRACK_INDEX,
   CARD_RARITY_ORDER,
   CATALOG_KINDS,
   deriveTracksInFromTrackIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
+import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { WishlistEntry } from "@/lib/cards/wishlist";
 import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
 import { type Intensity, intensityLevelIndex } from "@/lib/genres/subgenres-data";
 
@@ -274,8 +274,14 @@ function SortToggle({
 
 export default function CatalogDeckTable({
   className = "",
+  catalogEntries,
+  wishlistEntries,
+  cardTrackIndex,
 }: {
   className?: string;
+  catalogEntries: CatalogEntry[];
+  wishlistEntries: WishlistEntry[];
+  cardTrackIndex: CardTrackIndex;
 }) {
   const [filterKind, setFilterKind] = useState<string>("all");
   const [filterSeries, setFilterSeries] = useState<string>("all");
@@ -342,7 +348,7 @@ export default function CatalogDeckTable({
 
   const seriesOptions = useMemo(() => {
     const seen = new Map<string, string>();
-    for (const e of CATALOG_ENTRIES) {
+    for (const e of catalogEntries) {
       const value = `${e.catalogSeriesType}\t${e.catalogSeriesLabel}`;
       const label =
         e.catalogSeriesType === "country"
@@ -359,7 +365,7 @@ export default function CatalogDeckTable({
 
   const eraFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of CATALOG_ENTRIES) s.add(e.catalogEra);
+    for (const e of catalogEntries) s.add(e.catalogEra);
     return [...s].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: "base" }),
     );
@@ -367,7 +373,7 @@ export default function CatalogDeckTable({
 
   const genreFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of CATALOG_ENTRIES) s.add(e.catalogGenreLabel);
+    for (const e of catalogEntries) s.add(e.catalogGenreLabel);
     return [...s].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: "base" }),
     );
@@ -375,7 +381,7 @@ export default function CatalogDeckTable({
 
   const lineGenreFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of CATALOG_ENTRIES) {
+    for (const e of catalogEntries) {
       s.add(e.card.genre ?? "__empty__");
     }
     return [...s].sort((a, b) => {
@@ -387,7 +393,7 @@ export default function CatalogDeckTable({
 
   const countryFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of CATALOG_ENTRIES) {
+    for (const e of catalogEntries) {
       s.add(e.card.country ?? "__empty__");
     }
     return [...s].sort((a, b) => {
@@ -398,7 +404,7 @@ export default function CatalogDeckTable({
   }, []);
 
   const visibleRows = useMemo(() => {
-    let rows = CATALOG_ENTRIES;
+    let rows = catalogEntries;
     if (filterKind !== "all") rows = rows.filter((r) => r.kind === filterKind);
     if (filterSeries !== "all") {
       const [t, lab] = filterSeries.split("\t");
@@ -469,7 +475,7 @@ export default function CatalogDeckTable({
 
   const catalogEntryById = useMemo(() => {
     const byId = new Map<number, CatalogEntry>();
-    for (const e of CATALOG_ENTRIES) byId.set(e.card.id, e);
+    for (const e of catalogEntries) byId.set(e.card.id, e);
     return byId;
   }, []);
   return (
@@ -490,7 +496,10 @@ export default function CatalogDeckTable({
           role="tabpanel"
           aria-labelledby="catalog-tab-wishlist"
         >
-          <WishlistDeckTable />
+          <WishlistDeckTable
+            wishlistEntries={wishlistEntries}
+            cardTrackIndex={cardTrackIndex}
+          />
         </div>
       ) : (
         <div
@@ -507,7 +516,7 @@ export default function CatalogDeckTable({
             }}
             onSelectGrid={() => setViewMode("grid")}
           />
-          <CatalogSeriesSummaryTable entries={CATALOG_ENTRIES} />
+          <CatalogSeriesSummaryTable entries={catalogEntries} />
 
           <div className="w-full min-w-0 rounded-[6px] border border-ui-border bg-[#0f0f14]/35 overflow-x-auto">
             <table className="w-full min-w-[1820px] border-collapse text-left">
@@ -902,6 +911,7 @@ export default function CatalogDeckTable({
                                   theme={theme}
                                   small
                                   enableZoom={false}
+                                  cardTrackIndex={cardTrackIndex}
                                 />
                               </div>
                             </div>
@@ -956,7 +966,7 @@ export default function CatalogDeckTable({
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {
                             const ids = deriveTracksInFromTrackIndex(
-                              CATALOG_CARD_TRACK_INDEX,
+                              cardTrackIndex,
                               card.id,
                             );
                             if (!ids || ids.length === 0) {
@@ -1003,6 +1013,7 @@ export default function CatalogDeckTable({
                                           theme={target.theme}
                                           small
                                           enableZoom={false}
+                                          cardTrackIndex={cardTrackIndex}
                                         />
                                       </div>
                                     </button>
@@ -1015,7 +1026,7 @@ export default function CatalogDeckTable({
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {
                             const ids =
-                              CATALOG_CARD_TRACK_INDEX[card.id]?.tracksOut;
+                              cardTrackIndex[card.id]?.tracksOut;
                             if (!ids || ids.length === 0) {
                               return <span className="text-muted/80">—</span>;
                             }
@@ -1060,6 +1071,7 @@ export default function CatalogDeckTable({
                                           theme={target.theme}
                                           small
                                           enableZoom={false}
+                                          cardTrackIndex={cardTrackIndex}
                                         />
                                       </div>
                                     </button>
@@ -1181,6 +1193,7 @@ export default function CatalogDeckTable({
                               theme={theme}
                               small
                               enableZoom={false}
+                              cardTrackIndex={cardTrackIndex}
                             />
                           </div>
                         ) : (
@@ -1227,6 +1240,7 @@ export default function CatalogDeckTable({
           <CatalogEntryDetailModal
             entry={catalogEntryDetail}
             effectiveArtworkPrompt={effectiveArtworkPrompt}
+            cardTrackIndex={cardTrackIndex}
             onClose={() => setCatalogEntryDetail(null)}
             onOpenArtworkPrompt={(text) => {
               setCatalogEntryDetail(null);

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import CatalogDeckTable from "@/components/catalog/CatalogDeckTable";
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Catalog" };
+import { Suspense } from "react";
+import CatalogDeck from "./catalog-deck";
 
+export const metadata: Metadata = { title: "Catalog" };
 
 export default function CatalogPage() {
   return (
@@ -36,7 +37,15 @@ export default function CatalogPage() {
         id="catalog"
         className="w-full min-w-0 self-stretch mb-10 scroll-mt-24 max-w-none"
       >
-        <CatalogDeckTable className="w-full min-w-0" />
+        <Suspense
+          fallback={
+            <p className="font-garamond text-muted text-center py-12">
+              Loading catalogue…
+            </p>
+          }
+        >
+          <CatalogDeck />
+        </Suspense>
       </div>
     </div>
   );

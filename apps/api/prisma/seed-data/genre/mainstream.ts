@@ -1,0 +1,62 @@
+import type { CardData } from "@repo/cards-domain";
+import { ART, ARTWORK_CREATED_AT, artworkPromptFor } from "../_card-helpers";
+
+export const MAINSTREAM_CARDS: CardData[] = [
+  {
+    catalogNumber: 1,
+    id: 78,
+    title: "Hakuna Matata",
+    year: "1994",
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Banger",
+    artwork: `${ART}artwork.hakuna-matata-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.hakuna-matata-v1.png"],
+    ...(artworkPromptFor(78) ?? {}),
+  },
+  {
+    catalogNumber: 2,
+    id: 101,
+    title: "The Great Pretender",
+    year: "1987",
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 8,
+    rarity: "Classic",
+    artwork: `${ART}artwork.freddy-mercury-the-great-pretender-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.freddy-mercury-the-great-pretender-v1.png"],
+    ...(artworkPromptFor(101) ?? {}),
+  },
+  {
+    catalogNumber: 3,
+    id: 49,
+    title: "Shape of You",
+    year: "2017",
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.shape-of-you-v1.png`,
+    artworkCreatedAt: ARTWORK_CREATED_AT["artwork.shape-of-you-v1.png"],
+  },
+  {
+    catalogNumber: 4,
+    id: 43,
+    title: "My Heart Will Go On",
+    year: "1997",
+    genre: "Mainstream",
+    ability: "Reserve",
+    abilityDesc: "Shipped catalogue entry.",
+    pop: 9,
+    rarity: "Legendary",
+    artwork: `${ART}artwork.celine-dion-my-hearth-will-go-on-v1.png`,
+    artworkCreatedAt:
+      ARTWORK_CREATED_AT["artwork.celine-dion-my-hearth-will-go-on-v1.png"],
+    ...(artworkPromptFor(43) ?? {}),
+  },
+];

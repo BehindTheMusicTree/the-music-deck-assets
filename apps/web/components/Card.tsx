@@ -30,7 +30,7 @@ import {
   deriveTracksInFromTrackIndex,
   type CardTrackIndex,
 } from "@/lib/cards/track-graph";
-import type { CardRarity } from "@/lib/cards/card-rarity";
+import type { CardData, CardRarity } from "@repo/cards-domain";
 import type { GenreTheme } from "@/lib/card-theme-types";
 
 export type {
@@ -38,6 +38,7 @@ export type {
   CardTypePipSymbol,
   GenreTheme,
 } from "@/lib/card-theme-types";
+export type { CardData } from "@repo/cards-domain";
 
 export interface TransitionTrack {
   title: string;
@@ -54,38 +55,6 @@ type GenreTransitionStrip = {
   themeColor: string;
   icon: string;
 };
-
-export interface CardData {
-  id: number;
-  title: string;
-  artist?: string;
-  year: string;
-  /** Subgenre, or a parent app genre (e.g. "Electronic" on World+genre) when not a subgenre name. */
-  genre?: string;
-  ability: string;
-  abilityDesc: string;
-  /** Popularity note shown in the header and used for award symbols: integer 1–9. */
-  pop: number;
-  rarity: CardRarity;
-  artwork?: string;
-  /** Optional illustration brief; not rendered on the card (catalog / tooling only). */
-  artworkPrompt?: string;
-  /** ISO-like local datetime when the bundled PNG was created (`YYYY-MM-DD` or `YYYY-MM-DDTHH:mm:ss`). */
-  artworkCreatedAt?: string;
-  /**
-   * Vertical shift in CSS pixels (same `object-fit: cover`); the art frame is still fully
-   * bottom-flush — we grow the image by |offset| and translate so proportions stay fixed and
-   * the image stays centered horizontally.
-   */
-  artworkOffsetY?: number;
-  /** When true, artwork presentation hides the frame border (full-bleed visual). */
-  artworkOverBorder?: boolean;
-  country?: string;
-  /** Track ids this card transitions into (successors in a DJ transition). */
-  tracksOut?: number[];
-  /** Shipped deck only: catalogue number within the derived series. */
-  catalogNumber?: number;
-}
 
 const RARITY_COLOR: Record<CardRarity, string> = {
   Legendary: "#c8a040",
@@ -174,13 +143,14 @@ function isVeryLight(hex: string) {
 }
 
 function CardArtwork({ card }: { card: CardData }) {
-  if (!card.artwork) return null;
+  const src = card.artworkUrl ?? card.artwork;
+  if (!src) return null;
   const dy = card.artworkOffsetY;
   const hasOffset = dy != null && dy !== 0;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={card.artwork}
+      src={src}
       alt=""
       className={styles.artImg}
       style={

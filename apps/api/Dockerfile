@@ -5,8 +5,11 @@ RUN corepack enable && corepack prepare pnpm@10.33.2 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
+COPY packages/cards-domain/package.json packages/cards-domain/
 RUN pnpm install --frozen-lockfile
+COPY packages/cards-domain packages/cards-domain
 COPY apps/api apps/api
+RUN pnpm --filter api exec prisma generate
 RUN pnpm --filter api build
 # Portable prod tree: own node_modules + dist (no reliance on monorepo path layout). --legacy: workspace without injectWorkspacePackages.
 RUN pnpm --filter api --prod deploy --legacy /deploy/api
@@ -18,6 +21,10 @@ ENV NODE_ENV=production \
     APP_VERSION=$APP_VERSION
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
 COPY --from=builder --chown=nestjs:nodejs /deploy/api .
+COPY --from=builder --chown=nestjs:nodejs /repo/apps/api/prisma ./prisma
+COPY --chown=nestjs:nodejs apps/api/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 USER nestjs
 EXPOSE 3021
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["node", "dist/main.js"]

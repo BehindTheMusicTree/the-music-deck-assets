@@ -4,32 +4,82 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch app (dev)",
-			"runtimeExecutable": "npm",
+			"name": "Web: Next.js (dev, webpack)",
+			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["run", "dev:webpack"],
-			"cwd": "${workspaceFolder}",
+			"cwd": "${workspaceFolder}/apps/web",
 			"env": { "PORT": "3011" },
 			"console": "integratedTerminal",
-			"autoAttachChildProcesses": false
+			"autoAttachChildProcesses": true
 		},
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch app (build and run)",
-			"runtimeExecutable": "npm",
-			"runtimeArgs": ["run", "launch"],
-			"cwd": "${workspaceFolder}",
+			"name": "Web: Next.js (dev, turbopack)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["run", "dev"],
+			"cwd": "${workspaceFolder}/apps/web",
 			"env": { "PORT": "3011" },
 			"console": "integratedTerminal",
-			"autoAttachChildProcesses": false
+			"autoAttachChildProcesses": true
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Web: Next.js (build + start)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["run", "launch"],
+			"cwd": "${workspaceFolder}/apps/web",
+			"env": { "PORT": "3011" },
+			"console": "integratedTerminal",
+			"autoAttachChildProcesses": true
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "API: Nest (watch)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["run", "start:dev"],
+			"cwd": "${workspaceFolder}/apps/api",
+			"env": { "PORT": "3021" },
+			"console": "integratedTerminal",
+			"restart": true,
+			"autoAttachChildProcesses": true
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "API: Nest (debug, watch)",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["run", "start:debug"],
+			"cwd": "${workspaceFolder}/apps/api",
+			"env": { "PORT": "3021" },
+			"console": "integratedTerminal",
+			"restart": true,
+			"autoAttachChildProcesses": true
 		},
 		{
 			"type": "chrome",
 			"request": "launch",
-			"name": "Open app in Chrome",
-			"preLaunchTask": "Build then Run Dev App",
+			"name": "Web: open in Chrome",
+			"preLaunchTask": "Web: build then run dev (webpack)",
 			"url": "http://localhost:3011",
-			"webRoot": "${workspaceFolder}"
+			"webRoot": "${workspaceFolder}/apps/web"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Monorepo: web + API",
+			"configurations": [
+				"Web: Next.js (dev, webpack)",
+				"API: Nest (watch)"
+			],
+			"stopAll": true,
+			"presentation": {
+				"hidden": false,
+				"group": "",
+				"order": 1
+			}
 		}
 	]
 }

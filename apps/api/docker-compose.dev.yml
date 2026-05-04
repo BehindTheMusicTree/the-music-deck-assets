@@ -1,0 +1,68 @@
+# Local-dev stack for apps/api: Postgres + MinIO + bucket bootstrap.
+# Bring up with: docker compose -f apps/api/docker-compose.dev.yml up -d
+#
+# Postgres:  localhost:5433  (avoid clash with system Postgres)
+# MinIO:     localhost:9000 (S3 API), localhost:9001 (console)
+#   - bucket `tmd-admin-artworks-dev` is pre-created with public download policy by `mc-init`.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: tmd-admin-api-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - tmd-admin-api-db-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  s3:
+    image: minio/minio:RELEASE.2025-04-08T15-41-24Z
+    container_name: tmd-admin-api-s3-dev
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "127.0.0.1:9100:9000"
+      - "127.0.0.1:9101:9001"
+    volumes:
+      - tmd-admin-api-s3-dev:/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O- http://127.0.0.1:9000/minio/health/live >/dev/null || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  s3-init:
+    image: minio/mc:RELEASE.2025-04-08T15-39-49Z
+    container_name: tmd-admin-api-s3-init-dev
+    restart: "no"
+    depends_on:
+      s3:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        mc alias set local http://s3:9000 minioadmin minioadmin
+        mc mb --ignore-existing local/tmd-admin-artworks-dev
+        mc anonymous set download local/tmd-admin-artworks-dev
+        echo "Bucket tmd-admin-artworks-dev ready."
+
+volumes:
+  tmd-admin-api-db-dev:
+  tmd-admin-api-s3-dev:

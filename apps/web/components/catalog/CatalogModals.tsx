@@ -3,10 +3,10 @@
 import CatalogCard from "@/components/catalog/CatalogCard";
 import {
   type CatalogEntry,
-  CATALOG_CARD_TRACK_INDEX,
   deriveTracksInFromTrackIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
+import type { CardTrackIndex } from "@/lib/cards/track-graph";
 
 const CATALOG_CARD_NATIVE_W = 272;
 const CATALOG_CARD_NATIVE_H = 400;
@@ -57,11 +57,13 @@ export function CatalogEntryDetailModal({
   onClose,
   onOpenArtworkPrompt,
   effectiveArtworkPrompt,
+  cardTrackIndex,
 }: {
   entry: CatalogEntry | null;
   onClose: () => void;
   onOpenArtworkPrompt: (text: string) => void;
   effectiveArtworkPrompt: (card: CatalogEntry["card"]) => string;
+  cardTrackIndex: CardTrackIndex;
 }) {
   if (entry === null) return null;
 
@@ -115,6 +117,7 @@ export function CatalogEntryDetailModal({
                 theme={entry.theme}
                 enableZoom={false}
                 hoverLift={false}
+                cardTrackIndex={cardTrackIndex}
               />
             </div>
           </div>
@@ -146,15 +149,15 @@ export function CatalogEntryDetailModal({
               {detailLine(
                 "Tracks in",
                 trackRefsLabel(
-                  deriveTracksInFromTrackIndex(CATALOG_CARD_TRACK_INDEX, c.id),
-                  CATALOG_CARD_TRACK_INDEX,
+                  deriveTracksInFromTrackIndex(cardTrackIndex, c.id),
+                  cardTrackIndex,
                 ),
               )}
               {detailLine(
                 "Tracks out",
                 trackRefsLabel(
-                  CATALOG_CARD_TRACK_INDEX[c.id]?.tracksOut,
-                  CATALOG_CARD_TRACK_INDEX,
+                  cardTrackIndex[c.id]?.tracksOut,
+                  cardTrackIndex,
                 ),
               )}
               {detailLine("Intensity", formatCatalogIntensity(entry.catalogIntensity))}

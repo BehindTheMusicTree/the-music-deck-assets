@@ -54,11 +54,27 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Added
 
-- **Ops — Sync env to server**: [`.github/workflows/sync-env-to-server.yml`](.github/workflows/sync-env-to-server.yml) (manual **workflow_dispatch**), same reusable workflow as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): builds API + Postgres fragments per **STAGING** / **PROD**, uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME>-<env>.env`** and **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (**`DB_APP_NAME_SUFFIX`** required GitHub Variable, same value as **BehindTheMusicTree/infrastructure**). Requires **`REDEPLOYMENT_ROOT`** = Music Deck admin redeploy tree (e.g. **`/var/webhook/redeployment-the-music-deck-admin`**). See **CONTRIBUTING**.
+- **Ops — Sync env to server**: [`.github/workflows/sync-env-to-server.yml`](.github/workflows/sync-env-to-server.yml) (manual **workflow_dispatch**), same reusable workflow as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): builds API + Postgres fragments per **STAGING** / **PROD**, uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME>-<env>.env`** and **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (**`DB_APP_NAME_SUFFIX`** required GitHub Variable, same value as **BehindTheMusicTree/infrastructure**). API fragment includes **R2** **`S3_*`** (**`TMD_ADMIN_S3_ENDPOINT`** required; **`TMD_ADMIN_R2_ACCESS_KEY_ID`** / **`TMD_ADMIN_R2_SECRET_ACCESS_KEY`** secrets). Requires **`REDEPLOYMENT_ROOT`** = Music Deck admin redeploy tree (e.g. **`/var/webhook/redeployment-the-music-deck-admin`**). See **CONTRIBUTING**.
 
 - **API**: Jest + Supertest e2e coverage for `GET /health` (`apps/api`).
 
+- **API — data & storage**: Prisma + Postgres (**`Card`**, **`CardTrackTransition`**), **`GET/POST/PATCH/DELETE /cards`**, **`PUT /cards/:id/tracks-out`**, S3-compatible **`StorageModule`**, artwork **`GET/POST/DELETE /cards/:id/artwork`**, admin bearer **`ADMIN_API_TOKEN`**.
+
+- **`@repo/cards-domain`**: Shared card types + track graph for API + web.
+
+- **Web**: Cached **`API_URL`** fetchers (**`apps/web/lib/cards-api.ts`**), catalog/wishlist from API (**`deck-from-api.ts`**), **`revalidateTag('cards', 'max')`**, admin card artwork upload (**`app/admin/cards/[id]/`**).
+
+- **Ops — Sync env**: API **`S3_*`** from GitHub vars/secrets only; **`apply-tmd-admin-env-from-sync`** (infra) copies promoted sync into **`compose/<API>.env`** with no MinIO compose env on the server (**Cloudflare R2** for staging/prod).
+
+- **API Docker image**: **`prisma migrate deploy`** on container start (**`docker-entrypoint.sh`**); **`SKIP_PRISMA_MIGRATE=1`** to skip; **`packages/cards-domain`** + **`prisma/`** in build/run context.
+
+### Removed
+
+- _(Deferred until production bucket verified.)_ Bundled deck PNGs and static card JSON lists remain under **`apps/web/lib/cards/`** and **`apps/web/public/cards/artworks/deck/`** for now; remove after cutover.
+
 ### Changed
+
+- **Ops — Sync env to server**: Dropped MinIO third fragment and **`sync-minio-*`** jobs; API fragment requires **`TMD_ADMIN_S3_ENDPOINT`** and **R2** token secrets **`TMD_ADMIN_R2_ACCESS_KEY_ID`** / **`TMD_ADMIN_R2_SECRET_ACCESS_KEY`** (replaces **`TMD_ADMIN_MINIO_ROOT_*`**). No **`S3_FORCE_PATH_STYLE`** in the synced fragment (R2 uses virtual-hosted style with the account endpoint).
 
 - **Ops — Sync env to server**: Postgres fragment **`app_name`** uses **`TMD_ADMIN_API_APP_NAME` + `DB_APP_NAME_SUFFIX`** (no hardcoded **`_db`**). **`build-api-fragment`** and **`build-db-fragment`** require **`DB_APP_NAME_SUFFIX`** so the workflow fails fast when it is missing or empty.
 
@@ -71,7 +87,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 ### Documentation
 
 - **README**: Updated for the pnpm/Turborepo layout (`apps/web`, `apps/api`), root scripts, and Docker build entrypoint; **Sync env** pointer and corrected workflow filenames (**`api-release.yml`**, **`api-image-ghcr.yml`**, **`turbo-ci.yml`**).
-- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DATABASE_URL`**, **`TMD_ADMIN_POSTGRES_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres user+db / **`TMD_ADMIN_NODE_ENV`** / CORS); **`PORT`** documented as infrastructure-only (**`TMD_ADMIN_API_LISTEN_PORT`**); workflow table aligned with repo filenames.
+- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DATABASE_URL`**, **`TMD_ADMIN_POSTGRES_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres user+db / **`TMD_ADMIN_NODE_ENV`** / CORS, **`TMD_ADMIN_S3_*`**, **`TMD_ADMIN_R2_*`**); **`PORT`** documented as infrastructure-only (**`TMD_ADMIN_API_LISTEN_PORT`**); workflow table aligned with repo filenames.
 
 ## [0.1.0] - 2026-05-01
 

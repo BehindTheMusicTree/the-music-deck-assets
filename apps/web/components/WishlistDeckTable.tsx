@@ -4,14 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import CatalogCard from "@/components/catalog/CatalogCard";
 import {
   CARD_RARITY_ORDER,
-  CATALOG_CARD_TRACK_INDEX,
-  CATALOG_CARD_TRANSITION_PROPS,
   deriveTracksInFromTrackIndex,
   formatCatalogIntensity,
-  type WishlistEntry,
-  WISHLIST_ENTRIES,
   WISHLIST_KINDS,
 } from "@/lib/cards";
+import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { WishlistEntry } from "@/lib/cards/wishlist";
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";
 
@@ -71,7 +69,7 @@ function artworkPromptPreview(full: string): {
 
 function trackRefsLabel(
   ids: number[] | undefined,
-  byId: typeof CATALOG_CARD_TRACK_INDEX,
+  byId: CardTrackIndex,
 ): string {
   if (!ids || ids.length === 0) return "—";
   return ids
@@ -220,8 +218,12 @@ const CATALOG_DETAIL_CARD_BOX_H =
 
 export default function WishlistDeckTable({
   className = "",
+  wishlistEntries,
+  cardTrackIndex,
 }: {
   className?: string;
+  wishlistEntries: WishlistEntry[];
+  cardTrackIndex: CardTrackIndex;
 }) {
   const [filterKind, setFilterKind] = useState<string>("all");
   const [filterAppGenre, setFilterAppGenre] = useState<string>("all");
@@ -281,7 +283,7 @@ export default function WishlistDeckTable({
 
   const appGenreFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of WISHLIST_ENTRIES) s.add(e.appGenreLabel);
+    for (const e of wishlistEntries) s.add(e.appGenreLabel);
     return [...s].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: "base" }),
     );
@@ -289,7 +291,7 @@ export default function WishlistDeckTable({
 
   const lineGenreFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of WISHLIST_ENTRIES) {
+    for (const e of wishlistEntries) {
       s.add(e.card.genre ?? "__empty__");
     }
     return [...s].sort((a, b) => {
@@ -301,7 +303,7 @@ export default function WishlistDeckTable({
 
   const countryFilterOptions = useMemo(() => {
     const s = new Set<string>();
-    for (const e of WISHLIST_ENTRIES) {
+    for (const e of wishlistEntries) {
       s.add(e.card.country ?? "__empty__");
     }
     return [...s].sort((a, b) => {
@@ -312,7 +314,7 @@ export default function WishlistDeckTable({
   }, []);
 
   const visibleRows = useMemo(() => {
-    let rows = WISHLIST_ENTRIES;
+    let rows = wishlistEntries;
     if (filterKind !== "all") rows = rows.filter((r) => r.kind === filterKind);
     if (filterAppGenre !== "all") {
       rows = rows.filter((r) => r.appGenreLabel === filterAppGenre);
@@ -694,7 +696,7 @@ export default function WishlistDeckTable({
                           theme={theme}
                           small
                           enableZoom={false}
-                          {...CATALOG_CARD_TRANSITION_PROPS}
+                          cardTrackIndex={cardTrackIndex}
                         />
                       </div>
                     </div>
@@ -822,7 +824,7 @@ export default function WishlistDeckTable({
                             theme={d.theme}
                             enableZoom={false}
                             hoverLift={false}
-                            {...CATALOG_CARD_TRANSITION_PROPS}
+                            cardTrackIndex={cardTrackIndex}
                           />
                         </div>
                       </div>
@@ -847,17 +849,17 @@ export default function WishlistDeckTable({
                             "Tracks in",
                             trackRefsLabel(
                               deriveTracksInFromTrackIndex(
-                                CATALOG_CARD_TRACK_INDEX,
+                                cardTrackIndex,
                                 c.id,
                               ),
-                              CATALOG_CARD_TRACK_INDEX,
+                              cardTrackIndex,
                             ),
                           )}
                           {detailLine(
                             "Tracks out",
                             trackRefsLabel(
-                              CATALOG_CARD_TRACK_INDEX[c.id]?.tracksOut,
-                              CATALOG_CARD_TRACK_INDEX,
+                              cardTrackIndex[c.id]?.tracksOut,
+                              cardTrackIndex,
                             ),
                           )}
                           {detailLine(

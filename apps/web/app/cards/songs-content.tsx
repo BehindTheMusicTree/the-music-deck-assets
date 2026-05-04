@@ -12,21 +12,21 @@ import {
   type GenreName,
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
-import {
-  ALL_GENRE_CARDS,
-  DECK_SPOTLIGHT_CARDS,
-  WORLD_FLAG_CARDS,
-  WORLD_MIXED_CARDS,
-  CATALOG_CARD_TRACK_INDEX,
-  CARD_ARTWORK_BASE,
-  CARD_RARITY_ORDER,
-} from "@/lib/cards";
+import { CARD_RARITY_ORDER } from "@/lib/cards";
+import { getCatalogTrackIndex, getShippedCatalogCards } from "@/lib/cards-api";
+import { apiCardToCardData, type ApiCardJson } from "@/lib/deck-from-api";
 
-const allGenreCardsById = new Map(ALL_GENRE_CARDS.map((c) => [c.id, c]));
-function genreExample(id: number): CardData {
-  const card = allGenreCardsById.get(id);
-  if (!card) throw new Error(`Missing genre example card id ${id}`);
-  return card;
+function findShippedCard(shipped: ApiCardJson[], id: number): CardData {
+  const c = shipped.find((x) => x.id === id);
+  if (!c) throw new Error(`Missing shipped card id ${id}`);
+  return apiCardToCardData(c);
+}
+
+function firstWorldFlagCard(shipped: ApiCardJson[]): CardData {
+  const rows = shipped.filter((c) => c.rowKey.startsWith("world-"));
+  rows.sort((a, b) => a.id - b.id);
+  if (!rows[0]) throw new Error("No world flag cards in catalogue");
+  return apiCardToCardData(rows[0]);
 }
 
 function assertCardGenre(card: CardData, context: string): string {
@@ -41,14 +41,12 @@ function assertCardCountry(card: CardData, context: string): string {
   return c;
 }
 
-export function CardsSongsContent() {
-  const cardTrackIndex = CATALOG_CARD_TRACK_INDEX;
-  const anatomyCard = DECK_SPOTLIGHT_CARDS.find((c) => c.id === 39)!;
-  const takeFiveWorldFlag =
-    WORLD_FLAG_CARDS.find((c) => c.id === 76) ??
-    (() => {
-      throw new Error("WORLD_FLAG_CARDS must include Take Five (id 76)");
-    })();
+export async function CardsSongsContent() {
+  const shipped = await getShippedCatalogCards();
+  const cardTrackIndex = await getCatalogTrackIndex();
+  const genreExample = (id: number) => findShippedCard(shipped, id);
+  const anatomyCard = findShippedCard(shipped, 39);
+  const takeFiveWorldFlag = findShippedCard(shipped, 76);
   /** Shipped catalogue cards with no `tracksOut` and no peers pointing in — strips stay empty. */
   const noCatalogTrackTransitionExamples = [
     {
@@ -71,14 +69,7 @@ export function CardsSongsContent() {
     },
   ] as const;
 
-  const greatPretenderWorld =
-    WORLD_FLAG_CARDS.find((c) => c.id === 100) ??
-    WORLD_MIXED_CARDS.find((c) => c.id === 100) ??
-    (() => {
-      throw new Error(
-        "World catalogue must include The Great Pretender (id 100)",
-      );
-    })();
+  const greatPretenderWorld = findShippedCard(shipped, 100);
   const pistolsGodSaveTheQueen = genreExample(29);
   const classicalGodSaveTheQueen = genreExample(39);
   const vivaldiSpring = genreExample(54);
@@ -243,6 +234,8 @@ export function CardsSongsContent() {
     },
   );
 
+  const worldFlagSample = firstWorldFlagCard(shipped);
+
   const themeRuleExamples: Array<{
     key: string;
     title: string;
@@ -279,8 +272,8 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "Border and full theme always come from the country/region theme.",
-      card: WORLD_FLAG_CARDS[0],
-      theme: worldThemeForCountry(WORLD_FLAG_CARDS[0].country!),
+      card: worldFlagSample,
+      theme: worldThemeForCountry(worldFlagSample.country!),
     },
     {
       key: "region-subgenre",
@@ -289,7 +282,7 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "Border and full theme always come from the region theme (same rule as country-subgenre).",
-      card: WORLD_FLAG_CARDS.find((c) => c.id === 77)!,
+      card: findShippedCard(shipped, 77),
       theme: worldThemeForCountry("Bretagne"),
     },
     {
@@ -298,19 +291,7 @@ export function CardsSongsContent() {
       left: "Country/region.",
       right: "Genre.",
       border: "Border fades from country flag (left) to genre colour (right).",
-      card: {
-        id: 9101,
-        title: "La Macarena",
-        artist: "Los Del Rio",
-        year: "1993",
-        ability: "Festival Pulse",
-        abilityDesc: "Gain +10 popularity when played after a World card.",
-        pop: 9,
-        rarity: "Classic",
-        artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
-        country: "Spain",
-        genre: "Electronic",
-      },
+      card: findShippedCard(shipped, 9101),
       theme: worldThemeForCountry("Spain"),
     },
     {
@@ -320,7 +301,7 @@ export function CardsSongsContent() {
       right: "Genre-subgenre.",
       border:
         "Border fades from country flag (left) to subgenre/genre colour (right).",
-      card: WORLD_MIXED_CARDS.find((c) => c.id === 27)!,
+      card: findShippedCard(shipped, 27),
       theme: worldThemeForCountry("France"),
     },
     {
@@ -330,7 +311,7 @@ export function CardsSongsContent() {
       right: "Country-subgenre.",
       border:
         "No border — artwork fills the card edge-to-edge. UI bands (Genre strip, ability, stats, footer) stay inset as in normal mode.",
-      card: WORLD_FLAG_CARDS.find((c) => c.id === 26)!,
+      card: findShippedCard(shipped, 26),
       theme: worldThemeForCountry("Bretagne"),
     },
   ];

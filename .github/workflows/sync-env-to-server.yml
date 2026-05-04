@@ -4,6 +4,7 @@
 # Uploads /tmp/sync-env-<app>-<env>.env and merges keys into {REDEPLOYMENT_ROOT}-{env}/scripts/.env (reusable).
 # Infra redeploy promotes /tmp into scripts/sync-env/ then apply-tmd-admin-env-from-sync → compose/*.env.
 # Postgres fragment basename: TMD_ADMIN_API_APP_NAME + DB_APP_NAME_SUFFIX (same GitHub Variable as infrastructure / hear-the-music-tree-api; required, no default).
+# Card artwork storage: Cloudflare R2 (S3 API). API fragment carries S3_* from GitHub vars/secrets; no third compose fragment on the server.
 # Nest PORT is set on the server from infrastructure only (TMD_ADMIN_API_LISTEN_PORT in scripts/.env); do not put PORT in this fragment.
 name: Sync env to server
 
@@ -37,6 +38,12 @@ jobs:
           SERVER_DEPLOY_USERNAME: ${{ secrets.SERVER_DEPLOY_USERNAME }}
           SERVER_DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.SERVER_DEPLOY_SSH_PRIVATE_KEY }}
           TMD_ADMIN_DATABASE_URL: ${{ secrets.TMD_ADMIN_DATABASE_URL }}
+          TMD_ADMIN_S3_BUCKET: ${{ vars.TMD_ADMIN_S3_BUCKET }}
+          TMD_ADMIN_S3_PUBLIC_BASE_URL: ${{ vars.TMD_ADMIN_S3_PUBLIC_BASE_URL }}
+          TMD_ADMIN_S3_ENDPOINT: ${{ vars.TMD_ADMIN_S3_ENDPOINT }}
+          TMD_ADMIN_S3_REGION: ${{ vars.TMD_ADMIN_S3_REGION }}
+          TMD_ADMIN_R2_ACCESS_KEY_ID: ${{ secrets.TMD_ADMIN_R2_ACCESS_KEY_ID }}
+          TMD_ADMIN_R2_SECRET_ACCESS_KEY: ${{ secrets.TMD_ADMIN_R2_SECRET_ACCESS_KEY }}
         run: |
           set -euo pipefail
           : > fragment.env
@@ -48,6 +55,8 @@ jobs:
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
             SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY TMD_ADMIN_DATABASE_URL
+            TMD_ADMIN_S3_BUCKET TMD_ADMIN_S3_PUBLIC_BASE_URL TMD_ADMIN_S3_ENDPOINT
+            TMD_ADMIN_R2_ACCESS_KEY_ID TMD_ADMIN_R2_SECRET_ACCESS_KEY
           )
           missing=()
           for v in "${required[@]}"; do
@@ -60,6 +69,14 @@ jobs:
           fi
           val="$(printf '%s' "${TMD_ADMIN_DATABASE_URL}" | tr -d '\n\r')"
           printf '%s\n' "DATABASE_URL=${val}" >> fragment.env
+          s3_region="${TMD_ADMIN_S3_REGION:-us-east-1}"
+          printf '%s\n' "S3_REGION=${s3_region}" >> fragment.env
+          printf '%s\n' "S3_BUCKET=${TMD_ADMIN_S3_BUCKET}" >> fragment.env
+          printf '%s\n' "S3_PUBLIC_BASE_URL=${TMD_ADMIN_S3_PUBLIC_BASE_URL}" >> fragment.env
+          printf '%s\n' "S3_ENDPOINT=${TMD_ADMIN_S3_ENDPOINT}" >> fragment.env
+          ak="$(printf '%s' "${TMD_ADMIN_R2_ACCESS_KEY_ID}" | tr -d '\n\r')"
+          sk="$(printf '%s' "${TMD_ADMIN_R2_SECRET_ACCESS_KEY}" | tr -d '\n\r')"
+          printf '%s\n' "S3_ACCESS_KEY_ID=${ak}" "S3_SECRET_ACCESS_KEY=${sk}" >> fragment.env
           echo "API fragment ready for ${{ matrix.sync_env }}."
 
       - name: Upload API fragment artifact
@@ -165,3 +182,4 @@ jobs:
       fragment_artifact: sync-env-fragment-db-prod/fragment.env
       app_name: ${{ format('{0}{1}', vars.TMD_ADMIN_API_APP_NAME, vars.DB_APP_NAME_SUFFIX) }}
     secrets: inherit
+

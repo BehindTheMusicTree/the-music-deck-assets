@@ -1,0 +1,74 @@
+// Prisma schema for the Music Deck admin API.
+// Run `pnpm --filter api prisma migrate dev` after edits.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CardKind {
+  Genre
+  World
+  WorldBlend
+  WorldGenre
+  Planned
+}
+
+enum CardStatus {
+  Shipped
+  Wishlist
+  Planned
+}
+
+enum CardRarity {
+  Legendary
+  Classic
+  Banger
+  Niche
+}
+
+model Card {
+  id                 Int        @id
+  rowKey             String     @unique
+  status             CardStatus
+  kind               CardKind
+  title              String
+  artist             String?
+  year               String
+  genre              String?
+  country            String?
+  ability            String
+  abilityDesc        String
+  pop                Int
+  rarity             CardRarity
+  catalogNumber      Int?
+  // Artwork bytes live in the S3-compatible bucket; DB only stores the object key + metadata.
+  artworkKey         String?
+  artworkContentType String?
+  artworkBytes       Int?
+  artworkChecksum    String?
+  artworkOffsetY     Int?
+  artworkOverBorder  Boolean    @default(false)
+  artworkCreatedAt   DateTime?
+  artworkPrompt      String?    @db.Text
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  tracksOut CardTrackTransition[] @relation("from")
+  tracksIn  CardTrackTransition[] @relation("to")
+}
+
+model CardTrackTransition {
+  fromId Int
+  toId   Int
+
+  from Card @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to   Card @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@id([fromId, toId])
+  @@index([toId])
+}

@@ -58,7 +58,7 @@ export type RawCatalogRow = {
   theme: GenreTheme;
 };
 
-const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<AppGenreName, number> = {
+export const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<AppGenreName, number> = {
   Rock: 1,
   Mainstream: 2,
   Electronic: 3,
