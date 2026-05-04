@@ -136,7 +136,7 @@ jobs:
     name: Trigger VPS redeploy webhook
     needs:
       [build-api-image, set-remote-api-tag, deploy-preflight, resolve-version]
-    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v0.3.0
+    uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v1.0.4
     with:
       env: ${{ needs.resolve-version.outputs.env }}
       hook_id_base: ${{ vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE }}
