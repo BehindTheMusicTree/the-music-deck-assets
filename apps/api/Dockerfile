@@ -17,6 +17,8 @@ ENV NODE_ENV=production \
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
 COPY --from=builder /repo/package.json /repo/pnpm-workspace.yaml /repo/pnpm-lock.yaml ./
 COPY --from=builder /repo/node_modules ./node_modules
+# pnpm: runtime deps (e.g. reflect-metadata) are linked under apps/api/node_modules → ../node_modules/.pnpm
+COPY --from=builder /repo/apps/api/node_modules ./apps/api/node_modules
 COPY --from=builder /repo/apps/api/package.json ./apps/api/
 COPY --from=builder /repo/apps/api/dist ./apps/api/dist
 USER nestjs

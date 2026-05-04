@@ -48,6 +48,10 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ## [Unreleased]
 
+### Fixed
+
+- **API Docker image**: Runner stage copies **`apps/api/node_modules`** alongside the repo root store so **pnpm** symlinks (e.g. **`reflect-metadata`**) resolve when running **`node apps/api/dist/main.js`** (fixes **`MODULE_NOT_FOUND`** crash loop in production).
+
 ### Added
 
 - **Ops — Sync env to server**: [`.github/workflows/sync-env-to-server.yml`](.github/workflows/sync-env-to-server.yml) (manual **workflow_dispatch**), same reusable workflow as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): builds API + Postgres fragments per **STAGING** / **PROD**, uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME>-<env>.env`** and **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (**`DB_APP_NAME_SUFFIX`** required GitHub Variable, same value as **BehindTheMusicTree/infrastructure**). Requires **`REDEPLOYMENT_ROOT`** = Music Deck admin redeploy tree (e.g. **`/var/webhook/redeployment-the-music-deck-admin`**). See **CONTRIBUTING**.
@@ -55,10 +59,6 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 - **API**: Jest + Supertest e2e coverage for `GET /health` (`apps/api`).
 
 ### Changed
-
-- **Ops — Sync env to server**: **`sync-*`** jobs wait for **both** fragment builds before any SSH upload; per environment **DB** sync runs before **API** sync to avoid pushing one half when the other build failed and to align with redeploy **apply** order (rerun if API SSH fails after DB).
-
-- **Ops — Sync env to server**: Postgres fragment includes **`POSTGRES_APP_*`**; API fragment sends **`TMD_ADMIN_SYNC_DATABASE_*`** only. **`DATABASE_URL`** (infra **`TMD_ADMIN_DATABASE_URL_*`** secrets or composed host + **`POSTGRES_DB`** + sync), **`CORS_ORIGINS`** (**`TMD_ADMIN_CORS_ORIGINS_*`** vars), and **`PORT`** are applied on the VPS by **BehindTheMusicTree/infrastructure** **`apply-tmd-admin-env-from-sync.sh`** from **`scripts/.env`**. Requires **`docker-entrypoint-initdb.d`** for first **`PGDATA`** init. See **CONTRIBUTING** and infra README.
 
 - **Ops — Sync env to server**: Postgres fragment **`app_name`** uses **`TMD_ADMIN_API_APP_NAME` + `DB_APP_NAME_SUFFIX`** (no hardcoded **`_db`**). **`build-api-fragment`** and **`build-db-fragment`** require **`DB_APP_NAME_SUFFIX`** so the workflow fails fast when it is missing or empty.
 
@@ -69,7 +69,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 ### Documentation
 
 - **README**: Updated for the pnpm/Turborepo layout (`apps/web`, `apps/api`), root scripts, and Docker build entrypoint; **Sync env** pointer and corrected workflow filenames (**`api-release.yml`**, **`api-image-ghcr.yml`**, **`turbo-ci.yml`**).
-- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DB_APP_USER_PASSWORD`**, **`TMD_ADMIN_DB_SUPERUSER_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres bootstrap + app user + db / **`TMD_ADMIN_NODE_ENV`**); **`PORT`**, **`CORS_ORIGINS`**, and **`DATABASE_URL`** overrides documented as **infrastructure** Server setup only; workflow table aligned with repo filenames.
+- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** secrets/vars (**`TMD_ADMIN_DATABASE_URL`**, **`TMD_ADMIN_POSTGRES_PASSWORD`**, **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, optional Postgres user+db / **`TMD_ADMIN_NODE_ENV`** / CORS); **`PORT`** documented as infrastructure-only (**`TMD_ADMIN_API_LISTEN_PORT`**); workflow table aligned with repo filenames.
 
 ## [0.1.0] - 2026-05-01
 
