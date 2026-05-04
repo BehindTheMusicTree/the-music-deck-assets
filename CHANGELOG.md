@@ -52,8 +52,6 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 - **API Docker image**: After **`pnpm --filter api build`**, the image runs **`pnpm --filter api --prod deploy --legacy /deploy/api`** so the runner copies a **self-contained** deploy tree (**`dist/`** + production **`node_modules`**, local **`.pnpm`**). Fixes **`MODULE_NOT_FOUND`** for **`reflect-metadata`** and avoids fragile copies of the monorepo **`node_modules`** layout (**`--legacy`**: deploy without **`injectWorkspacePackages`** in **`pnpm-workspace.yaml`**).
 
-- **API Docker `EXPOSE`**: **`EXPOSE 3000`** matches infrastructure **`redeployment_app_tmd_admin_api_listen_port`** (default **3000** in **BehindTheMusicTree/infrastructure** **`ansible/roles/redeployment_app/defaults/main.yml`**). **`PORT`** is **not** set in the image: **Ansible** writes **`TMD_ADMIN_API_LISTEN_PORT`** into **`scripts/.env`**, and **`apply-tmd-admin-env-from-sync.sh`** copies it into **`compose/<API>.env` `PORT`** on the server (see **`deploy/redeployment/the-music-deck-admin/apply-tmd-admin-env-from-sync.sh`** in that repo).
-
 ### Added
 
 - **Ops — Sync env to server**: [`.github/workflows/sync-env-to-server.yml`](.github/workflows/sync-env-to-server.yml) (manual **workflow_dispatch**), same reusable workflow as [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): builds API + Postgres fragments per **STAGING** / **PROD**, uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME>-<env>.env`** and **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (**`DB_APP_NAME_SUFFIX`** required GitHub Variable, same value as **BehindTheMusicTree/infrastructure**). Requires **`REDEPLOYMENT_ROOT`** = Music Deck admin redeploy tree (e.g. **`/var/webhook/redeployment-the-music-deck-admin`**). See **CONTRIBUTING**.
@@ -64,7 +62,9 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 - **Ops — Sync env to server**: Postgres fragment **`app_name`** uses **`TMD_ADMIN_API_APP_NAME` + `DB_APP_NAME_SUFFIX`** (no hardcoded **`_db`**). **`build-api-fragment`** and **`build-db-fragment`** require **`DB_APP_NAME_SUFFIX`** so the workflow fails fast when it is missing or empty.
 
-- **Ops — Sync env**: API fragment no longer includes **`PORT`**. Nest listen port is **`TMD_ADMIN_API_LISTEN_PORT`** in **infrastructure** only (Ansible **`scripts/.env`**; optional GitHub Variable, default **3000**); **`apply-tmd-admin-env-from-sync.sh`** sets **`compose/<API>.env` `PORT`** on redeploy.
+- **Ops — Sync env**: API fragment no longer includes **`PORT`**. Nest listen port is **`TMD_ADMIN_API_LISTEN_PORT`** in **infrastructure** only (Ansible **`scripts/.env`**; optional GitHub Variable, default **3021**); **`apply-tmd-admin-env-from-sync.sh`** sets **`compose/<API>.env` `PORT`** on redeploy.
+
+- **API**: **`EXPOSE 3021`** in **`apps/api/Dockerfile`** and default **`PORT`** fallback **`3021`** in **`main.ts`** when **`PORT`** is unset (matches infrastructure **`TMD_ADMIN_API_LISTEN_PORT`** default).
 
 - **CI — publish**: Aligned with [hear-the-music-tree-api](https://github.com/BehindTheMusicTree/hear-the-music-tree-api): GitHub Environments **`STAGING`** / **`PROD`**; **`set-image-tag-on-server.yml@main`**; **`call-redeployment-webhook.yml@v0.3.0`** with **`hook_id_base`**. API image pushes to **GHCR** (`ghcr.io/<GHCR_IMAGE_NAMESPACE>/<TMD_ADMIN_API_APP_NAME>:<tag>`) with **`GITHUB_TOKEN`** and **`packages: write`**; Docker Hub removed. Preflight **`check-pinned-tags`** (deploy vars only; no DB/AFP pins). **`call-redeployment-webhook`** uses **`TMD_ADMIN_WEBHOOK_SECRET_*`** when **`hook_id_base`** matches **`vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE`** — publish now requires that variable and passes it as **`hook_id_base`** (not **`REDEPLOYMENT_HOOK_ID_BASE`** alone).
 
