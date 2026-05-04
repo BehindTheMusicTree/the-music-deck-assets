@@ -1,11 +1,12 @@
 # yaml-language-server: $schema=https://gist.githubusercontent.com/sargunv/c2ca41a08391cd06feaad97aece309e4/raw/empty-json-schema.json
 # Sync Nest API + Postgres compose env fragments to the VPS (BehindTheMusicTree/github-workflows).
-# Same pattern as hear-the-music-tree-api: build fragment per env → artifact → reusable sync-env-to-server.
+# Pattern: build fragment per env → artifact → reusable sync-env-to-server.
 # Uploads /tmp/sync-env-<app>-<env>.env and merges keys into {REDEPLOYMENT_ROOT}-{env}/scripts/.env (reusable).
 # Infra redeploy promotes /tmp into scripts/sync-env/ then apply-tmd-admin-env-from-sync → compose/*.env.
 # Postgres fragment basename: TMD_ADMIN_API_APP_NAME + DB_APP_NAME_SUFFIX (same GitHub Variable as infrastructure / hear-the-music-tree-api; required, no default).
 # Card artwork storage: Cloudflare R2 (S3 API). API fragment carries S3_* from GitHub vars/secrets; no third compose fragment on the server.
 # Nest PORT is set on the server from infrastructure only (TMD_ADMIN_API_LISTEN_PORT in scripts/.env); do not put PORT in this fragment.
+# DATABASE_URL (Prisma) is set by infrastructure only — not in this API fragment (same merge discipline as PORT).
 name: Sync env to server
 
 on:
@@ -37,7 +38,6 @@ jobs:
           TMD_ADMIN_CORS_ORIGINS: ${{ vars.TMD_ADMIN_CORS_ORIGINS }}
           SERVER_DEPLOY_USERNAME: ${{ secrets.SERVER_DEPLOY_USERNAME }}
           SERVER_DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.SERVER_DEPLOY_SSH_PRIVATE_KEY }}
-          TMD_ADMIN_DATABASE_URL: ${{ secrets.TMD_ADMIN_DATABASE_URL }}
           TMD_ADMIN_S3_BUCKET: ${{ vars.TMD_ADMIN_S3_BUCKET }}
           TMD_ADMIN_S3_PUBLIC_BASE_URL: ${{ vars.TMD_ADMIN_S3_PUBLIC_BASE_URL }}
           TMD_ADMIN_S3_ENDPOINT: ${{ vars.TMD_ADMIN_S3_ENDPOINT }}
@@ -54,7 +54,7 @@ jobs:
           fi
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
-            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY TMD_ADMIN_DATABASE_URL
+            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY
             TMD_ADMIN_S3_BUCKET TMD_ADMIN_S3_PUBLIC_BASE_URL TMD_ADMIN_S3_ENDPOINT
             TMD_ADMIN_R2_ACCESS_KEY_ID TMD_ADMIN_R2_SECRET_ACCESS_KEY
           )
@@ -67,8 +67,6 @@ jobs:
             echo "ERROR: Missing required vars or secrets: ${missing[*]}"
             exit 1
           fi
-          val="$(printf '%s' "${TMD_ADMIN_DATABASE_URL}" | tr -d '\n\r')"
-          printf '%s\n' "DATABASE_URL=${val}" >> fragment.env
           s3_region="${TMD_ADMIN_S3_REGION:-us-east-1}"
           printf '%s\n' "S3_REGION=${s3_region}" >> fragment.env
           printf '%s\n' "S3_BUCKET=${TMD_ADMIN_S3_BUCKET}" >> fragment.env
@@ -103,11 +101,12 @@ jobs:
           REDEPLOYMENT_ROOT: ${{ vars.REDEPLOYMENT_ROOT }}
           TMD_ADMIN_API_APP_NAME: ${{ vars.TMD_ADMIN_API_APP_NAME }}
           DB_APP_NAME_SUFFIX: ${{ vars.DB_APP_NAME_SUFFIX }}
-          TMD_ADMIN_POSTGRES_USER: ${{ vars.TMD_ADMIN_POSTGRES_USER }}
-          TMD_ADMIN_POSTGRES_DB: ${{ vars.TMD_ADMIN_POSTGRES_DB }}
+          TMD_ADMIN_DB_SUPERUSER: ${{ vars.TMD_ADMIN_DB_SUPERUSER }}
+          TMD_ADMIN_DB_APP_USER: ${{ vars.TMD_ADMIN_DB_APP_USER }}
           SERVER_DEPLOY_USERNAME: ${{ secrets.SERVER_DEPLOY_USERNAME }}
           SERVER_DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.SERVER_DEPLOY_SSH_PRIVATE_KEY }}
-          TMD_ADMIN_POSTGRES_PASSWORD: ${{ secrets.TMD_ADMIN_POSTGRES_PASSWORD }}
+          TMD_ADMIN_DB_SUPERUSER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_SUPERUSER_PASSWORD }}
+          TMD_ADMIN_DB_APP_USER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_APP_USER_PASSWORD }}
         run: |
           set -euo pipefail
           : > fragment.env
@@ -117,11 +116,12 @@ jobs:
             exit 1
           fi
           db_app_name="${api}${DB_APP_NAME_SUFFIX}"
-          pg_user="${TMD_ADMIN_POSTGRES_USER:-postgres}"
-          pg_db="${TMD_ADMIN_POSTGRES_DB:-app}"
+          pg_super="${TMD_ADMIN_DB_SUPERUSER:-postgres}"
+          pg_app="${TMD_ADMIN_DB_APP_USER:-tmd_admin_app}"
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
-            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY TMD_ADMIN_POSTGRES_PASSWORD
+            SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY
+            TMD_ADMIN_DB_SUPERUSER_PASSWORD TMD_ADMIN_DB_APP_USER_PASSWORD
           )
           missing=()
           for v in "${required[@]}"; do
@@ -132,9 +132,12 @@ jobs:
             echo "ERROR: Missing required vars or secrets: ${missing[*]}"
             exit 1
           fi
-          pw="$(printf '%s' "${TMD_ADMIN_POSTGRES_PASSWORD}" | tr -d '\n\r')"
-          printf '%s\n' "POSTGRES_USER=${pg_user}" "POSTGRES_DB=${pg_db}" >> fragment.env
-          printf 'POSTGRES_PASSWORD=%s\n' "${pw}" >> fragment.env
+          super_pw="$(printf '%s' "${TMD_ADMIN_DB_SUPERUSER_PASSWORD}" | tr -d '\n\r')"
+          app_pw="$(printf '%s' "${TMD_ADMIN_DB_APP_USER_PASSWORD}" | tr -d '\n\r')"
+          printf '%s\n' "POSTGRES_USER=${pg_super}" "POSTGRES_DB=app" >> fragment.env
+          printf 'POSTGRES_PASSWORD=%s\n' "${super_pw}" >> fragment.env
+          printf '%s\n' "POSTGRES_APP_USER=${pg_app}" >> fragment.env
+          printf 'POSTGRES_APP_PASSWORD=%s\n' "${app_pw}" >> fragment.env
           echo "DB fragment ready for ${{ matrix.sync_env }} (service basename ${db_app_name} = API + DB_APP_NAME_SUFFIX)."
 
       - name: Upload DB fragment artifact
@@ -182,4 +185,3 @@ jobs:
       fragment_artifact: sync-env-fragment-db-prod/fragment.env
       app_name: ${{ format('{0}{1}', vars.TMD_ADMIN_API_APP_NAME, vars.DB_APP_NAME_SUFFIX) }}
     secrets: inherit
-
