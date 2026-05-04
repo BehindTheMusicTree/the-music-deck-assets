@@ -50,7 +50,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Fixed
 
-- **API Docker image**: Runner stage copies **`apps/api/node_modules`** alongside the repo root store so **pnpm** symlinks (e.g. **`reflect-metadata`**) resolve when running **`node apps/api/dist/main.js`** (fixes **`MODULE_NOT_FOUND`** crash loop in production).
+- **API Docker image**: After **`pnpm --filter api build`**, the image runs **`pnpm --filter api --prod deploy --legacy /deploy/api`** so the runner copies a **self-contained** deploy tree (**`dist/`** + production **`node_modules`**, local **`.pnpm`**). Fixes **`MODULE_NOT_FOUND`** for **`reflect-metadata`** and avoids fragile copies of the monorepo **`node_modules`** layout (**`--legacy`**: deploy without **`injectWorkspacePackages`** in **`pnpm-workspace.yaml`**).
 
 ### Added
 

@@ -8,19 +8,16 @@ COPY apps/web/package.json apps/web/
 RUN pnpm install --frozen-lockfile
 COPY apps/api apps/api
 RUN pnpm --filter api build
+# Portable prod tree: own node_modules + dist (no reliance on monorepo path layout). --legacy: workspace without injectWorkspacePackages.
+RUN pnpm --filter api --prod deploy --legacy /deploy/api
 
 FROM node:22-alpine AS runner
 ARG APP_VERSION=unknown
-WORKDIR /repo
+WORKDIR /app
 ENV NODE_ENV=production \
     APP_VERSION=$APP_VERSION
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
-COPY --from=builder /repo/package.json /repo/pnpm-workspace.yaml /repo/pnpm-lock.yaml ./
-COPY --from=builder /repo/node_modules ./node_modules
-# pnpm: runtime deps (e.g. reflect-metadata) are linked under apps/api/node_modules → ../node_modules/.pnpm
-COPY --from=builder /repo/apps/api/node_modules ./apps/api/node_modules
-COPY --from=builder /repo/apps/api/package.json ./apps/api/
-COPY --from=builder /repo/apps/api/dist ./apps/api/dist
+COPY --from=builder --chown=nestjs:nodejs /deploy/api .
 USER nestjs
 EXPOSE 3001
-CMD ["node", "apps/api/dist/main.js"]
+CMD ["node", "dist/main.js"]
