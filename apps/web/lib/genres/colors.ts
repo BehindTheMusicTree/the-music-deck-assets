@@ -325,6 +325,61 @@ export function resolveThemeSelection({
   };
 }
 
+/**
+ * Like {@link resolveThemeSelection}, but never throws when `genre` is absent from the canonical
+ * model (e.g. wishlist notes). Unknown strings render as a neutral genre-only strip using
+ * `fallbackTheme`.
+ */
+export function resolveThemeSelectionLoose(params: {
+  genre: string;
+  country?: string;
+  fallbackTheme?: GenreTheme;
+}): ResolvedThemeSelection {
+  const fallbackTheme = params.fallbackTheme ?? APP_GENRE_THEMES.Mainstream;
+  const g = params.genre ?? "";
+  if (!g.trim()) {
+    return {
+      theme: fallbackTheme,
+      displayGenre: "—",
+      leftLabel: "—",
+      rightLabel: "—",
+      genreStripPrimaryBorder: fallbackTheme.border,
+      genreStripSubBorder: fallbackTheme.border,
+      selectionKind: "genre-only",
+      mirrorCountryTypeStripRight: false,
+    };
+  }
+  try {
+    return resolveThemeSelection({
+      genre: g,
+      country: params.country,
+    });
+  } catch {
+    const trimmed = g.trim();
+    const t = fallbackTheme;
+    return {
+      theme: t,
+      displayGenre: trimmed,
+      leftLabel: trimmed,
+      rightLabel: "—",
+      genreStripPrimaryBorder: t.border,
+      genreStripSubBorder: t.border,
+      selectionKind: "genre-only",
+      mirrorCountryTypeStripRight: false,
+    };
+  }
+}
+
+/** Border/icon theme from a genre string; unknown → Mainstream (transition strips, etc.). */
+export function themeFromGenreLoose(genre: string): GenreTheme {
+  if (!genre.trim()) return APP_GENRE_THEMES.Mainstream;
+  try {
+    return resolveThemeSelection({ genre }).theme;
+  } catch {
+    return APP_GENRE_THEMES.Mainstream;
+  }
+}
+
 export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
   Object.entries(COUNTRY_DATA).map(([k, v]) => [
     k,

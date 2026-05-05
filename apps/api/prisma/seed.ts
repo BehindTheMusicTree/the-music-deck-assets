@@ -1,6 +1,12 @@
 /** Catalog seed — `rowKey` = slugified `title-year`; see ./README.md */
 import { basename } from "node:path";
 import { CardKind, PrismaClient } from "@prisma/client";
+
+function persistedArtist(value: string | undefined | null): string | null {
+  if (value == null) return null;
+  const t = value.trim();
+  return t.length > 0 ? t : null;
+}
 import {
   APP_GENRE_NAMES,
   assignCatalogRowKeys,
@@ -204,9 +210,8 @@ async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<voi
     where: { id: card.id },
     create: {
       id: card.id,
-      artist: card.artist ?? null,
+      artist: persistedArtist(card.artist),
       year: card.year,
-      genre: card.genre,
       genreId: genreRow?.id ?? null,
       country: card.country ?? null,
       ability: card.ability,
@@ -222,9 +227,8 @@ async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<voi
       soundcloudUrl: STREAMING_URLS[card.id]?.soundcloudUrl ?? null,
     },
     update: {
-      artist: card.artist ?? null,
+      artist: persistedArtist(card.artist),
       year: card.year,
-      genre: card.genre,
       genreId: genreRow?.id ?? undefined,
       country: card.country ?? null,
       ability: card.ability,
@@ -250,7 +254,7 @@ async function upsertWishlist(row: WishlistRow): Promise<void> {
       id: def.id,
       rowKey,
       title: def.title,
-      artist: def.artist ?? null,
+      artist: persistedArtist(def.artist),
       year: def.year ?? null,
       genre: def.genre ?? null,
       country: def.country ?? null,
@@ -269,7 +273,7 @@ async function upsertWishlist(row: WishlistRow): Promise<void> {
     update: {
       rowKey,
       title: def.title,
-      artist: def.artist ?? null,
+      artist: persistedArtist(def.artist),
       year: def.year ?? null,
       genre: def.genre ?? null,
       country: def.country ?? null,

@@ -68,6 +68,11 @@ function artworkBasename(artworkUrl: string | undefined): string {
   return parts[parts.length - 1] ?? artworkUrl;
 }
 
+/** Same source as `Card` artwork img: API uses `artworkUrl`, bundled deck uses `artwork`. */
+function cardArtworkSrc(card: CatalogEntry["card"]): string | undefined {
+  return card.artworkUrl ?? card.artwork;
+}
+
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;
 
 /** Parse date-only or local datetime for sorting; invalid or missing → null. */
@@ -205,15 +210,15 @@ function compareRows(
       return s;
     }
     case "artwork": {
-      const ha = a.card.artwork ? 1 : 0;
-      const hb = b.card.artwork ? 1 : 0;
+      const sa = cardArtworkSrc(a.card);
+      const sb = cardArtworkSrc(b.card);
+      const ha = sa ? 1 : 0;
+      const hb = sb ? 1 : 0;
       if (ha !== hb) return cmp(ha, hb);
       return (
-        artworkBasename(a.card.artwork).localeCompare(
-          artworkBasename(b.card.artwork),
-          undefined,
-          { sensitivity: "base" },
-        ) * dir
+        artworkBasename(sa).localeCompare(artworkBasename(sb), undefined, {
+          sensitivity: "base",
+        }) * dir
       );
     }
     case "artworkCreatedAt": {
@@ -881,6 +886,7 @@ export default function CatalogDeckTable({
                       catalogIntensity,
                       catalogEra,
                     } = entry;
+                    const artworkSrc = cardArtworkSrc(card);
                     return (
                       <tr
                         key={rowKey}
@@ -897,7 +903,7 @@ export default function CatalogDeckTable({
                         }}
                       >
                         <td className="py-2 pl-2 pr-1">
-                          {card.artwork ? (
+                          {artworkSrc ? (
                             <div
                               className="mx-auto flex justify-center"
                               style={{
@@ -1100,12 +1106,12 @@ export default function CatalogDeckTable({
                           })()}
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
-                          {card.artwork ? (
+                          {artworkSrc ? (
                             <span
                               className="font-mono text-[11px] leading-snug break-all text-white/85"
-                              title={card.artwork}
+                              title={artworkSrc}
                             >
-                              {artworkBasename(card.artwork)}
+                              {artworkBasename(artworkSrc)}
                             </span>
                           ) : (
                             <span className="text-muted/80">—</span>
@@ -1199,7 +1205,7 @@ export default function CatalogDeckTable({
                           height: 150 * 4,
                         }}
                       >
-                        {card.artwork ? (
+                        {cardArtworkSrc(card) ? (
                           <div
                             style={{
                               transform: `scale(${CATALOG_GRID_THUMB_SCALE})`,

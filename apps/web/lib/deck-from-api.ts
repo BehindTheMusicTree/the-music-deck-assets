@@ -8,6 +8,7 @@ import {
   displayGenreLabel,
   isCountrySubgenre,
   resolveThemeSelection,
+  resolveThemeSelectionLoose,
   subgenreIntensity,
   themeForCountry,
 } from "@/lib/genres";
@@ -98,19 +99,6 @@ function resolveCardTheme(
   fallback: GenreTheme,
 ): GenreTheme {
   return apiCard.genreTheme ?? fallback;
-}
-
-/** Wishlist genres are free-form notes; unknown values skip canonical theme rules. */
-function wishlistResolvedThemeOrNull(
-  genre: string,
-  country?: string,
-): ReturnType<typeof resolveThemeSelection> | null {
-  if (!genre.trim()) return null;
-  try {
-    return resolveThemeSelection({ genre, country });
-  } catch {
-    return null;
-  }
 }
 
 function rawCatalogRowFromApiShipped(a: ApiCardJson): RawCatalogRow {
@@ -224,8 +212,10 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   const kind: WishlistKind = "Wishlist";
   const fallbackTheme = card.country
     ? themeForCountry(card.country)
-    : (wishlistResolvedThemeOrNull(card.genre)?.theme ??
-      APP_GENRE_THEMES.Mainstream);
+    : resolveThemeSelectionLoose({
+        genre: card.genre ?? "",
+        fallbackTheme: APP_GENRE_THEMES.Mainstream,
+      }).theme;
   const theme = resolveCardTheme(a, fallbackTheme);
   return { rowKey: a.rowKey, kind, card, theme };
 }
@@ -235,8 +225,12 @@ function wishlistRootGenreLabel(card: CardData, rowKey: string): string {
     return "World";
   }
   if (!card.genre) return "—";
-  const r = wishlistResolvedThemeOrNull(card.genre, card.country);
-  if (r?.resolvedGenre) {
+  const r = resolveThemeSelectionLoose({
+    genre: card.genre,
+    country: card.country,
+    fallbackTheme: APP_GENRE_THEMES.Mainstream,
+  });
+  if (r.resolvedGenre) {
     return displayGenreLabel(r.resolvedGenre as RootGenreName);
   }
   return card.genre;
@@ -248,10 +242,11 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
       `Wishlist row "${rowKey}" (${card.title}): missing genre for intensity`,
     );
   }
-  const resolved = wishlistResolvedThemeOrNull(card.genre, card.country);
-  if (!resolved) {
-    return "POP";
-  }
+  const resolved = resolveThemeSelectionLoose({
+    genre: card.genre,
+    country: card.country,
+    fallbackTheme: APP_GENRE_THEMES.Mainstream,
+  });
   if (resolved.resolvedSubgenre) {
     return subgenreIntensity(resolved.resolvedSubgenre);
   }

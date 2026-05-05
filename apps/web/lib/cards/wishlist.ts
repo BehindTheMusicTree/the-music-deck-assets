@@ -2,12 +2,13 @@ import type { CardData } from "@/components/Card";
 import { assignCatalogRowKeys } from "@repo/cards-domain";
 import type { GenreTheme } from "@/lib/card-theme-types";
 import {
+  APP_GENRE_THEMES,
   type RootGenreName,
   type Intensity,
   appGenreIntensity,
   displayGenreLabel,
   isCountrySubgenre,
-  resolveThemeSelection,
+  resolveThemeSelectionLoose,
   subgenreIntensity,
   themeForCountry,
 } from "@/lib/genres";
@@ -62,7 +63,10 @@ function wishlistDefToInterim(
   const kind: WishlistKind = d.kind === "Wishlist" ? "Wishlist" : "Card";
   const theme = d.country
     ? themeForCountry(d.country)
-    : resolveThemeSelection({ genre: d.genre ?? "" }).theme;
+    : resolveThemeSelectionLoose({
+        genre: d.genre ?? "",
+        fallbackTheme: APP_GENRE_THEMES.Mainstream,
+      }).theme;
   return { rowKey, kind, card, theme };
 }
 
@@ -71,13 +75,15 @@ function wishlistRootGenreLabel(card: CardData, rowKey: string): string {
     return "World";
   }
   if (!card.genre) return "—";
-  const r = resolveThemeSelection({ genre: card.genre, country: card.country });
+  const r = resolveThemeSelectionLoose({
+    genre: card.genre,
+    country: card.country,
+    fallbackTheme: APP_GENRE_THEMES.Mainstream,
+  });
   if (r.resolvedGenre) {
     return displayGenreLabel(r.resolvedGenre as RootGenreName);
   }
-  throw new Error(
-    `Wishlist row "${rowKey}" (genre "${card.genre}") has no resolved app genre`,
-  );
+  return card.genre;
 }
 
 function wishlistIntensity(card: CardData, rowKey: string): Intensity {
@@ -86,9 +92,10 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
       `Wishlist row "${rowKey}" (${card.title}): missing genre for intensity`,
     );
   }
-  const resolved = resolveThemeSelection({
+  const resolved = resolveThemeSelectionLoose({
     genre: card.genre,
     country: card.country,
+    fallbackTheme: APP_GENRE_THEMES.Mainstream,
   });
   if (resolved.resolvedSubgenre) {
     return subgenreIntensity(resolved.resolvedSubgenre);
@@ -96,9 +103,7 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
   if (resolved.resolvedGenre) {
     return appGenreIntensity(resolved.resolvedGenre as RootGenreName);
   }
-  throw new Error(
-    `Wishlist row "${rowKey}" (${card.title}): cannot resolve intensity`,
-  );
+  return "POP";
 }
 
 const _filteredWishlistDefs = WISHLIST_CARD_DEFS.filter(

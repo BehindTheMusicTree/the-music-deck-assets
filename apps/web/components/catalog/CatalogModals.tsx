@@ -165,7 +165,9 @@ export function CatalogEntryDetailModal({
                 {detailLine("Rarity", c.rarity)}
                 {detailLine(
                   "Artwork file",
-                  c.artwork ? artworkBasename(c.artwork) : "—",
+                  c.artworkUrl ?? c.artwork
+                    ? artworkBasename(c.artworkUrl ?? c.artwork)
+                    : "—",
                 )}
                 {detailLine(
                   "Art created",

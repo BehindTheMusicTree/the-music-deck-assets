@@ -9,6 +9,8 @@ import {
   Max,
   MaxLength,
   Min,
+  MinLength,
+  ValidateIf,
 } from "class-validator";
 
 const CARD_STATUS_VALUES = ["Shipped", "Wishlist"] as const;
@@ -368,6 +370,7 @@ export class CreateCardDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @MinLength(1)
   @MaxLength(200)
   artist?: string;
 
@@ -508,11 +511,12 @@ export class UpdateCardDto {
   @MaxLength(200)
   title?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ nullable: true })
   @IsOptional()
+  @ValidateIf((_, v) => v !== undefined && v !== null)
   @IsString()
   @MaxLength(200)
-  artist?: string;
+  artist?: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()

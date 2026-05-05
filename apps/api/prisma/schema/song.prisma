@@ -1,9 +1,9 @@
 model SongCard {
   id            Int      @id
   card          Card     @relation(fields: [id], references: [id], onDelete: Cascade)
+  /// When set, must be non-empty after trim (DB check).
   artist        String?
   year          String?
-  genre         String
   genreId       Int?
   genreRef      Genre?   @relation(fields: [genreId], references: [id])
   country       String?

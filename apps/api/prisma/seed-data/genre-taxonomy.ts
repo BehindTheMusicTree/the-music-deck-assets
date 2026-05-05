@@ -111,27 +111,3 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
     });
   }
 }
-
-export async function backfillCardGenreIds(
-  prisma: PrismaClient,
-): Promise<void> {
-  const genres = await prisma.genre.findMany({
-    select: { id: true, name: true },
-  });
-  const byName = new Map(genres.map((g) => [g.name, g.id]));
-  const songCards = await prisma.songCard.findMany({
-    where: { genreId: null },
-    select: { id: true, genre: true },
-  });
-  let filled = 0;
-  for (const sc of songCards) {
-    const genreId = sc.genre ? byName.get(sc.genre) : undefined;
-    if (genreId) {
-      await prisma.songCard.update({ where: { id: sc.id }, data: { genreId } });
-      filled++;
-    }
-  }
-  console.log(
-    `Seed: backfilled genreId on ${filled}/${songCards.length} song cards.`,
-  );
-}

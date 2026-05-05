@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://gist.githubusercontent.com/sargunv/c2ca41a08391cd06feaad97aece309e4/raw/empty-json-schema.json
 # API image + server tag + redeploy.
-# Branch pushes: `develop` → staging; `main` → prod. Tags `v*`: prerelease → staging, stable → prod.
+# Branch pushes: `develop` → staging; `main` → prod.
+# Tags `dev` / `dev-*` → staging; tags `v*` (releases) → prod.
 # `deployment_environment` = GitHub Environment STAGING / PROD; `env` = slug for org workflows (staging / prod).
 name: API release
 
@@ -11,6 +12,8 @@ on:
     branches: [main, develop]
     tags:
       - "v*"
+      - "dev"
+      - "dev-*"
 
 permissions:
   contents: read
@@ -38,25 +41,42 @@ jobs:
       - name: Set version and environment
         id: version
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            VERSION="${GITHUB_REF#refs/tags/v}"
-            if [[ "$VERSION" == *-* ]]; then
-              {
-                echo "app_version=$VERSION"
-                echo "image_tag=$VERSION"
-                echo "env=staging"
-                echo "deployment_environment=STAGING"
-              } >> "$GITHUB_OUTPUT"
-              echo "Prerelease/dev tag -> STAGING, staging"
-            else
-              {
-                echo "app_version=$VERSION"
-                echo "image_tag=$VERSION"
-                echo "env=prod"
-                echo "deployment_environment=PROD"
-              } >> "$GITHUB_OUTPUT"
-              echo "Release tag -> PROD, production"
+          if [[ "$GITHUB_REF" == refs/tags/dev ]]; then
+            VERSION=$(tr -d '[:space:]' < VERSION)
+            if [ -z "$VERSION" ]; then
+              echo "Error: VERSION file is empty or missing."
+              exit 1
             fi
+            {
+              echo "app_version=${VERSION}-dev"
+              echo "image_tag=dev"
+              echo "env=staging"
+              echo "deployment_environment=STAGING"
+            } >> "$GITHUB_OUTPUT"
+            echo "dev tag -> STAGING"
+          elif [[ "$GITHUB_REF" == refs/tags/dev-* ]]; then
+            VERSION=$(tr -d '[:space:]' < VERSION)
+            if [ -z "$VERSION" ]; then
+              echo "Error: VERSION file is empty or missing."
+              exit 1
+            fi
+            TAG="${GITHUB_REF#refs/tags/}"
+            {
+              echo "app_version=${VERSION}-${TAG}"
+              echo "image_tag=${TAG}"
+              echo "env=staging"
+              echo "deployment_environment=STAGING"
+            } >> "$GITHUB_OUTPUT"
+            echo "dev-* tag -> STAGING (${TAG})"
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            {
+              echo "app_version=$VERSION"
+              echo "image_tag=$VERSION"
+              echo "env=prod"
+              echo "deployment_environment=PROD"
+            } >> "$GITHUB_OUTPUT"
+            echo "Release tag v${VERSION} -> PROD"
           elif [[ "$GITHUB_REF" == refs/heads/develop ]]; then
             VERSION=$(tr -d '[:space:]' < VERSION)
             if [ -z "$VERSION" ]; then
@@ -85,7 +105,7 @@ jobs:
             echo "main push -> PROD, prod"
           else
             echo "Error: Unsupported ref '$GITHUB_REF'."
-            echo "Only branches 'main', 'develop', or tags matching 'v*' are supported."
+            echo "Only branches 'main', 'develop', tags 'dev' / 'dev-*', or release tags matching 'v*' are supported."
             exit 1
           fi
 

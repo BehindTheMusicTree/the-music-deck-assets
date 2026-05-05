@@ -58,7 +58,6 @@ CREATE TABLE "SongCard" (
     "id" INTEGER NOT NULL,
     "artist" TEXT,
     "year" TEXT,
-    "genre" TEXT NOT NULL,
     "genreId" INTEGER,
     "country" TEXT,
     "ability" TEXT NOT NULL,
@@ -75,7 +74,9 @@ CREATE TABLE "SongCard" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "SongCard_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "SongCard_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "SongCard_artist_nonempty_when_set_check"
+      CHECK ("artist" IS NULL OR length(trim("artist")) > 0)
 );
 
 -- CreateTable
@@ -113,7 +114,9 @@ CREATE TABLE "WishlistSong" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "WishlistSong_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "WishlistSong_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "WishlistSong_artist_nonempty_when_set_check"
+      CHECK ("artist" IS NULL OR length(trim("artist")) > 0)
 );
 
 -- CreateTable

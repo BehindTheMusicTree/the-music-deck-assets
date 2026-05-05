@@ -339,23 +339,6 @@ export async function CardsSongsContent() {
         constant across all genres and rarities.
       </p>
 
-      <div id="remix" className="w-full max-w-[1100px] mb-14">
-        <div className="section-title mb-5">Remix</div>
-        <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4">
-          <p className="font-garamond text-muted leading-[1.6] m-0">
-            Remix cards are documented separately, with their own anatomy and
-            genre-specific layer:{" "}
-            <Link
-              href="/cards/remixes#remix-anatomy"
-              className="text-gold underline-offset-2 hover:underline"
-            >
-              Cards — Remixes
-            </Link>
-            .
-          </p>
-        </div>
-      </div>
-
       {/* Anatomy legend */}
       <div id="anatomy" className="w-full max-w-[1100px] mb-14">
         <div className="section-title mb-5">Frame Anatomy</div>

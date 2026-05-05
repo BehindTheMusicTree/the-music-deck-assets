@@ -16,8 +16,9 @@ import {
   matchupTargetDiamondColor,
   matchupTargetsForRootGenre,
   type ResolvedThemeSelection,
-  resolveThemeSelection,
+  resolveThemeSelectionLoose,
   subgenreIntensity,
+  themeFromGenreLoose,
   type Intensity,
   WORLD_THEMES,
 } from "@/lib/genres";
@@ -202,16 +203,11 @@ export default function Card({
   const titleScaleRef = useRef(1);
   const cardFrameRef = useRef<HTMLDivElement>(null);
   const genreStripRef = useRef<HTMLDivElement>(null);
-  const resolved: ResolvedThemeSelection = card.genre
-    ? resolveThemeSelection({ genre: card.genre, country: card.country })
-    : {
-        theme,
-        displayGenre: "—",
-        leftLabel: "—",
-        rightLabel: "—",
-        selectionKind: "genre-only",
-        mirrorCountryTypeStripRight: false,
-      };
+  const resolved: ResolvedThemeSelection = resolveThemeSelectionLoose({
+    genre: card.genre ?? "",
+    country: card.country,
+    fallbackTheme: theme,
+  });
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
   const matchup = matchupTargetsForRootGenre(
@@ -297,7 +293,7 @@ export default function Card({
     const ref = cardSongIndex[id];
     if (!ref) return undefined;
     const resolvedRefTheme = ref.genre
-      ? resolveThemeSelection({ genre: ref.genre }).theme
+      ? themeFromGenreLoose(ref.genre)
       : theme;
     return {
       title: ref.title,

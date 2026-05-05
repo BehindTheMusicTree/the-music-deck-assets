@@ -2,6 +2,7 @@ model WishlistSong {
   id            Int         @id
   rowKey        String      @unique
   title         String
+  /// When set, must be non-empty after trim (DB check). Omit or null when unknown.
   artist        String?
   year          String?
   genre         String?

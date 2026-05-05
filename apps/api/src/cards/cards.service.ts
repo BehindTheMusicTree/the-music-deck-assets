@@ -27,11 +27,24 @@ import {
   UpdateCardDto,
 } from "./cards.dto";
 
+function persistedArtist(value: string | undefined | null): string | null {
+  if (value == null) return null;
+  const t = value.trim();
+  return t.length > 0 ? t : null;
+}
+
+/** Undefined = omit patch; null or blank = clear to null. */
+function patchArtist(value: string | null | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  return persistedArtist(value);
+}
+
 type SongFull = SongCard & {
   card: Card;
   songsOut: { fromId: number; toId: number }[];
   genreRef: {
     id: number;
+    name: string;
     theme: Prisma.JsonValue | null;
     parent: { theme: Prisma.JsonValue | null } | null;
   } | null;
@@ -66,7 +79,7 @@ export class CardsService {
       title: song.card.title,
       artist: song.artist ?? undefined,
       year: song.year ?? undefined,
-      genre: song.genre ?? "",
+      genre: genreRef?.name ?? "",
       genreId: genreRef?.id,
       genreTheme: toGenreThemeDto(genreRef?.theme ?? genreRef?.parent?.theme),
       country: song.country ?? undefined,
@@ -179,7 +192,7 @@ export class CardsService {
         id: s.id,
         title: s.card.title,
         artist: s.artist ?? undefined,
-        genre: s.genre,
+        genre: s.genreRef?.name ?? "",
         artworkUrl: this.artworkUrlFor(s.card),
         printedSetId: s.card.printedSetId ?? undefined,
         songsOut: s.songsOut.map((t) => t.toId),
@@ -301,9 +314,8 @@ export class CardsService {
         await tx.songCard.create({
           data: {
             id: dto.id,
-            artist: dto.artist ?? null,
+            artist: persistedArtist(dto.artist),
             year: dto.year,
-            genre: dto.genre,
             genreId,
             country: dto.country ?? null,
             ability: dto.ability,
@@ -331,7 +343,7 @@ export class CardsService {
             id: dto.id,
             rowKey: dto.rowKey,
             title: dto.title,
-            artist: dto.artist ?? null,
+            artist: persistedArtist(dto.artist),
             year: dto.year ?? null,
             genre: dto.genre ?? null,
             country: dto.country ?? null,
@@ -358,7 +370,10 @@ export class CardsService {
     return this.prisma.$transaction(async (tx) => {
       const existingSong = await tx.songCard.findUnique({
         where: { id },
-        include: { card: true },
+        include: {
+          card: true,
+          genreRef: { select: { name: true } },
+        },
       });
       const existingWishlist = await tx.wishlistSong.findUnique({
         where: { id },
@@ -386,7 +401,8 @@ export class CardsService {
         const genreId = dto.genre
           ? await this.resolveGenreId(tx, dto.genre)
           : undefined;
-        const nextGenre = dto.genre ?? existingSong.genre;
+        const nextGenre =
+          dto.genre ?? existingSong.genreRef?.name ?? "";
         const nextCountry =
           dto.country !== undefined ? dto.country : existingSong.country;
         const nextPrintedSetId =
@@ -418,9 +434,8 @@ export class CardsService {
         await tx.songCard.update({
           where: { id },
           data: {
-            artist: dto.artist ?? undefined,
+            artist: patchArtist(dto.artist),
             year: dto.year ?? undefined,
-            genre: dto.genre ?? undefined,
             genreId: genreId ?? undefined,
             country: dto.country ?? undefined,
             ability: dto.ability ?? undefined,
@@ -453,7 +468,7 @@ export class CardsService {
           data: {
             rowKey: dto.rowKey ?? undefined,
             title: dto.title ?? undefined,
-            artist: dto.artist ?? undefined,
+            artist: patchArtist(dto.artist),
             year: dto.year ?? undefined,
             genre: dto.genre ?? undefined,
             country: dto.country ?? undefined,
@@ -812,6 +827,7 @@ const SONG_INCLUDE = {
   genreRef: {
     select: {
       id: true,
+      name: true,
       theme: true,
       parent: { select: { theme: true } },
     },
