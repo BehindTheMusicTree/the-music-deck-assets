@@ -1,0 +1,24 @@
+model WishlistSong {
+  id            Int         @id
+  rowKey        String      @unique
+  title         String
+  artist        String?
+  year          String?
+  genre         String?
+  country       String?
+  ability       String?
+  abilityDesc   String?
+  pop           Int?
+  rarity        CardRarity?
+  artworkPrompt String?     @db.Text
+  wikipediaUrl  String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  bandcampUrl   String?
+  soundcloudUrl String?
+  comment       String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+

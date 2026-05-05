@@ -1,0 +1,14 @@
+enum CardRarity {
+  Legendary
+  Classic
+  Banger
+  Niche
+}
+
+enum Intensity {
+  pop
+  soft
+  experimental
+  hardcore
+}
+

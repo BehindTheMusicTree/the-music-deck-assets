@@ -1,0 +1,11 @@
+model TransitionCard {
+  id        Int      @id
+  rowKey    String   @unique
+  title     String
+  genre     String?
+  genreId   Int?
+  genreRef  Genre?   @relation(fields: [genreId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

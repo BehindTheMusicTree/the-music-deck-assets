@@ -1,0 +1,38 @@
+model Genre {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  // Hierarchy: null for AppGenre; points to parent AppGenre row for subgenres
+  parentId  Int?
+  parent    Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
+  children  Genre[] @relation("SubgenreParent")
+
+  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub @ t=0.42)
+  parentBId     Int?
+  parentB       Genre?  @relation("BlendParentB", fields: [parentBId], references: [id])
+  blendChildren Genre[] @relation("BlendParentB")
+  blendFactor   Float?
+
+  intensity     Intensity
+  colorOverride String?
+
+  // Transition/influence hint for GenreSubgenre
+  influenceId        Int?
+  influenceRef       Genre?  @relation("SubgenreInfluence", fields: [influenceId], references: [id])
+  influenced         Genre[] @relation("SubgenreInfluence")
+  influenceIntensity Intensity?
+
+  // AppGenre only
+  displayLabel String?
+  wheelOrder   Int?
+  isCountry    Boolean  @default(false)
+
+  theme Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  songs           Song[]
+  transitionCards TransitionCard[]
+}
+
