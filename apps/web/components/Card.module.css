@@ -167,9 +167,11 @@
 }
 .headerIcon {
   flex-shrink: 0;
-  color: #ffffff;
+  color: #fafbff;
   display: flex;
   align-items: center;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
 }
 .titleGroup {
   display: flex;
@@ -187,7 +189,11 @@
   font-size: 12px;
   letter-spacing: 1px;
   line-height: 1.2;
-  color: #ffffff;
+  color: #fafbff;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.85),
+    0 1px 2px rgba(0, 0, 0, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.35);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -206,11 +212,15 @@
   font-size: 10px;
   line-height: 1.2;
   letter-spacing: 0.4px;
-  color: #ffffff;
+  color: #f6f7fc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.85;
+  opacity: 0.94;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.8),
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 5px rgba(0, 0, 0, 0.32);
 }
 
 /* Score circle */
@@ -227,7 +237,10 @@
   font-family: "Space Mono", monospace;
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: #fafbff;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.55);
   box-shadow: 0 0 var(--score-glow-r, 4px) var(--score-glow-c, transparent);
 }
 
@@ -583,8 +596,10 @@
   font-size: 7px;
   font-weight: 700;
   letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.88);
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.95),
+    0 1px 3px rgba(0, 0, 0, 0.85);
   line-height: 1;
 }
 .intensityNoteMuted {
@@ -593,7 +608,8 @@
   transform: translateX(-50%);
   font-family: "Space Mono", monospace;
   font-size: 7px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.48);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
 }
 .statsSm .intensityNote,
 .statsSm .intensityNoteMuted {
@@ -617,7 +633,10 @@
   font-family: "Space Mono", monospace;
   font-size: 7px;
   letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.65),
+    0 1px 2px rgba(0, 0, 0, 0.45);
 }
 .rarityRow {
   display: flex;
