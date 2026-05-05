@@ -2,13 +2,13 @@
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
-CREATE TYPE "CardRarity" AS ENUM ('Legendary', 'Classic', 'Banger', 'Niche');
+CREATE TYPE "CardRarity" AS ENUM ('LEGENDARY', 'CLASSIC', 'BANGER', 'NICHE');
 
 -- CreateEnum
-CREATE TYPE "CardKind" AS ENUM ('Song', 'Transition');
+CREATE TYPE "CardKind" AS ENUM ('SONG', 'TRANSITION');
 
 -- CreateEnum
-CREATE TYPE "Intensity" AS ENUM ('pop', 'soft', 'experimental', 'hardcore');
+CREATE TYPE "Intensity" AS ENUM ('POP', 'SOFT', 'EXPERIMENTAL', 'HARDCORE');
 
 -- CreateTable
 CREATE TABLE "Genre" (
@@ -24,6 +24,7 @@ CREATE TABLE "Genre" (
     "influenceIntensity" "Intensity",
     "wheelOrder" INTEGER,
     "isCountry" BOOLEAN NOT NULL DEFAULT false,
+    "printedTypeCode" VARCHAR(2),
     "theme" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -45,6 +46,7 @@ CREATE TABLE "Card" (
     "artworkOverBorder" BOOLEAN NOT NULL DEFAULT false,
     "artworkCreatedAt" TIMESTAMP(3),
     "artworkPrompt" TEXT,
+    "printedSetId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -129,6 +131,9 @@ CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");
 CREATE UNIQUE INDEX "Card_rowKey_key" ON "Card"("rowKey");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Card_printedSetId_key" ON "Card"("printedSetId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "WishlistSong_rowKey_key" ON "WishlistSong"("rowKey");
 
 -- CreateIndex
@@ -160,4 +165,3 @@ ALTER TABLE "SongSongTransition" ADD CONSTRAINT "SongSongTransition_fromId_fkey"
 
 -- AddForeignKey
 ALTER TABLE "SongSongTransition" ADD CONSTRAINT "SongSongTransition_toId_fkey" FOREIGN KEY ("toId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
