@@ -13,9 +13,11 @@ import {
 
 const CARD_STATUS_VALUES = ["Shipped", "Wishlist"] as const;
 const CARD_RARITY_VALUES = ["Legendary", "Classic", "Banger", "Niche"] as const;
+const CARD_KIND_VALUES = ["Song"] as const;
 
 export type CardStatusValue = (typeof CARD_STATUS_VALUES)[number];
 export type CardRarityValue = (typeof CARD_RARITY_VALUES)[number];
+export type CardKindValue = (typeof CARD_KIND_VALUES)[number];
 export const GENRE_TAXONOMY_KIND = {
   COUNTRY_ROOT: "COUNTRY_ROOT",
   COUNTRY_SUB_GENRE: "COUNTRY_SUB_GENRE",
@@ -133,14 +135,17 @@ export class CardResponse {
   @ApiProperty({ enum: CARD_STATUS_VALUES })
   status!: CardStatusValue;
 
+  @ApiProperty({ enum: CARD_KIND_VALUES })
+  kind!: CardKindValue;
+
   @ApiProperty()
   title!: string;
 
   @ApiPropertyOptional()
   artist?: string;
 
-  @ApiProperty()
-  year!: string;
+  @ApiPropertyOptional()
+  year?: string;
 
   @ApiProperty()
   genre!: string;
@@ -217,11 +222,14 @@ export class CardResponse {
   @ApiPropertyOptional()
   soundcloudUrl?: string;
 
+  @ApiPropertyOptional()
+  comment?: string;
+
   @ApiProperty({
     type: [Number],
     description: "Outgoing transition card ids (DJ transitions).",
   })
-  tracksOut!: number[];
+  songsOut!: number[];
 }
 
 export class GenreTaxonomyEntryDto {
@@ -272,7 +280,7 @@ export class GenreTaxonomyResponse {
   entries!: GenreTaxonomyEntryDto[];
 }
 
-export class CardTrackIndexEntryDto {
+export class CardSongIndexEntryDto {
   @ApiProperty()
   id!: number;
 
@@ -289,18 +297,18 @@ export class CardTrackIndexEntryDto {
   artworkUrl?: string;
 
   @ApiProperty({ type: [Number] })
-  tracksOut!: number[];
+  songsOut!: number[];
 }
 
-export class CardTrackIndexResponse {
+export class CardSongIndexResponse {
   @ApiProperty({
     description:
       "Card transition index keyed by card id (numeric keys serialised as JSON object keys).",
     additionalProperties: {
-      $ref: "#/components/schemas/CardTrackIndexEntryDto",
+      $ref: "#/components/schemas/CardSongIndexEntryDto",
     },
   })
-  entries!: Record<number, CardTrackIndexEntryDto>;
+  entries!: Record<number, CardSongIndexEntryDto>;
 }
 
 export class CreateCardDto {
@@ -319,6 +327,11 @@ export class CreateCardDto {
   @IsEnum(CARD_STATUS_VALUES)
   status!: CardStatusValue;
 
+  @ApiPropertyOptional({ enum: CARD_KIND_VALUES, default: "Song" })
+  @IsOptional()
+  @IsEnum(CARD_KIND_VALUES)
+  kind?: CardKindValue;
+
   @ApiProperty()
   @IsString()
   @MaxLength(200)
@@ -330,10 +343,11 @@ export class CreateCardDto {
   @MaxLength(200)
   artist?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @MaxLength(20)
-  year!: string;
+  year?: string;
 
   @ApiProperty()
   @IsString()
@@ -346,24 +360,28 @@ export class CreateCardDto {
   @MaxLength(120)
   country?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @MaxLength(120)
-  ability!: string;
+  ability?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  abilityDesc!: string;
+  abilityDesc?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Max(9)
-  pop!: number;
+  pop?: number;
 
-  @ApiProperty({ enum: CARD_RARITY_VALUES })
+  @ApiPropertyOptional({ enum: CARD_RARITY_VALUES })
+  @IsOptional()
   @IsEnum(CARD_RARITY_VALUES)
-  rarity!: CardRarityValue;
+  rarity?: CardRarityValue;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -385,9 +403,10 @@ export class CreateCardDto {
   @IsString()
   artworkPrompt?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  wikipediaUrl!: string;
+  wikipediaUrl?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -414,6 +433,11 @@ export class CreateCardDto {
   @IsString()
   soundcloudUrl?: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
   @ApiPropertyOptional({
     type: [Number],
     description: "Outgoing transition card ids; will be replaced atomically.",
@@ -421,7 +445,7 @@ export class CreateCardDto {
   @IsOptional()
   @IsArray()
   @IsInt({ each: true })
-  tracksOut?: number[];
+  songsOut?: number[];
 }
 
 export class UpdateCardDto {
@@ -435,6 +459,11 @@ export class UpdateCardDto {
   @IsOptional()
   @IsEnum(CARD_STATUS_VALUES)
   status?: CardStatusValue;
+
+  @ApiPropertyOptional({ enum: CARD_KIND_VALUES })
+  @IsOptional()
+  @IsEnum(CARD_KIND_VALUES)
+  kind?: CardKindValue;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -538,11 +567,16 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   soundcloudUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  comment?: string;
 }
 
-export class TracksOutDto {
+export class SongsOutDto {
   @ApiProperty({ type: [Number] })
   @IsArray()
   @IsInt({ each: true })
-  tracksOut!: number[];
+  songsOut!: number[];
 }

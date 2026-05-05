@@ -1,28 +1,31 @@
 import type { CardData } from "./card-data";
 
-export type TrackGraph = {
+export type SongGraph = {
   byId: Record<
     number,
-    Pick<CardData, "id" | "title" | "artist" | "genre" | "artwork" | "artworkUrl">
+    Pick<
+      CardData,
+      "id" | "title" | "artist" | "genre" | "artwork" | "artworkUrl"
+    >
   >;
-  tracksOutById: Record<number, number[]>;
-  tracksInById: Record<number, number[]>;
+  songsOutById: Record<number, number[]>;
+  songsInById: Record<number, number[]>;
 };
 
 /**
- * Build strict directed track graph from card `tracksOut`.
+ * Build strict directed track graph from card `songsOut`.
  *
  * Rules:
- * - Unknown ids referenced in `tracksOut` throw errors.
- * - Duplicate ids in a single `tracksOut` list throw errors.
+ * - Unknown ids referenced in `songsOut` throw errors.
+ * - Duplicate ids in a single `songsOut` list throw errors.
  * - Cycles are allowed (A->B and B->A, larger loops, etc.).
  */
-export function buildTrackGraph(cards: CardData[]): TrackGraph {
+export function buildSongGraph(cards: CardData[]): SongGraph {
   /* Plain `{}` (not `Object.create(null)`) so the graph is RSC-serializable when
    * passed to Client Components (React rejects null-prototype objects). */
-  const byId: TrackGraph["byId"] = {};
-  const tracksOutById: TrackGraph["tracksOutById"] = {};
-  const tracksInById: TrackGraph["tracksInById"] = {};
+  const byId: SongGraph["byId"] = {};
+  const songsOutById: SongGraph["songsOutById"] = {};
+  const songsInById: SongGraph["songsInById"] = {};
 
   for (const card of cards) {
     byId[card.id] = {
@@ -33,59 +36,59 @@ export function buildTrackGraph(cards: CardData[]): TrackGraph {
       artwork: card.artwork,
       artworkUrl: card.artworkUrl,
     };
-    tracksOutById[card.id] = [];
-    tracksInById[card.id] = [];
+    songsOutById[card.id] = [];
+    songsInById[card.id] = [];
   }
 
   for (const card of cards) {
     const seen = new Set<number>();
-    for (const outId of card.tracksOut ?? []) {
+    for (const outId of card.songsOut ?? []) {
       if (seen.has(outId)) {
         throw new Error(
-          `Duplicate tracksOut id "${outId}" in card "${card.title}" (${card.id})`,
+          `Duplicate songsOut id "${outId}" in card "${card.title}" (${card.id})`,
         );
       }
       seen.add(outId);
       if (!(outId in byId)) {
         throw new Error(
-          `Unknown tracksOut id "${outId}" referenced by "${card.title}" (${card.id})`,
+          `Unknown songsOut id "${outId}" referenced by "${card.title}" (${card.id})`,
         );
       }
-      tracksOutById[card.id].push(outId);
-      tracksInById[outId].push(card.id);
+      songsOutById[card.id].push(outId);
+      songsInById[outId].push(card.id);
     }
   }
 
-  return { byId, tracksOutById, tracksInById };
+  return { byId, songsOutById, songsInById };
 }
 
 /** One lookup per id: display fields + outgoing link ids (for `Card` transition strips). */
-export type CardTrackIndexEntry = Pick<
+export type CardSongIndexEntry = Pick<
   CardData,
   "id" | "title" | "artist" | "genre" | "artwork" | "artworkUrl"
 > & {
-  tracksOut: number[];
+  songsOut: number[];
 };
 
-export type CardTrackIndex = Record<number, CardTrackIndexEntry>;
+export type CardSongIndex = Record<number, CardSongIndexEntry>;
 
 /**
- * Merges `buildTrackGraph` into a single index so consumers pass only
- * `cardTrackIndex` to `Card` (no separate `trackGraph`).
- * @param prebuilt - If already computed (e.g. catalogue), avoids a second `buildTrackGraph` pass.
+ * Merges `buildSongGraph` into a single index so consumers pass only
+ * `cardSongIndex` to `Card` (no separate `trackGraph`).
+ * @param prebuilt - If already computed (e.g. catalogue), avoids a second `buildSongGraph` pass.
  */
-export function buildCardTrackIndex(
+export function buildCardSongIndex(
   cards: CardData[],
-  prebuilt?: TrackGraph,
-): CardTrackIndex {
-  const g = prebuilt ?? buildTrackGraph(cards);
-  const index: CardTrackIndex = {};
+  prebuilt?: SongGraph,
+): CardSongIndex {
+  const g = prebuilt ?? buildSongGraph(cards);
+  const index: CardSongIndex = {};
   for (const key of Object.keys(g.byId)) {
     const id = Number(key);
     const base = g.byId[id];
     index[id] = {
       ...base,
-      tracksOut: g.tracksOutById[id] ?? [],
+      songsOut: g.songsOutById[id] ?? [],
     };
   }
   return index;
@@ -93,16 +96,16 @@ export function buildCardTrackIndex(
 
 /**
  * UI helper: derive incoming transition ids for one card from other cards'
- * `tracksOut`, keeping `tracksOut` as the single source of truth.
+ * `songsOut`, keeping `songsOut` as the single source of truth.
  */
-export function deriveTracksInFromTrackIndex(
-  cardTrackIndex: CardTrackIndex,
+export function deriveSongsInFromSongIndex(
+  cardSongIndex: CardSongIndex,
   targetId: number,
 ): number[] {
   const incoming: number[] = [];
-  for (const key of Object.keys(cardTrackIndex)) {
+  for (const key of Object.keys(cardSongIndex)) {
     const sourceId = Number(key);
-    if (cardTrackIndex[sourceId]?.tracksOut.includes(targetId)) {
+    if (cardSongIndex[sourceId]?.songsOut.includes(targetId)) {
       incoming.push(sourceId);
     }
   }

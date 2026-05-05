@@ -12,18 +12,18 @@ const rarities = [
     name: "Classic",
     hex: "#a070e0",
     desc: "Powerful and distinctive. Purple signals strong competitive value and special mechanics.",
-    examples: ["Genre-defining albums", "Cult artists", "Era-defining tracks"],
+    examples: ["Genre-defining albums", "Cult artists", "Era-defining songs"],
   },
   {
     name: "Banger",
     hex: "#6090e0",
     desc: "Reliable and collectible. Blue tones indicate meaningful cards worth building around.",
-    examples: ["Influential tracks", "Known artists", "Acclaimed albums"],
+    examples: ["Influential songs", "Known artists", "Acclaimed albums"],
   },
   {
     name: "Niche",
     hex: "#8888a0",
-    desc: "Not mainstream, but meaningful — cult cuts, local scenes, and under-the-radar tracks. Neutral grey, accessible to collect.",
+    desc: "Not mainstream, but meaningful — cult cuts, local scenes, and under-the-radar songs. Neutral grey, accessible to collect.",
     examples: [
       "Cult and regional scenes",
       "Deep catalogue cuts",

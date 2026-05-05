@@ -1,5 +1,5 @@
 ---
-description: Wishlist is planned-only — no bundled artwork; promote to shipped when art exists
+description: Wishlist-only rows — no bundled artwork; promote to shipped when art exists
 globs: lib/cards/catalog-wishlist-defs.ts, lib/cards/wishlist-types.ts, lib/cards/wishlist.ts, lib/cards/examples.ts, lib/cards/artwork-prompts.ts, lib/cards/catalog.ts
 alwaysApply: false
 ---
@@ -8,7 +8,7 @@ alwaysApply: false
 
 ## Wishlist (`WISHLIST_CARD_DEFS` in `catalog-wishlist-defs.ts`)
 
-- **Planned rows only:** tracks that do **not** yet have a PNG under `public/cards/artworks/deck/`.
+- **Wishlist rows only:** songs that do **not** yet have a PNG under `public/cards/artworks/deck/`.
 - **Do not add** `artwork`, `artworkFile`, or `artworkCreatedAt` on wishlist defs — those fields belong on shipped `CardData` only.
 - **`artworkPrompt` is allowed** on wishlist rows as an optional illustration brief while the asset is still pending.
 - **UI:** wishlist rows render in the Catalog page under the Wishlist tab (`WishlistDeckTable`); they are **not** merged into `CATALOG_ENTRIES`. Resolved rows are `WishlistEntry` in [`lib/cards/wishlist.ts`](lib/cards/wishlist.ts); source shape is `WishlistCardDef` in [`lib/cards/wishlist-types.ts`](lib/cards/wishlist-types.ts).

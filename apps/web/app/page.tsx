@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Overview" };
 
-
 const sections = [
   {
     href: "/cards",
@@ -37,7 +36,7 @@ const sections = [
   {
     href: "/tracklists",
     index: "06",
-    label: "Track Lists",
+    label: "Song Lists",
     desc: "Deck building — 60 cards per track list",
   },
   {

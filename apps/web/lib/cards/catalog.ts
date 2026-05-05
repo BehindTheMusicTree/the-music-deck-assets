@@ -19,7 +19,7 @@ import { CARD_ARTWORK_BASE } from "./art-path";
 import { deriveCatalogSeriesLabel } from "./_card-helpers";
 import { ALL_GENRE_CARDS, DECK_ADDITIONAL_GENRE_CARDS } from "./genre";
 import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
-import { buildCardTrackIndex } from "./track-graph";
+import { buildCardSongIndex } from "./track-graph";
 
 export type { CatalogSeriesType };
 
@@ -320,19 +320,19 @@ export const CATALOG_ENTRIES: CatalogEntry[] = rawCatalogRows
   .sort((a, b) => a.card.id - b.card.id);
 
 /**
- * Per-id transition data for shipped catalogue cards. `buildCardTrackIndex` runs
- * `buildTrackGraph` once (validates `tracksOut` links on the same card list).
+ * Per-id transition data for shipped catalogue cards. `buildCardSongIndex` runs
+ * `buildSongGraph` once (validates `songsOut` links on the same card list).
  */
-export const CATALOG_CARD_TRACK_INDEX = buildCardTrackIndex(
+export const CATALOG_CARD_TRACK_INDEX = buildCardSongIndex(
   rawCatalogRows.map((r) => r.card),
 );
 
 /**
  * Pass to `Card` (or use `CatalogCard`) so transition strips resolve — only
- * `cardTrackIndex` is required.
+ * `cardSongIndex` is required.
  */
 export const CATALOG_CARD_TRANSITION_PROPS = {
-  cardTrackIndex: CATALOG_CARD_TRACK_INDEX,
+  cardSongIndex: CATALOG_CARD_TRACK_INDEX,
 } as const;
 
 export const CATALOG_KINDS: CatalogEntryKind[] = [

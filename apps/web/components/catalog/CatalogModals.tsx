@@ -3,10 +3,10 @@
 import CatalogCard from "@/components/catalog/CatalogCard";
 import {
   type CatalogEntry,
-  deriveTracksInFromTrackIndex,
+  deriveSongsInFromSongIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
-import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/track-graph";
 
 const CATALOG_CARD_NATIVE_W = 272;
 const CATALOG_CARD_NATIVE_H = 400;
@@ -57,13 +57,13 @@ export function CatalogEntryDetailModal({
   onClose,
   onOpenArtworkPrompt,
   effectiveArtworkPrompt,
-  cardTrackIndex,
+  cardSongIndex,
 }: {
   entry: CatalogEntry | null;
   onClose: () => void;
   onOpenArtworkPrompt: (text: string) => void;
   effectiveArtworkPrompt: (card: CatalogEntry["card"]) => string;
-  cardTrackIndex: CardTrackIndex;
+  cardSongIndex: CardSongIndex;
 }) {
   if (entry === null) return null;
 
@@ -92,117 +92,117 @@ export function CatalogEntryDetailModal({
           className="max-w-5xl w-full rounded-lg border border-ui-border bg-[#12121a] p-5 sm:p-6 shadow-xl text-left"
           onClick={(e) => e.stopPropagation()}
         >
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
-          <div
-            className="shrink-0 mx-auto lg:mx-0 bg-[#0a0a0e]"
-            style={{
-              width: CATALOG_DETAIL_CARD_BOX_W,
-              height: CATALOG_DETAIL_CARD_BOX_H,
-              position: "relative",
-            }}
-          >
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
             <div
+              className="shrink-0 mx-auto lg:mx-0 bg-[#0a0a0e]"
               style={{
-                position: "absolute",
-                left: "50%",
-                top: 0,
-                width: CATALOG_CARD_NATIVE_W,
-                height: CATALOG_CARD_NATIVE_H,
-                transform: "translateX(-50%) scale(2)",
-                transformOrigin: "top center",
+                width: CATALOG_DETAIL_CARD_BOX_W,
+                height: CATALOG_DETAIL_CARD_BOX_H,
+                position: "relative",
               }}
             >
-              <CatalogCard
-                card={c}
-                theme={entry.theme}
-                enableZoom={false}
-                hoverLift={false}
-                cardTrackIndex={cardTrackIndex}
-              />
-            </div>
-          </div>
-          <div className="flex-1 min-w-0 w-full">
-            <h2
-              id="catalog-entry-detail-title"
-              className="font-cinzel text-sm sm:text-base tracking-[0.14em] text-gold mb-1"
-            >
-              {c.title}
-            </h2>
-            <p className="font-garamond text-muted text-[15px] mb-5">
-              {c.artist ?? "—"} · {c.year}
-            </p>
-            <dl className="flex flex-col gap-2.5 mb-6">
-              {detailLine("Catalogue №", String(entry.catalogNumber))}
-              {detailLine("Card ID", String(c.id))}
-              {detailLine("Era", entry.catalogEra)}
-              {detailLine("Series", entry.catalogSeriesLabel)}
-              {detailLine(
-                "Series bucket",
-                entry.catalogSeriesType === "country"
-                  ? "By country / region"
-                  : "By genre",
-              )}
-              {detailLine("Type", entry.kind)}
-              {detailLine("App genre", entry.catalogGenreLabel)}
-              {detailLine("Genre line", c.genre ?? "—")}
-              {detailLine("Country / region", c.country ?? "—")}
-              {detailLine(
-                "Tracks in",
-                trackRefsLabel(
-                  deriveTracksInFromTrackIndex(cardTrackIndex, c.id),
-                  cardTrackIndex,
-                ),
-              )}
-              {detailLine(
-                "Tracks out",
-                trackRefsLabel(
-                  cardTrackIndex[c.id]?.tracksOut,
-                  cardTrackIndex,
-                ),
-              )}
-              {detailLine("Intensity", formatCatalogIntensity(entry.catalogIntensity))}
-              {detailLine("Popularity", String(c.pop))}
-              {detailLine("Rarity", c.rarity)}
-              {detailLine(
-                "Artwork file",
-                c.artwork ? artworkBasename(c.artwork) : "—",
-              )}
-              {detailLine(
-                "Art created",
-                c.artworkCreatedAt?.trim()
-                  ? formatArtworkCreatedAtDisplay(c.artworkCreatedAt.trim())
-                  : "—",
-              )}
-            </dl>
-            <div className="rounded-md border border-ui-border/80 bg-[#0f0f14]/40 px-3 py-3">
-              <div className="font-cinzel text-[10px] tracking-[0.14em] text-gold mb-1">
-                Ability
-              </div>
-              <p className="font-garamond text-white/95 text-[15px] m-0">
-                {c.ability}
-              </p>
-              <p className="font-garamond text-muted text-[13px] leading-relaxed mt-2 m-0">
-                {c.abilityDesc}
-              </p>
-            </div>
-            {effectiveArtworkPrompt(c) ? (
-              <button
-                type="button"
-                className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
-                onClick={() => onOpenArtworkPrompt(effectiveArtworkPrompt(c))}
+              <div
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: 0,
+                  width: CATALOG_CARD_NATIVE_W,
+                  height: CATALOG_CARD_NATIVE_H,
+                  transform: "translateX(-50%) scale(2)",
+                  transformOrigin: "top center",
+                }}
               >
-                View full artwork prompt
-              </button>
-            ) : null}
+                <CatalogCard
+                  card={c}
+                  theme={entry.theme}
+                  enableZoom={false}
+                  hoverLift={false}
+                  cardSongIndex={cardSongIndex}
+                />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0 w-full">
+              <h2
+                id="catalog-entry-detail-title"
+                className="font-cinzel text-sm sm:text-base tracking-[0.14em] text-gold mb-1"
+              >
+                {c.title}
+              </h2>
+              <p className="font-garamond text-muted text-[15px] mb-5">
+                {c.artist ?? "—"} · {c.year}
+              </p>
+              <dl className="flex flex-col gap-2.5 mb-6">
+                {detailLine("Catalogue №", String(entry.catalogNumber))}
+                {detailLine("Card ID", String(c.id))}
+                {detailLine("Era", entry.catalogEra)}
+                {detailLine("Series", entry.catalogSeriesLabel)}
+                {detailLine(
+                  "Series bucket",
+                  entry.catalogSeriesType === "country"
+                    ? "By country / region"
+                    : "By genre",
+                )}
+                {detailLine("Type", entry.kind)}
+                {detailLine("App genre", entry.catalogGenreLabel)}
+                {detailLine("Genre line", c.genre ?? "—")}
+                {detailLine("Country / region", c.country ?? "—")}
+                {detailLine(
+                  "Songs in",
+                  trackRefsLabel(
+                    deriveSongsInFromSongIndex(cardSongIndex, c.id),
+                    cardSongIndex,
+                  ),
+                )}
+                {detailLine(
+                  "Songs out",
+                  trackRefsLabel(cardSongIndex[c.id]?.songsOut, cardSongIndex),
+                )}
+                {detailLine(
+                  "Intensity",
+                  formatCatalogIntensity(entry.catalogIntensity),
+                )}
+                {detailLine("Popularity", String(c.pop))}
+                {detailLine("Rarity", c.rarity)}
+                {detailLine(
+                  "Artwork file",
+                  c.artwork ? artworkBasename(c.artwork) : "—",
+                )}
+                {detailLine(
+                  "Art created",
+                  c.artworkCreatedAt?.trim()
+                    ? formatArtworkCreatedAtDisplay(c.artworkCreatedAt.trim())
+                    : "—",
+                )}
+              </dl>
+              <div className="rounded-md border border-ui-border/80 bg-[#0f0f14]/40 px-3 py-3">
+                <div className="font-cinzel text-[10px] tracking-[0.14em] text-gold mb-1">
+                  Ability
+                </div>
+                <p className="font-garamond text-white/95 text-[15px] m-0">
+                  {c.ability}
+                </p>
+                <p className="font-garamond text-muted text-[13px] leading-relaxed mt-2 m-0">
+                  {c.abilityDesc}
+                </p>
+              </div>
+              {effectiveArtworkPrompt(c) ? (
+                <button
+                  type="button"
+                  className="mt-4 font-garamond text-left text-[13px] text-gold/95 hover:underline underline-offset-2"
+                  onClick={() => onOpenArtworkPrompt(effectiveArtworkPrompt(c))}
+                >
+                  View full artwork prompt
+                </button>
+              ) : null}
+            </div>
           </div>
-        </div>
-        <button
-          type="button"
-          className="mt-8 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5 w-full sm:w-auto"
-          onClick={onClose}
-        >
-          Close
-        </button>
+          <button
+            type="button"
+            className="mt-8 font-mono text-[12px] tracking-wide text-gold border border-ui-border rounded px-4 py-2 hover:bg-white/5 w-full sm:w-auto"
+            onClick={onClose}
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

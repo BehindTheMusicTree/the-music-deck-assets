@@ -1,6 +1,6 @@
 # Open Questions
 
-Tracks unresolved product and design questions.
+Songs unresolved product and design questions.
 
 ## Current Questions
 

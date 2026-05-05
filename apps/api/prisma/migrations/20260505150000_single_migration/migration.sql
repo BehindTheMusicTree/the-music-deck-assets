@@ -77,11 +77,11 @@ CREATE TABLE "SongCard" (
 );
 
 -- CreateTable
-CREATE TABLE "SongCardTrackTransition" (
+CREATE TABLE "SongCardSongTransition" (
     "fromId" INTEGER NOT NULL,
     "toId" INTEGER NOT NULL,
 
-    CONSTRAINT "SongCardTrackTransition_pkey" PRIMARY KEY ("fromId","toId")
+    CONSTRAINT "SongCardSongTransition_pkey" PRIMARY KEY ("fromId","toId")
 );
 
 -- CreateIndex
@@ -91,7 +91,7 @@ CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");
 CREATE UNIQUE INDEX "Card_rowKey_key" ON "Card"("rowKey");
 
 -- CreateIndex
-CREATE INDEX "SongCardTrackTransition_toId_idx" ON "SongCardTrackTransition"("toId");
+CREATE INDEX "SongCardSongTransition_toId_idx" ON "SongCardSongTransition"("toId");
 
 -- AddForeignKey
 ALTER TABLE "Genre" ADD CONSTRAINT "Genre_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -109,8 +109,8 @@ ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_id_fkey" FOREIGN KEY ("id") REFE
 ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SongCardTrackTransition" ADD CONSTRAINT "SongCardTrackTransition_fromId_fkey" FOREIGN KEY ("fromId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "SongCardSongTransition" ADD CONSTRAINT "SongCardSongTransition_fromId_fkey" FOREIGN KEY ("fromId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SongCardTrackTransition" ADD CONSTRAINT "SongCardTrackTransition_toId_fkey" FOREIGN KEY ("toId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "SongCardSongTransition" ADD CONSTRAINT "SongCardSongTransition_toId_fkey" FOREIGN KEY ("toId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

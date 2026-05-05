@@ -1,12 +1,13 @@
 /** Catalog seed — `rowKey` = slugified `title-year`; see ./README.md */
 import { basename } from "node:path";
-import { CardStatus, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import {
+  APP_GENRE_NAMES,
   assignCatalogRowKeys,
   type CardData,
   type WishlistCardDef,
 } from "@repo/cards-domain";
-import { seedGenres, backfillCardGenreIds } from "./seed-data/genre-taxonomy";
+import { seedGenres } from "./seed-data/genre-taxonomy";
 import { ALL_GENRE_CARDS } from "./seed-data/genre";
 import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./seed-data/world";
 import { LA_MACARENA_CARD } from "./seed-data/la-macarena";
@@ -16,98 +17,79 @@ import { STREAMING_URLS } from "./seed-data/streaming-urls";
 
 const prisma = new PrismaClient();
 
-type RawSeedRow = {
-  card: CardData;
-  status: CardStatus;
+type ShippedRow = { card: CardData; rowKey: string };
+type WishlistRow = { def: WishlistCardDef; rowKey: string };
+type TransitionRow = {
+  id: number;
+  rowKey: string;
+  title: string;
+  genre: string | null;
 };
 
-type SeedRow = RawSeedRow & { rowKey: string };
-
-function rawRowsForGenreCards(): RawSeedRow[] {
-  return ALL_GENRE_CARDS.map((card) => ({
-    status: CardStatus.Shipped,
-    card,
-  }));
-}
-
-function rawRowsForWorldFlagCards(): RawSeedRow[] {
-  return WORLD_FLAG_CARDS.map((card) => ({
-    status: CardStatus.Shipped,
-    card,
-  }));
-}
-
-function rawRowsForWorldMixedCards(): RawSeedRow[] {
-  return WORLD_MIXED_CARDS.map((card) => ({
-    status: CardStatus.Shipped,
-    card,
-  }));
-}
-
-function rawRowForLaMacarena(): RawSeedRow {
-  return {
-    status: CardStatus.Shipped,
-    card: LA_MACARENA_CARD,
-  };
-}
-
-function rawRowForWishlistDef(def: WishlistCardDef): RawSeedRow {
-  const status = CardStatus.Wishlist;
-  const card: CardData = {
-    id: def.id,
-    title: def.title,
-    artist: def.artist,
-    year: def.year,
-    genre: def.genre,
-    country: def.country,
-    ability: def.ability,
-    abilityDesc: def.abilityDesc,
-    pop: def.pop ?? 0,
-    rarity: def.rarity,
-    artworkPrompt: def.artworkPrompt,
-  };
-  return { status, card };
-}
-
-function collectAllSeedRows(): SeedRow[] {
-  const rawRows: RawSeedRow[] = [
-    ...rawRowsForGenreCards(),
-    ...rawRowsForWorldFlagCards(),
-    ...rawRowsForWorldMixedCards(),
-    rawRowForLaMacarena(),
-    ...WISHLIST_CARD_DEFS.map(rawRowForWishlistDef),
+function shippedCards(): CardData[] {
+  return [
+    ...ALL_GENRE_CARDS,
+    ...WORLD_FLAG_CARDS,
+    ...WORLD_MIXED_CARDS,
+    LA_MACARENA_CARD,
   ];
+}
 
-  const rowKeyMap = assignCatalogRowKeys(
-    rawRows.map((r) => ({
-      id: r.card.id,
-      title: r.card.title,
-      year: r.card.year,
+function maxShippedDeckId(cards: CardData[]): number {
+  return cards.reduce((max, c) => (c.id < 1000 ? Math.max(max, c.id) : max), 0);
+}
+
+function compactWishlistDefs(
+  defs: WishlistCardDef[],
+  cards: CardData[],
+): WishlistCardDef[] {
+  let nextId = maxShippedDeckId(cards) + 1;
+  const used = new Set(cards.map((c) => c.id));
+  return defs.map((def) => {
+    while (used.has(nextId)) nextId += 1;
+    const id = nextId;
+    nextId += 1;
+    used.add(id);
+    return { ...def, id };
+  });
+}
+
+function collectRows(): { shipped: ShippedRow[]; wishlist: WishlistRow[] } {
+  const shipped = shippedCards();
+  const compactWishlist = compactWishlistDefs(WISHLIST_CARD_DEFS, shipped);
+  const all = [
+    ...shipped.map((c) => ({ id: c.id, title: c.title, year: c.year })),
+    ...compactWishlist.map((d) => ({ id: d.id, title: d.title, year: d.year })),
+  ];
+  const rowKeyMap = assignCatalogRowKeys(all);
+
+  return {
+    shipped: shipped.map((card) => ({ card, rowKey: rowKeyMap.get(card.id)! })),
+    wishlist: compactWishlist.map((def) => ({
+      def,
+      rowKey: rowKeyMap.get(def.id)!,
     })),
-  );
+  };
+}
 
-  const rows: SeedRow[] = rawRows.map((r) => ({
-    ...r,
-    rowKey: rowKeyMap.get(r.card.id)!,
-  }));
+function collectTransitionRows(shipped: ShippedRow[], wishlist: WishlistRow[]): TransitionRow[] {
+  let nextId =
+    Math.max(
+      0,
+      ...shipped.map((r) => r.card.id),
+      ...wishlist.map((r) => r.def.id),
+    ) + 1;
 
-  const seenRowKeys = new Map<string, number>();
-  const seenIds = new Map<number, string>();
-  for (const row of rows) {
-    const dupKey = seenRowKeys.get(row.rowKey);
-    const dupId = seenIds.get(row.card.id);
-    if (dupKey !== undefined)
-      throw new Error(
-        `Duplicate rowKey "${row.rowKey}": ids ${dupKey} and ${row.card.id}`,
-      );
-    if (dupId !== undefined)
-      throw new Error(
-        `Duplicate id ${row.card.id}: rowKeys "${dupId}" and "${row.rowKey}"`,
-      );
-    seenRowKeys.set(row.rowKey, row.card.id);
-    seenIds.set(row.card.id, row.rowKey);
-  }
-  return rows;
+  return APP_GENRE_NAMES.map((genre) => {
+    const id = nextId;
+    nextId += 1;
+    return {
+      id,
+      rowKey: `transition-${genre.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+      title: `${genre} Transition`,
+      genre,
+    };
+  });
 }
 
 function artworkKeyFromCard(card: CardData): string | null {
@@ -117,79 +99,165 @@ function artworkKeyFromCard(card: CardData): string | null {
 
 function dateFromArtworkCreatedAt(value: string | undefined): Date | null {
   if (!value) return null;
-  /* Bundled values are local timestamps without TZ — preserve as-is.
-   * `new Date("2024-01-01T12:34:56")` returns a Date in the runtime tz. */
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return null;
   return d;
 }
 
-async function upsertCard(row: SeedRow): Promise<void> {
-  const { card } = row;
-  const artworkKey = artworkKeyFromCard(card);
-  const artworkContentType = artworkKey ? "image/png" : null;
-  const artworkCreatedAt = dateFromArtworkCreatedAt(card.artworkCreatedAt);
-  const wikipediaUrl = WIKIPEDIA_URLS[card.id] ?? null;
-  if (!card.genre)
-    throw new Error(`Missing genre for card id ${card.id} ("${card.title}")`);
+async function upsertShipped(row: ShippedRow): Promise<void> {
+  const { card, rowKey } = row;
+  const genreRow = card.genre
+    ? await prisma.genre.findUnique({
+        where: { name: card.genre },
+        select: { id: true },
+      })
+    : null;
 
-  const baseData = {
-    rowKey: row.rowKey,
-    status: row.status,
-    title: card.title,
-    ability: card.ability,
-    abilityDesc: card.abilityDesc,
-    pop: card.pop,
-    rarity: card.rarity,
-    artworkKey,
-    artworkContentType,
-    artworkOffsetY: card.artworkOffsetY ?? null,
-    artworkOverBorder: card.artworkOverBorder ?? false,
-    artworkCreatedAt,
-    artworkPrompt: card.artworkPrompt ?? null,
-    wikipediaUrl,
-    spotifyUrl: STREAMING_URLS[card.id]?.spotifyUrl ?? null,
-    appleMusicUrl: STREAMING_URLS[card.id]?.appleMusicUrl ?? null,
-    youtubeUrl: STREAMING_URLS[card.id]?.youtubeUrl ?? null,
-    bandcampUrl: STREAMING_URLS[card.id]?.bandcampUrl ?? null,
-  };
-
-  const songData = {
-    artist: card.artist ?? null,
-    year: card.year,
-    genre: card.genre,
-    country: card.country ?? null,
-    catalogNumber: card.catalogNumber ?? null,
-  };
-
-  await prisma.card.upsert({
+  await prisma.song.upsert({
     where: { id: card.id },
-    create: { id: card.id, ...baseData },
-    update: baseData,
-  });
-
-  await prisma.songCard.upsert({
-    where: { id: card.id },
-    create: { id: card.id, ...songData },
-    update: songData,
+    create: {
+      id: card.id,
+      rowKey,
+      title: card.title,
+      artist: card.artist ?? null,
+      year: card.year,
+      genre: card.genre,
+      genreId: genreRow?.id ?? null,
+      country: card.country ?? null,
+      ability: card.ability,
+      abilityDesc: card.abilityDesc,
+      pop: card.pop,
+      rarity: card.rarity,
+      catalogNumber: card.catalogNumber ?? null,
+      artworkKey: artworkKeyFromCard(card),
+      artworkContentType: card.artwork ? "image/png" : null,
+      artworkOffsetY: card.artworkOffsetY ?? null,
+      artworkOverBorder: card.artworkOverBorder ?? false,
+      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
+      artworkPrompt: card.artworkPrompt ?? null,
+      wikipediaUrl: WIKIPEDIA_URLS[card.id] ?? null,
+      spotifyUrl: STREAMING_URLS[card.id]?.spotifyUrl ?? null,
+      appleMusicUrl: STREAMING_URLS[card.id]?.appleMusicUrl ?? null,
+      youtubeUrl: STREAMING_URLS[card.id]?.youtubeUrl ?? null,
+      bandcampUrl: STREAMING_URLS[card.id]?.bandcampUrl ?? null,
+      soundcloudUrl: STREAMING_URLS[card.id]?.soundcloudUrl ?? null,
+    },
+    update: {
+      rowKey,
+      title: card.title,
+      artist: card.artist ?? null,
+      year: card.year,
+      genre: card.genre,
+      genreId: genreRow?.id ?? null,
+      country: card.country ?? null,
+      ability: card.ability,
+      abilityDesc: card.abilityDesc,
+      pop: card.pop,
+      rarity: card.rarity,
+      catalogNumber: card.catalogNumber ?? null,
+      artworkKey: artworkKeyFromCard(card),
+      artworkContentType: card.artwork ? "image/png" : null,
+      artworkOffsetY: card.artworkOffsetY ?? null,
+      artworkOverBorder: card.artworkOverBorder ?? false,
+      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
+      artworkPrompt: card.artworkPrompt ?? null,
+      wikipediaUrl: WIKIPEDIA_URLS[card.id] ?? null,
+      spotifyUrl: STREAMING_URLS[card.id]?.spotifyUrl ?? null,
+      appleMusicUrl: STREAMING_URLS[card.id]?.appleMusicUrl ?? null,
+      youtubeUrl: STREAMING_URLS[card.id]?.youtubeUrl ?? null,
+      bandcampUrl: STREAMING_URLS[card.id]?.bandcampUrl ?? null,
+      soundcloudUrl: STREAMING_URLS[card.id]?.soundcloudUrl ?? null,
+    },
   });
 }
 
-async function replaceTracksForCard(
+async function upsertWishlist(row: WishlistRow): Promise<void> {
+  const { def, rowKey } = row;
+  await prisma.wishlistSong.upsert({
+    where: { id: def.id },
+    create: {
+      id: def.id,
+      rowKey,
+      title: def.title,
+      artist: def.artist ?? null,
+      year: def.year ?? null,
+      genre: def.genre ?? null,
+      country: def.country ?? null,
+      ability: def.ability ?? null,
+      abilityDesc: def.abilityDesc ?? null,
+      pop: def.pop ?? null,
+      rarity: def.rarity ?? null,
+      artworkPrompt: def.artworkPrompt ?? null,
+      wikipediaUrl: WIKIPEDIA_URLS[def.id] ?? null,
+      spotifyUrl: STREAMING_URLS[def.id]?.spotifyUrl ?? null,
+      appleMusicUrl: STREAMING_URLS[def.id]?.appleMusicUrl ?? null,
+      youtubeUrl: STREAMING_URLS[def.id]?.youtubeUrl ?? null,
+      bandcampUrl: STREAMING_URLS[def.id]?.bandcampUrl ?? null,
+      soundcloudUrl: STREAMING_URLS[def.id]?.soundcloudUrl ?? null,
+    },
+    update: {
+      rowKey,
+      title: def.title,
+      artist: def.artist ?? null,
+      year: def.year ?? null,
+      genre: def.genre ?? null,
+      country: def.country ?? null,
+      ability: def.ability ?? null,
+      abilityDesc: def.abilityDesc ?? null,
+      pop: def.pop ?? null,
+      rarity: def.rarity ?? null,
+      artworkPrompt: def.artworkPrompt ?? null,
+      wikipediaUrl: WIKIPEDIA_URLS[def.id] ?? null,
+      spotifyUrl: STREAMING_URLS[def.id]?.spotifyUrl ?? null,
+      appleMusicUrl: STREAMING_URLS[def.id]?.appleMusicUrl ?? null,
+      youtubeUrl: STREAMING_URLS[def.id]?.youtubeUrl ?? null,
+      bandcampUrl: STREAMING_URLS[def.id]?.bandcampUrl ?? null,
+      soundcloudUrl: STREAMING_URLS[def.id]?.soundcloudUrl ?? null,
+    },
+  });
+}
+
+async function upsertTransition(row: TransitionRow): Promise<void> {
+  const genreRow = row.genre
+    ? await prisma.genre.findUnique({
+        where: { name: row.genre },
+        select: { id: true },
+      })
+    : null;
+
+  await prisma.transitionCard.upsert({
+    where: { id: row.id },
+    create: {
+      id: row.id,
+      rowKey: row.rowKey,
+      title: row.title,
+      genre: row.genre,
+      genreId: genreRow?.id ?? null,
+    },
+    update: {
+      rowKey: row.rowKey,
+      title: row.title,
+      genre: row.genre,
+      genreId: genreRow?.id ?? null,
+    },
+  });
+}
+
+async function replaceSongs(
   card: CardData,
   validIds: Set<number>,
 ): Promise<void> {
-  const desired = (card.tracksOut ?? []).filter((id) => {
+  const desired = (card.songsOut ?? []).filter((id) => {
     if (!validIds.has(id)) {
       throw new Error(
-        `Card "${card.title}" (${card.id}) tracksOut references unknown id ${id}`,
+        `Card "${card.title}" (${card.id}) songsOut references unknown id ${id}`,
       );
     }
     return true;
   });
-  await prisma.songCardTrackTransition.deleteMany({ where: { fromId: card.id } });
+  await prisma.songSongTransition.deleteMany({ where: { fromId: card.id } });
   if (desired.length === 0) return;
-  await prisma.songCardTrackTransition.createMany({
+  await prisma.songSongTransition.createMany({
     data: desired.map((toId) => ({ fromId: card.id, toId })),
     skipDuplicates: true,
   });
@@ -197,28 +265,27 @@ async function replaceTracksForCard(
 
 async function main(): Promise<void> {
   await seedGenres(prisma);
+  const { shipped, wishlist } = collectRows();
+  const transitions = collectTransitionRows(shipped, wishlist);
+  const validSongIds = new Set(shipped.map((r) => r.card.id));
 
-  const rows = collectAllSeedRows();
-  const validIds = new Set(rows.map((r) => r.card.id));
+  for (const row of shipped) await upsertShipped(row);
+  for (const row of shipped) await replaceSongs(row.card, validSongIds);
+  for (const row of wishlist) await upsertWishlist(row);
+  for (const row of transitions) await upsertTransition(row);
 
-  /* Idempotent: every row is upserted by primary key. */
-  for (const row of rows) {
-    await upsertCard(row);
-  }
-  for (const row of rows) {
-    await replaceTracksForCard(row.card, validIds);
-  }
-
-  /* Drop any DB rows that are no longer in the snapshot (e.g. removed wishlist).
-   * Wrapped in a single statement so partial seeds never leave orphans. */
-  await prisma.card.deleteMany({
-    where: { id: { notIn: Array.from(validIds) } },
+  await prisma.song.deleteMany({
+    where: { id: { notIn: Array.from(validSongIds) } },
+  });
+  await prisma.wishlistSong.deleteMany({
+    where: { id: { notIn: wishlist.map((w) => w.def.id) } },
+  });
+  await prisma.transitionCard.deleteMany({
+    where: { id: { notIn: transitions.map((t) => t.id) } },
   });
 
-  await backfillCardGenreIds(prisma);
-
   console.log(
-    `Seed: ${rows.length} cards upserted (${rows.filter((r) => r.status === "Shipped").length} shipped, ${rows.filter((r) => r.status === "Wishlist").length} wishlist).`,
+    `Seed: ${shipped.length} songs, ${wishlist.length} wishlist songs, and ${transitions.length} transition cards upserted.`,
   );
 }
 

@@ -30,10 +30,10 @@ import { AdminAuthGuard } from "../auth/admin-auth.guard";
 import {
   CardListQuery,
   CardResponse,
-  CardTrackIndexEntryDto,
+  CardSongIndexEntryDto,
   CreateCardDto,
   GenreTaxonomyResponse,
-  TracksOutDto,
+  SongsOutDto,
   UpdateCardDto,
 } from "./cards.dto";
 import { CardsService } from "./cards.service";
@@ -68,7 +68,7 @@ export class CardsController {
   @ApiOperation({
     summary: "Map of shipped card ids to transition data (for Card strips)",
   })
-  trackIndex(): Promise<Record<number, CardTrackIndexEntryDto>> {
+  trackIndex(): Promise<Record<number, CardSongIndexEntryDto>> {
     return this.cards.trackIndex();
   }
 
@@ -115,7 +115,9 @@ export class CardsController {
       required: ["file"],
     },
   })
-  @ApiOperation({ summary: "Upload/replace card artwork (image) to object storage" })
+  @ApiOperation({
+    summary: "Upload/replace card artwork (image) to object storage",
+  })
   @ApiOkResponse({ type: CardResponse })
   uploadArtwork(
     @Param("id", ParseIntPipe) id: number,
@@ -163,15 +165,15 @@ export class CardsController {
     await this.cards.remove(id);
   }
 
-  @Put(":id/tracks-out")
+  @Put(":id/songs-out")
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: "Replace outgoing transitions atomically" })
   @ApiOkResponse({ type: CardResponse })
-  replaceTracksOut(
+  replaceSongsOut(
     @Param("id", ParseIntPipe) id: number,
-    @Body() dto: TracksOutDto,
+    @Body() dto: SongsOutDto,
   ): Promise<CardResponse> {
-    return this.cards.replaceTracksOut(id, dto.tracksOut);
+    return this.cards.replaceSongsOut(id, dto.songsOut);
   }
 }

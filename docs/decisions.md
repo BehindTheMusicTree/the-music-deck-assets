@@ -1,6 +1,6 @@
 # Decisions
 
-Tracks accepted product decisions.
+Songs accepted product decisions.
 
 ## Accepted Decisions
 

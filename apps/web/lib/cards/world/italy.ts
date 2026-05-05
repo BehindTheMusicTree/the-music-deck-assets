@@ -5,7 +5,7 @@ export const ITALY_CARDS: CardData[] = [
   {
     catalogNumber: 1,
     id: 52,
-    tracksOut: [5],
+    songsOut: [5],
     title: "Bella Ciao",
     year: "1880",
     genre: "Italian Folk",

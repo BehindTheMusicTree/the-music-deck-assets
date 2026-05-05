@@ -109,7 +109,7 @@ export const WIKIPEDIA_URLS: Record<number, string> = {
   // ── Shipped: La Macarena ──────────────────────────────────────────────────
   9101: "https://en.wikipedia.org/wiki/Macarena_(song)",
 
-  // ── Planned / Wishlist ────────────────────────────────────────────────────
+  // ── Wishlist ──────────────────────────────────────────────────────────────
   12006: "https://en.wikipedia.org/wiki/Gilbert_Montagn%C3%A9",
   12010: "https://en.wikipedia.org/wiki/Jolene_(song)",
   12011: "https://en.wikipedia.org/wiki/Rapper%27s_Delight",
@@ -193,4 +193,26 @@ export const WIKIPEDIA_URLS: Record<number, string> = {
   12116: "https://en.wikipedia.org/wiki/The_Payback",
   12117: "https://en.wikipedia.org/wiki/Gramatik",
   12118: "https://en.wikipedia.org/wiki/Never_Gonna_Give_You_Up",
+  12119: "https://en.wikipedia.org/wiki/Sing,_Sing,_Sing_(With_a_Swing)",
+  12120: "https://en.wikipedia.org/wiki/In_the_Mood",
+  12121: "https://en.wikipedia.org/wiki/Take_On_Me",
+  12122: "https://en.wikipedia.org/wiki/September_(Earth,_Wind_%26_Fire_song)",
+  12123: "https://en.wikipedia.org/wiki/Stayin%27_Alive",
+  12124: "https://en.wikipedia.org/wiki/Boogie_Wonderland",
+  12125: "https://en.wikipedia.org/wiki/I_Will_Survive",
+  12126: "https://en.wikipedia.org/wiki/Y.M.C.A._(song)",
+  12128: "https://en.wikipedia.org/wiki/Rasputin_(song)",
+  12131: "https://en.wikipedia.org/wiki/Dragostea_Din_Tei",
+  12132: "https://en.wikipedia.org/wiki/Around_the_World_(Daft_Punk_song)",
+  12133: "https://en.wikipedia.org/wiki/Technologic",
+  12134: "https://en.wikipedia.org/wiki/Digital_Love",
+  12135: "https://en.wikipedia.org/wiki/Get_Lucky_(Daft_Punk_song)",
+  12136: "https://en.wikipedia.org/wiki/Lose_Yourself_to_Dance",
+  12137: "https://en.wikipedia.org/wiki/Instant_Crush",
+  12138: "https://en.wikipedia.org/wiki/Derezzed",
+  12141: "https://en.wikipedia.org/wiki/Alive_2007",
+  12142: "https://en.wikipedia.org/wiki/Alive_2007",
+  12143: "https://en.wikipedia.org/wiki/Aerodynamic_(instrumental)",
+  12129: "https://en.wikipedia.org/wiki/Daddy_Cool_(Boney_M._song)",
+  12130: "https://en.wikipedia.org/wiki/Barbie_Girl",
 };

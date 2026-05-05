@@ -242,9 +242,9 @@ Magic-style illustration, vertical 2:3, upper 40% focus. A majestic Breton lands
 
   78: `🎨 Magic-Style Illustration Prompt — Hakuna Matata — Realistic Human Trio (Banlieue Vibes)
 High-detail semi-realistic fantasy illustration inspired by carefree friendship and joyful relaxation. Vertical composition. The bottom 60% of the artwork will be covered, so place the main subjects and all key visual elements in the upper third. In the upper third, three young adults sit together in a warm, atmospheric hookah lounge filled with soft coloured lights and drifting smoke.
-— A slim, lively Black man in a modern tracksuit, with sharp, expressive eyes and quick, mischievous gestures, evoking energetic comic relief without resembling any existing character.
-— A broad-shouldered White man in a comfy tracksuit, round face, warm smile, and a jovial, generous presence.
-— A confident Arab woman in a stylish tracksuit, relaxed posture, radiant expression, and a soft golden aura around her silhouette, conveying calm charisma and warmth.
+— A slim, lively Black man in a modern songsuit, with sharp, expressive eyes and quick, mischievous gestures, evoking energetic comic relief without resembling any existing character.
+— A broad-shouldered White man in a comfy songsuit, round face, warm smile, and a jovial, generous presence.
+— A confident Arab woman in a stylish songsuit, relaxed posture, radiant expression, and a soft golden aura around her silhouette, conveying calm charisma and warmth.
 Their faces are realistic but stylized, with no resemblance to real people or copyrighted characters. Magical smoke from ornate hookahs rises in swirling shapes, adding a subtle fantasy glow. Lighting is warm, intimate, slightly cinematic. Dominant tones: amber, soft red, and warm neutrals. Atmosphere: friendly, humorous, relaxed. No text, no symbols, no borders.`,
 
   79: `🎨 Magic-Style Illustration Prompt — California Love — Wasteland Groove

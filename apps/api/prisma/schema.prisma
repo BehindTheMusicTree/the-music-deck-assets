@@ -10,12 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum CardStatus {
-  Shipped
-  Wishlist
-  Planned
-}
-
 enum CardRarity {
   Legendary
   Classic
@@ -64,19 +58,25 @@ model Genre {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  songCards SongCard[]
+  songs           Song[]
+  transitionCards TransitionCard[]
 }
 
-model Card {
-  id          Int        @id
-  rowKey      String     @unique
-  status      CardStatus
-  title       String
-  pop         Int
-  rarity      CardRarity
-  ability     String
-  abilityDesc String
-
+model Song {
+  id            Int        @id
+  rowKey        String     @unique
+  title         String
+  artist        String?
+  year          String?
+  genre         String
+  genreId       Int?
+  genreRef      Genre?  @relation(fields: [genreId], references: [id])
+  country       String?
+  ability       String
+  abilityDesc   String
+  pop           Int
+  rarity        CardRarity
+  catalogNumber Int?
   // Artwork bytes live in the S3-compatible bucket; DB only stores the object key + metadata.
   artworkKey         String?
   artworkContentType String?
@@ -86,42 +86,60 @@ model Card {
   artworkOverBorder  Boolean   @default(false)
   artworkCreatedAt   DateTime?
   artworkPrompt      String?   @db.Text
+  wikipediaUrl  String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  bandcampUrl   String?
+  soundcloudUrl String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 
-  wikipediaUrl   String?
-  spotifyUrl     String?
-  appleMusicUrl  String?
-  youtubeUrl     String?
-  bandcampUrl    String?
-  soundcloudUrl  String?
+  songsOut SongSongTransition[] @relation("from")
+  songsIn  SongSongTransition[] @relation("to")
+}
 
+model WishlistSong {
+  id            Int         @id
+  rowKey        String      @unique
+  title         String
+  artist        String?
+  year          String?
+  genre         String?
+  country       String?
+  ability       String?
+  abilityDesc   String?
+  pop           Int?
+  rarity        CardRarity?
+  artworkPrompt String?     @db.Text
+  wikipediaUrl  String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  bandcampUrl   String?
+  soundcloudUrl String?
+  comment       String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model TransitionCard {
+  id        Int      @id
+  rowKey    String   @unique
+  title     String
+  genre     String?
+  genreId   Int?
+  genreRef  Genre?   @relation(fields: [genreId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  songCard SongCard?
 }
 
-model SongCard {
-  id      Int  @id
-  card    Card @relation(fields: [id], references: [id], onDelete: Cascade)
-
-  artist        String?
-  year          String
-  genre         String
-  genreId       Int?
-  genreRef      Genre?  @relation(fields: [genreId], references: [id])
-  country       String?
-  catalogNumber Int?
-
-  tracksOut SongCardTrackTransition[] @relation("from")
-  tracksIn  SongCardTrackTransition[] @relation("to")
-}
-
-model SongCardTrackTransition {
+model SongSongTransition {
   fromId Int
   toId   Int
 
-  from SongCard @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
-  to   SongCard @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+  from Song @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to   Song @relation("to", fields: [toId], references: [id], onDelete: Cascade)
 
   @@id([fromId, toId])
   @@index([toId])

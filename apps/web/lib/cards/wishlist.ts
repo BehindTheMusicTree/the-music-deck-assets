@@ -33,7 +33,7 @@ export type WishlistEntry = {
   intensity: Intensity;
 };
 
-export const WISHLIST_KINDS: WishlistKind[] = ["Card", "Planned"];
+export const WISHLIST_KINDS: WishlistKind[] = ["Card", "Wishlist"];
 
 type WishlistInterim = {
   rowKey: string;
@@ -59,7 +59,7 @@ function wishlistDefToInterim(
     rarity: d.rarity,
     artworkPrompt: d.artworkPrompt,
   };
-  const kind: WishlistKind = d.kind === "Planned" ? "Planned" : "Card";
+  const kind: WishlistKind = d.kind === "Wishlist" ? "Wishlist" : "Card";
   const theme = d.country
     ? themeForCountry(d.country)
     : resolveThemeSelection({ genre: d.genre ?? "" }).theme;
@@ -126,7 +126,7 @@ const wishlistInterimRows: WishlistInterim[] = _filteredWishlistDefs.map((d) =>
   wishlistDefToInterim(d, _wishlistRowKeyMap.get(d.id)!),
 );
 
-/** Planned / future cards not yet in the shipped deck (no bundled artwork). */
+/** Wishlist / future cards not yet in the shipped deck (no bundled artwork). */
 export const WISHLIST_ENTRIES: WishlistEntry[] = (() => {
   const sorted = [...wishlistInterimRows].sort((a, b) => a.card.id - b.card.id);
   return sorted.map((row, i) => ({

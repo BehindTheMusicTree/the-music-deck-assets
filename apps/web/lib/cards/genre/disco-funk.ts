@@ -46,7 +46,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
   {
     catalogNumber: 6,
     id: 81,
-    tracksOut: [82],
+    songsOut: [82],
     title: "Shaft",
     year: "1971",
     genre: "Disco",
@@ -62,7 +62,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
   {
     catalogNumber: 7,
     id: 91,
-    tracksOut: [93, 92],
+    songsOut: [93, 92],
     title: "Superstition",
     year: "1972",
     genre: "Funk Soul",
@@ -78,7 +78,7 @@ export const DISCO_FUNK_CARDS: CardData[] = [
   {
     catalogNumber: 8,
     id: 112,
-    tracksOut: [111],
+    songsOut: [111],
     title: "Cola Bottle Baby",
     year: "1979",
     genre: "Funk Soul",

@@ -102,7 +102,7 @@ Each week, players can complete any of these missions:
 6. **Genre Diversity Challenge**: Win battles using 5 different single genres
    - Reward: 75 points + genre-specific cosmetic
    - Engagement: exploring diverse playstyles, testing lineups
-   - Tracks battles won (not just participated)
+   - Songs battles won (not just participated)
 
 7. **Rarity Acquisition Challenge**: Open enough boosters to obtain 10 rare+ cards
    - Reward: 90 points + rare cosmetic or deckslot

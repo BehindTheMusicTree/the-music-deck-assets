@@ -64,7 +64,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 - **API**: Jest + Supertest e2e coverage for `GET /health` (`apps/api`).
 
-- **API — data & storage**: Prisma + Postgres (**`Card`**, **`CardTrackTransition`**), **`GET/POST/PATCH/DELETE /cards`**, **`PUT /cards/:id/tracks-out`**, S3-compatible **`StorageModule`**, artwork **`GET/POST/DELETE /cards/:id/artwork`**, admin bearer **`ADMIN_API_TOKEN`**.
+- **API — data & storage**: Prisma + Postgres (**`Card`**, **`CardSongTransition`**), **`GET/POST/PATCH/DELETE /cards`**, **`PUT /cards/:id/songs-out`**, S3-compatible **`StorageModule`**, artwork **`GET/POST/DELETE /cards/:id/artwork`**, admin bearer **`ADMIN_API_TOKEN`**.
 
 - **`@repo/cards-domain`**: Shared card types + track graph for API + web.
 

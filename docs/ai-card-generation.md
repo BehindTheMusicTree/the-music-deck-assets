@@ -127,7 +127,7 @@ Required fields:
 - design_notes (short explanation of why this score/rarity choice makes sense)
 
 Input values:
-Track: "<track-title>"
+Song: "<track-title>"
 Artist: "<artist-name>"
 Album: "<album-name-or-null>"
 

@@ -37,7 +37,7 @@ Optional product limits (to be tuned later): maximum number of saved presets per
 - A lineup can contain more than 10 physical cards if some cards are stacked.
 - Multiple cards from the same artist count as only 1 active slot.
 - Multiple cards from the same album count as only 1 active slot.
-- Variants are linked to tracks (same track family), not artists, and can be stacked without taking a new active slot.
+- Variants are linked to songs (same track family), not artists, and can be stacked without taking a new active slot.
 
 Stack scoring rule:
 

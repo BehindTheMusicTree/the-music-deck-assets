@@ -7,14 +7,11 @@ export const CARD_RARITY_ORDER: readonly CardRarity[] = [
   "Legendary",
 ] as const;
 
-/** Catalogue row classification. Matches Prisma `CardKind` enum. */
-export type CardKind = "Card" | "Planned";
-
-/** Top-level filter: shipped catalogue, wishlist (concept), or planned (no artwork yet). */
-export type CardStatus = "Shipped" | "Wishlist" | "Planned";
+/** Card variant — matches the Prisma `CardKind` enum. */
+export type CardKind = "Song" | "Transition";
 
 /** Wishlist row classification (table view). */
-export type WishlistKindLabel = "Card" | "Planned";
+export type WishlistKindLabel = "Card" | "Wishlist";
 
 /** Card season label (era). All shipped today are Era I. */
 export const CATALOG_DEFAULT_ERA = "Era I" as const;
@@ -26,18 +23,10 @@ export type CatalogSeriesType = "genre" | "country";
 /** Intensity ramp shared with `apps/web/lib/genres`. Re-exported for convenience. */
 export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
 
-/**
- * Canonical card payload returned by the API and rendered by the UI.
- * Mirrors the legacy `CardData` shape from `apps/web/components/Card` so component
- * call-sites remain unchanged. Artwork now resolves to a CDN URL on `artworkUrl`.
- */
-export interface CardData {
+/** Shared properties for any card variant. */
+export interface BaseCardData {
   id: number;
   title: string;
-  artist?: string;
-  year: string;
-  /** Subgenre, or a parent app genre (e.g. "Electronic" on World+genre) when not a subgenre name. */
-  genre?: string;
   ability: string;
   abilityDesc: string;
   /** Popularity 1–9. */
@@ -57,14 +46,33 @@ export interface CardData {
   wikipediaUrl?: string;
   artworkOffsetY?: number;
   artworkOverBorder?: boolean;
+}
+
+/**
+ * Song payload: Song-specific fields layered on top of base card fields.
+ * This is the canonical model for the current catalog and API routes.
+ */
+export interface SongData extends BaseCardData {
+  artist?: string;
+  year: string;
+  /** Subgenre, or a parent app genre (e.g. "Electronic" on World+genre) when not a subgenre name. */
+  genre: string;
   country?: string;
-  /** Track ids this card transitions into (successors in a DJ transition). */
-  tracksOut?: number[];
+  /** Song ids this card transitions into (successors in a DJ transition). */
+  songsOut?: number[];
   /** Shipped deck only: catalogue number within the derived series. */
   catalogNumber?: number;
 }
 
-/** Source row for planned / future cards — separate input shape from `CardData`. */
+/** Transition payload: dedicated card variant used for bridge/mix steps. */
+export interface TransitionData extends BaseCardData {
+  genre: string;
+}
+
+/** Backward-compatible alias kept while the UI migrates from CardData -> SongData. */
+export type CardData = SongData;
+
+/** Source row for planned / future song cards — separate input shape from `SongData`. */
 export type WishlistCardDef = {
   id: number;
   title: string;
@@ -72,7 +80,7 @@ export type WishlistCardDef = {
   year: string;
   kind: WishlistKindLabel;
   /** Subgenre, or an app-level genre when the card is World+genre only. */
-  genre?: string;
+  genre: string;
   country?: string;
   rarity: CardRarity;
   pop?: number;

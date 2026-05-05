@@ -27,8 +27,8 @@ import {
 } from "@/lib/countries";
 import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import {
-  deriveTracksInFromTrackIndex,
-  type CardTrackIndex,
+  deriveSongsInFromSongIndex,
+  type CardSongIndex,
 } from "@/lib/cards/track-graph";
 import type { CardData, CardRarity } from "@repo/cards-domain";
 import type { GenreTheme } from "@/lib/card-theme-types";
@@ -40,7 +40,7 @@ export type {
 } from "@/lib/card-theme-types";
 export type { CardData } from "@repo/cards-domain";
 
-export interface TransitionTrack {
+export interface TransitionSong {
   title: string;
   artist?: string;
   /** Genre canonical border colour used as the strip background. */
@@ -177,7 +177,7 @@ export default function Card({
   small,
   enableZoom = true,
   hoverLift = true,
-  cardTrackIndex,
+  cardSongIndex,
 }: {
   card: CardData;
   theme: GenreTheme;
@@ -189,10 +189,10 @@ export default function Card({
    */
   hoverLift?: boolean;
   /**
-   * Per-id lookup with `tracksOut` + display fields for link targets.
-   * Built with `buildCardTrackIndex` (e.g. catalogue).
+   * Per-id lookup with `songsOut` + display fields for link targets.
+   * Built with `buildCardSongIndex` (e.g. catalogue).
    */
-  cardTrackIndex?: CardTrackIndex;
+  cardSongIndex?: CardSongIndex;
 }) {
   const [isZoomed, setIsZoomed] = useState(false);
   const rarColor = RARITY_COLOR[card.rarity] ?? "#666";
@@ -290,11 +290,11 @@ export default function Card({
   /** Flat shell when the selected country shell is not r90. */
   const flagFlatShell = Boolean(flagLayer && !flagRotateR90);
 
-  const resolveTransitionTrack = (
+  const resolveTransitionSong = (
     id: number | undefined,
-  ): TransitionTrack | undefined => {
-    if (id == null || !cardTrackIndex) return undefined;
-    const ref = cardTrackIndex[id];
+  ): TransitionSong | undefined => {
+    if (id == null || !cardSongIndex) return undefined;
+    const ref = cardSongIndex[id];
     if (!ref) return undefined;
     const resolvedRefTheme = ref.genre
       ? resolveThemeSelection({ genre: ref.genre }).theme
@@ -306,21 +306,17 @@ export default function Card({
       icon: resolvedRefTheme.icon,
     };
   };
-  const row = cardTrackIndex?.[card.id];
-  const tracksIn = cardTrackIndex
-    ? deriveTracksInFromTrackIndex(cardTrackIndex, card.id)
+  const row = cardSongIndex?.[card.id];
+  const songsIn = cardSongIndex
+    ? deriveSongsInFromSongIndex(cardSongIndex, card.id)
     : [];
-  const tracksOut = row?.tracksOut ?? card.tracksOut ?? [];
-  const transitionsIn = tracksIn
-    .map(resolveTransitionTrack)
-    .filter(Boolean) as NonNullable<
-    ReturnType<typeof resolveTransitionTrack>
-  >[];
-  const transitionsOut = tracksOut
-    .map(resolveTransitionTrack)
-    .filter(Boolean) as NonNullable<
-    ReturnType<typeof resolveTransitionTrack>
-  >[];
+  const songsOut = row?.songsOut ?? card.songsOut ?? [];
+  const transitionsIn = songsIn
+    .map(resolveTransitionSong)
+    .filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionSong>>[];
+  const transitionsOut = songsOut
+    .map(resolveTransitionSong)
+    .filter(Boolean) as NonNullable<ReturnType<typeof resolveTransitionSong>>[];
 
   const currentGenre = resolved.resolvedGenre;
   const currentIntensity: Intensity | undefined = (() => {
@@ -492,7 +488,11 @@ export default function Card({
       <div className={styles.header}>
         <div
           className={styles.headerLeft}
-          style={transitionsIn.length > 0 ? { transform: "translateY(-2px)" } : undefined}
+          style={
+            transitionsIn.length > 0
+              ? { transform: "translateY(-2px)" }
+              : undefined
+          }
         >
           <span
             className={styles.headerIcon}

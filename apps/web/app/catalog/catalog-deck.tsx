@@ -1,6 +1,6 @@
 import CatalogDeckTable from "@/components/catalog/CatalogDeckTable";
 import {
-  getCatalogTrackIndex,
+  getCatalogSongIndex,
   getShippedCatalogCards,
   getWishlistCards,
 } from "@/lib/cards-api";
@@ -10,10 +10,10 @@ import {
 } from "@/lib/deck-from-api";
 
 export default async function CatalogDeck() {
-  const [shipped, wishlist, cardTrackIndex] = await Promise.all([
+  const [shipped, wishlist, cardSongIndex] = await Promise.all([
     getShippedCatalogCards(),
     getWishlistCards(),
-    getCatalogTrackIndex(),
+    getCatalogSongIndex(),
   ]);
   const catalogEntries = buildCatalogEntriesFromShippedApi(shipped);
   const wishlistEntries = buildWishlistEntriesFromApi(wishlist, catalogEntries);
@@ -22,7 +22,7 @@ export default async function CatalogDeck() {
       className="w-full min-w-0"
       catalogEntries={catalogEntries}
       wishlistEntries={wishlistEntries}
-      cardTrackIndex={cardTrackIndex}
+      cardSongIndex={cardSongIndex}
     />
   );
 }

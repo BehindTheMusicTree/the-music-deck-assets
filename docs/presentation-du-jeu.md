@@ -5,7 +5,7 @@
 The Music Deck is a collectible card game built around music.
 Players open boosters, collect Song, Artist, and Special cards, then build lineups for tactical festival battles.
 The difference: strategy is not just about rarity — it relies on genre synergies, smart stacking, and musical knowledge.
-Every day, 10 enigmas let you win cards by guessing tracks from AI-inspired visual clues.
+Every day, 10 enigmas let you win cards by guessing songs from AI-inspired visual clues.
 The result: an experience that blends collection, pop music culture, competition, and long-term progression.
 
 ## Product Vision

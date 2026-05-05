@@ -245,7 +245,7 @@ export default function BattleAudioLibrary() {
     [filteredCombos],
   );
 
-  const totalNeededTracks = singles.length + combos.length;
+  const totalNeededSongs = singles.length + combos.length;
   const singlesKnownSizeCount = filteredSingles.filter(
     (r) => r.fileSizeMb != null,
   ).length;
@@ -261,7 +261,7 @@ export default function BattleAudioLibrary() {
   const totalKnownSizeCount = singlesKnownSizeCount + combosKnownSizeCount;
   const totalKnownDurationCount =
     singlesKnownDurationCount + combosKnownDurationCount;
-  const visibleTracks = filteredSingles.length + filteredCombos.length;
+  const visibleSongs = filteredSingles.length + filteredCombos.length;
   const visibleMb = singlesTotalMb + combosTotalMb;
   const visibleMin = singlesTotalMin + combosTotalMin;
 
@@ -321,15 +321,15 @@ export default function BattleAudioLibrary() {
               <tr>
                 <td className="px-3 py-2">Total</td>
                 <td className="px-3 py-2">
-                  {visibleTracks} / {totalNeededTracks}
+                  {visibleSongs} / {totalNeededSongs}
                 </td>
                 <td className="px-3 py-2">
                   {visibleMb.toFixed(1)} (known {totalKnownSizeCount}/
-                  {visibleTracks})
+                  {visibleSongs})
                 </td>
                 <td className="px-3 py-2">
                   {visibleMin.toFixed(1)} (known {totalKnownDurationCount}/
-                  {visibleTracks})
+                  {visibleSongs})
                 </td>
               </tr>
             </tbody>

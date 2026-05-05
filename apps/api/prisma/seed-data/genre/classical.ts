@@ -5,7 +5,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 2,
     id: 38,
-    tracksOut: [39],
+    songsOut: [39],
     title: "God Save the King",
     year: "1745",
     genre: "Anthem",
@@ -20,7 +20,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 3,
     id: 39,
-    tracksOut: [38, 29],
+    songsOut: [38, 29],
     title: "God Save the Queen",
     year: "1745",
     genre: "Anthem",
@@ -35,7 +35,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 4,
     id: 54,
-    tracksOut: [55],
+    songsOut: [55],
     title: "Spring (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: "1725",
@@ -51,7 +51,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 5,
     id: 55,
-    tracksOut: [56],
+    songsOut: [56],
     title: "Summer (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: "1725",
@@ -67,7 +67,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 6,
     id: 56,
-    tracksOut: [57],
+    songsOut: [57],
     title: "Autumn (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: "1725",
@@ -83,7 +83,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 7,
     id: 57,
-    tracksOut: [54],
+    songsOut: [54],
     title: "Winter (The Four Seasons)",
     artist: "Antonio Vivaldi",
     year: "1725",
@@ -129,7 +129,7 @@ export const CLASSICAL_CARDS: CardData[] = [
   {
     catalogNumber: 10,
     id: 72,
-    tracksOut: [116],
+    songsOut: [116],
     title: "Symphony No. 5",
     artist: "Ludwig van Beethoven",
     year: "1808",

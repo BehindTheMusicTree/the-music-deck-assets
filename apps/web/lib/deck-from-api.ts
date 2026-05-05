@@ -48,7 +48,7 @@ export type ApiCardJson = {
   artworkCreatedAt?: string;
   artworkPrompt?: string;
   wikipediaUrl: string;
-  tracksOut: number[];
+  songsOut: number[];
 };
 
 const ID_TO_APP_GENRE = Object.fromEntries(
@@ -77,7 +77,7 @@ export function apiCardToCardData(a: ApiCardJson): CardData {
     artworkOffsetY: a.artworkOffsetY,
     artworkOverBorder: a.artworkOverBorder,
     wikipediaUrl: a.wikipediaUrl,
-    tracksOut: a.tracksOut?.length ? a.tracksOut : undefined,
+    songsOut: a.songsOut?.length ? a.songsOut : undefined,
   };
 }
 
@@ -193,9 +193,7 @@ export function buildCatalogEntriesFromShippedApi(
   shipped: ApiCardJson[],
 ): CatalogEntry[] {
   const rawRows = shipped.map(rawCatalogRowFromApiShipped);
-  return rawRows
-    .map(catalogEntryFromRow)
-    .sort((a, b) => a.card.id - b.card.id);
+  return rawRows.map(catalogEntryFromRow).sort((a, b) => a.card.id - b.card.id);
 }
 
 function wishlistInterimFromApi(a: ApiCardJson): {
@@ -205,7 +203,7 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   theme: GenreTheme;
 } {
   const card = apiCardToCardData(a);
-  const kind: WishlistKind = "Planned";
+  const kind: WishlistKind = "Wishlist";
   const fallbackTheme = card.country
     ? themeForCountry(card.country)
     : resolveThemeSelection({ genre: card.genre ?? "" }).theme;
@@ -254,11 +252,14 @@ export function buildWishlistEntriesFromApi(
   shippedCatalog: CatalogEntry[],
 ): WishlistEntry[] {
   const shippedKeys = new Set(
-    shippedCatalog.map((r) => normCatalogKey(r.card.title, r.card.genre, r.card.country, r.card.year)),
+    shippedCatalog.map((r) =>
+      normCatalogKey(r.card.title, r.card.genre, r.card.country, r.card.year),
+    ),
   );
   const interim = wishlist
     .filter(
-      (a) => !shippedKeys.has(normCatalogKey(a.title, a.genre, a.country, a.year)),
+      (a) =>
+        !shippedKeys.has(normCatalogKey(a.title, a.genre, a.country, a.year)),
     )
     .map(wishlistInterimFromApi);
   const sorted = [...interim].sort((a, b) => a.card.id - b.card.id);

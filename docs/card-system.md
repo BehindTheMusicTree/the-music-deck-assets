@@ -29,7 +29,7 @@ Example release cadence:
 
 - `Song`: main collectible type.
 - `Artist`: rarer cards that buff linked songs and support multi-genre strategies.
-- `Special`: album cards, shiny full-art cards, legendary tracks, legendary concerts, legendary events, legendary festivals, and accessories.
+- `Special`: album cards, shiny full-art cards, legendary songs, legendary concerts, legendary events, legendary festivals, and accessories.
 
 ## Song Variants
 
@@ -77,9 +77,9 @@ Card value is not a plain sum of popularity and experimentation.
 
 Design intent:
 
-- very popular but musically safe tracks should not automatically dominate
-- tracks that are both popular and experimental should rank very high
-- experimental but niche tracks can become strong in specific genre or lineup combos
+- very popular but musically safe songs should not automatically dominate
+- songs that are both popular and experimental should rank very high
+- experimental but niche songs can become strong in specific genre or lineup combos
 
 Examples:
 

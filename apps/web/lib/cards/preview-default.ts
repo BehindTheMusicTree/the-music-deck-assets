@@ -4,7 +4,7 @@ import { ARTWORK_CREATED_AT } from "@/lib/cards/artwork-created-at";
 /** Default card for genre / theme preview tooling. */
 export const DEFAULT_PREVIEW_CARD: CardData = {
   id: 9000,
-  title: "Preview Track",
+  title: "Preview Song",
   artist: "Artist",
   year: "2024",
   genre: "Disco Pop",

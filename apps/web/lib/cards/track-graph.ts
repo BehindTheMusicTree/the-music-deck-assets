@@ -1,8 +1,8 @@
 export {
-  buildCardTrackIndex,
-  buildTrackGraph,
-  deriveTracksInFromTrackIndex,
-  type CardTrackIndex,
-  type CardTrackIndexEntry,
-  type TrackGraph,
+  buildCardSongIndex,
+  buildSongGraph,
+  deriveSongsInFromSongIndex,
+  type CardSongIndex,
+  type CardSongIndexEntry,
+  type SongGraph,
 } from "@repo/cards-domain";

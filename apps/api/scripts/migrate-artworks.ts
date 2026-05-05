@@ -58,7 +58,7 @@ async function main(): Promise<void> {
 
   for (const filename of files) {
     const key = `deck/${filename}`;
-    const card = await prisma.card.findFirst({
+    const card = await prisma.song.findFirst({
       where: { artworkKey: key },
     });
     if (!card) {
@@ -86,7 +86,7 @@ async function main(): Promise<void> {
     );
     const birth = ARTWORK_CREATED_AT[filename];
     const artworkCreatedAt = birth ? new Date(birth) : new Date();
-    await prisma.card.update({
+    await prisma.song.update({
       where: { id: card.id },
       data: {
         artworkKey: effectiveKey,

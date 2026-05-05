@@ -14,13 +14,16 @@ import {
   type CatalogEntry,
   CARD_RARITY_ORDER,
   CATALOG_KINDS,
-  deriveTracksInFromTrackIndex,
+  deriveSongsInFromSongIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
-import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/track-graph";
 import type { WishlistEntry } from "@/lib/cards/wishlist";
 import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
-import { type Intensity, intensityLevelIndex } from "@/lib/genres/subgenres-data";
+import {
+  type Intensity,
+  intensityLevelIndex,
+} from "@/lib/genres/subgenres-data";
 
 type SortKey =
   | "id"
@@ -276,12 +279,12 @@ export default function CatalogDeckTable({
   className = "",
   catalogEntries,
   wishlistEntries,
-  cardTrackIndex,
+  cardSongIndex,
 }: {
   className?: string;
   catalogEntries: CatalogEntry[];
   wishlistEntries: WishlistEntry[];
-  cardTrackIndex: CardTrackIndex;
+  cardSongIndex: CardSongIndex;
 }) {
   const [filterKind, setFilterKind] = useState<string>("all");
   const [filterSeries, setFilterSeries] = useState<string>("all");
@@ -498,7 +501,7 @@ export default function CatalogDeckTable({
         >
           <WishlistDeckTable
             wishlistEntries={wishlistEntries}
-            cardTrackIndex={cardTrackIndex}
+            cardSongIndex={cardSongIndex}
           />
         </div>
       ) : (
@@ -741,10 +744,10 @@ export default function CatalogDeckTable({
                     <span className="leading-snug">Wiki</span>
                   </th>
                   <th className={`${thWrap} min-w-[92px]`}>
-                    <span className="leading-snug">Tracks in</span>
+                    <span className="leading-snug">Songs in</span>
                   </th>
                   <th className={`${thWrap} min-w-[92px]`}>
-                    <span className="leading-snug">Tracks out</span>
+                    <span className="leading-snug">Songs out</span>
                   </th>
                   <th className={`${thWrap} min-w-[132px]`}>
                     <SortToggle
@@ -914,7 +917,7 @@ export default function CatalogDeckTable({
                                   theme={theme}
                                   small
                                   enableZoom={false}
-                                  cardTrackIndex={cardTrackIndex}
+                                  cardSongIndex={cardSongIndex}
                                 />
                               </div>
                             </div>
@@ -981,8 +984,8 @@ export default function CatalogDeckTable({
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {
-                            const ids = deriveTracksInFromTrackIndex(
-                              cardTrackIndex,
+                            const ids = deriveSongsInFromSongIndex(
+                              cardSongIndex,
                               card.id,
                             );
                             if (!ids || ids.length === 0) {
@@ -1029,7 +1032,7 @@ export default function CatalogDeckTable({
                                           theme={target.theme}
                                           small
                                           enableZoom={false}
-                                          cardTrackIndex={cardTrackIndex}
+                                          cardSongIndex={cardSongIndex}
                                         />
                                       </div>
                                     </button>
@@ -1041,8 +1044,7 @@ export default function CatalogDeckTable({
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {
-                            const ids =
-                              cardTrackIndex[card.id]?.tracksOut;
+                            const ids = cardSongIndex[card.id]?.songsOut;
                             if (!ids || ids.length === 0) {
                               return <span className="text-muted/80">—</span>;
                             }
@@ -1087,7 +1089,7 @@ export default function CatalogDeckTable({
                                           theme={target.theme}
                                           small
                                           enableZoom={false}
-                                          cardTrackIndex={cardTrackIndex}
+                                          cardSongIndex={cardSongIndex}
                                         />
                                       </div>
                                     </button>
@@ -1209,7 +1211,7 @@ export default function CatalogDeckTable({
                               theme={theme}
                               small
                               enableZoom={false}
-                              cardTrackIndex={cardTrackIndex}
+                              cardSongIndex={cardSongIndex}
                             />
                           </div>
                         ) : (
@@ -1256,7 +1258,7 @@ export default function CatalogDeckTable({
           <CatalogEntryDetailModal
             entry={catalogEntryDetail}
             effectiveArtworkPrompt={effectiveArtworkPrompt}
-            cardTrackIndex={cardTrackIndex}
+            cardSongIndex={cardSongIndex}
             onClose={() => setCatalogEntryDetail(null)}
             onOpenArtworkPrompt={(text) => {
               setCatalogEntryDetail(null);

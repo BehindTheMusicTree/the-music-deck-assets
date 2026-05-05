@@ -13,7 +13,7 @@ import {
   themeForCountry as worldThemeForCountry,
 } from "@/lib/genres";
 import { CARD_RARITY_ORDER } from "@/lib/cards";
-import { getCatalogTrackIndex, getShippedCatalogCards } from "@/lib/cards-api";
+import { getCatalogSongIndex, getShippedCatalogCards } from "@/lib/cards-api";
 import { apiCardToCardData, type ApiCardJson } from "@/lib/deck-from-api";
 
 function findShippedCard(shipped: ApiCardJson[], id: number): CardData {
@@ -52,12 +52,12 @@ function assertCardCountry(card: CardData, context: string): string {
 
 export async function CardsSongsContent() {
   const shipped = await getShippedCatalogCards();
-  const cardTrackIndex = await getCatalogTrackIndex();
+  const cardSongIndex = await getCatalogSongIndex();
   const genreExample = (id: number) => findShippedCard(shipped, id);
   const anatomyCard = findShippedCard(shipped, 39);
   const takeFiveWorldFlag = findShippedCard(shipped, 76);
-  /** Shipped catalogue cards with no `tracksOut` and no peers pointing in — strips stay empty. */
-  const noCatalogTrackTransitionExamples = [
+  /** Shipped catalogue cards with no `songsOut` and no peers pointing in — strips stay empty. */
+  const noCatalogSongTransitionExamples = [
     {
       key: "no-track-rock",
       caption: "Bohemian Rhapsody — no track edges in the catalogue graph.",
@@ -66,7 +66,8 @@ export async function CardsSongsContent() {
     },
     {
       key: "no-track-mainstream",
-      caption: "Shape of You — same (genre strips still follow transition rules).",
+      caption:
+        "Shape of You — same (genre strips still follow transition rules).",
       card: genreExample(49),
       theme: APP_GENRE_THEMES.Mainstream,
     },
@@ -83,7 +84,7 @@ export async function CardsSongsContent() {
   const classicalGodSaveTheQueen = genreExample(39);
   const vivaldiSpring = genreExample(54);
 
-  const catalogTrackEdgeShapeExamples = [
+  const catalogSongEdgeShapeExamples = [
     {
       key: "track-one-in-no-out",
       caption:
@@ -371,7 +372,7 @@ export async function CardsSongsContent() {
             <Card
               card={anatomyCard}
               theme={APP_GENRE_THEMES.Electronic}
-              cardTrackIndex={cardTrackIndex}
+              cardSongIndex={cardSongIndex}
             />
           </div>
           <div className="flex flex-col gap-3 pt-2 flex-1">
@@ -381,7 +382,7 @@ export async function CardsSongsContent() {
                 "Song title, artist, and popularity score (1–9 stars).",
               ],
               [
-                "Track Transitions",
+                "Song Transitions",
                 "Arrow strips showing musical lineage — which track this song leads from (left) and which it leads to (right). Each strip uses the linked track's genre colour.",
               ],
               [
@@ -512,29 +513,30 @@ export async function CardsSongsContent() {
       </div>
 
       <div id="track-transitions" className="w-full max-w-[1100px] mb-14">
-        <div className="section-title mb-5">Track Transitions</div>
+        <div className="section-title mb-5">Song Transitions</div>
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 mb-6">
           <p className="font-garamond text-muted leading-[1.6] mb-3">
-            Track transitions are card-to-card links used by the transition
+            Song transitions are card-to-card links used by the transition
             strips. They are directional and built from each card&apos;s
             outgoing list. If card B appears in A&apos;s outgoing list, then A
-            appears in B&apos;s incoming list — the graph is consistent both ways.
-            The same pair can link both directions: B may sit on A&apos;s out strip
-            and on A&apos;s in strip when each card lists the other in{" "}
-            <code>tracksOut</code>. A card may have several incoming links, several
-            outgoing links, or none on either side — counts are independent.
+            appears in B&apos;s incoming list — the graph is consistent both
+            ways. The same pair can link both directions: B may sit on A&apos;s
+            out strip and on A&apos;s in strip when each card lists the other in{" "}
+            <code>songsOut</code>. A card may have several incoming links,
+            several outgoing links, or none on either side — counts are
+            independent.
           </p>
           <p className="font-garamond text-muted leading-[1.6] mb-0">
             Cards below are real catalogue rows with{" "}
             <strong className="font-semibold text-foreground/90">
               no track transitions
             </strong>
-            : they omit <code>tracksOut</code> and nothing else targets them, so
+            : they omit <code>songsOut</code> and nothing else targets them, so
             both strips render empty while genre transitions behave as usual.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-          {noCatalogTrackTransitionExamples.map((item) => (
+          {noCatalogSongTransitionExamples.map((item) => (
             <div key={item.key} className="flex flex-col items-center gap-2">
               <div
                 style={{
@@ -553,7 +555,7 @@ export async function CardsSongsContent() {
                     card={item.card}
                     theme={item.theme}
                     small
-                    cardTrackIndex={cardTrackIndex}
+                    cardSongIndex={cardSongIndex}
                   />
                 </div>
               </div>
@@ -566,14 +568,14 @@ export async function CardsSongsContent() {
 
         <div className="rounded-[6px] border border-ui-border bg-[#0f0f14]/35 px-5 py-4 mb-6">
           <p className="font-garamond text-muted leading-[1.6] mb-0">
-            The shipped catalogue also includes asymmetric wiring: one-way stubs,
-            simple chains, and reciprocal pairs where the same row appears on
-            both strips because each lists the other in{" "}
-            <code>tracksOut</code>.
+            The shipped catalogue also includes asymmetric wiring: one-way
+            stubs, simple chains, and reciprocal pairs where the same row
+            appears on both strips because each lists the other in{" "}
+            <code>songsOut</code>.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {catalogTrackEdgeShapeExamples.map((item) => (
+          {catalogSongEdgeShapeExamples.map((item) => (
             <div key={item.key} className="flex flex-col items-center gap-2">
               <div
                 style={{
@@ -592,7 +594,7 @@ export async function CardsSongsContent() {
                     card={item.card}
                     theme={item.theme}
                     small
-                    cardTrackIndex={cardTrackIndex}
+                    cardSongIndex={cardSongIndex}
                   />
                 </div>
               </div>

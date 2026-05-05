@@ -18,7 +18,7 @@ export const REGGAE_DUB_CARDS: CardData[] = [
   {
     catalogNumber: 2,
     id: 104,
-    tracksOut: [105],
+    songsOut: [105],
     title: "I Shot the Sherif",
     year: "1973",
     genre: "Roots",

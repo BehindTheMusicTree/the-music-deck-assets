@@ -77,7 +77,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
   {
     catalogNumber: 7,
     id: 111,
-    tracksOut: [113],
+    songsOut: [113],
     title: "Harder, Better, Faster, Stronger",
     year: "2001",
     genre: "French House",
@@ -123,7 +123,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
   {
     catalogNumber: 11,
     id: 109,
-    tracksOut: [110],
+    songsOut: [110],
     title: "Mad World",
     artist: "",
     year: "1982",
@@ -140,7 +140,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
   {
     catalogNumber: 12,
     id: 84,
-    tracksOut: [85],
+    songsOut: [85],
     title: "Opus I",
     artist: "",
     year: "2015",
@@ -155,7 +155,7 @@ export const ELECTRONIC_CARDS: CardData[] = [
   {
     catalogNumber: 13,
     id: 85,
-    tracksOut: [86],
+    songsOut: [86],
     title: "Opus II",
     artist: "",
     year: "2016",

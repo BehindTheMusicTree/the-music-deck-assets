@@ -33,5 +33,5 @@ This folder contains the product design documentation for The Music Deck.
 
 - Use `README.md` for high-level context.
 - Use these docs for detailed rules.
-- `Open Questions` tracks unresolved items.
-- `Decisions` tracks accepted rules and assumptions.
+- `Open Questions` songs unresolved items.
+- `Decisions` songs accepted rules and assumptions.

@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import CatalogCard from "@/components/catalog/CatalogCard";
 import {
   CARD_RARITY_ORDER,
-  deriveTracksInFromTrackIndex,
+  deriveSongsInFromSongIndex,
   formatCatalogIntensity,
   WISHLIST_KINDS,
 } from "@/lib/cards";
-import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/track-graph";
 import type { WishlistEntry } from "@/lib/cards/wishlist";
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";
@@ -69,7 +69,7 @@ function artworkPromptPreview(full: string): {
 
 function trackRefsLabel(
   ids: number[] | undefined,
-  byId: CardTrackIndex,
+  byId: CardSongIndex,
 ): string {
   if (!ids || ids.length === 0) return "—";
   return ids
@@ -219,11 +219,11 @@ const CATALOG_DETAIL_CARD_BOX_H =
 export default function WishlistDeckTable({
   className = "",
   wishlistEntries,
-  cardTrackIndex,
+  cardSongIndex,
 }: {
   className?: string;
   wishlistEntries: WishlistEntry[];
-  cardTrackIndex: CardTrackIndex;
+  cardSongIndex: CardSongIndex;
 }) {
   const [filterKind, setFilterKind] = useState<string>("all");
   const [filterAppGenre, setFilterAppGenre] = useState<string>("all");
@@ -377,7 +377,7 @@ export default function WishlistDeckTable({
   return (
     <div className={["w-full min-w-0", className].filter(Boolean).join(" ")}>
       <p className="font-garamond text-muted text-[14px] leading-relaxed mb-4 max-w-[720px]">
-        Planned tracks without bundled deck artwork. They are excluded from
+        Wishlist songs without bundled deck artwork. They are excluded from
         shipped catalogue numbering and from the deck transition graph until
         they ship.
       </p>
@@ -699,7 +699,7 @@ export default function WishlistDeckTable({
                           theme={theme}
                           small
                           enableZoom={false}
-                          cardTrackIndex={cardTrackIndex}
+                          cardSongIndex={cardSongIndex}
                         />
                       </div>
                     </div>
@@ -840,7 +840,7 @@ export default function WishlistDeckTable({
                             theme={d.theme}
                             enableZoom={false}
                             hoverLift={false}
-                            cardTrackIndex={cardTrackIndex}
+                            cardSongIndex={cardSongIndex}
                           />
                         </div>
                       </div>
@@ -862,20 +862,17 @@ export default function WishlistDeckTable({
                           {detailLine("Genre line", c.genre ?? "—")}
                           {detailLine("Country / region", c.country ?? "—")}
                           {detailLine(
-                            "Tracks in",
+                            "Songs in",
                             trackRefsLabel(
-                              deriveTracksInFromTrackIndex(
-                                cardTrackIndex,
-                                c.id,
-                              ),
-                              cardTrackIndex,
+                              deriveSongsInFromSongIndex(cardSongIndex, c.id),
+                              cardSongIndex,
                             ),
                           )}
                           {detailLine(
-                            "Tracks out",
+                            "Songs out",
                             trackRefsLabel(
-                              cardTrackIndex[c.id]?.tracksOut,
-                              cardTrackIndex,
+                              cardSongIndex[c.id]?.songsOut,
+                              cardSongIndex,
                             ),
                           )}
                           {detailLine(

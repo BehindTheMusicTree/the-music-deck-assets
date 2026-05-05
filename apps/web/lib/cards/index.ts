@@ -25,8 +25,8 @@ export { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
 export { DEFAULT_PREVIEW_CARD } from "./preview-default";
 export { type CardRarity, CARD_RARITY_ORDER } from "./card-rarity";
 export {
-  buildCardTrackIndex,
-  deriveTracksInFromTrackIndex,
-  type CardTrackIndex,
-  type CardTrackIndexEntry,
+  buildCardSongIndex,
+  deriveSongsInFromSongIndex,
+  type CardSongIndex,
+  type CardSongIndexEntry,
 } from "./track-graph";

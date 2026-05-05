@@ -106,7 +106,7 @@ export async function backfillCardGenreIds(
     select: { id: true, name: true },
   });
   const byName = new Map(genres.map((g) => [g.name, g.id]));
-  const songCards = await prisma.songCard.findMany({
+  const songCards = await prisma.song.findMany({
     where: { genreId: null },
     select: { id: true, genre: true },
   });
@@ -114,7 +114,7 @@ export async function backfillCardGenreIds(
   for (const sc of songCards) {
     const genreId = sc.genre ? byName.get(sc.genre) : undefined;
     if (genreId) {
-      await prisma.songCard.update({ where: { id: sc.id }, data: { genreId } });
+      await prisma.song.update({ where: { id: sc.id }, data: { genreId } });
       filled++;
     }
   }

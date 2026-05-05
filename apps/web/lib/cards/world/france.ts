@@ -115,7 +115,7 @@ export const FRANCE_CARDS: CardData[] = [
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
     rarity: "Classic",
-    tracksOut: [90],
+    songsOut: [90],
     artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.les-choristes-vois-sur-ton-chemin-v1.png"],

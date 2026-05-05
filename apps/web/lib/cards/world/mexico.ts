@@ -11,7 +11,7 @@ export const MEXICO_CARDS: CardData[] = [
     genre: "Mexican Folk",
     country: "Mexico",
     ability: "Reserve",
-    abilityDesc: "Planned catalogue entry.",
+    abilityDesc: "Wishlist catalogue entry.",
     artworkOffsetY: -20,
     pop: 7,
     rarity: "Banger",

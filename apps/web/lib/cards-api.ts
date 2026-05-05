@@ -1,15 +1,15 @@
 import { cacheLife, cacheTag } from "next/cache";
-import type { CardTrackIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/track-graph";
 import type { ApiCardJson } from "@/lib/deck-from-api";
 import type { GenreTheme } from "@/lib/card-theme-types";
 
-type TrackIndexApiRow = {
+type SongIndexApiRow = {
   id: number;
   title: string;
   artist?: string;
   genre?: string;
   artworkUrl?: string;
-  tracksOut: number[];
+  songsOut: number[];
 };
 
 export type GenreTaxonomyEntry = {
@@ -63,12 +63,13 @@ export async function getWishlistCards(): Promise<ApiCardJson[]> {
   return fetchJson<ApiCardJson[]>("/cards/wishlist");
 }
 
-export async function getCatalogTrackIndex(): Promise<CardTrackIndex> {
+export async function getCatalogSongIndex(): Promise<CardSongIndex> {
   "use cache";
   cacheLife("hours");
   cacheTag("cards", "cards:track-index");
-  const raw = await fetchJson<Record<string, TrackIndexApiRow>>("/cards/track-index");
-  const out: CardTrackIndex = {};
+  const raw =
+    await fetchJson<Record<string, SongIndexApiRow>>("/cards/track-index");
+  const out: CardSongIndex = {};
   for (const [key, row] of Object.entries(raw)) {
     const id = Number(key);
     out[id] = {
@@ -78,7 +79,7 @@ export async function getCatalogTrackIndex(): Promise<CardTrackIndex> {
       genre: row.genre,
       artwork: row.artworkUrl,
       artworkUrl: row.artworkUrl,
-      tracksOut: row.tracksOut ?? [],
+      songsOut: row.songsOut ?? [],
     };
   }
   return out;

@@ -24,7 +24,7 @@ export default function IntensityGauge({
   const gauge = (
     <>
       <div
-        className={styles.intensityTrack}
+        className={styles.intensitySong}
         style={
           idx
             ? ({

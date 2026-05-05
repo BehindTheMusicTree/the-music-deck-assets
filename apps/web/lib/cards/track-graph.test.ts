@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CardData } from "@/components/Card";
-import {
-  buildCardTrackIndex,
-  deriveTracksInFromTrackIndex,
-} from "./track-graph";
+import { buildCardSongIndex, deriveSongsInFromSongIndex } from "./track-graph";
 
 const cards: CardData[] = [
   {
@@ -14,7 +11,7 @@ const cards: CardData[] = [
     abilityDesc: "Test",
     pop: 5,
     rarity: "Classic",
-    tracksOut: [2, 3],
+    songsOut: [2, 3],
   },
   {
     id: 2,
@@ -24,7 +21,7 @@ const cards: CardData[] = [
     abilityDesc: "Test",
     pop: 5,
     rarity: "Classic",
-    tracksOut: [3],
+    songsOut: [3],
   },
   {
     id: 3,
@@ -37,12 +34,12 @@ const cards: CardData[] = [
   },
 ];
 
-describe("deriveTracksInFromTrackIndex", () => {
-  it("derives incoming ids only from other cards tracksOut", () => {
-    const index = buildCardTrackIndex(cards);
+describe("deriveSongsInFromSongIndex", () => {
+  it("derives incoming ids only from other cards songsOut", () => {
+    const index = buildCardSongIndex(cards);
 
-    expect(deriveTracksInFromTrackIndex(index, 1)).toEqual([]);
-    expect(deriveTracksInFromTrackIndex(index, 2)).toEqual([1]);
-    expect(deriveTracksInFromTrackIndex(index, 3)).toEqual([1, 2]);
+    expect(deriveSongsInFromSongIndex(index, 1)).toEqual([]);
+    expect(deriveSongsInFromSongIndex(index, 2)).toEqual([1]);
+    expect(deriveSongsInFromSongIndex(index, 3)).toEqual([1, 2]);
   });
 });

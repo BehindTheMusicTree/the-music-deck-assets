@@ -229,7 +229,7 @@ export const ROCK_CARDS: CardData[] = [
     genre: "Krautrock",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
-    tracksOut: [107],
+    songsOut: [107],
     pop: 8,
     rarity: "Classic",
     artwork: `${ART}artwork.can-vitamine-c-v1.png`,

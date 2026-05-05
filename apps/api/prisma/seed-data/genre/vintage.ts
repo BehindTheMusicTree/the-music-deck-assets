@@ -5,7 +5,7 @@ export const VINTAGE_CARDS: CardData[] = [
   {
     catalogNumber: 18,
     id: 114,
-    tracksOut: [115],
+    songsOut: [115],
     title: "Amen, Brother",
     artist: "The Winstons",
     year: "1969",

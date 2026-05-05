@@ -282,8 +282,8 @@ function BattlesAudio() {
           <section className="mb-10 max-w-[760px]">
             <h2 className="section-title mb-2">1) Battle audio strategy</h2>
             <ul className="font-garamond text-muted leading-normal m-0 pl-5 space-y-1.5">
-              <li>All battle tracks are AI-generated in production.</li>
-              <li>All battle tracks are streamed at runtime.</li>
+              <li>All battle songs are AI-generated in production.</li>
+              <li>All battle songs are streamed at runtime.</li>
               <li>
                 Each generated asset is 3:00 and must avoid plagiarism and
                 celebrity voice imitation.

@@ -150,7 +150,7 @@ export const HIP_HOP_CARDS: CardData[] = [
     genre: "Alternative Hip-Hop",
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
-    tracksOut: [108],
+    songsOut: [108],
     pop: 8,
     rarity: "Classic",
     artwork: `${ART}artwork.raury-jaden-losing-your-mind-v1.png`,

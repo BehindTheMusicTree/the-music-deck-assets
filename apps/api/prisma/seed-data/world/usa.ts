@@ -54,7 +54,7 @@ export const USA_CARDS: CardData[] = [
   {
     catalogNumber: 7,
     id: 100,
-    tracksOut: [101],
+    songsOut: [101],
     title: "The Great Pretender",
     artist: "The Platters",
     year: "1955",
