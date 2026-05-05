@@ -100,6 +100,19 @@ function resolveCardTheme(
   return apiCard.genreTheme ?? fallback;
 }
 
+/** Wishlist genres are free-form notes; unknown values skip canonical theme rules. */
+function wishlistResolvedThemeOrNull(
+  genre: string,
+  country?: string,
+): ReturnType<typeof resolveThemeSelection> | null {
+  if (!genre.trim()) return null;
+  try {
+    return resolveThemeSelection({ genre, country });
+  } catch {
+    return null;
+  }
+}
+
 function rawCatalogRowFromApiShipped(a: ApiCardJson): RawCatalogRow {
   const card = apiCardToCardData(a);
   const g = ID_TO_APP_GENRE[a.id];
@@ -211,7 +224,8 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   const kind: WishlistKind = "Wishlist";
   const fallbackTheme = card.country
     ? themeForCountry(card.country)
-    : resolveThemeSelection({ genre: card.genre ?? "" }).theme;
+    : (wishlistResolvedThemeOrNull(card.genre)?.theme ??
+      APP_GENRE_THEMES.Mainstream);
   const theme = resolveCardTheme(a, fallbackTheme);
   return { rowKey: a.rowKey, kind, card, theme };
 }
@@ -221,13 +235,11 @@ function wishlistRootGenreLabel(card: CardData, rowKey: string): string {
     return "World";
   }
   if (!card.genre) return "—";
-  const r = resolveThemeSelection({ genre: card.genre, country: card.country });
-  if (r.resolvedGenre) {
+  const r = wishlistResolvedThemeOrNull(card.genre, card.country);
+  if (r?.resolvedGenre) {
     return displayGenreLabel(r.resolvedGenre as RootGenreName);
   }
-  throw new Error(
-    `Wishlist row "${rowKey}" (genre "${card.genre}") has no resolved app genre`,
-  );
+  return card.genre;
 }
 
 function wishlistIntensity(card: CardData, rowKey: string): Intensity {
@@ -236,19 +248,17 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
       `Wishlist row "${rowKey}" (${card.title}): missing genre for intensity`,
     );
   }
-  const resolved = resolveThemeSelection({
-    genre: card.genre,
-    country: card.country,
-  });
+  const resolved = wishlistResolvedThemeOrNull(card.genre, card.country);
+  if (!resolved) {
+    return "POP";
+  }
   if (resolved.resolvedSubgenre) {
     return subgenreIntensity(resolved.resolvedSubgenre);
   }
   if (resolved.resolvedGenre) {
     return appGenreIntensity(resolved.resolvedGenre as RootGenreName);
   }
-  throw new Error(
-    `Wishlist row "${rowKey}" (${card.title}): cannot resolve intensity`,
-  );
+  return "POP";
 }
 
 /** Wishlist + planned rows, deduped against shipped catalogue keys like the static bundle. */

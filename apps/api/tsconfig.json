@@ -17,11 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "@repo/cards-domain": ["../../packages/cards-domain/src/index.ts"],
-      "@repo/cards-domain/*": ["../../packages/cards-domain/src/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*", "prisma/seed.ts", "scripts/**/*"],
   "exclude": ["node_modules", "dist"]

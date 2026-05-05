@@ -41,10 +41,43 @@ function apiOrigin(): string {
   return base.replace(/\/+$/, "");
 }
 
+/** Flatten fetch/network errors so RSC surfaces ECONNREFUSED etc., not an empty AggregateError. */
+function describeFetchFailure(err: unknown): string {
+  const out: string[] = [];
+  const seen = new Set<unknown>();
+  function walk(e: unknown): void {
+    if (e === undefined || e === null || seen.has(e)) return;
+    seen.add(e);
+    if (e instanceof Error) {
+      const code = "code" in e && typeof (e as NodeJS.ErrnoException).code === "string"
+        ? ` (${(e as NodeJS.ErrnoException).code})`
+        : "";
+      out.push(`${e.message}${code}`);
+      if (e instanceof AggregateError) {
+        for (const sub of e.errors) walk(sub);
+      }
+      walk(e.cause);
+    } else {
+      out.push(String(e));
+    }
+  }
+  walk(err);
+  return [...new Set(out)].filter(Boolean).join(" — ");
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${apiOrigin()}${path}`, {
-    cache: "force-cache",
-  });
+  const url = `${apiOrigin()}${path}`;
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      cache: "force-cache",
+    });
+  } catch (err) {
+    throw new Error(
+      `API fetch failed ${path}: ${describeFetchFailure(err)}. Check BACKEND_URL (${apiOrigin()}) and that the API is running.`,
+      { cause: err },
+    );
+  }
   if (!res.ok) {
     throw new Error(`API ${path} failed: ${res.status} ${res.statusText}`);
   }

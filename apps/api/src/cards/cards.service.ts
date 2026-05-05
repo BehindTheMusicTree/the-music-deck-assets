@@ -244,6 +244,8 @@ export class CardsService {
       });
       if (existingSong)
         throw new ConflictException(`Card ${dto.id} already exists`);
+      if (existingWishlist)
+        throw new ConflictException(`Card ${dto.id} already exists`);
       const conflictCard = await tx.card.findUnique({
         where: { rowKey: dto.rowKey },
       });
