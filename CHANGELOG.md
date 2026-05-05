@@ -68,7 +68,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 - **`@repo/cards-domain`**: Shared card types + track graph for API + web.
 
-- **Web**: Cached **`API_URL`** fetchers (**`apps/web/lib/cards-api.ts`**), catalog/wishlist from API (**`deck-from-api.ts`**), **`revalidateTag('cards', 'max')`**, admin card artwork upload (**`app/admin/cards/[id]/`**).
+- **Web**: Cached **`BACKEND_URL`** fetchers (**`apps/web/lib/cards-api.ts`**), catalog/wishlist from API (**`deck-from-api.ts`**), **`revalidateTag('cards', 'max')`**, admin card artwork upload (**`app/admin/cards/[id]/`**).
 
 - **Ops — Sync env**: API **`S3_*`** from GitHub vars/secrets only; **`apply-tmd-admin-env-from-sync`** (infra) copies promoted sync into **`compose/<API>.env`** with no MinIO compose env on the server (**Cloudflare R2** for staging/prod).
 
