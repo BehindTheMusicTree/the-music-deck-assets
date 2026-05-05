@@ -10,7 +10,6 @@ import {
 import { ConfigService } from "@nestjs/config";
 import {
   Card,
-  CardKind,
   CardRarity,
   CardStatus,
   SongCard,
@@ -24,13 +23,21 @@ import {
   CardResponse,
   CardTrackIndexEntryDto,
   CreateCardDto,
+  GenreTaxonomyKindValue,
+  GenreTaxonomyEntryDto,
+  GenreTaxonomyResponse,
+  GenreThemeDto,
   UpdateCardDto,
 } from "./cards.dto";
 
 type SongCardFull = SongCard & {
   card: Card;
   tracksOut: SongCardTrackTransition[];
-  genreRef: { id: number } | null;
+  genreRef: {
+    id: number;
+    theme: Prisma.JsonValue | null;
+    parent: { theme: Prisma.JsonValue | null } | null;
+  } | null;
 };
 
 @Injectable()
@@ -56,13 +63,13 @@ export class CardsService {
     return {
       id: sc.card.id,
       rowKey: sc.card.rowKey,
-      status: sc.card.status,
-      kind: sc.card.kind,
+      status: normalizeCardStatus(sc.card.status),
       title: sc.card.title,
       artist: sc.artist ?? undefined,
       year: sc.year,
       genre: sc.genre,
       genreId: sc.genreRef?.id ?? undefined,
+      genreTheme: toGenreThemeDto(sc.genreRef?.theme ?? sc.genreRef?.parent?.theme),
       country: sc.country ?? undefined,
       ability: sc.card.ability,
       abilityDesc: sc.card.abilityDesc,
@@ -85,6 +92,7 @@ export class CardsService {
       appleMusicUrl: sc.card.appleMusicUrl ?? undefined,
       youtubeUrl: sc.card.youtubeUrl ?? undefined,
       bandcampUrl: sc.card.bandcampUrl ?? undefined,
+      soundcloudUrl: sc.card.soundcloudUrl ?? undefined,
       tracksOut: sc.tracksOut.map((t) => t.toId),
     };
   }
@@ -92,14 +100,16 @@ export class CardsService {
   async list(query: CardListQuery): Promise<CardResponse[]> {
     const where: Prisma.SongCardWhereInput = {};
     const cardWhere: Prisma.CardWhereInput = {};
-    if (query.status) cardWhere.status = query.status as CardStatus;
-    if (query.kind) cardWhere.kind = query.kind as CardKind;
-    if (query.status || query.kind) where.card = cardWhere;
+    if (query.status) {
+      cardWhere.status =
+        query.status === "Wishlist" ? CardStatus.Wishlist : CardStatus.Shipped;
+    }
+    if (query.status) where.card = cardWhere;
     if (query.genre) where.genre = query.genre;
     if (query.country) where.country = query.country;
     const songCards = await this.prisma.songCard.findMany({
       where,
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
       orderBy: { id: "asc" },
     });
     return songCards.map((sc) => this.toResponse(sc));
@@ -108,7 +118,7 @@ export class CardsService {
   async getById(id: number): Promise<CardResponse> {
     const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
     });
     if (!sc) throw new NotFoundException(`Card ${id} not found`);
     return this.toResponse(sc);
@@ -117,7 +127,7 @@ export class CardsService {
   async getRaw(id: number): Promise<SongCardFull> {
     const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
     });
     if (!sc) throw new NotFoundException(`Card ${id} not found`);
     return sc;
@@ -130,9 +140,9 @@ export class CardsService {
   async wishlist(): Promise<CardResponse[]> {
     const songCards = await this.prisma.songCard.findMany({
       where: {
-        card: { status: { in: [CardStatus.Wishlist, CardStatus.Planned] } },
+        card: { status: CardStatus.Wishlist },
       },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
       orderBy: { id: "asc" },
     });
     return songCards.map((sc) => this.toResponse(sc));
@@ -141,7 +151,7 @@ export class CardsService {
   async trackIndex(): Promise<Record<number, CardTrackIndexEntryDto>> {
     const songCards = await this.prisma.songCard.findMany({
       where: { card: { status: CardStatus.Shipped } },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
       orderBy: { id: "asc" },
     });
     const index: Record<number, CardTrackIndexEntryDto> = {};
@@ -156,6 +166,50 @@ export class CardsService {
       };
     }
     return index;
+  }
+
+  async genreTaxonomy(): Promise<GenreTaxonomyResponse> {
+    const genres = await this.prisma.genre.findMany({
+      select: {
+        id: true,
+        name: true,
+        parentId: true,
+        parentBId: true,
+        isCountry: true,
+        intensity: true,
+        displayLabel: true,
+        theme: true,
+        updatedAt: true,
+      },
+      orderBy: { id: "asc" },
+    });
+    const latestUpdatedAt = genres.reduce<Date | null>(
+      (latest, row) => (!latest || row.updatedAt > latest ? row.updatedAt : latest),
+      null,
+    );
+    const updatedAt = (latestUpdatedAt ?? new Date(0)).toISOString();
+    const byId = new Map(genres.map((g) => [g.id, g]));
+    const entries: GenreTaxonomyEntryDto[] = genres.map((g) => ({
+      id: g.id,
+      name: g.name,
+      parentId: g.parentId ?? undefined,
+      parentBId: g.parentBId ?? undefined,
+      isCountry: g.isCountry,
+      intensity: g.intensity,
+      displayLabel: g.displayLabel ?? undefined,
+      theme: toGenreThemeDto(g.theme),
+      kind: classifyGenreKind(
+        g.isCountry,
+        g.parentId ? byId.get(g.parentId)?.isCountry ?? false : false,
+        g.parentId ?? null,
+      ),
+      updatedAt: g.updatedAt.toISOString(),
+    }));
+    return {
+      taxonomyVersion: updatedAt,
+      updatedAt,
+      entries,
+    };
   }
 
   async create(dto: CreateCardDto): Promise<CardResponse> {
@@ -178,8 +232,7 @@ export class CardsService {
         data: {
           id: dto.id,
           rowKey: dto.rowKey,
-          status: dto.status as CardStatus,
-          kind: dto.kind as CardKind,
+          status: dto.status === "Shipped" ? CardStatus.Shipped : CardStatus.Wishlist,
           title: dto.title,
           ability: dto.ability,
           abilityDesc: dto.abilityDesc,
@@ -193,6 +246,7 @@ export class CardsService {
           appleMusicUrl: dto.appleMusicUrl ?? null,
           youtubeUrl: dto.youtubeUrl ?? null,
           bandcampUrl: dto.bandcampUrl ?? null,
+          soundcloudUrl: dto.soundcloudUrl ?? null,
         },
       });
       await tx.songCard.create({
@@ -214,7 +268,7 @@ export class CardsService {
       }
       const refreshed = await tx.songCard.findUnique({
         where: { id: dto.id },
-        include: { card: true, tracksOut: true, genreRef: true },
+        include: SONG_CARD_INCLUDE,
       });
       if (!refreshed) throw new Error("Failed to load created card");
       return this.toResponse(refreshed);
@@ -239,8 +293,11 @@ export class CardsService {
         where: { id },
         data: {
           rowKey: dto.rowKey ?? undefined,
-          status: dto.status ? (dto.status as CardStatus) : undefined,
-          kind: dto.kind ? (dto.kind as CardKind) : undefined,
+          status: dto.status
+            ? dto.status === "Shipped"
+              ? CardStatus.Shipped
+              : CardStatus.Wishlist
+            : undefined,
           title: dto.title ?? undefined,
           ability: dto.ability ?? undefined,
           abilityDesc: dto.abilityDesc ?? undefined,
@@ -254,6 +311,7 @@ export class CardsService {
           appleMusicUrl: dto.appleMusicUrl ?? undefined,
           youtubeUrl: dto.youtubeUrl ?? undefined,
           bandcampUrl: dto.bandcampUrl ?? undefined,
+          soundcloudUrl: dto.soundcloudUrl ?? undefined,
         },
       });
       if (
@@ -281,7 +339,7 @@ export class CardsService {
       }
       const refreshed = await tx.songCard.findUnique({
         where: { id },
-        include: { card: true, tracksOut: true, genreRef: true },
+        include: SONG_CARD_INCLUDE,
       });
       if (!refreshed) throw new NotFoundException(`Card ${id} not found`);
       return this.toResponse(refreshed);
@@ -373,7 +431,7 @@ export class CardsService {
       }
       const refreshed = await tx.songCard.findUnique({
         where: { id },
-        include: { card: true, tracksOut: true, genreRef: true },
+        include: SONG_CARD_INCLUDE,
       });
       if (!refreshed) throw new NotFoundException(`Card ${id} not found`);
       return this.toResponse(refreshed);
@@ -401,7 +459,7 @@ export class CardsService {
     });
     const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
     });
     if (!sc) throw new NotFoundException(`Card ${id} not found`);
     return this.toResponse(sc);
@@ -419,7 +477,7 @@ export class CardsService {
     });
     const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { card: true, tracksOut: true, genreRef: true },
+      include: SONG_CARD_INCLUDE,
     });
     if (!sc) throw new NotFoundException(`Card ${id} not found`);
     return this.toResponse(sc);
@@ -466,8 +524,116 @@ export class CardsService {
   }
 }
 
+export function classifyGenreKind(
+  isCountry: boolean,
+  parentIsCountry: boolean,
+  parentId: number | null,
+): GenreTaxonomyKindValue {
+  if (isCountry) return "COUNTRY_ROOT";
+  if (parentIsCountry) return "COUNTRY_SUB_GENRE";
+  if (!parentId) return "GENRE_ROOT";
+  return "SUB_GENRE";
+}
+
+function toGenreThemeDto(raw: Prisma.JsonValue | null | undefined): GenreThemeDto | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const value = raw as Record<string, unknown>;
+  if (
+    typeof value.border !== "string" ||
+    typeof value.headerBg !== "string" ||
+    typeof value.textMain !== "string" ||
+    typeof value.textBody !== "string" ||
+    typeof value.parchStrip !== "string" ||
+    typeof value.parchAbility !== "string" ||
+    typeof value.barGlowPop !== "string" ||
+    typeof value.barGlowExp !== "string" ||
+    typeof value.icon !== "string" ||
+    !isColorPair(value.barPop) ||
+    !isColorPair(value.barExp)
+  ) {
+    return undefined;
+  }
+  return {
+    border: value.border,
+    frameBorder:
+      typeof value.frameBorder === "string" ? value.frameBorder : undefined,
+    frameBg: typeof value.frameBg === "string" ? value.frameBg : undefined,
+    frameBackgroundPosition:
+      typeof value.frameBackgroundPosition === "string"
+        ? value.frameBackgroundPosition
+        : undefined,
+    frameRotateR90:
+      typeof value.frameRotateR90 === "boolean" ? value.frameRotateR90 : undefined,
+    frameFilter:
+      typeof value.frameFilter === "string" ? value.frameFilter : undefined,
+    frameOpacity:
+      typeof value.frameOpacity === "number" ? value.frameOpacity : undefined,
+    headerBg: value.headerBg,
+    textMain: value.textMain,
+    textBody: value.textBody,
+    parchStrip: value.parchStrip,
+    parchAbility: value.parchAbility,
+    barPop: value.barPop,
+    barExp: value.barExp,
+    barGlowPop: value.barGlowPop,
+    barGlowExp: value.barGlowExp,
+    typePip: toCardTypePip(value.typePip),
+    icon: value.icon,
+  };
+}
+
+function toCardTypePip(raw: unknown): GenreThemeDto["typePip"] {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const value = raw as Record<string, unknown>;
+  return {
+    symbol: toCardTypePipSymbol(value.symbol),
+    flagBg: typeof value.flagBg === "string" ? value.flagBg : undefined,
+  };
+}
+
+function toCardTypePipSymbol(
+  raw: unknown,
+): { sym: string; color: string; size?: number; svg?: string } | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const value = raw as Record<string, unknown>;
+  if (typeof value.sym !== "string" || typeof value.color !== "string") {
+    return undefined;
+  }
+  return {
+    sym: value.sym,
+    color: value.color,
+    size: typeof value.size === "number" ? value.size : undefined,
+    svg: typeof value.svg === "string" ? value.svg : undefined,
+  };
+}
+
+function isColorPair(raw: unknown): raw is [string, string] {
+  return (
+    Array.isArray(raw) &&
+    raw.length === 2 &&
+    typeof raw[0] === "string" &&
+    typeof raw[1] === "string"
+  );
+}
+
+const SONG_CARD_INCLUDE = {
+  card: true,
+  tracksOut: true,
+  genreRef: {
+    select: {
+      id: true,
+      theme: true,
+      parent: { select: { theme: true } },
+    },
+  },
+} satisfies Prisma.SongCardInclude;
+
 function safeDeckBasename(original: string, id: number): string {
   const b = basename(original).replace(/[^a-zA-Z0-9._-]+/g, "_");
   if (!b || b === "." || b === "..") return `artwork-${id}.png`;
   return b.slice(0, 180);
+}
+
+function normalizeCardStatus(status: CardStatus): "Shipped" | "Wishlist" {
+  return status === CardStatus.Shipped ? "Shipped" : "Wishlist";
 }

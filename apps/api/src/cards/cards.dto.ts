@@ -11,24 +11,104 @@ import {
   Min,
 } from "class-validator";
 
-const CARD_STATUS_VALUES = ["Shipped", "Wishlist", "Planned"] as const;
-const CARD_KIND_VALUES = ["Card", "Planned"] as const;
+const CARD_STATUS_VALUES = ["Shipped", "Wishlist"] as const;
 const CARD_RARITY_VALUES = ["Legendary", "Classic", "Banger", "Niche"] as const;
 
 export type CardStatusValue = (typeof CARD_STATUS_VALUES)[number];
-export type CardKindValue = (typeof CARD_KIND_VALUES)[number];
 export type CardRarityValue = (typeof CARD_RARITY_VALUES)[number];
+export const GENRE_TAXONOMY_KIND = {
+  COUNTRY_ROOT: "COUNTRY_ROOT",
+  COUNTRY_SUB_GENRE: "COUNTRY_SUB_GENRE",
+  GENRE_ROOT: "GENRE_ROOT",
+  SUB_GENRE: "SUB_GENRE",
+} as const;
+export const GENRE_TAXONOMY_KIND_VALUES = Object.values(GENRE_TAXONOMY_KIND);
+export type GenreTaxonomyKindValue =
+  (typeof GENRE_TAXONOMY_KIND)[keyof typeof GENRE_TAXONOMY_KIND];
+
+export class CardTypePipSymbolDto {
+  @ApiProperty()
+  sym!: string;
+
+  @ApiProperty()
+  color!: string;
+
+  @ApiPropertyOptional()
+  size?: number;
+
+  @ApiPropertyOptional()
+  svg?: string;
+}
+
+export class CardTypePipDto {
+  @ApiPropertyOptional({ type: CardTypePipSymbolDto })
+  symbol?: CardTypePipSymbolDto;
+
+  @ApiPropertyOptional()
+  flagBg?: string;
+}
+
+export class GenreThemeDto {
+  @ApiProperty()
+  border!: string;
+
+  @ApiPropertyOptional()
+  frameBorder?: string;
+
+  @ApiPropertyOptional()
+  frameBg?: string;
+
+  @ApiPropertyOptional()
+  frameBackgroundPosition?: string;
+
+  @ApiPropertyOptional()
+  frameRotateR90?: boolean;
+
+  @ApiPropertyOptional()
+  frameFilter?: string;
+
+  @ApiPropertyOptional()
+  frameOpacity?: number;
+
+  @ApiProperty()
+  headerBg!: string;
+
+  @ApiProperty()
+  textMain!: string;
+
+  @ApiProperty()
+  textBody!: string;
+
+  @ApiProperty()
+  parchStrip!: string;
+
+  @ApiProperty()
+  parchAbility!: string;
+
+  @ApiProperty({ type: [String], example: ["#123456", "#abcdef"] })
+  barPop!: [string, string];
+
+  @ApiProperty({ type: [String], example: ["#123456", "#abcdef"] })
+  barExp!: [string, string];
+
+  @ApiProperty()
+  barGlowPop!: string;
+
+  @ApiProperty()
+  barGlowExp!: string;
+
+  @ApiPropertyOptional({ type: CardTypePipDto })
+  typePip?: CardTypePipDto;
+
+  @ApiProperty()
+  icon!: string;
+}
 
 export class CardListQuery {
   @ApiPropertyOptional({ enum: CARD_STATUS_VALUES })
   @IsOptional()
   @IsEnum(CARD_STATUS_VALUES)
   status?: CardStatusValue;
-
-  @ApiPropertyOptional({ enum: CARD_KIND_VALUES })
-  @IsOptional()
-  @IsEnum(CARD_KIND_VALUES)
-  kind?: CardKindValue;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -53,9 +133,6 @@ export class CardResponse {
   @ApiProperty({ enum: CARD_STATUS_VALUES })
   status!: CardStatusValue;
 
-  @ApiProperty({ enum: CARD_KIND_VALUES })
-  kind!: CardKindValue;
-
   @ApiProperty()
   title!: string;
 
@@ -70,6 +147,9 @@ export class CardResponse {
 
   @ApiPropertyOptional()
   genreId?: number;
+
+  @ApiPropertyOptional({ type: GenreThemeDto })
+  genreTheme?: GenreThemeDto;
 
   @ApiPropertyOptional()
   country?: string;
@@ -134,11 +214,62 @@ export class CardResponse {
   @ApiPropertyOptional()
   bandcampUrl?: string;
 
+  @ApiPropertyOptional()
+  soundcloudUrl?: string;
+
   @ApiProperty({
     type: [Number],
     description: "Outgoing transition card ids (DJ transitions).",
   })
   tracksOut!: number[];
+}
+
+export class GenreTaxonomyEntryDto {
+  @ApiProperty()
+  id!: number;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiPropertyOptional()
+  parentId?: number;
+
+  @ApiPropertyOptional()
+  parentBId?: number;
+
+  @ApiProperty()
+  isCountry!: boolean;
+
+  @ApiPropertyOptional({ enum: ["pop", "soft", "experimental", "hardcore"] })
+  intensity?: "pop" | "soft" | "experimental" | "hardcore";
+
+  @ApiPropertyOptional()
+  displayLabel?: string;
+
+  @ApiPropertyOptional({ type: GenreThemeDto })
+  theme?: GenreThemeDto;
+
+  @ApiProperty({ enum: GENRE_TAXONOMY_KIND_VALUES })
+  kind!: GenreTaxonomyKindValue;
+
+  @ApiProperty()
+  updatedAt!: string;
+}
+
+export class GenreTaxonomyResponse {
+  @ApiProperty({
+    description:
+      "Monotonic taxonomy version derived from latest genre update timestamp.",
+  })
+  taxonomyVersion!: string;
+
+  @ApiProperty({
+    description: "Latest updatedAt across all genre rows (ISO timestamp).",
+  })
+  updatedAt!: string;
+
+  @ApiProperty({ type: [GenreTaxonomyEntryDto] })
+  entries!: GenreTaxonomyEntryDto[];
 }
 
 export class CardTrackIndexEntryDto {
@@ -187,10 +318,6 @@ export class CreateCardDto {
   @ApiProperty({ enum: CARD_STATUS_VALUES })
   @IsEnum(CARD_STATUS_VALUES)
   status!: CardStatusValue;
-
-  @ApiProperty({ enum: CARD_KIND_VALUES })
-  @IsEnum(CARD_KIND_VALUES)
-  kind!: CardKindValue;
 
   @ApiProperty()
   @IsString()
@@ -282,6 +409,11 @@ export class CreateCardDto {
   @IsString()
   bandcampUrl?: string;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  soundcloudUrl?: string;
+
   @ApiPropertyOptional({
     type: [Number],
     description: "Outgoing transition card ids; will be replaced atomically.",
@@ -303,11 +435,6 @@ export class UpdateCardDto {
   @IsOptional()
   @IsEnum(CARD_STATUS_VALUES)
   status?: CardStatusValue;
-
-  @ApiPropertyOptional({ enum: CARD_KIND_VALUES })
-  @IsOptional()
-  @IsEnum(CARD_KIND_VALUES)
-  kind?: CardKindValue;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -406,6 +533,11 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   bandcampUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  soundcloudUrl?: string;
 }
 
 export class TracksOutDto {

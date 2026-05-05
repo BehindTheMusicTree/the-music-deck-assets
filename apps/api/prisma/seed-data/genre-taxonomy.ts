@@ -26,12 +26,14 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
         intensity: name === "Mainstream" ? Intensity.pop : Intensity.soft,
         displayLabel: name === "Mainstream" ? "Pop" : null,
         wheelOrder: wheelIdx >= 0 ? wheelIdx + 1 : null,
+        isCountry: false,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
           )[name] ?? Prisma.DbNull,
       },
       update: {
+        isCountry: false,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
@@ -49,8 +51,8 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
   for (const name of countryNames) {
     await prisma.genre.upsert({
       where: { name },
-      create: { name, intensity: Intensity.soft },
-      update: {},
+      create: { name, intensity: Intensity.soft, isCountry: true },
+      update: { isCountry: true },
     });
   }
 
@@ -86,12 +88,13 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
         blendFactor: "t" in sub ? (sub.t ?? null) : null,
         intensity: sub.intensity as Intensity,
         colorOverride: sub.color ?? null,
+        isCountry: false,
         influenceId,
         influenceIntensity: sub.influence
           ? (sub.influence.intensity as Intensity)
           : null,
       },
-      update: {},
+      update: { isCountry: false },
     });
   }
 }

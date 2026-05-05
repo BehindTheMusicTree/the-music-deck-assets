@@ -32,6 +32,7 @@ import {
   CardResponse,
   CardTrackIndexEntryDto,
   CreateCardDto,
+  GenreTaxonomyResponse,
   TracksOutDto,
   UpdateCardDto,
 } from "./cards.dto";
@@ -57,7 +58,7 @@ export class CardsController {
   }
 
   @Get("wishlist")
-  @ApiOperation({ summary: "Wishlist + planned cards" })
+  @ApiOperation({ summary: "Wishlist cards" })
   @ApiOkResponse({ type: [CardResponse] })
   wishlist(): Promise<CardResponse[]> {
     return this.cards.wishlist();
@@ -69,6 +70,16 @@ export class CardsController {
   })
   trackIndex(): Promise<Record<number, CardTrackIndexEntryDto>> {
     return this.cards.trackIndex();
+  }
+
+  @Get("genres")
+  @ApiOperation({
+    summary:
+      "Genre taxonomy and theme contract for web/mobile clients (cache by taxonomyVersion)",
+  })
+  @ApiOkResponse({ type: GenreTaxonomyResponse })
+  genreTaxonomy(): Promise<GenreTaxonomyResponse> {
+    return this.cards.genreTaxonomy();
   }
 
   @Get(":id/artwork")

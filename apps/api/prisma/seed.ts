@@ -1,6 +1,6 @@
 /** Catalog seed — `rowKey` = slugified `title-year`; see ./README.md */
 import { basename } from "node:path";
-import { CardKind, CardStatus, PrismaClient } from "@prisma/client";
+import { CardStatus, PrismaClient } from "@prisma/client";
 import {
   assignCatalogRowKeys,
   type CardData,
@@ -19,7 +19,6 @@ const prisma = new PrismaClient();
 type RawSeedRow = {
   card: CardData;
   status: CardStatus;
-  kind: CardKind;
 };
 
 type SeedRow = RawSeedRow & { rowKey: string };
@@ -27,7 +26,6 @@ type SeedRow = RawSeedRow & { rowKey: string };
 function rawRowsForGenreCards(): RawSeedRow[] {
   return ALL_GENRE_CARDS.map((card) => ({
     status: CardStatus.Shipped,
-    kind: CardKind.Card,
     card,
   }));
 }
@@ -35,7 +33,6 @@ function rawRowsForGenreCards(): RawSeedRow[] {
 function rawRowsForWorldFlagCards(): RawSeedRow[] {
   return WORLD_FLAG_CARDS.map((card) => ({
     status: CardStatus.Shipped,
-    kind: CardKind.Card,
     card,
   }));
 }
@@ -43,7 +40,6 @@ function rawRowsForWorldFlagCards(): RawSeedRow[] {
 function rawRowsForWorldMixedCards(): RawSeedRow[] {
   return WORLD_MIXED_CARDS.map((card) => ({
     status: CardStatus.Shipped,
-    kind: CardKind.Card,
     card,
   }));
 }
@@ -51,15 +47,12 @@ function rawRowsForWorldMixedCards(): RawSeedRow[] {
 function rawRowForLaMacarena(): RawSeedRow {
   return {
     status: CardStatus.Shipped,
-    kind: CardKind.Card,
     card: LA_MACARENA_CARD,
   };
 }
 
 function rawRowForWishlistDef(def: WishlistCardDef): RawSeedRow {
-  const kind = def.kind === "Planned" ? CardKind.Planned : CardKind.Card;
-  const status =
-    def.kind === "Planned" ? CardStatus.Planned : CardStatus.Wishlist;
+  const status = CardStatus.Wishlist;
   const card: CardData = {
     id: def.id,
     title: def.title,
@@ -73,7 +66,7 @@ function rawRowForWishlistDef(def: WishlistCardDef): RawSeedRow {
     rarity: def.rarity,
     artworkPrompt: def.artworkPrompt,
   };
-  return { status, kind, card };
+  return { status, card };
 }
 
 function collectAllSeedRows(): SeedRow[] {
@@ -143,7 +136,6 @@ async function upsertCard(row: SeedRow): Promise<void> {
   const baseData = {
     rowKey: row.rowKey,
     status: row.status,
-    kind: row.kind,
     title: card.title,
     ability: card.ability,
     abilityDesc: card.abilityDesc,
@@ -226,7 +218,7 @@ async function main(): Promise<void> {
   await backfillCardGenreIds(prisma);
 
   console.log(
-    `Seed: ${rows.length} cards upserted (${rows.filter((r) => r.status === "Shipped").length} shipped, ${rows.filter((r) => r.status === "Wishlist").length} wishlist, ${rows.filter((r) => r.status === "Planned").length} planned).`,
+    `Seed: ${rows.length} cards upserted (${rows.filter((r) => r.status === "Shipped").length} shipped, ${rows.filter((r) => r.status === "Wishlist").length} wishlist).`,
   );
 }
 

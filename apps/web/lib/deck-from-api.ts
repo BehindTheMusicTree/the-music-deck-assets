@@ -27,11 +27,11 @@ export type ApiCardJson = {
   id: number;
   rowKey: string;
   status: string;
-  kind: string;
   title: string;
   artist?: string;
   year: string;
   genre?: string;
+  genreTheme?: GenreTheme;
   country?: string;
   ability: string;
   abilityDesc: string;
@@ -88,13 +88,25 @@ type RawCatalogRow = {
   theme: GenreTheme;
 };
 
+function resolveCardTheme(
+  apiCard: ApiCardJson,
+  fallback: GenreTheme,
+): GenreTheme {
+  return apiCard.genreTheme ?? fallback;
+}
+
 function rawCatalogRowFromApiShipped(a: ApiCardJson): RawCatalogRow {
   const card = apiCardToCardData(a);
   const g = ID_TO_APP_GENRE[a.id];
   const meta = g
     ? { kind: "Genre" as CatalogEntryKind, theme: APP_GENRE_THEMES[g] }
     : catalogMetaForGenreDeckCard(card);
-  return { rowKey: a.rowKey, kind: meta.kind, card, theme: meta.theme };
+  return {
+    rowKey: a.rowKey,
+    kind: meta.kind,
+    card,
+    theme: resolveCardTheme(a, meta.theme),
+  };
 }
 
 function catalogCardIntensity(row: RawCatalogRow): Intensity {
@@ -193,10 +205,11 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   theme: GenreTheme;
 } {
   const card = apiCardToCardData(a);
-  const kind: WishlistKind = a.kind === "Planned" ? "Planned" : "Card";
-  const theme = card.country
+  const kind: WishlistKind = "Planned";
+  const fallbackTheme = card.country
     ? themeForCountry(card.country)
     : resolveThemeSelection({ genre: card.genre ?? "" }).theme;
+  const theme = resolveCardTheme(a, fallbackTheme);
   return { rowKey: a.rowKey, kind, card, theme };
 }
 

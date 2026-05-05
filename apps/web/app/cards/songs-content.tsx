@@ -23,7 +23,16 @@ function findShippedCard(shipped: ApiCardJson[], id: number): CardData {
 }
 
 function firstWorldFlagCard(shipped: ApiCardJson[]): CardData {
-  const rows = shipped.filter((c) => c.kind === "World");
+  const rows = shipped.filter((c) => {
+    const country = c.country?.trim();
+    const genre = c.genre?.trim();
+    if (!country) return false;
+    return genre === country;
+  });
+  if (!rows[0]) {
+    // Fallback for older/incomplete data where country root rows are missing.
+    rows.push(...shipped.filter((c) => Boolean(c.country?.trim())));
+  }
   rows.sort((a, b) => a.id - b.id);
   if (!rows[0]) throw new Error("No world flag cards in catalogue");
   return apiCardToCardData(rows[0]);
