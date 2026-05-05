@@ -12,9 +12,7 @@ if (missing.length) {
 const nextConfig: NextConfig = {
   reactCompiler: process.env.NODE_ENV === "production",
   outputFileTracingRoot: path.join(__dirname, "../.."),
-  experimental: {
-    cacheComponents: true,
-  },
+  cacheComponents: true,
 };
 
 export default nextConfig;
