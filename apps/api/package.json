@@ -9,11 +9,12 @@
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest --config jest.config.cjs",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate:dev": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:generate": "set -a && . ./.env && set +a && prisma generate",
+    "prisma:migrate:dev": "set -a && . ./.env && set +a && prisma migrate dev",
+    "prisma:migrate:deploy": "set -a && . ./.env && set +a && prisma migrate deploy",
+    "prisma:migrate:reset": "set -a && . ./.env && set +a && prisma migrate reset",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma migrate reset --force && pnpm db:seed && pnpm artworks:migrate",
+    "db:reset": "set -a && . ./.env && set +a && prisma migrate reset --force && pnpm db:seed && pnpm artworks:migrate",
     "artworks:migrate": "tsx scripts/migrate-artworks.ts"
   },
   "dependencies": {
