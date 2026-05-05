@@ -69,6 +69,9 @@ export class CardResponse {
   genre!: string;
 
   @ApiPropertyOptional()
+  genreId?: number;
+
+  @ApiPropertyOptional()
   country?: string;
 
   @ApiProperty()
@@ -116,8 +119,20 @@ export class CardResponse {
   @ApiPropertyOptional()
   artworkPrompt?: string;
 
-  @ApiProperty()
-  wikipediaUrl!: string;
+  @ApiPropertyOptional()
+  wikipediaUrl?: string;
+
+  @ApiPropertyOptional()
+  spotifyUrl?: string;
+
+  @ApiPropertyOptional()
+  appleMusicUrl?: string;
+
+  @ApiPropertyOptional()
+  youtubeUrl?: string;
+
+  @ApiPropertyOptional()
+  bandcampUrl?: string;
 
   @ApiProperty({
     type: [Number],
@@ -193,11 +208,10 @@ export class CreateCardDto {
   @MaxLength(20)
   year!: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @IsString()
   @MaxLength(120)
-  genre?: string;
+  genre!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -243,6 +257,30 @@ export class CreateCardDto {
   @IsOptional()
   @IsString()
   artworkPrompt?: string;
+
+  @ApiProperty()
+  @IsString()
+  wikipediaUrl!: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  spotifyUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  appleMusicUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  bandcampUrl?: string;
 
   @ApiPropertyOptional({
     type: [Number],
@@ -343,6 +381,31 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   artworkPrompt?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  wikipediaUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  spotifyUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  appleMusicUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  bandcampUrl?: string;
 }
 
 export class TracksOutDto {

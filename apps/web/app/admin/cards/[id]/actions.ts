@@ -3,8 +3,8 @@
 import { revalidateCardsCache } from "@/lib/cards-revalidate";
 
 function apiOrigin(): string {
-  const base = process.env.API_URL;
-  if (!base?.trim()) throw new Error("API_URL is not set");
+  const base = process.env.BACKEND_URL;
+  if (!base?.trim()) throw new Error("BACKEND_URL is not set");
   return base.replace(/\/+$/, "");
 }
 

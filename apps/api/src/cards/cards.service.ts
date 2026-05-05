@@ -13,7 +13,8 @@ import {
   CardKind,
   CardRarity,
   CardStatus,
-  CardTrackTransition,
+  SongCard,
+  SongCardTrackTransition,
   Prisma,
 } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
@@ -26,7 +27,11 @@ import {
   UpdateCardDto,
 } from "./cards.dto";
 
-type CardWithTracks = Card & { tracksOut: CardTrackTransition[] };
+type SongCardFull = SongCard & {
+  card: Card;
+  tracksOut: SongCardTrackTransition[];
+  genreRef: { id: number } | null;
+};
 
 @Injectable()
 export class CardsService {
@@ -47,68 +52,75 @@ export class CardsService {
     return `${base.replace(/\/+$/, "")}/${card.artworkKey}`;
   }
 
-  toResponse(card: CardWithTracks): CardResponse {
+  toResponse(sc: SongCardFull): CardResponse {
     return {
-      id: card.id,
-      rowKey: card.rowKey,
-      status: card.status,
-      kind: card.kind,
-      title: card.title,
-      artist: card.artist ?? undefined,
-      year: card.year,
-      genre: card.genre,
-      country: card.country ?? undefined,
-      ability: card.ability,
-      abilityDesc: card.abilityDesc,
-      pop: card.pop,
-      rarity: card.rarity,
-      catalogNumber: card.catalogNumber ?? undefined,
-      artworkUrl: this.artworkUrlFor(card),
-      artworkKey: card.artworkKey ?? undefined,
-      artworkContentType: card.artworkContentType ?? undefined,
-      artworkBytes: card.artworkBytes ?? undefined,
-      artworkChecksum: card.artworkChecksum ?? undefined,
-      artworkOffsetY: card.artworkOffsetY ?? undefined,
-      artworkOverBorder: card.artworkOverBorder,
-      artworkCreatedAt: card.artworkCreatedAt
-        ? card.artworkCreatedAt.toISOString()
+      id: sc.card.id,
+      rowKey: sc.card.rowKey,
+      status: sc.card.status,
+      kind: sc.card.kind,
+      title: sc.card.title,
+      artist: sc.artist ?? undefined,
+      year: sc.year,
+      genre: sc.genre,
+      genreId: sc.genreRef?.id ?? undefined,
+      country: sc.country ?? undefined,
+      ability: sc.card.ability,
+      abilityDesc: sc.card.abilityDesc,
+      pop: sc.card.pop,
+      rarity: sc.card.rarity,
+      catalogNumber: sc.catalogNumber ?? undefined,
+      artworkUrl: this.artworkUrlFor(sc.card),
+      artworkKey: sc.card.artworkKey ?? undefined,
+      artworkContentType: sc.card.artworkContentType ?? undefined,
+      artworkBytes: sc.card.artworkBytes ?? undefined,
+      artworkChecksum: sc.card.artworkChecksum ?? undefined,
+      artworkOffsetY: sc.card.artworkOffsetY ?? undefined,
+      artworkOverBorder: sc.card.artworkOverBorder,
+      artworkCreatedAt: sc.card.artworkCreatedAt
+        ? sc.card.artworkCreatedAt.toISOString()
         : undefined,
-      artworkPrompt: card.artworkPrompt ?? undefined,
-      wikipediaUrl: card.wikipediaUrl,
-      tracksOut: card.tracksOut.map((t) => t.toId),
+      artworkPrompt: sc.card.artworkPrompt ?? undefined,
+      wikipediaUrl: sc.card.wikipediaUrl ?? undefined,
+      spotifyUrl: sc.card.spotifyUrl ?? undefined,
+      appleMusicUrl: sc.card.appleMusicUrl ?? undefined,
+      youtubeUrl: sc.card.youtubeUrl ?? undefined,
+      bandcampUrl: sc.card.bandcampUrl ?? undefined,
+      tracksOut: sc.tracksOut.map((t) => t.toId),
     };
   }
 
   async list(query: CardListQuery): Promise<CardResponse[]> {
-    const where: Prisma.CardWhereInput = {};
-    if (query.status) where.status = query.status as CardStatus;
-    if (query.kind) where.kind = query.kind as CardKind;
+    const where: Prisma.SongCardWhereInput = {};
+    const cardWhere: Prisma.CardWhereInput = {};
+    if (query.status) cardWhere.status = query.status as CardStatus;
+    if (query.kind) cardWhere.kind = query.kind as CardKind;
+    if (query.status || query.kind) where.card = cardWhere;
     if (query.genre) where.genre = query.genre;
     if (query.country) where.country = query.country;
-    const cards = await this.prisma.card.findMany({
+    const songCards = await this.prisma.songCard.findMany({
       where,
-      include: { tracksOut: true },
+      include: { card: true, tracksOut: true, genreRef: true },
       orderBy: { id: "asc" },
     });
-    return cards.map((c) => this.toResponse(c));
+    return songCards.map((sc) => this.toResponse(sc));
   }
 
   async getById(id: number): Promise<CardResponse> {
-    const card = await this.prisma.card.findUnique({
+    const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { tracksOut: true },
+      include: { card: true, tracksOut: true, genreRef: true },
     });
-    if (!card) throw new NotFoundException(`Card ${id} not found`);
-    return this.toResponse(card);
+    if (!sc) throw new NotFoundException(`Card ${id} not found`);
+    return this.toResponse(sc);
   }
 
-  async getRaw(id: number): Promise<CardWithTracks> {
-    const card = await this.prisma.card.findUnique({
+  async getRaw(id: number): Promise<SongCardFull> {
+    const sc = await this.prisma.songCard.findUnique({
       where: { id },
-      include: { tracksOut: true },
+      include: { card: true, tracksOut: true, genreRef: true },
     });
-    if (!card) throw new NotFoundException(`Card ${id} not found`);
-    return card;
+    if (!sc) throw new NotFoundException(`Card ${id} not found`);
+    return sc;
   }
 
   async catalog(): Promise<CardResponse[]> {
@@ -116,29 +128,31 @@ export class CardsService {
   }
 
   async wishlist(): Promise<CardResponse[]> {
-    const cards = await this.prisma.card.findMany({
-      where: { status: { in: [CardStatus.Wishlist, CardStatus.Planned] } },
-      include: { tracksOut: true },
+    const songCards = await this.prisma.songCard.findMany({
+      where: {
+        card: { status: { in: [CardStatus.Wishlist, CardStatus.Planned] } },
+      },
+      include: { card: true, tracksOut: true, genreRef: true },
       orderBy: { id: "asc" },
     });
-    return cards.map((c) => this.toResponse(c));
+    return songCards.map((sc) => this.toResponse(sc));
   }
 
   async trackIndex(): Promise<Record<number, CardTrackIndexEntryDto>> {
-    const cards = await this.prisma.card.findMany({
-      where: { status: CardStatus.Shipped },
-      include: { tracksOut: true },
+    const songCards = await this.prisma.songCard.findMany({
+      where: { card: { status: CardStatus.Shipped } },
+      include: { card: true, tracksOut: true, genreRef: true },
       orderBy: { id: "asc" },
     });
     const index: Record<number, CardTrackIndexEntryDto> = {};
-    for (const card of cards) {
-      index[card.id] = {
-        id: card.id,
-        title: card.title,
-        artist: card.artist ?? undefined,
-        genre: card.genre ?? undefined,
-        artworkUrl: this.artworkUrlFor(card),
-        tracksOut: card.tracksOut.map((t) => t.toId),
+    for (const sc of songCards) {
+      index[sc.id] = {
+        id: sc.id,
+        title: sc.card.title,
+        artist: sc.artist ?? undefined,
+        genre: sc.genre,
+        artworkUrl: this.artworkUrlFor(sc.card),
+        tracksOut: sc.tracksOut.map((t) => t.toId),
       };
     }
     return index;
@@ -159,37 +173,48 @@ export class CardsService {
         );
       }
       await this.assertTracksReferentialIntegrity(tx, tracksOut, dto.id);
-      const card = await tx.card.create({
+      const genreId = await this.resolveGenreId(tx, dto.genre);
+      await tx.card.create({
         data: {
           id: dto.id,
           rowKey: dto.rowKey,
           status: dto.status as CardStatus,
           kind: dto.kind as CardKind,
           title: dto.title,
-          artist: dto.artist ?? null,
-          year: dto.year,
-          genre: dto.genre ?? null,
-          country: dto.country ?? null,
           ability: dto.ability,
           abilityDesc: dto.abilityDesc,
           pop: dto.pop,
           rarity: dto.rarity as CardRarity,
-          catalogNumber: dto.catalogNumber ?? null,
           artworkOffsetY: dto.artworkOffsetY ?? null,
           artworkOverBorder: dto.artworkOverBorder ?? false,
           artworkPrompt: dto.artworkPrompt ?? null,
+          wikipediaUrl: dto.wikipediaUrl ?? null,
+          spotifyUrl: dto.spotifyUrl ?? null,
+          appleMusicUrl: dto.appleMusicUrl ?? null,
+          youtubeUrl: dto.youtubeUrl ?? null,
+          bandcampUrl: dto.bandcampUrl ?? null,
         },
-        include: { tracksOut: true },
+      });
+      await tx.songCard.create({
+        data: {
+          id: dto.id,
+          artist: dto.artist ?? null,
+          year: dto.year,
+          genre: dto.genre,
+          genreId,
+          country: dto.country ?? null,
+          catalogNumber: dto.catalogNumber ?? null,
+        },
       });
       if (tracksOut.length > 0) {
-        await tx.cardTrackTransition.createMany({
-          data: tracksOut.map((toId) => ({ fromId: card.id, toId })),
+        await tx.songCardTrackTransition.createMany({
+          data: tracksOut.map((toId) => ({ fromId: dto.id, toId })),
           skipDuplicates: true,
         });
       }
-      const refreshed = await tx.card.findUnique({
-        where: { id: card.id },
-        include: { tracksOut: true },
+      const refreshed = await tx.songCard.findUnique({
+        where: { id: dto.id },
+        include: { card: true, tracksOut: true, genreRef: true },
       });
       if (!refreshed) throw new Error("Failed to load created card");
       return this.toResponse(refreshed);
@@ -217,23 +242,46 @@ export class CardsService {
           status: dto.status ? (dto.status as CardStatus) : undefined,
           kind: dto.kind ? (dto.kind as CardKind) : undefined,
           title: dto.title ?? undefined,
-          artist: dto.artist ?? undefined,
-          year: dto.year ?? undefined,
-          genre: dto.genre ?? undefined,
-          country: dto.country ?? undefined,
           ability: dto.ability ?? undefined,
           abilityDesc: dto.abilityDesc ?? undefined,
           pop: dto.pop ?? undefined,
           rarity: dto.rarity ? (dto.rarity as CardRarity) : undefined,
-          catalogNumber: dto.catalogNumber ?? undefined,
           artworkOffsetY: dto.artworkOffsetY ?? undefined,
           artworkOverBorder: dto.artworkOverBorder ?? undefined,
           artworkPrompt: dto.artworkPrompt ?? undefined,
+          wikipediaUrl: dto.wikipediaUrl ?? undefined,
+          spotifyUrl: dto.spotifyUrl ?? undefined,
+          appleMusicUrl: dto.appleMusicUrl ?? undefined,
+          youtubeUrl: dto.youtubeUrl ?? undefined,
+          bandcampUrl: dto.bandcampUrl ?? undefined,
         },
       });
-      const refreshed = await tx.card.findUnique({
+      if (
+        dto.artist !== undefined ||
+        dto.year !== undefined ||
+        dto.genre !== undefined ||
+        dto.country !== undefined ||
+        dto.catalogNumber !== undefined
+      ) {
+        const genreId =
+          dto.genre !== undefined
+            ? await this.resolveGenreId(tx, dto.genre)
+            : undefined;
+        await tx.songCard.update({
+          where: { id },
+          data: {
+            artist: dto.artist ?? undefined,
+            year: dto.year ?? undefined,
+            genre: dto.genre ?? undefined,
+            genreId,
+            country: dto.country ?? undefined,
+            catalogNumber: dto.catalogNumber ?? undefined,
+          },
+        });
+      }
+      const refreshed = await tx.songCard.findUnique({
         where: { id },
-        include: { tracksOut: true },
+        include: { card: true, tracksOut: true, genreRef: true },
       });
       if (!refreshed) throw new NotFoundException(`Card ${id} not found`);
       return this.toResponse(refreshed);
@@ -247,13 +295,16 @@ export class CardsService {
   }
 
   async resolveArtworkRedirectUrl(id: number): Promise<string> {
-    const card = await this.prisma.card.findUnique({ where: { id } });
-    if (!card?.artworkKey) {
+    const sc = await this.prisma.songCard.findUnique({
+      where: { id },
+      include: { card: true, tracksOut: false },
+    });
+    if (!sc?.card.artworkKey) {
       throw new NotFoundException(`No artwork for card ${id}`);
     }
-    const pub = this.s3.publicUrl(card.artworkKey);
+    const pub = this.s3.publicUrl(sc.card.artworkKey);
     if (pub) return pub;
-    return this.s3.signedGetUrl(card.artworkKey);
+    return this.s3.signedGetUrl(sc.card.artworkKey);
   }
 
   async uploadArtworkFile(
@@ -270,13 +321,16 @@ export class CardsService {
     const key = `deck/${deckBasename}`;
     const sha = createHash("sha256").update(file.buffer).digest("hex");
     const existing = await this.getRaw(id);
-    if (existing.artworkChecksum === sha && existing.artworkKey === key) {
+    if (
+      existing.card.artworkChecksum === sha &&
+      existing.card.artworkKey === key
+    ) {
       return this.toResponse(existing);
     }
     await this.s3.putObject(key, file.buffer, file.mimetype, file.size);
-    if (existing.artworkKey && existing.artworkKey !== key) {
+    if (existing.card.artworkKey && existing.card.artworkKey !== key) {
       try {
-        await this.s3.deleteObject(existing.artworkKey);
+        await this.s3.deleteObject(existing.card.artworkKey);
       } catch {
         /* best-effort cleanup */
       }
@@ -307,19 +361,19 @@ export class CardsService {
     tracksOut: number[],
   ): Promise<CardResponse> {
     return this.prisma.$transaction(async (tx) => {
-      const card = await tx.card.findUnique({ where: { id } });
-      if (!card) throw new NotFoundException(`Card ${id} not found`);
+      const sc = await tx.songCard.findUnique({ where: { id } });
+      if (!sc) throw new NotFoundException(`Card ${id} not found`);
       await this.assertTracksReferentialIntegrity(tx, tracksOut, id);
-      await tx.cardTrackTransition.deleteMany({ where: { fromId: id } });
+      await tx.songCardTrackTransition.deleteMany({ where: { fromId: id } });
       if (tracksOut.length > 0) {
-        await tx.cardTrackTransition.createMany({
+        await tx.songCardTrackTransition.createMany({
           data: tracksOut.map((toId) => ({ fromId: id, toId })),
           skipDuplicates: true,
         });
       }
-      const refreshed = await tx.card.findUnique({
+      const refreshed = await tx.songCard.findUnique({
         where: { id },
-        include: { tracksOut: true },
+        include: { card: true, tracksOut: true, genreRef: true },
       });
       if (!refreshed) throw new NotFoundException(`Card ${id} not found`);
       return this.toResponse(refreshed);
@@ -335,7 +389,7 @@ export class CardsService {
       artworkChecksum: string;
     },
   ): Promise<CardResponse> {
-    const card = await this.prisma.card.update({
+    await this.prisma.card.update({
       where: { id },
       data: {
         artworkKey: metadata.artworkKey,
@@ -344,13 +398,17 @@ export class CardsService {
         artworkChecksum: metadata.artworkChecksum,
         artworkCreatedAt: new Date(),
       },
-      include: { tracksOut: true },
     });
-    return this.toResponse(card);
+    const sc = await this.prisma.songCard.findUnique({
+      where: { id },
+      include: { card: true, tracksOut: true, genreRef: true },
+    });
+    if (!sc) throw new NotFoundException(`Card ${id} not found`);
+    return this.toResponse(sc);
   }
 
   async clearArtworkMetadata(id: number): Promise<CardResponse> {
-    const card = await this.prisma.card.update({
+    await this.prisma.card.update({
       where: { id },
       data: {
         artworkKey: null,
@@ -358,9 +416,25 @@ export class CardsService {
         artworkBytes: null,
         artworkChecksum: null,
       },
-      include: { tracksOut: true },
     });
-    return this.toResponse(card);
+    const sc = await this.prisma.songCard.findUnique({
+      where: { id },
+      include: { card: true, tracksOut: true, genreRef: true },
+    });
+    if (!sc) throw new NotFoundException(`Card ${id} not found`);
+    return this.toResponse(sc);
+  }
+
+  private async resolveGenreId(
+    tx: Prisma.TransactionClient,
+    genre: string,
+  ): Promise<number> {
+    const g = await tx.genre.findUnique({
+      where: { name: genre },
+      select: { id: true },
+    });
+    if (!g) throw new BadRequestException(`Unknown genre "${genre}"`);
+    return g.id;
   }
 
   private async assertTracksReferentialIntegrity(
@@ -378,7 +452,7 @@ export class CardsService {
       seen.add(id);
     }
     if (seen.size === 0) return;
-    const found = await tx.card.findMany({
+    const found = await tx.songCard.findMany({
       where: { id: { in: Array.from(seen) } },
       select: { id: true },
     });

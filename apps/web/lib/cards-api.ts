@@ -12,9 +12,9 @@ type TrackIndexApiRow = {
 };
 
 function apiOrigin(): string {
-  const base = process.env.API_URL;
+  const base = process.env.BACKEND_URL;
   if (!base?.trim()) {
-    throw new Error("API_URL is not set");
+    throw new Error("BACKEND_URL is not set");
   }
   return base.replace(/\/+$/, "");
 }
