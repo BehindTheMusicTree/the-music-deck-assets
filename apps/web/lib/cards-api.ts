@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from "next/cache";
-import type { CardSongIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/song-graph";
 import type { ApiCardJson } from "@/lib/deck-from-api";
 import type { GenreTheme } from "@/lib/card-theme-types";
 

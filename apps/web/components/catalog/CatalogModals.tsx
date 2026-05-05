@@ -6,7 +6,7 @@ import {
   deriveSongsInFromSongIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
-import type { CardSongIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/song-graph";
 
 const CATALOG_CARD_NATIVE_W = 272;
 const CATALOG_CARD_NATIVE_H = 400;

@@ -8,7 +8,7 @@ import {
   formatCatalogIntensity,
   WISHLIST_KINDS,
 } from "@/lib/cards";
-import type { CardSongIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/song-graph";
 import type { WishlistEntry } from "@/lib/cards/wishlist";
 import type { Intensity } from "@/lib/genres";
 import { intensityLevelIndex } from "@/lib/genres";

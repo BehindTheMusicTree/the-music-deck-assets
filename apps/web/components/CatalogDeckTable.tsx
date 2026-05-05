@@ -17,7 +17,7 @@ import {
   deriveSongsInFromSongIndex,
   formatCatalogIntensity,
 } from "@/lib/cards";
-import type { CardSongIndex } from "@/lib/cards/track-graph";
+import type { CardSongIndex } from "@/lib/cards/song-graph";
 import type { WishlistEntry } from "@/lib/cards/wishlist";
 import { resolveBundledArtworkPrompt } from "@/lib/cards/artwork-prompts";
 import {

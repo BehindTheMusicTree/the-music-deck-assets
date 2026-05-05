@@ -18,13 +18,13 @@ export type {
   CardSongIndex,
   CardSongIndexEntry,
   SongGraph,
-} from "./track-graph";
+} from "./song-graph";
 
 export {
   buildCardSongIndex,
   buildSongGraph,
   deriveSongsInFromSongIndex,
-} from "./track-graph";
+} from "./song-graph";
 
 export { catalogRowKey, assignCatalogRowKeys } from "./catalog-row-key";
 

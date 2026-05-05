@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CardData } from "@/components/Card";
-import { buildCardSongIndex, deriveSongsInFromSongIndex } from "./track-graph";
+import { buildCardSongIndex, deriveSongsInFromSongIndex } from "./song-graph";
 
 const cards: CardData[] = [
   {

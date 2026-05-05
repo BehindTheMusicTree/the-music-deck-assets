@@ -29,7 +29,7 @@ import { flatShellFlagBackgroundSize } from "@/lib/flag-background-size";
 import {
   deriveSongsInFromSongIndex,
   type CardSongIndex,
-} from "@/lib/cards/track-graph";
+} from "@/lib/cards/song-graph";
 import type { CardData, CardRarity } from "@repo/cards-domain";
 import type { GenreTheme } from "@/lib/card-theme-types";
 

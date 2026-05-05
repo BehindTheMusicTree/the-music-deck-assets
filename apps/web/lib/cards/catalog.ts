@@ -19,7 +19,7 @@ import { CARD_ARTWORK_BASE } from "./art-path";
 import { deriveCatalogSeriesLabel } from "./_card-helpers";
 import { ALL_GENRE_CARDS, DECK_ADDITIONAL_GENRE_CARDS } from "./genre";
 import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
-import { buildCardSongIndex } from "./track-graph";
+import { buildCardSongIndex } from "./song-graph";
 
 export type { CatalogSeriesType };
 
