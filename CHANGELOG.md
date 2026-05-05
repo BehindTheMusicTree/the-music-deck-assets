@@ -48,6 +48,12 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ## [Unreleased]
 
+### Changed
+
+- **Ops — Sync env to server**: **`sync-env-to-server.yml`** no longer substitutes defaults for **`TMD_ADMIN_NODE_ENV`**, **`TMD_ADMIN_S3_REGION`**, **`TMD_ADMIN_API_DB_SUPERUSER`**, or **`TMD_ADMIN_API_DB_APP_USER`**. Each **STAGING** / **PROD** environment must define those variables; the build steps exit with an error if any required var or secret is missing. GitHub names for DB bootstrap credentials are **`TMD_ADMIN_API_DB_*`** (aligned with **`TMD_ADMIN_API_APP_NAME`**); rename from **`TMD_ADMIN_DB_SUPERUSER`** / **`TMD_ADMIN_DB_APP_USER`** and matching **`_PASSWORD`** secrets.
+
+- **Catalog / Prisma seed**: **`Card.rowKey`** is always slugified **`artist-title`** via **`catalogRowKey()`** in **`@repo/cards-domain`** (no `genre-` / `spotlight-` / `world-` / `blend-` / fixed La Macarena key / wishlist **`wl-`** prefixes). **`WishlistCardDef`** drops **`rowKey`**; seed and web wishlist derive it from **`artist`** + **`title`**. Existing DBs need a re-seed or rowKey migration; locally use **`pnpm --filter api db:reset`** or **`db:seed`**.
+
 ### Fixed
 
 - **API Docker image**: After **`pnpm --filter api build`**, the image runs **`pnpm --filter api --prod deploy --legacy /deploy/api`** so the runner copies a **self-contained** deploy tree (**`dist/`** + production **`node_modules`**, local **`.pnpm`**). Fixes **`MODULE_NOT_FOUND`** for **`reflect-metadata`** and avoids fragile copies of the monorepo **`node_modules`** layout (**`--legacy`**: deploy without **`injectWorkspacePackages`** in **`pnpm-workspace.yaml`**).
@@ -78,7 +84,7 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 - **Ops — Sync env to server**: Postgres fragment **`app_name`** uses **`TMD_ADMIN_API_APP_NAME` + `DB_APP_NAME_SUFFIX`** (no hardcoded **`_db`**). **`build-api-fragment`** and **`build-db-fragment`** require **`DB_APP_NAME_SUFFIX`** so the workflow fails fast when it is missing or empty.
 
-- **Ops — Sync env**: DB fragment GitHub names **`TMD_ADMIN_DB_SUPERUSER`**, **`TMD_ADMIN_DB_SUPERUSER_PASSWORD`**, **`TMD_ADMIN_DB_APP_USER`**, **`TMD_ADMIN_DB_APP_USER_PASSWORD`** (replaces **`TMD_ADMIN_POSTGRES_*`**); emits **`POSTGRES_APP_*`** for infra initdb + composed **`DATABASE_URL`**.
+- **Ops — Sync env**: DB fragment GitHub names **`TMD_ADMIN_API_DB_SUPERUSER`**, **`TMD_ADMIN_API_DB_SUPERUSER_PASSWORD`**, **`TMD_ADMIN_API_DB_APP_USER`**, **`TMD_ADMIN_API_DB_APP_USER_PASSWORD`** (replaces **`TMD_ADMIN_POSTGRES_*`**); emits **`POSTGRES_APP_*`** for infra initdb + composed **`DATABASE_URL`**.
 
 - **Ops — Sync env**: DB fragment always **`POSTGRES_DB=app`**; logical DB name on the server is **BehindTheMusicTree/infrastructure** GitHub Variable **`TMD_ADMIN_DB_NAME`** (legacy **`TMD_ADMIN_POSTGRES_DB`**) in **`scripts/.env`**, not configured in this repo’s Sync env workflow.
 
@@ -92,8 +98,10 @@ On release, maintainers move **`[Unreleased]`** content into a dated **`## [0.x.
 
 ### Documentation
 
+- **API / Prisma**: [apps/api/prisma/README.md](apps/api/prisma/README.md) documents **`rowKey`** conventions and seed commands; **CONTRIBUTING** links to it under **API (Prisma catalog)**.
+
 - **README**: Updated for the pnpm/Turborepo layout (`apps/web`, `apps/api`), root scripts, and Docker build entrypoint; **Sync env** pointer and corrected workflow filenames (**`api-release.yml`**, **`api-image-ghcr.yml`**, **`turbo-ci.yml`**).
-- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** DB secrets **`TMD_ADMIN_DB_SUPERUSER_PASSWORD`** / **`TMD_ADMIN_DB_APP_USER_PASSWORD`**, optional **`TMD_ADMIN_DB_SUPERUSER`** / **`TMD_ADMIN_DB_APP_USER`**, fixed **`POSTGRES_DB=app`** (infra **`TMD_ADMIN_DB_NAME`** / legacy **`TMD_ADMIN_POSTGRES_DB`**), plus **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, **`TMD_ADMIN_NODE_ENV`** / CORS, **`TMD_ADMIN_S3_*`**, **`TMD_ADMIN_R2_*`**; **`PORT`** / **`DATABASE_URL`** infrastructure-only; workflow table aligned with repo filenames.
+- **CONTRIBUTING**: Publish/env vars table for **`REDEPLOYMENT_ROOT`**, webhook secrets, **`the-music-deck-admin`** infra paths; **Sync env** DB secrets **`TMD_ADMIN_API_DB_SUPERUSER_PASSWORD`** / **`TMD_ADMIN_API_DB_APP_USER_PASSWORD`**, required **`TMD_ADMIN_API_DB_SUPERUSER`** / **`TMD_ADMIN_API_DB_APP_USER`**, fixed **`POSTGRES_DB=app`** (infra **`TMD_ADMIN_DB_NAME`** / legacy **`TMD_ADMIN_POSTGRES_DB`**), plus **`SERVER_DEPLOY_*`**, **`DB_APP_NAME_SUFFIX`**, **`TMD_ADMIN_NODE_ENV`** / CORS, **`TMD_ADMIN_S3_*`**, **`TMD_ADMIN_R2_*`**; **`PORT`** / **`DATABASE_URL`** infrastructure-only; workflow table aligned with repo filenames.
 
 ## [0.1.0] - 2026-05-01
 

@@ -737,6 +737,9 @@ export default function CatalogDeckTable({
                       />
                     </div>
                   </th>
+                  <th className={`${thWrap} w-8`}>
+                    <span className="leading-snug">Wiki</span>
+                  </th>
                   <th className={`${thWrap} min-w-[92px]`}>
                     <span className="leading-snug">Tracks in</span>
                   </th>
@@ -962,6 +965,19 @@ export default function CatalogDeckTable({
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle">
                           {card.artist ?? "—"}
+                        </td>
+                        <td className="py-2.5 px-2 align-middle">
+                          {card.wikipediaUrl && (
+                            <a
+                              href={card.wikipediaUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 text-xs"
+                              aria-label="Wikipedia"
+                            >
+                              W
+                            </a>
+                          )}
                         </td>
                         <td className="py-2.5 px-2 text-muted align-middle min-w-0">
                           {(() => {

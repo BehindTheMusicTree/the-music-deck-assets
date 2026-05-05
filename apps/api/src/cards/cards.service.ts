@@ -56,7 +56,7 @@ export class CardsService {
       title: card.title,
       artist: card.artist ?? undefined,
       year: card.year,
-      genre: card.genre ?? undefined,
+      genre: card.genre,
       country: card.country ?? undefined,
       ability: card.ability,
       abilityDesc: card.abilityDesc,
@@ -74,6 +74,7 @@ export class CardsService {
         ? card.artworkCreatedAt.toISOString()
         : undefined,
       artworkPrompt: card.artworkPrompt ?? undefined,
+      wikipediaUrl: card.wikipediaUrl,
       tracksOut: card.tracksOut.map((t) => t.toId),
     };
   }
@@ -147,7 +148,8 @@ export class CardsService {
     const tracksOut = dto.tracksOut ?? [];
     return this.prisma.$transaction(async (tx) => {
       const existing = await tx.card.findUnique({ where: { id: dto.id } });
-      if (existing) throw new ConflictException(`Card ${dto.id} already exists`);
+      if (existing)
+        throw new ConflictException(`Card ${dto.id} already exists`);
       const conflict = await tx.card.findUnique({
         where: { rowKey: dto.rowKey },
       });

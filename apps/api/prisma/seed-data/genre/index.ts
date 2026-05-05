@@ -21,7 +21,7 @@ export const ALL_GENRE_CARDS: CardData[] = [
 
 const _catalogGenreRepresentativeIds = new Set([1, 2, 3, 4, 5, 6, 7, 8]);
 
-/** All genre cards except the 8 representative rows already handled separately in `catalog.ts` (`rawGenreRows`). */
-export const DECK_SPOTLIGHT_CARDS: CardData[] = ALL_GENRE_CARDS.filter(
+/** All genre cards except the 8 representative rows already handled separately in the web `catalog.ts` (`rawGenreRows`). */
+export const DECK_ADDITIONAL_GENRE_CARDS: CardData[] = ALL_GENRE_CARDS.filter(
   (c) => !_catalogGenreRepresentativeIds.has(c.id),
 );

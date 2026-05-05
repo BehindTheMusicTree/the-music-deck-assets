@@ -47,14 +47,13 @@ jobs:
         run: |
           set -euo pipefail
           : > fragment.env
-          node_env="${TMD_ADMIN_NODE_ENV:-production}"
-          printf '%s\n' "NODE_ENV=${node_env}" >> fragment.env
           if [ -n "${TMD_ADMIN_CORS_ORIGINS:-}" ]; then
             printf '%s\n' "CORS_ORIGINS=${TMD_ADMIN_CORS_ORIGINS}" >> fragment.env
           fi
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
             SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY
+            TMD_ADMIN_NODE_ENV TMD_ADMIN_S3_REGION
             TMD_ADMIN_S3_BUCKET TMD_ADMIN_S3_PUBLIC_BASE_URL TMD_ADMIN_S3_ENDPOINT
             TMD_ADMIN_R2_ACCESS_KEY_ID TMD_ADMIN_R2_SECRET_ACCESS_KEY
           )
@@ -67,8 +66,8 @@ jobs:
             echo "ERROR: Missing required vars or secrets: ${missing[*]}"
             exit 1
           fi
-          s3_region="${TMD_ADMIN_S3_REGION:-us-east-1}"
-          printf '%s\n' "S3_REGION=${s3_region}" >> fragment.env
+          printf '%s\n' "NODE_ENV=${TMD_ADMIN_NODE_ENV}" >> fragment.env
+          printf '%s\n' "S3_REGION=${TMD_ADMIN_S3_REGION}" >> fragment.env
           printf '%s\n' "S3_BUCKET=${TMD_ADMIN_S3_BUCKET}" >> fragment.env
           printf '%s\n' "S3_PUBLIC_BASE_URL=${TMD_ADMIN_S3_PUBLIC_BASE_URL}" >> fragment.env
           printf '%s\n' "S3_ENDPOINT=${TMD_ADMIN_S3_ENDPOINT}" >> fragment.env
@@ -101,12 +100,12 @@ jobs:
           REDEPLOYMENT_ROOT: ${{ vars.REDEPLOYMENT_ROOT }}
           TMD_ADMIN_API_APP_NAME: ${{ vars.TMD_ADMIN_API_APP_NAME }}
           DB_APP_NAME_SUFFIX: ${{ vars.DB_APP_NAME_SUFFIX }}
-          TMD_ADMIN_DB_SUPERUSER: ${{ vars.TMD_ADMIN_DB_SUPERUSER }}
-          TMD_ADMIN_DB_APP_USER: ${{ vars.TMD_ADMIN_DB_APP_USER }}
+          TMD_ADMIN_API_DB_SUPERUSER: ${{ vars.TMD_ADMIN_API_DB_SUPERUSER }}
+          TMD_ADMIN_API_DB_APP_USER: ${{ vars.TMD_ADMIN_API_DB_APP_USER }}
           SERVER_DEPLOY_USERNAME: ${{ secrets.SERVER_DEPLOY_USERNAME }}
           SERVER_DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.SERVER_DEPLOY_SSH_PRIVATE_KEY }}
-          TMD_ADMIN_DB_SUPERUSER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_SUPERUSER_PASSWORD }}
-          TMD_ADMIN_DB_APP_USER_PASSWORD: ${{ secrets.TMD_ADMIN_DB_APP_USER_PASSWORD }}
+          TMD_ADMIN_API_DB_SUPERUSER_PASSWORD: ${{ secrets.TMD_ADMIN_API_DB_SUPERUSER_PASSWORD }}
+          TMD_ADMIN_API_DB_APP_USER_PASSWORD: ${{ secrets.TMD_ADMIN_API_DB_APP_USER_PASSWORD }}
         run: |
           set -euo pipefail
           : > fragment.env
@@ -116,12 +115,11 @@ jobs:
             exit 1
           fi
           db_app_name="${api}${DB_APP_NAME_SUFFIX}"
-          pg_super="${TMD_ADMIN_DB_SUPERUSER:-postgres}"
-          pg_app="${TMD_ADMIN_DB_APP_USER:-tmd_admin_app}"
           required=(
             SERVER_HOST REDEPLOYMENT_ROOT TMD_ADMIN_API_APP_NAME DB_APP_NAME_SUFFIX
             SERVER_DEPLOY_USERNAME SERVER_DEPLOY_SSH_PRIVATE_KEY
-            TMD_ADMIN_DB_SUPERUSER_PASSWORD TMD_ADMIN_DB_APP_USER_PASSWORD
+            TMD_ADMIN_API_DB_SUPERUSER TMD_ADMIN_API_DB_APP_USER
+            TMD_ADMIN_API_DB_SUPERUSER_PASSWORD TMD_ADMIN_API_DB_APP_USER_PASSWORD
           )
           missing=()
           for v in "${required[@]}"; do
@@ -132,8 +130,10 @@ jobs:
             echo "ERROR: Missing required vars or secrets: ${missing[*]}"
             exit 1
           fi
-          super_pw="$(printf '%s' "${TMD_ADMIN_DB_SUPERUSER_PASSWORD}" | tr -d '\n\r')"
-          app_pw="$(printf '%s' "${TMD_ADMIN_DB_APP_USER_PASSWORD}" | tr -d '\n\r')"
+          pg_super="${TMD_ADMIN_API_DB_SUPERUSER}"
+          pg_app="${TMD_ADMIN_API_DB_APP_USER}"
+          super_pw="$(printf '%s' "${TMD_ADMIN_API_DB_SUPERUSER_PASSWORD}" | tr -d '\n\r')"
+          app_pw="$(printf '%s' "${TMD_ADMIN_API_DB_APP_USER_PASSWORD}" | tr -d '\n\r')"
           printf '%s\n' "POSTGRES_USER=${pg_super}" "POSTGRES_DB=app" >> fragment.env
           printf 'POSTGRES_PASSWORD=%s\n' "${super_pw}" >> fragment.env
           printf '%s\n' "POSTGRES_APP_USER=${pg_app}" >> fragment.env

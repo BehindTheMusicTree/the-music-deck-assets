@@ -23,7 +23,7 @@ function findShippedCard(shipped: ApiCardJson[], id: number): CardData {
 }
 
 function firstWorldFlagCard(shipped: ApiCardJson[]): CardData {
-  const rows = shipped.filter((c) => c.rowKey.startsWith("world-"));
+  const rows = shipped.filter((c) => c.kind === "World");
   rows.sort((a, b) => a.id - b.id);
   if (!rows[0]) throw new Error("No world flag cards in catalogue");
   return apiCardToCardData(rows[0]);

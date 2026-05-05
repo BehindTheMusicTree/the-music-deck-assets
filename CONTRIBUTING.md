@@ -12,6 +12,7 @@ This repo holds the charter / admin Next.js app, supporting libraries, and a sma
   - [Install and run](#install-and-run)
   - [Branching](#branching)
   - [Testing and lint](#testing-and-lint)
+  - [API (Prisma catalog)](#api-prisma-catalog)
   - [Commits](#commits)
   - [Pull requests](#pull-requests)
 - [GitHub Actions](#github-actions)
@@ -82,6 +83,10 @@ pnpm build
 - **`apps/web`**: ESLint, Vitest, Next.js production build.
 - **`apps/api`**: ESLint; **Jest** + **Supertest** for HTTP-level checks (e.g. `GET /health`).
 
+### API (Prisma catalog)
+
+Stable **`rowKey`** strings, seed layout, and local **`db:seed` / `artworks:migrate`**: [apps/api/prisma/README.md](apps/api/prisma/README.md).
+
 ### Commits
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
@@ -124,11 +129,11 @@ Before opening a PR:
 | Secret   | **`TMD_ADMIN_WEBHOOK_SECRET_STAGING`**, **`TMD_ADMIN_WEBHOOK_SECRET_PROD`**       | Same values as infra **`TMD_ADMIN_WEBHOOK_SECRET_*`** (Music Deck admin hooks). |
 | Secret   | **`SERVER_DEPLOY_USERNAME`**, **`SERVER_DEPLOY_SSH_PRIVATE_KEY`**                 | Deploy user SSH (required by **`set-image-tag-on-server`**, **`sync-env-to-server`**, and other **github-workflows** jobs that SSH to the VPS). |
 | Infra    | **`DATABASE_URL`**                                                                | Per-environment (**STAGING** / **PROD**): Nest Prisma **`DATABASE_URL`** must be set only by **BehindTheMusicTree/infrastructure** (e.g. **`scripts/.env`**, **`apply-tmd-admin-env-from-sync`**, or CI writing compose env) so it survives **Sync env** merges. Host on the Docker network is **`${TMD_ADMIN_API_APP_NAME}${DB_APP_NAME_SUFFIX}-<env>`** (e.g. **`_db`** → `...@myapi_db-staging:5432/...`). Not a GitHub secret in this repo. |
-| Secret   | **`TMD_ADMIN_DB_SUPERUSER_PASSWORD`**, **`TMD_ADMIN_DB_APP_USER_PASSWORD`**          | Bootstrap superuser (**`POSTGRES_PASSWORD`**) and Nest/app role (**`POSTGRES_APP_PASSWORD`**) for the DB compose fragment; sync uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (same basename as **`TMD_ADMIN_DB_APP_NAME`**). Infra **`docker-entrypoint-initdb.d`** creates **`POSTGRES_APP_USER`** on first init. |
-| Variable | **`TMD_ADMIN_DB_SUPERUSER`**, **`TMD_ADMIN_DB_APP_USER`** _(optional)_ | Fragment maps to **`POSTGRES_USER`** (default **`postgres`**) and **`POSTGRES_APP_USER`** (default **`tmd_admin_app`**). **`POSTGRES_DB`** is always **`app`** in the synced fragment — align infrastructure **`TMD_ADMIN_DB_NAME`** (default **`app`**) when overriding the logical DB name on the server. |
-| Variable | **`TMD_ADMIN_NODE_ENV`**, **`TMD_ADMIN_CORS_ORIGINS`** _(optional)_ | API fragment: **`NODE_ENV`** (default **`production`**). **`PORT`** for the running container is **not** in this repo — set **`TMD_ADMIN_API_LISTEN_PORT`** in **BehindTheMusicTree/infrastructure** (Server setup → **`scripts/.env`**); redeploy applies it into **`compose/<API>.env`**. Set **`TMD_ADMIN_CORS_ORIGINS`** (comma-separated) when you need explicit CORS. |
+| Secret   | **`TMD_ADMIN_API_DB_SUPERUSER_PASSWORD`**, **`TMD_ADMIN_API_DB_APP_USER_PASSWORD`** | Bootstrap superuser (**`POSTGRES_PASSWORD`**) and Nest/app role (**`POSTGRES_APP_PASSWORD`**) for the DB compose fragment; sync uploads **`/tmp/sync-env-<TMD_ADMIN_API_APP_NAME><DB_APP_NAME_SUFFIX>-<env>.env`** (same basename as **`TMD_ADMIN_DB_APP_NAME`**). Infra **`docker-entrypoint-initdb.d`** creates **`POSTGRES_APP_USER`** on first init. |
+| Variable | **`TMD_ADMIN_API_DB_SUPERUSER`**, **`TMD_ADMIN_API_DB_APP_USER`** | **Required** for **Sync env**: fragment maps to **`POSTGRES_USER`** and **`POSTGRES_APP_USER`** (no defaults — workflow fails if unset). **`POSTGRES_DB`** is always **`app`** in the synced fragment — align infrastructure **`TMD_ADMIN_DB_NAME`** when overriding the logical DB name on the server. |
+| Variable | **`TMD_ADMIN_NODE_ENV`**, **`TMD_ADMIN_CORS_ORIGINS`** _(optional)_ | API fragment: **`NODE_ENV`** (**required** for Sync env; no default). **`TMD_ADMIN_CORS_ORIGINS`** remains optional (comma-separated). **`PORT`** for the running container is **not** in this repo — set **`TMD_ADMIN_API_LISTEN_PORT`** in **BehindTheMusicTree/infrastructure** (Server setup → **`scripts/.env`**); redeploy applies it into **`compose/<API>.env`**. |
 | Variable | **`TMD_ADMIN_S3_BUCKET`**, **`TMD_ADMIN_S3_PUBLIC_BASE_URL`**, **`TMD_ADMIN_S3_ENDPOINT`** | API fragment: **`S3_BUCKET`**, **`S3_PUBLIC_BASE_URL`**, **`S3_ENDPOINT`** (R2 S3 API URL). |
-| Variable | **`TMD_ADMIN_S3_REGION`** _(optional)_ | API fragment: **`S3_REGION`** (use **`auto`** for R2; default **`us-east-1`** if unset). |
+| Variable | **`TMD_ADMIN_S3_REGION`** | **Required** for Sync env: API fragment **`S3_REGION`** (e.g. **`auto`** for R2); no default. |
 | Secret   | **`TMD_ADMIN_R2_ACCESS_KEY_ID`**, **`TMD_ADMIN_R2_SECRET_ACCESS_KEY`** | Scoped **R2** API token → API fragment **`S3_ACCESS_KEY_ID`** / **`S3_SECRET_ACCESS_KEY`**. |
 
 **GHCR push** uses the workflow’s **`GITHUB_TOKEN`** (no Docker Hub token). The repository needs **Packages** write access for workflows (see **`permissions`** in [`api-release.yml`](.github/workflows/api-release.yml) / [`api-image-ghcr.yml`](.github/workflows/api-image-ghcr.yml)); the package must allow **`GITHUB_TOKEN`** or the org’s default **Actions** access to **GitHub Packages**.

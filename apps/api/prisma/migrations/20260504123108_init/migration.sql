@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "CardKind" AS ENUM ('Genre', 'World', 'WorldBlend', 'WorldGenre', 'Planned');
+CREATE TYPE "CardKind" AS ENUM ('Card', 'Planned');
 
 -- CreateEnum
 CREATE TYPE "CardStatus" AS ENUM ('Shipped', 'Wishlist', 'Planned');
@@ -31,6 +31,7 @@ CREATE TABLE "Card" (
     "artworkOverBorder" BOOLEAN NOT NULL DEFAULT false,
     "artworkCreatedAt" TIMESTAMP(3),
     "artworkPrompt" TEXT,
+    "wikipediaUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

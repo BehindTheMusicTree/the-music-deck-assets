@@ -16,9 +16,9 @@ alwaysApply: false
 ## When bundled artwork exists
 
 1. **Remove** the row from `WISHLIST_CARD_DEFS` (or never add it there if creating a new shipped card).
-2. **Add** the card to the shipped deck in [`lib/cards/examples.ts`](lib/cards/examples.ts) — typically [`DECK_SPOTLIGHT_CARDS`](lib/cards/examples.ts) (or `WORLD_*` if it fits that fixture role).
-3. Set **`artwork`**, **`artworkCreatedAt`** (local ISO-like datetime from PNG birth time in [`lib/cards/artwork-created-at.ts`](lib/cards/artwork-created-at.ts), keyed by filename), and optional **`artworkPrompt`** via [`lib/cards/artwork-prompts.ts`](lib/cards/artwork-prompts.ts) + `artworkPromptFor(id)` in `examples.ts`.
-4. **Catalogue wiring:** for spotlight ids, `SPOTLIGHT_CATALOG_META` in [`lib/cards/catalog.ts`](lib/cards/catalog.ts) is filled automatically for `id > 36` via `spotlightMetaForCard` — ensure `genre` / `country` on the card resolve correctly.
+2. **Add** the card to the shipped deck under [`lib/cards/genre/`](lib/cards/genre/) or [`lib/cards/world/`](lib/cards/world/) so it appears in **`ALL_GENRE_CARDS`** / **`DECK_ADDITIONAL_GENRE_CARDS`** or **`WORLD_FLAG_CARDS`** / **`WORLD_MIXED_CARDS`** as appropriate.
+3. Set **`artwork`**, **`artworkCreatedAt`** (local ISO-like datetime from PNG birth time in [`lib/cards/artwork-created-at.ts`](lib/cards/artwork-created-at.ts), keyed by filename), and optional **`artworkPrompt`** via [`lib/cards/artwork-prompts.ts`](lib/cards/artwork-prompts.ts).
+4. **Catalogue wiring:** for non-pillar genre-deck ids, `ADDITIONAL_GENRE_CATALOG_META` in [`lib/cards/catalog.ts`](lib/cards/catalog.ts) is filled from `catalogMetaForGenreDeckCard` — ensure `genre` / `country` on the card resolve correctly. **`rowKey`** is `title-year` slug via `assignCatalogRowKeys()` (see `apps/api/prisma/README.md`); if two shipped cards share title+year, numeric suffixes are added automatically.
 
 ## `wishlist.ts` / `catalog.ts`
 

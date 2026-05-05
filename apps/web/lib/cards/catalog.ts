@@ -1,4 +1,5 @@
 import type { CardData } from "@/components/Card";
+import { assignCatalogRowKeys } from "@repo/cards-domain";
 import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
 import {
   APP_GENRE_THEMES,
@@ -16,7 +17,7 @@ import {
 import { ARTWORK_CREATED_AT } from "./artwork-created-at";
 import { CARD_ARTWORK_BASE } from "./art-path";
 import { deriveCatalogSeriesLabel } from "./_card-helpers";
-import { ALL_GENRE_CARDS, DECK_SPOTLIGHT_CARDS } from "./genre";
+import { ALL_GENRE_CARDS, DECK_ADDITIONAL_GENRE_CARDS } from "./genre";
 import { WORLD_FLAG_CARDS, WORLD_MIXED_CARDS } from "./world";
 import { buildCardTrackIndex } from "./track-graph";
 
@@ -71,48 +72,47 @@ export const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<AppGenreName, number> = {
 
 const _allGenreCardsById = new Map(ALL_GENRE_CARDS.map((c) => [c.id, c]));
 
-const rawGenreRows: RawCatalogRow[] = (
+type IntermCatalogRow = {
+  card: CardData;
+  kind: CatalogEntryKind;
+  theme: GenreTheme;
+};
+
+const _intermGenreRows: IntermCatalogRow[] = (
   Object.keys(CATALOG_GENRE_REPRESENTATIVE_IDS) as AppGenreName[]
 ).map((g) => {
   const card = _allGenreCardsById.get(CATALOG_GENRE_REPRESENTATIVE_IDS[g]);
   if (!card) {
     throw new Error(`Missing genre representative card for "${g}"`);
   }
-  return {
-    rowKey: `genre-${card.id}`,
-    kind: "Genre",
-    card,
-    theme: APP_GENRE_THEMES[g],
-  };
+  return { kind: "Genre", card, theme: APP_GENRE_THEMES[g] };
 });
 
-const rawWorldRows: RawCatalogRow[] = WORLD_FLAG_CARDS.map((c) => ({
-  rowKey: `world-${c.id}`,
+const _intermWorldRows: IntermCatalogRow[] = WORLD_FLAG_CARDS.map((c) => ({
   kind: "World",
   card: c,
   theme: themeForCountry(c.country!),
 }));
 
-const rawBlendRows: RawCatalogRow[] = WORLD_MIXED_CARDS.map((c) => ({
-  rowKey: `blend-${c.id}`,
+const _intermBlendRows: IntermCatalogRow[] = WORLD_MIXED_CARDS.map((c) => ({
   kind: "World blend",
   card: c,
   theme: themeForCountry(c.country!),
 }));
 
 /**
- * Catalog row “kind” + row theme for spotlight cards. Uses `themeForCountry` for world rows
- * instead of `resolveThemeSelection` so the table shows the country shell consistently; full
- * card chrome still comes from `resolveThemeSelection` on the `Card` component.
+ * Catalog row kind + table theme for non-pillar genre-deck cards. Uses `themeForCountry` for
+ * world-style rows instead of `resolveThemeSelection` so the table shows the country shell
+ * consistently; full card chrome still comes from `resolveThemeSelection` on `Card`.
  */
-function spotlightMetaForCard(card: CardData): {
+export function catalogMetaForGenreDeckCard(card: CardData): {
   kind: CatalogEntryKind;
   theme: GenreTheme;
 } {
   const g = card.genre;
   if (!g) {
     throw new Error(
-      `Spotlight card "${card.title}" (${card.id}) must set genre`,
+      `Genre deck card "${card.title}" (${card.id}) must set genre`,
     );
   }
   if (isCountrySubgenre(g)) {
@@ -120,7 +120,7 @@ function spotlightMetaForCard(card: CardData): {
     const ctry = card.country ?? expected;
     if (ctry !== expected) {
       throw new Error(
-        `Spotlight "${card.title}": country-native "${g}" expects country "${expected}", got "${card.country}"`,
+        `"${card.title}": country-native "${g}" expects country "${expected}", got "${card.country}"`,
       );
     }
     return { kind: "World", theme: themeForCountry(ctry) };
@@ -133,9 +133,7 @@ function spotlightMetaForCard(card: CardData): {
   }
   const r = resolveThemeSelection({ genre: g });
   if (!r.resolvedGenre) {
-    throw new Error(
-      `Spotlight "${card.title}": no resolved app genre for "${g}"`,
-    );
+    throw new Error(`"${card.title}": no resolved app genre for "${g}"`);
   }
   return {
     kind: "Genre",
@@ -143,32 +141,30 @@ function spotlightMetaForCard(card: CardData): {
   };
 }
 
-const SPOTLIGHT_CATALOG_META: Record<
+const ADDITIONAL_GENRE_CATALOG_META: Record<
   number,
   { kind: CatalogEntryKind; theme: GenreTheme }
 > = (() => {
   return Object.fromEntries(
-    DECK_SPOTLIGHT_CARDS.map((c) => [c.id, spotlightMetaForCard(c)]),
+    DECK_ADDITIONAL_GENRE_CARDS.map((c) => [
+      c.id,
+      catalogMetaForGenreDeckCard(c),
+    ]),
   );
 })();
 
-const rawSpotlightRows: RawCatalogRow[] = DECK_SPOTLIGHT_CARDS.map((card) => {
-  const meta = SPOTLIGHT_CATALOG_META[card.id];
-  if (!meta) {
-    throw new Error(
-      `Add SPOTLIGHT_CATALOG_META[${card.id}] for "${card.title}" in lib/cards/catalog.ts`,
-    );
-  }
-  return {
-    rowKey: `spotlight-${card.id}`,
-    kind: meta.kind,
-    card,
-    theme: meta.theme,
-  };
-});
+const _intermAdditionalGenreRows: IntermCatalogRow[] =
+  DECK_ADDITIONAL_GENRE_CARDS.map((card) => {
+    const meta = ADDITIONAL_GENRE_CATALOG_META[card.id];
+    if (!meta) {
+      throw new Error(
+        `Missing ADDITIONAL_GENRE_CATALOG_META[${card.id}] for "${card.title}"`,
+      );
+    }
+    return { kind: meta.kind, card, theme: meta.theme };
+  });
 
-const rawLaMacarena: RawCatalogRow = {
-  rowKey: "world-genre-9101",
+const _intermLaMacarena: IntermCatalogRow = {
   kind: "World + genre",
   card: {
     id: 9101,
@@ -273,30 +269,49 @@ function catalogEntryFromRow(row: RawCatalogRow): CatalogEntry {
   };
 }
 
-const rawCatalogRows: RawCatalogRow[] = [
-  ...rawGenreRows,
-  ...rawWorldRows,
-  ...rawBlendRows,
-  ...rawSpotlightRows,
-  rawLaMacarena,
+const _allShippedInterm: IntermCatalogRow[] = [
+  ..._intermGenreRows,
+  ..._intermWorldRows,
+  ..._intermBlendRows,
+  ..._intermAdditionalGenreRows,
+  _intermLaMacarena,
 ];
 
-/** Normalised title|artist key for deduplicating wishlist rows against the shipped deck. */
-export function normCatalogKey(title: string, artist?: string): string {
-  const t = title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-  const a = (artist ?? "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-  return `${t}|${a}`;
+const _shippedRowKeyMap = assignCatalogRowKeys(
+  _allShippedInterm.map((r) => ({
+    id: r.card.id,
+    title: r.card.title,
+    year: r.card.year,
+  })),
+);
+
+const rawCatalogRows: RawCatalogRow[] = _allShippedInterm.map((r) => ({
+  rowKey: _shippedRowKeyMap.get(r.card.id)!,
+  kind: r.kind,
+  card: r.card,
+  theme: r.theme,
+}));
+
+/** Normalised key for deduplicating wishlist rows against the shipped deck. */
+export function normCatalogKey(
+  title: string,
+  genre?: string,
+  country?: string,
+  year?: string,
+): string {
+  const norm = (s?: string) =>
+    (s ?? "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  return [norm(title), norm(genre), norm(country), norm(year)].join("|");
 }
 
 /** Keys for shipped catalogue rows only — used by `lib/cards/wishlist.ts`. */
 export const SHIPPED_CATALOG_DEDUP_KEYS = new Set(
-  rawCatalogRows.map((r) => normCatalogKey(r.card.title, r.card.artist)),
+  rawCatalogRows.map((r) =>
+    normCatalogKey(r.card.title, r.card.genre, r.card.country, r.card.year),
+  ),
 );
 
 /** Shipped deck only (bundled artwork). Wishlist rows live in {@link WISHLIST_ENTRIES}. */

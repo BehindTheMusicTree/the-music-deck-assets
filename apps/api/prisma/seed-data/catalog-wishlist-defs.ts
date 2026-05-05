@@ -8,7 +8,6 @@ const A = "Reserve";
 /** IDs 12xxx avoid collision with shipped deck (1–33, 9101). */
 export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
   {
-    rowKey: "wl-sous-les-sunlights",
     id: 12006,
     title: "Sous les sunlights des tropiques",
     artist: "Gilbert Montagné",
@@ -21,7 +20,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-jolene",
     id: 12010,
     title: "Jolene",
     artist: "Dolly Parton",
@@ -34,7 +32,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-rappers-delight",
     id: 12011,
     title: "Rapper's Delight",
     artist: "The Sugarhill Gang",
@@ -47,7 +44,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-highway-to-hell",
     id: 12012,
     title: "Highway to Hell",
     artist: "AC/DC",
@@ -60,7 +56,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-thunderstruck",
     id: 12013,
     title: "Thunderstruck",
     artist: "AC/DC",
@@ -73,7 +68,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-hells-bells",
     id: 12014,
     title: "Hell's Bells",
     artist: "AC/DC",
@@ -86,7 +80,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-ywnwa",
     id: 12016,
     title: "You'll Never Walk Alone",
     artist: "Gerry and the Pacemakers",
@@ -99,7 +92,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-sweet-caroline",
     id: 12017,
     title: "Sweet Caroline",
     artist: "Neil Diamond",
@@ -112,7 +104,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-baby-shark",
     id: 12018,
     title: "Baby Shark",
     artist: "Pinkfong",
@@ -125,7 +116,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-blinding-lights",
     id: 12019,
     title: "Blinding Lights",
     artist: "The Weeknd",
@@ -138,7 +128,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-superstition",
     id: 12020,
     title: "Superstition",
     artist: "Stevie Wonder",
@@ -151,7 +140,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-rock-this-way",
     id: 12021,
     title: "Walk This Way",
     artist: "Aerosmith",
@@ -164,7 +152,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-walk-this-way-run",
     id: 12022,
     title: "Walk This Way",
     artist: "Run-DMC feat. Aerosmith",
@@ -177,7 +164,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-pretender",
     id: 12025,
     title: "The Pretender",
     artist: "Foo Fighters",
@@ -190,7 +176,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-great-pretender-platters",
     id: 12026,
     title: "The Great Pretender",
     artist: "The Platters",
@@ -203,7 +188,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-great-pretender-sinatra",
     id: 12027,
     title: "The Great Pretender",
     artist: "Frank Sinatra",
@@ -216,7 +200,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-charge-triangle",
     id: 12028,
     title: "Chargé",
     artist: "Triangle des Bermudes",
@@ -229,7 +212,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-my-way-sinatra",
     id: 12030,
     title: "My Way",
     artist: "Frank Sinatra",
@@ -242,7 +224,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-my-way-sid",
     id: 12031,
     title: "My Way",
     artist: "Sid Vicious",
@@ -255,12 +236,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-la-mer-trenet",
     id: 12032,
     title: "La Mer",
     artist: "Charles Trenet",
     year: "1946",
-    kind: "World",
+    kind: "Card",
     country: "France",
     genre: "French Variety",
     rarity: "Classic",
@@ -269,7 +249,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-beyond-the-sea",
     id: 12033,
     title: "Beyond the Sea",
     artist: "Bobby Darin",
@@ -282,7 +261,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-hallelujah-cohen",
     id: 12034,
     title: "Hallelujah",
     artist: "Leonard Cohen",
@@ -295,7 +273,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-hallelujah-buckley",
     id: 12035,
     title: "Hallelujah",
     artist: "Jeff Buckley",
@@ -308,7 +285,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-take-five",
     id: 12047,
     title: "Take Five",
     artist: "The Dave Brubeck Quartet",
@@ -321,7 +297,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-mission-impossible",
     id: 12048,
     title: "Mission: Impossible",
     artist: "Lalo Schifrin",
@@ -334,7 +309,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-entertainer",
     id: 12062,
     title: "The Entertainer",
     artist: "Scott Joplin",
@@ -347,7 +321,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-maple-leaf-rag",
     id: 12063,
     title: "Maple Leaf Rag",
     artist: "Scott Joplin",
@@ -360,7 +333,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-clair-de-lune",
     id: 12064,
     title: "Clair de Lune",
     artist: "Claude Debussy",
@@ -373,7 +345,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-gymnopedie",
     id: 12065,
     title: "Gymnopédie No. 1",
     artist: "Erik Satie",
@@ -386,7 +357,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-fur-elise",
     id: 12066,
     title: "Für Elise",
     artist: "Ludwig van Beethoven",
@@ -399,7 +369,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-moonlight-sonata",
     id: 12067,
     title: "Moonlight Sonata",
     artist: "Ludwig van Beethoven",
@@ -412,7 +381,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-la-campanella",
     id: 12068,
     title: "La Campanella",
     artist: "Franz Liszt",
@@ -425,7 +393,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-air-on-g-string",
     id: 12069,
     title: "Air on the G String",
     artist: "J.S. Bach",
@@ -438,7 +405,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-hungarian-dance-5",
     id: 12070,
     title: "Hungarian Dance No. 5",
     artist: "Johannes Brahms",
@@ -451,7 +417,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-mountain-king",
     id: 12071,
     title: "In the Hall of the Mountain King",
     artist: "Edvard Grieg",
@@ -464,7 +429,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-pachelbel-canon",
     id: 12072,
     title: "Canon in D",
     artist: "Johann Pachelbel",
@@ -477,7 +441,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-nocturne-chopin",
     id: 12073,
     title: "Nocturne Op. 9 No. 2",
     artist: "Frédéric Chopin",
@@ -490,7 +453,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-swan-lake",
     id: 12074,
     title: "Swan Lake Theme",
     artist: "Pyotr Ilyich Tchaikovsky",
@@ -503,7 +465,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-blue-danube",
     id: 12075,
     title: "The Blue Danube",
     artist: "Johann Strauss II",
@@ -516,7 +477,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-bolero",
     id: 12076,
     title: "Boléro",
     artist: "Maurice Ravel",
@@ -529,7 +489,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-carmen-overture",
     id: 12077,
     title: "Carmen Overture",
     artist: "Georges Bizet",
@@ -542,12 +501,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-greensleeves",
     id: 12078,
     title: "Greensleeves",
     artist: "Traditional (England)",
     year: "1580",
-    kind: "World",
+    kind: "Card",
     country: "England",
     genre: "English Folk",
     rarity: "Banger",
@@ -556,7 +514,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-silent-night",
     id: 12079,
     title: "Silent Night",
     artist: "Franz Xaver Gruber",
@@ -569,12 +526,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-when-the-saints",
     id: 12080,
     title: "When the Saints Go Marching In",
     artist: "Traditional",
     year: "1896",
-    kind: "World",
+    kind: "Card",
     country: "USA",
     genre: "Spiritual",
     rarity: "Banger",
@@ -583,12 +539,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-frere-jacques",
     id: 12081,
     title: "Frère Jacques",
     artist: "Traditional (France)",
     year: "1780",
-    kind: "World",
+    kind: "Card",
     country: "France",
     genre: "French Folk",
     rarity: "Banger",
@@ -597,7 +552,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-danny-boy",
     id: 12082,
     title: "Londonderry Air (Danny Boy)",
     artist: "Traditional (Ireland)",
@@ -610,12 +564,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-o-sole-mio",
     id: 12083,
     title: "O Sole Mio",
     artist: "Eduardo di Capua",
     year: "1898",
-    kind: "World",
+    kind: "Card",
     country: "Italy",
     genre: "Neapolitan Song",
     rarity: "Classic",
@@ -624,7 +577,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-sorcerers-apprentice",
     id: 12084,
     title: "The Sorcerer's Apprentice",
     artist: "Paul Dukas",
@@ -637,7 +589,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-pomp-circumstance",
     id: 12085,
     title: "Pomp and Circumstance",
     artist: "Edward Elgar",
@@ -650,7 +601,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-stars-stripes",
     id: 12086,
     title: "The Stars and Stripes Forever",
     artist: "John Philip Sousa",
@@ -663,7 +613,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-ave-maria-schubert",
     id: 12087,
     title: "Ave Maria",
     artist: "Franz Schubert",
@@ -676,7 +625,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-william-tell-overture",
     id: 12088,
     title: "William Tell Overture",
     artist: "Gioachino Rossini",
@@ -689,7 +637,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-toccata-fugue-d-minor",
     id: 12089,
     title: "Toccata and Fugue in D minor",
     artist: "J.S. Bach",
@@ -702,7 +649,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-eine-kleine-nachtmusik",
     id: 12090,
     title: "Eine kleine Nachtmusik",
     artist: "Wolfgang Amadeus Mozart",
@@ -715,7 +661,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-ode-to-joy",
     id: 12091,
     title: "Ode to Joy",
     artist: "Ludwig van Beethoven",
@@ -728,12 +673,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-oh-susanna",
     id: 12092,
     title: "Oh! Susanna",
     artist: "Stephen Foster",
     year: "1848",
-    kind: "World",
+    kind: "Card",
     country: "USA",
     genre: "American Folk",
     rarity: "Banger",
@@ -742,12 +686,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-yankee-doodle",
     id: 12093,
     title: "Yankee Doodle",
     artist: "Traditional (USA)",
     year: "1755",
-    kind: "World",
+    kind: "Card",
     country: "USA",
     genre: "American Folk",
     rarity: "Banger",
@@ -756,7 +699,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-aura-lee",
     id: 12094,
     title: "Aura Lee",
     artist: "George R. Poulton",
@@ -769,7 +711,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-house-rising-sun",
     id: 12095,
     title: "House of the Rising Sun",
     artist: "Traditional",
@@ -782,7 +723,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-scarborough-fair",
     id: 12096,
     title: "Scarborough Fair",
     artist: "Traditional (England)",
@@ -795,12 +735,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-sakura-sakura",
     id: 12098,
     title: "Sakura Sakura",
     artist: "Traditional (Japan)",
     year: "1888",
-    kind: "World",
+    kind: "Card",
     country: "Japan",
     genre: "Japanese Folk",
     rarity: "Banger",
@@ -809,7 +748,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-habanera-carmen",
     id: 12099,
     title: "Habanera (Carmen)",
     artist: "Georges Bizet",
@@ -822,7 +760,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-turkish-march-mozart",
     id: 12100,
     title: "Turkish March",
     artist: "Wolfgang Amadeus Mozart",
@@ -835,7 +772,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-waltz-of-the-flowers",
     id: 12101,
     title: "Waltz of the Flowers",
     artist: "Pyotr Ilyich Tchaikovsky",
@@ -848,7 +784,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-radetzky-march",
     id: 12102,
     title: "Radetzky March",
     artist: "Johann Strauss I",
@@ -861,7 +796,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-toreador-song",
     id: 12103,
     title: "Toreador Song",
     artist: "Georges Bizet",
@@ -874,7 +808,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-bridal-chorus",
     id: 12104,
     title: "Bridal Chorus",
     artist: "Richard Wagner",
@@ -887,7 +820,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-ave-verum-corpus",
     id: 12105,
     title: "Ave Verum Corpus",
     artist: "Wolfgang Amadeus Mozart",
@@ -900,7 +832,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-jesu-joy",
     id: 12106,
     title: "Jesu, Joy of Man's Desiring",
     artist: "J.S. Bach",
@@ -913,7 +844,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-la-donna-e-mobile",
     id: 12107,
     title: "La Donna è Mobile",
     artist: "Giuseppe Verdi",
@@ -926,12 +856,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-funiculi-funicula",
     id: 12108,
     title: "Funiculì Funiculà",
     artist: "Luigi Denza",
     year: "1880",
-    kind: "World",
+    kind: "Card",
     country: "Italy",
     genre: "Neapolitan Song",
     rarity: "Classic",
@@ -940,7 +869,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-american-idiot",
     id: 12109,
     title: "American Idiot",
     artist: "Green Day",
@@ -954,7 +882,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
       "When your opponent's card is a USA country (World) card, battle treats this card as countering theirs for advantage modifiers.",
   },
   {
-    rowKey: "wl-the-metal",
     id: 12110,
     title: "The Metal",
     artist: "Tenacious D",
@@ -968,12 +895,11 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
       "When your opponent's card is Punk Rock, Techno, Grunge, or New Wave, battle treats this card as countering theirs for advantage modifiers.",
   },
   {
-    rowKey: "wl-la-colegiala",
     id: 12111,
     title: "La Colegiala",
     artist: "Los Ilusionistas",
     year: "1977",
-    kind: "World",
+    kind: "Card",
     country: "Peru",
     genre: "Peruvian Cumbia",
     rarity: "Classic",
@@ -984,7 +910,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
       "Magic-style illustration, vertical 2:3, upper 40% focus. Amazon-Andean cumbia energy: electric guitar silhouette, timbales and congas as abstract shapes, warm festival crowd as anonymous silhouettes — no facial detail, no likeness to any real person. Red-and-cream palette echoing Peruvian stripes, golden late sun, dust in the air. Lower 60% simple jungle edge and stage haze. No text, no borders.",
   },
   {
-    rowKey: "wl-gotta-learn-biga-ranx",
     id: 12112,
     title: "Gotta Learn",
     artist: "Biga Ranx",
@@ -997,7 +922,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-everybodys-gotta-learn-sometime",
     id: 12113,
     title: "Everybody's Gotta Learn Sometime",
     artist: "The Korgis",
@@ -1010,7 +934,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-sorry-seems-hardest-word",
     id: 12114,
     title: "Sorry Seems to Be the Hardest Word",
     artist: "Elton John",
@@ -1023,7 +946,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-robot-rock",
     id: 12115,
     title: "Robot Rock",
     artist: "Daft Punk",
@@ -1036,7 +958,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-payback",
     id: 12116,
     title: "The Payback",
     artist: "James Brown",
@@ -1049,7 +970,6 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-break-loose",
     id: 12117,
     title: "Break Loose",
     artist: "Gramatik",
@@ -1062,8 +982,7 @@ export const WISHLIST_CARD_DEFS: WishlistCardDef[] = [
     abilityDesc: P,
   },
   {
-    rowKey: "wl-never-gonna-give-you-up",
-    id: 12117,
+    id: 12118,
     title: "Never Gonna Give You Up",
     artist: "Rick Astley",
     year: "2013",

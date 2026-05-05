@@ -5,10 +5,8 @@ import {
   type AppGenreName,
   type Intensity,
   appGenreIntensity,
-  canonicalCountryFromSubgenre,
   displayGenreLabel,
   isCountrySubgenre,
-  isGenreSubgenre,
   resolveThemeSelection,
   subgenreIntensity,
   themeForCountry,
@@ -16,6 +14,7 @@ import {
 import {
   CATALOG_DEFAULT_ERA,
   CATALOG_GENRE_REPRESENTATIVE_IDS,
+  catalogMetaForGenreDeckCard,
   normCatalogKey,
   type CatalogEntry,
   type CatalogEntryKind,
@@ -48,6 +47,7 @@ export type ApiCardJson = {
   artworkOverBorder?: boolean;
   artworkCreatedAt?: string;
   artworkPrompt?: string;
+  wikipediaUrl: string;
   tracksOut: number[];
 };
 
@@ -76,25 +76,9 @@ export function apiCardToCardData(a: ApiCardJson): CardData {
     artworkCreatedAt: a.artworkCreatedAt,
     artworkOffsetY: a.artworkOffsetY,
     artworkOverBorder: a.artworkOverBorder,
+    wikipediaUrl: a.wikipediaUrl,
     tracksOut: a.tracksOut?.length ? a.tracksOut : undefined,
   };
-}
-
-function apiKindToWishlistKind(kind: string): WishlistKind {
-  switch (kind) {
-    case "Genre":
-      return "Genre";
-    case "World":
-      return "World";
-    case "WorldBlend":
-      return "World blend";
-    case "WorldGenre":
-      return "World + genre";
-    case "Planned":
-      return "Planned";
-    default:
-      throw new Error(`Unexpected wishlist card kind "${kind}"`);
-  }
 }
 
 type RawCatalogRow = {
@@ -104,92 +88,13 @@ type RawCatalogRow = {
   theme: GenreTheme;
 };
 
-function spotlightMetaForCard(card: CardData): {
-  kind: CatalogEntryKind;
-  theme: GenreTheme;
-} {
-  const g = card.genre;
-  if (!g) {
-    throw new Error(
-      `Spotlight card "${card.title}" (${card.id}) must set genre`,
-    );
-  }
-  if (isCountrySubgenre(g)) {
-    const expected = canonicalCountryFromSubgenre(g);
-    const ctry = card.country ?? expected;
-    if (ctry !== expected) {
-      throw new Error(
-        `Spotlight "${card.title}": country-native "${g}" expects country "${expected}", got "${card.country}"`,
-      );
-    }
-    return { kind: "World", theme: themeForCountry(ctry) };
-  }
-  if (card.country) {
-    if (isGenreSubgenre(g)) {
-      return { kind: "World blend", theme: themeForCountry(card.country) };
-    }
-    return { kind: "World + genre", theme: themeForCountry(card.country) };
-  }
-  const r = resolveThemeSelection({ genre: g });
-  if (!r.resolvedGenre) {
-    throw new Error(
-      `Spotlight "${card.title}": no resolved app genre for "${g}"`,
-    );
-  }
-  return {
-    kind: "Genre",
-    theme: APP_GENRE_THEMES[r.resolvedGenre as AppGenreName],
-  };
-}
-
 function rawCatalogRowFromApiShipped(a: ApiCardJson): RawCatalogRow {
   const card = apiCardToCardData(a);
-  if (a.rowKey.startsWith("genre-")) {
-    const g = ID_TO_APP_GENRE[a.id];
-    if (!g) {
-      throw new Error(`Unknown genre representative id ${a.id}`);
-    }
-    return {
-      rowKey: a.rowKey,
-      kind: "Genre",
-      card,
-      theme: APP_GENRE_THEMES[g],
-    };
-  }
-  if (a.rowKey.startsWith("world-")) {
-    return {
-      rowKey: a.rowKey,
-      kind: "World",
-      card,
-      theme: themeForCountry(card.country!),
-    };
-  }
-  if (a.rowKey.startsWith("blend-")) {
-    return {
-      rowKey: a.rowKey,
-      kind: "World blend",
-      card,
-      theme: themeForCountry(card.country!),
-    };
-  }
-  if (a.rowKey === "world-genre-9101") {
-    return {
-      rowKey: a.rowKey,
-      kind: "World + genre",
-      card,
-      theme: themeForCountry("Spain"),
-    };
-  }
-  if (a.rowKey.startsWith("spotlight-")) {
-    const meta = spotlightMetaForCard(card);
-    return {
-      rowKey: a.rowKey,
-      kind: meta.kind,
-      card,
-      theme: meta.theme,
-    };
-  }
-  throw new Error(`Unrecognised shipped rowKey "${a.rowKey}"`);
+  const g = ID_TO_APP_GENRE[a.id];
+  const meta = g
+    ? { kind: "Genre" as CatalogEntryKind, theme: APP_GENRE_THEMES[g] }
+    : catalogMetaForGenreDeckCard(card);
+  return { rowKey: a.rowKey, kind: meta.kind, card, theme: meta.theme };
 }
 
 function catalogCardIntensity(row: RawCatalogRow): Intensity {
@@ -288,45 +193,11 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   theme: GenreTheme;
 } {
   const card = apiCardToCardData(a);
-  const kind = apiKindToWishlistKind(a.kind);
-  if (kind === "World") {
-    return {
-      rowKey: a.rowKey,
-      kind: "World",
-      card,
-      theme: themeForCountry(card.country!),
-    };
-  }
-  if (kind === "World blend") {
-    return {
-      rowKey: a.rowKey,
-      kind: "World blend",
-      card,
-      theme: themeForCountry(card.country!),
-    };
-  }
-  if (kind === "World + genre") {
-    if (!card.genre) {
-      throw new Error(`Wishlist "${a.rowKey}" (World + genre) must set genre`);
-    }
-    return {
-      rowKey: a.rowKey,
-      kind: "World + genre",
-      card,
-      theme: themeForCountry(card.country!),
-    };
-  }
-  const rowKind = kind === "Planned" ? "Planned" : "Genre";
-  if (!card.genre) {
-    throw new Error(`Wishlist "${a.rowKey}" must set genre`);
-  }
-  return {
-    rowKey: a.rowKey,
-    kind: rowKind,
-    card,
-    theme: resolveThemeSelection({ genre: card.genre, country: card.country })
-      .theme,
-  };
+  const kind: WishlistKind = a.kind === "Planned" ? "Planned" : "Card";
+  const theme = card.country
+    ? themeForCountry(card.country)
+    : resolveThemeSelection({ genre: card.genre ?? "" }).theme;
+  return { rowKey: a.rowKey, kind, card, theme };
 }
 
 function wishlistAppGenreLabel(card: CardData, rowKey: string): string {
@@ -370,11 +241,11 @@ export function buildWishlistEntriesFromApi(
   shippedCatalog: CatalogEntry[],
 ): WishlistEntry[] {
   const shippedKeys = new Set(
-    shippedCatalog.map((r) => normCatalogKey(r.card.title, r.card.artist)),
+    shippedCatalog.map((r) => normCatalogKey(r.card.title, r.card.genre, r.card.country, r.card.year)),
   );
   const interim = wishlist
     .filter(
-      (a) => !shippedKeys.has(normCatalogKey(a.title, a.artist)),
+      (a) => !shippedKeys.has(normCatalogKey(a.title, a.genre, a.country, a.year)),
     )
     .map(wishlistInterimFromApi);
   const sorted = [...interim].sort((a, b) => a.card.id - b.card.id);

@@ -8,20 +8,13 @@ export const CARD_RARITY_ORDER: readonly CardRarity[] = [
 ] as const;
 
 /** Catalogue row classification. Matches Prisma `CardKind` enum. */
-export type CardKind = "Genre" | "World" | "WorldBlend" | "WorldGenre" | "Planned";
+export type CardKind = "Card" | "Planned";
 
 /** Top-level filter: shipped catalogue, wishlist (concept), or planned (no artwork yet). */
 export type CardStatus = "Shipped" | "Wishlist" | "Planned";
 
-/** Display label shown on the card tables. Stored as `CardKind` in DB; UI labels add a space. */
-export type CatalogEntryKindLabel =
-  | "Genre"
-  | "World"
-  | "World blend"
-  | "World + genre";
-
 /** Wishlist row classification (table view). */
-export type WishlistKindLabel = CatalogEntryKindLabel | "Planned";
+export type WishlistKindLabel = "Card" | "Planned";
 
 /** Card season label (era). All shipped today are Era I. */
 export const CATALOG_DEFAULT_ERA = "Era I" as const;
@@ -61,6 +54,7 @@ export interface CardData {
   /** Optional illustration brief; not rendered. */
   artworkPrompt?: string;
   artworkCreatedAt?: string;
+  wikipediaUrl?: string;
   artworkOffsetY?: number;
   artworkOverBorder?: boolean;
   country?: string;
@@ -72,7 +66,6 @@ export interface CardData {
 
 /** Source row for planned / future cards — separate input shape from `CardData`. */
 export type WishlistCardDef = {
-  rowKey: string;
   id: number;
   title: string;
   artist?: string;

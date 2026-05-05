@@ -551,6 +551,9 @@ export default function WishlistDeckTable({
                   aria-label="Filter artist name"
                 />
               </th>
+              <th className={`${thWrap} w-8`}>
+                <span className="leading-snug">Wiki</span>
+              </th>
               <th className={`${thWrap} w-[64px]`}>
                 <SortToggle
                   label="Year"
@@ -724,6 +727,19 @@ export default function WishlistDeckTable({
                   </td>
                   <td className="py-2.5 px-2 text-muted align-middle max-w-[140px]">
                     {card.artist ?? "—"}
+                  </td>
+                  <td className="py-2.5 px-2 align-middle">
+                    {card.wikipediaUrl && (
+                      <a
+                        href={card.wikipediaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 text-xs"
+                        aria-label="Wikipedia"
+                      >
+                        W
+                      </a>
+                    )}
                   </td>
                   <td className="py-2.5 px-2 font-mono text-[13px] align-middle">
                     {card.year}

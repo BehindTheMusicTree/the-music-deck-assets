@@ -12,19 +12,8 @@ import {
 } from "class-validator";
 
 const CARD_STATUS_VALUES = ["Shipped", "Wishlist", "Planned"] as const;
-const CARD_KIND_VALUES = [
-  "Genre",
-  "World",
-  "WorldBlend",
-  "WorldGenre",
-  "Planned",
-] as const;
-const CARD_RARITY_VALUES = [
-  "Legendary",
-  "Classic",
-  "Banger",
-  "Niche",
-] as const;
+const CARD_KIND_VALUES = ["Card", "Planned"] as const;
+const CARD_RARITY_VALUES = ["Legendary", "Classic", "Banger", "Niche"] as const;
 
 export type CardStatusValue = (typeof CARD_STATUS_VALUES)[number];
 export type CardKindValue = (typeof CARD_KIND_VALUES)[number];
@@ -76,8 +65,8 @@ export class CardResponse {
   @ApiProperty()
   year!: string;
 
-  @ApiPropertyOptional()
-  genre?: string;
+  @ApiProperty()
+  genre!: string;
 
   @ApiPropertyOptional()
   country?: string;
@@ -127,6 +116,9 @@ export class CardResponse {
   @ApiPropertyOptional()
   artworkPrompt?: string;
 
+  @ApiProperty()
+  wikipediaUrl!: string;
+
   @ApiProperty({
     type: [Number],
     description: "Outgoing transition card ids (DJ transitions).",
@@ -158,7 +150,9 @@ export class CardTrackIndexResponse {
   @ApiProperty({
     description:
       "Card transition index keyed by card id (numeric keys serialised as JSON object keys).",
-    additionalProperties: { $ref: "#/components/schemas/CardTrackIndexEntryDto" },
+    additionalProperties: {
+      $ref: "#/components/schemas/CardTrackIndexEntryDto",
+    },
   })
   entries!: Record<number, CardTrackIndexEntryDto>;
 }

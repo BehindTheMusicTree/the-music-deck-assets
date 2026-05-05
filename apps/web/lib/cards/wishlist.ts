@@ -1,4 +1,5 @@
 import type { CardData } from "@/components/Card";
+import { assignCatalogRowKeys } from "@repo/cards-domain";
 import type { GenreTheme } from "@/lib/card-theme-types";
 import {
   type AppGenreName,
@@ -10,7 +11,11 @@ import {
   subgenreIntensity,
   themeForCountry,
 } from "@/lib/genres";
-import { SHIPPED_CATALOG_DEDUP_KEYS, normCatalogKey } from "./catalog";
+import {
+  SHIPPED_CATALOG_DEDUP_KEYS,
+  normCatalogKey,
+  CATALOG_ENTRIES,
+} from "./catalog";
 import type { WishlistCardDef } from "./wishlist-types";
 import { WISHLIST_CARD_DEFS } from "./catalog-wishlist-defs";
 
@@ -28,13 +33,7 @@ export type WishlistEntry = {
   intensity: Intensity;
 };
 
-export const WISHLIST_KINDS: WishlistKind[] = [
-  "Genre",
-  "World",
-  "World blend",
-  "World + genre",
-  "Planned",
-];
+export const WISHLIST_KINDS: WishlistKind[] = ["Card", "Planned"];
 
 type WishlistInterim = {
   rowKey: string;
@@ -43,7 +42,10 @@ type WishlistInterim = {
   theme: GenreTheme;
 };
 
-function wishlistDefToInterim(d: WishlistCardDef): WishlistInterim {
+function wishlistDefToInterim(
+  d: WishlistCardDef,
+  rowKey: string,
+): WishlistInterim {
   const card: CardData = {
     id: d.id,
     title: d.title,
@@ -57,43 +59,11 @@ function wishlistDefToInterim(d: WishlistCardDef): WishlistInterim {
     rarity: d.rarity,
     artworkPrompt: d.artworkPrompt,
   };
-  if (d.kind === "World") {
-    return {
-      rowKey: d.rowKey,
-      kind: "World",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  if (d.kind === "World blend") {
-    return {
-      rowKey: d.rowKey,
-      kind: "World blend",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  if (d.kind === "World + genre") {
-    if (!d.genre) {
-      throw new Error(`Wishlist "${d.rowKey}" (World + genre) must set genre`);
-    }
-    return {
-      rowKey: d.rowKey,
-      kind: "World + genre",
-      card,
-      theme: themeForCountry(d.country!),
-    };
-  }
-  const rowKind = d.kind === "Planned" ? "Planned" : "Genre";
-  if (!d.genre) {
-    throw new Error(`Wishlist "${d.rowKey}" must set genre`);
-  }
-  return {
-    rowKey: d.rowKey,
-    kind: rowKind,
-    card,
-    theme: resolveThemeSelection({ genre: d.genre, country: d.country }).theme,
-  };
+  const kind: WishlistKind = d.kind === "Planned" ? "Planned" : "Card";
+  const theme = d.country
+    ? themeForCountry(d.country)
+    : resolveThemeSelection({ genre: d.genre ?? "" }).theme;
+  return { rowKey, kind, card, theme };
 }
 
 function wishlistAppGenreLabel(card: CardData, rowKey: string): string {
@@ -131,9 +101,30 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
   );
 }
 
-const wishlistInterimRows: WishlistInterim[] = WISHLIST_CARD_DEFS.filter(
-  (d) => !SHIPPED_CATALOG_DEDUP_KEYS.has(normCatalogKey(d.title, d.artist)),
-).map(wishlistDefToInterim);
+const _filteredWishlistDefs = WISHLIST_CARD_DEFS.filter(
+  (d) =>
+    !SHIPPED_CATALOG_DEDUP_KEYS.has(
+      normCatalogKey(d.title, d.genre, d.country, d.year),
+    ),
+);
+
+// Global key assignment across shipped + wishlist to handle title+year collisions
+const _wishlistRowKeyMap = assignCatalogRowKeys([
+  ...CATALOG_ENTRIES.map((e) => ({
+    id: e.card.id,
+    title: e.card.title,
+    year: e.card.year,
+  })),
+  ..._filteredWishlistDefs.map((d) => ({
+    id: d.id,
+    title: d.title,
+    year: d.year,
+  })),
+]);
+
+const wishlistInterimRows: WishlistInterim[] = _filteredWishlistDefs.map((d) =>
+  wishlistDefToInterim(d, _wishlistRowKeyMap.get(d.id)!),
+);
 
 /** Planned / future cards not yet in the shipped deck (no bundled artwork). */
 export const WISHLIST_ENTRIES: WishlistEntry[] = (() => {
