@@ -370,16 +370,6 @@ export function resolveThemeSelectionLoose(params: {
   }
 }
 
-/** Border/icon theme from a genre string; unknown → Mainstream (transition strips, etc.). */
-export function themeFromGenreLoose(genre: string): GenreTheme {
-  if (!genre.trim()) return APP_GENRE_THEMES.Mainstream;
-  try {
-    return resolveThemeSelection({ genre }).theme;
-  } catch {
-    return APP_GENRE_THEMES.Mainstream;
-  }
-}
-
 export const WORLD_THEMES: Record<string, GenreTheme> = Object.fromEntries(
   Object.entries(COUNTRY_DATA).map(([k, v]) => [
     k,

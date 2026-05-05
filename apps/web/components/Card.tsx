@@ -16,9 +16,9 @@ import {
   matchupTargetDiamondColor,
   matchupTargetsForRootGenre,
   type ResolvedThemeSelection,
+  resolveThemeSelection,
   resolveThemeSelectionLoose,
   subgenreIntensity,
-  themeFromGenreLoose,
   type Intensity,
   WORLD_THEMES,
 } from "@/lib/genres";
@@ -293,7 +293,7 @@ export default function Card({
     const ref = cardSongIndex[id];
     if (!ref) return undefined;
     const resolvedRefTheme = ref.genre
-      ? themeFromGenreLoose(ref.genre)
+      ? resolveThemeSelection({ genre: ref.genre }).theme
       : theme;
     return {
       title: ref.title,
