@@ -8,22 +8,22 @@ datasource db {
 }
 
 enum CardRarity {
-  Legendary
-  Classic
-  Banger
-  Niche
+  LEGENDARY
+  CLASSIC
+  BANGER
+  NICHE
 }
 
 enum CardKind {
-  Song
-  Transition
+  SONG
+  TRANSITION
 }
 
 enum Intensity {
-  pop
-  soft
-  experimental
-  hardcore
+  POP
+  SOFT
+  EXPERIMENTAL
+  HARDCORE
 }
 
 model Genre {
@@ -55,6 +55,9 @@ model Genre {
   wheelOrder Int?
   isCountry  Boolean @default(false)
 
+  /** Printed catalogue TYPE segment (two chars): ISO alpha‑2 for country anchors; charter codes for wheel roots. */
+  printedTypeCode String? @db.VarChar(2)
+
   theme Json?
 
   createdAt DateTime @default(now())
@@ -77,6 +80,8 @@ model Card {
   artworkOverBorder  Boolean  @default(false)
   artworkCreatedAt   DateTime?
   artworkPrompt      String?  @db.Text
+  /** Immutable player-facing catalogue id after first print lock (e.g. RK-S1-023, FR-S1-005). */
+  printedSetId       String?  @unique
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

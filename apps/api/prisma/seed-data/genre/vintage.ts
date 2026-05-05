@@ -13,7 +13,7 @@ export const VINTAGE_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Legendary",
+    rarity: "LEGENDARY",
     artwork: `${ART}artwork.the-winstons-amen-brother-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-winstons-amen-brother-v1.png"],
@@ -29,7 +29,7 @@ export const VINTAGE_CARDS: CardData[] = [
     ability: "Modal",
     abilityDesc: "Random multiplier between ×1 and ×3 on each use.",
     pop: 5,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.miles-davis-so-what-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.miles-davis-so-what-v1.png"],
     ...(artworkPromptFor(8) ?? {}),
@@ -44,7 +44,7 @@ export const VINTAGE_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.these-boots-are-made-for-walkin-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.these-boots-are-made-for-walkin-v1.png"],
@@ -59,7 +59,7 @@ export const VINTAGE_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.bella-ciao-casa-de-papel-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bella-ciao-casa-de-papel-v1.png"],
@@ -75,7 +75,7 @@ export const VINTAGE_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.david-mccallum-the-edge-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.david-mccallum-the-edge-v1.png"],

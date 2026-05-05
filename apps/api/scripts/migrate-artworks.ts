@@ -6,12 +6,35 @@
  */
 import { createReadStream, readdirSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { basename, join } from "node:path";
+import { join } from "node:path";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { PrismaClient } from "@prisma/client";
 import { ARTWORK_CREATED_AT } from "../prisma/seed-data/artwork-created-at";
 
-const prisma = new PrismaClient();
+type MigrateArtworksPrisma = {
+  card: {
+    findFirst(args: {
+      where: { artworkKey: string; kind: "SONG" };
+    }): Promise<{
+      id: number;
+      artworkKey: string | null;
+      artworkChecksum: string | null;
+    } | null>;
+    update(args: {
+      where: { id: number };
+      data: {
+        artworkKey: string;
+        artworkContentType: string;
+        artworkBytes: number;
+        artworkChecksum: string;
+        artworkCreatedAt: Date;
+      };
+    }): Promise<void>;
+  };
+  $disconnect(): Promise<void>;
+};
+
+const prisma = new PrismaClient() as unknown as MigrateArtworksPrisma;
 
 function requireEnv(name: string): string {
   const v = process.env[name];
@@ -51,27 +74,28 @@ async function main(): Promise<void> {
   const client = s3Client();
   const repoRoot = join(__dirname, "../../..");
   const deckDir = join(repoRoot, "apps/web/public/cards/artworks/deck");
-  const files = readdirSync(deckDir).filter((f) => f.toLowerCase().endsWith(".png"));
+  const files = readdirSync(deckDir).filter((f) =>
+    f.toLowerCase().endsWith(".png"),
+  );
   let uploaded = 0;
   let skipped = 0;
   let orphaned = 0;
 
   for (const filename of files) {
     const key = `deck/${filename}`;
-    const card = await prisma.songCard.findFirst({
-      where: { card: { artworkKey: key } },
-      include: { card: true },
+    const cardRow = await prisma.card.findFirst({
+      where: { artworkKey: key, kind: "SONG" },
     });
-    if (!card) {
+    if (!cardRow) {
       console.warn(`Orphan file (no card): ${filename}`);
       orphaned += 1;
       continue;
     }
-    const effectiveKey = card.card.artworkKey ?? key;
+    const effectiveKey = cardRow.artworkKey ?? key;
     const filePath = join(deckDir, filename);
     const bytes = statSync(filePath).size;
     const sha = await sha256File(filePath);
-    if (card.card.artworkChecksum === sha) {
+    if (cardRow.artworkChecksum === sha) {
       skipped += 1;
       continue;
     }
@@ -88,7 +112,7 @@ async function main(): Promise<void> {
     const birth = ARTWORK_CREATED_AT[filename];
     const artworkCreatedAt = birth ? new Date(birth) : new Date();
     await prisma.card.update({
-      where: { id: card.id },
+      where: { id: cardRow.id },
       data: {
         artworkKey: effectiveKey,
         artworkContentType: "image/png",

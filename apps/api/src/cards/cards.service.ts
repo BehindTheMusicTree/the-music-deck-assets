@@ -9,6 +9,10 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Card, CardKind, CardRarity, Prisma, SongCard, WishlistSong } from "@prisma/client";
+import {
+  printedSetIdTypeSegment,
+  printedTypeCodeForSongCard,
+} from "@repo/cards-domain";
 import { PrismaService } from "../prisma/prisma.service";
 import { S3Service } from "../storage/s3.service";
 import {
@@ -58,7 +62,7 @@ export class CardsService {
       id: song.id,
       rowKey: song.card.rowKey,
       status: "Shipped",
-      kind: "Song",
+      kind: "SONG",
       title: song.card.title,
       artist: song.artist ?? undefined,
       year: song.year ?? undefined,
@@ -71,6 +75,7 @@ export class CardsService {
       pop: song.pop,
       rarity: song.rarity,
       catalogNumber: song.catalogNumber ?? undefined,
+      printedSetId: song.card.printedSetId ?? undefined,
       artworkUrl: this.artworkUrlFor(song.card),
       artworkKey: song.card.artworkKey ?? undefined,
       artworkContentType: song.card.artworkContentType ?? undefined,
@@ -97,7 +102,7 @@ export class CardsService {
       id: row.id,
       rowKey: row.rowKey,
       status: "Wishlist",
-      kind: "Song",
+      kind: "SONG",
       title: row.title,
       artist: row.artist ?? undefined,
       year: row.year ?? undefined,
@@ -106,7 +111,7 @@ export class CardsService {
       ability: row.ability ?? "",
       abilityDesc: row.abilityDesc ?? "",
       pop: row.pop ?? 0,
-      rarity: row.rarity ?? "Niche",
+      rarity: row.rarity ?? "NICHE",
       artworkPrompt: row.artworkPrompt ?? undefined,
       wikipediaUrl: row.wikipediaUrl ?? undefined,
       spotifyUrl: row.spotifyUrl ?? undefined,
@@ -176,6 +181,7 @@ export class CardsService {
         artist: s.artist ?? undefined,
         genre: s.genre,
         artworkUrl: this.artworkUrlFor(s.card),
+        printedSetId: s.card.printedSetId ?? undefined,
         songsOut: s.songsOut.map((t) => t.toId),
       };
     }
@@ -192,6 +198,7 @@ export class CardsService {
         isCountry: true,
         intensity: true,
         displayLabel: true,
+        printedTypeCode: true,
         theme: true,
         updatedAt: true,
       },
@@ -218,6 +225,7 @@ export class CardsService {
         g.parentId ? (byId.get(g.parentId)?.isCountry ?? false) : false,
         g.parentId ?? null,
       ),
+      printedTypeCode: g.printedTypeCode ?? undefined,
       updatedAt: g.updatedAt.toISOString(),
     }));
     return {
@@ -244,6 +252,15 @@ export class CardsService {
           `Card with rowKey "${dto.rowKey}" already exists`,
         );
       }
+      if (dto.printedSetId) {
+        const byPrinted = await tx.card.findFirst({
+          where: { printedSetId: dto.printedSetId },
+        });
+        if (byPrinted)
+          throw new ConflictException(
+            `Card with printedSetId "${dto.printedSetId}" already exists`,
+          );
+      }
       if (dto.status === "Shipped") {
         if (!dto.genre)
           throw new BadRequestException("genre is required for shipped songs");
@@ -261,12 +278,19 @@ export class CardsService {
           throw new BadRequestException("rarity is required for shipped songs");
         await this.assertSongsReferentialIntegrity(tx, songsOut, dto.id);
         const genreId = await this.resolveGenreId(tx, dto.genre);
+        await this.assertPrintedSetIdMatchesSongStripe(
+          tx,
+          dto.printedSetId,
+          dto.genre,
+          dto.country,
+        );
         await tx.card.create({
           data: {
             id: dto.id,
             rowKey: dto.rowKey,
-            kind: CardKind.Song,
+            kind: CardKind.SONG,
             title: dto.title,
+            printedSetId: dto.printedSetId ?? null,
             artworkOffsetY: dto.artworkOffsetY ?? null,
             artworkOverBorder: dto.artworkOverBorder ?? false,
             artworkPrompt: dto.artworkPrompt ?? null,
@@ -360,6 +384,35 @@ export class CardsService {
         const genreId = dto.genre
           ? await this.resolveGenreId(tx, dto.genre)
           : undefined;
+        const nextGenre = dto.genre ?? existingSong.genre;
+        const nextCountry =
+          dto.country !== undefined ? dto.country : existingSong.country;
+        const nextPrintedSetId =
+          dto.printedSetId !== undefined
+            ? dto.printedSetId
+            : existingSong.card.printedSetId;
+
+        if (dto.printedSetId && dto.printedSetId !== existingSong.card.printedSetId) {
+          const taken = await tx.card.findFirst({
+            where: { printedSetId: dto.printedSetId },
+            select: { id: true },
+          });
+          if (taken && taken.id !== id) {
+            throw new ConflictException(
+              `Card with printedSetId "${dto.printedSetId}" already exists`,
+            );
+          }
+        }
+
+        if (nextPrintedSetId) {
+          await this.assertPrintedSetIdMatchesSongStripe(
+            tx,
+            nextPrintedSetId,
+            nextGenre,
+            nextCountry,
+          );
+        }
+
         await tx.songCard.update({
           where: { id },
           data: {
@@ -386,6 +439,7 @@ export class CardsService {
           data: {
             rowKey: dto.rowKey ?? undefined,
             title: dto.title ?? undefined,
+            printedSetId: dto.printedSetId ?? undefined,
             artworkOffsetY: dto.artworkOffsetY ?? undefined,
             artworkOverBorder: dto.artworkOverBorder ?? undefined,
             artworkPrompt: dto.artworkPrompt ?? undefined,
@@ -566,6 +620,51 @@ export class CardsService {
     });
     if (!sc) throw new NotFoundException(`Card ${id} not found`);
     return this.songToResponse(sc);
+  }
+
+  private async printedTypeCodeAnchorMap(
+    tx: Prisma.TransactionClient,
+  ): Promise<Map<string, string>> {
+    const rows = await tx.genre.findMany({
+      where: { printedTypeCode: { not: null } },
+      select: { name: true, printedTypeCode: true },
+    });
+    const m = new Map<string, string>();
+    for (const r of rows) {
+      if (r.printedTypeCode) m.set(r.name, r.printedTypeCode);
+    }
+    return m;
+  }
+
+  private async assertPrintedSetIdMatchesSongStripe(
+    tx: Prisma.TransactionClient,
+    printedSetId: string | null | undefined,
+    genreStripe: string,
+    country: string | null | undefined,
+  ): Promise<void> {
+    if (!printedSetId?.trim()) return;
+    const map = await this.printedTypeCodeAnchorMap(tx);
+    let expected: string;
+    try {
+      expected = printedTypeCodeForSongCard({ genre: genreStripe, country }, map);
+    } catch (err) {
+      throw new BadRequestException(
+        err instanceof Error ? err.message : "Cannot resolve printed TYPE for genre",
+      );
+    }
+    let parsed: string;
+    try {
+      parsed = printedSetIdTypeSegment(printedSetId);
+    } catch (err) {
+      throw new BadRequestException(
+        err instanceof Error ? err.message : "Invalid printedSetId",
+      );
+    }
+    if (parsed !== expected) {
+      throw new BadRequestException(
+        `printedSetId TYPE "${parsed}" does not match genre taxonomy (${expected} expected for stripe "${genreStripe}")`,
+      );
+    }
   }
 
   private async resolveGenreId(

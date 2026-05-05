@@ -13,7 +13,7 @@ export const RUSSIA_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.ivan-larionov-kalinka-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.ivan-larionov-kalinka-v1.png"],
@@ -29,7 +29,7 @@ export const RUSSIA_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.red-army-choir-kalinka-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.red-army-choir-kalinka-v1.png"],

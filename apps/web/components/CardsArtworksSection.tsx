@@ -20,7 +20,7 @@ const ARTWORK_TABS: { id: ArtworksTabId; label: string }[] = [
   { id: "prompt", label: "5. Prompt generator" },
 ];
 
-const INTENSITIES: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
+const INTENSITIES: Intensity[] = ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"];
 
 const GENRE_STYLE_GUIDE: {
   genre: string;
@@ -84,49 +84,49 @@ export const PROMPT_EXAMPLES: {
 }[] = [
   {
     genre: "Mainstream",
-    intensity: "pop",
+    intensity: "POP",
     prompt:
       "Heroic fantasy illustration, vertical 2:3. A radiant central performer rises above a cheering crowd under golden-white light, cinematic symmetry, uplifting emotion, no text or logos.",
   },
   {
     genre: "Rock",
-    intensity: "soft",
+    intensity: "SOFT",
     prompt:
       "Gritty stage realism with painterly grain, vertical 2:3. A lone guitarist under warm amber sidelights, smoky depth, worn textures, emotionally restrained power, no text or logos.",
   },
   {
     genre: "Electronic",
-    intensity: "experimental",
+    intensity: "EXPERIMENTAL",
     prompt:
       "Futurist techno-ritual concept art, vertical 2:3. Abstract performer silhouette inside geometric neon architecture, layered fog, synthetic reflections, controlled chaos, no text or logos.",
   },
   {
     genre: "Hip-Hop",
-    intensity: "experimental",
+    intensity: "EXPERIMENTAL",
     prompt:
       "Early-2000s cel-shaded street mural aesthetic, vertical 2:3. Anonymous rapper silhouette in a tilted city canyon, bold outlines, vivid shadows, urban tension, no text or logos.",
   },
   {
     genre: "Disco/Funk",
-    intensity: "pop",
+    intensity: "POP",
     prompt:
       "Neon beachfront nightlife poster aesthetic, vertical 2:3. Dance silhouettes under warm magenta-cyan lights, chrome highlights, retro exuberance, no text or logos.",
   },
   {
     genre: "Reggae/Dub",
-    intensity: "soft",
+    intensity: "SOFT",
     prompt:
       "Caribbean vintage poster style, warm faded colours, soft grain, retro paper texture, vertical 2:3. Anonymous singer near coastal architecture and drifting haze, no text or logos.",
   },
   {
     genre: "Vintage",
-    intensity: "soft",
+    intensity: "SOFT",
     prompt:
       "Old-photograph style, vertical 2:3. Anonymous quartet in a dim jazz room, subtle film wear, desaturated palette, nostalgic stillness, no text or logos.",
   },
   {
     genre: "Classical",
-    intensity: "hardcore",
+    intensity: "HARDCORE",
     prompt:
       "Epic painting style, vertical 2:3. Monumental orchestra silhouettes in storm-lit architecture, deep chiaroscuro, sacred grandeur, no text or logos.",
   },
@@ -219,7 +219,7 @@ export default function CardsArtworksSection() {
   } | null>(null);
   const [primaryPromptChoice, setPrimaryPromptChoice] = useState<WheelChoice>({
     genre: "Mainstream",
-    intensity: "pop",
+    intensity: "POP",
     colour: GENRE_THEMES.Mainstream.border,
   });
   const [secondaryPromptChoice, setSecondaryPromptChoice] =
@@ -234,7 +234,7 @@ export default function CardsArtworksSection() {
     () =>
       GENRE_NAMES.map((genre) => {
         const intensities =
-          genre === "Mainstream" ? (["pop"] as const) : INTENSITIES;
+          genre === "Mainstream" ? (["POP"] as const) : INTENSITIES;
         return {
           genre,
           entries: intensities.map((intensity) => ({
@@ -377,22 +377,22 @@ export default function CardsArtworksSection() {
                 const genre = g.n as NonMainstreamGenreName;
                 return [
                   {
-                    intensity: "pop" as const,
+                    intensity: "POP" as const,
                     inner: 0,
                     outer: 84,
                   },
                   {
-                    intensity: "soft" as const,
+                    intensity: "SOFT" as const,
                     inner: 84,
                     outer: 116,
                   },
                   {
-                    intensity: "experimental" as const,
+                    intensity: "EXPERIMENTAL" as const,
                     inner: 116,
                     outer: 148,
                   },
                   {
-                    intensity: "hardcore" as const,
+                    intensity: "HARDCORE" as const,
                     inner: 148,
                     outer: 180,
                   },
@@ -482,11 +482,11 @@ export default function CardsArtworksSection() {
                     />
                     {g.entries.map((entry) => {
                       const radius =
-                        entry.intensity === "pop"
+                        entry.intensity === "POP"
                           ? 84
-                          : entry.intensity === "soft"
+                          : entry.intensity === "SOFT"
                             ? 116
-                            : entry.intensity === "experimental"
+                            : entry.intensity === "EXPERIMENTAL"
                               ? 148
                               : 180;
                       const x = 220 + radius * Math.cos(rad);
@@ -565,7 +565,7 @@ export default function CardsArtworksSection() {
                 onMouseEnter={() =>
                   setHoveredWheelColour({
                     genre: "Mainstream",
-                    intensity: "pop",
+                    intensity: "POP",
                     colour: GENRE_THEMES.Mainstream.border,
                     x: 0,
                     y: 0,
@@ -696,15 +696,15 @@ export default function CardsArtworksSection() {
                       const end = i * slice - 90 + slice / 2;
                       const genre = g.n as NonMainstreamGenreName;
                       return [
-                        { intensity: "pop" as const, inner: 0, outer: 84 },
-                        { intensity: "soft" as const, inner: 84, outer: 116 },
+                        { intensity: "POP" as const, inner: 0, outer: 84 },
+                        { intensity: "SOFT" as const, inner: 84, outer: 116 },
                         {
-                          intensity: "experimental" as const,
+                          intensity: "EXPERIMENTAL" as const,
                           inner: 116,
                           outer: 148,
                         },
                         {
-                          intensity: "hardcore" as const,
+                          intensity: "HARDCORE" as const,
                           inner: 148,
                           outer: 180,
                         },
@@ -808,7 +808,7 @@ export default function CardsArtworksSection() {
                       onClick={() =>
                         setSelected({
                           genre: "Mainstream",
-                          intensity: "pop",
+                          intensity: "POP",
                           colour: GENRE_THEMES.Mainstream.border,
                         })
                       }

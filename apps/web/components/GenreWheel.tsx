@@ -273,21 +273,21 @@ export default function GenreWheel() {
     outer: number;
     opacity: number;
   }> = [
-    { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.22 },
+    { intensity: "POP", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.22 },
     {
-      intensity: "soft",
+      intensity: "SOFT",
       inner: R_POP_SOFT_LINE,
       outer: R_SOFT_EXPERIMENTAL_LINE,
       opacity: 0.24,
     },
     {
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
       inner: R_SOFT_EXPERIMENTAL_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE,
       opacity: 0.22,
     },
     {
-      intensity: "hardcore",
+      intensity: "HARDCORE",
       inner: R_EXPERIMENTAL_HARDCORE_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
       opacity: 0.2,

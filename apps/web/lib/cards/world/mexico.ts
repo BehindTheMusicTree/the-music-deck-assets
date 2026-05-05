@@ -14,7 +14,7 @@ export const MEXICO_CARDS: CardData[] = [
     abilityDesc: "Wishlist catalogue entry.",
     artworkOffsetY: -20,
     pop: 7,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.la-cucaracha-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.la-cucaracha-v1.png"],
   },

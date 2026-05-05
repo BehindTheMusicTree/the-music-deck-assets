@@ -12,7 +12,7 @@ export const FRANCE_CARDS: CardData[] = [
     ability: "Liberty",
     abilityDesc: "Grants +15 power to all allied cards on the next turn.",
     pop: 7,
-    rarity: "Legendary",
+    rarity: "LEGENDARY",
     country: "France",
     artwork: `${ART}artwork.rouget-de-lisle-la-marseillaise-v1.png`,
     artworkCreatedAt:
@@ -29,7 +29,7 @@ export const FRANCE_CARDS: CardData[] = [
     ability: "Melancholy",
     abilityDesc: "Draws 2 cards from the deck when played after a Legendary.",
     pop: 7,
-    rarity: "Banger",
+    rarity: "BANGER",
     country: "France",
     artwork: `${ART}artwork.michel-sardou-les-lacs-du-connemara-v1.png`,
     artworkCreatedAt:
@@ -47,7 +47,7 @@ export const FRANCE_CARDS: CardData[] = [
     abilityDesc:
       "Allied Hip-Hop cards gain +12 popularity on the turn this card is played.",
     pop: 9,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     country: "France",
     artwork: `${ART}artwork.13-organises-bande-organisee-v1.png`,
     artworkCreatedAt:
@@ -67,7 +67,7 @@ export const FRANCE_CARDS: CardData[] = [
     abilityDesc:
       "French World cards gain +5 power while this card remains in play.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.les-corons-lens-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.les-corons-lens-v1.png"],
   },
@@ -82,7 +82,7 @@ export const FRANCE_CARDS: CardData[] = [
     ability: "Encore",
     abilityDesc: "Heal 15 HP when played after a Classical or Vintage card.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.luis-mariano-cest-magnifique-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.luis-mariano-cest-magnifique-v1.png"],
@@ -98,7 +98,7 @@ export const FRANCE_CARDS: CardData[] = [
     abilityDesc:
       "If another French card is on the field, draw one card from the deck.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.zaho-mc-solar-caroline-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.zaho-mc-solar-caroline-v1.png"],
@@ -114,7 +114,7 @@ export const FRANCE_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     songsOut: [90],
     artwork: `${ART}artwork.les-choristes-vois-sur-ton-chemin-v1.png`,
     artworkCreatedAt:

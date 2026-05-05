@@ -159,10 +159,10 @@ export default function GenreTransitionsWheel() {
 
   const data = useMemo(() => {
     const intensityLevels: Intensity[] = [
-      "pop",
-      "soft",
-      "experimental",
-      "hardcore",
+      "POP",
+      "SOFT",
+      "EXPERIMENTAL",
+      "HARDCORE",
     ];
     const pointFor = (genre: GenreName, intensity: Intensity) => {
       if (genre === "Mainstream") return { x: WHEEL_CX, y: WHEEL_CY };
@@ -174,7 +174,7 @@ export default function GenreTransitionsWheel() {
     const nodes: Node[] = [
       {
         genre: "Mainstream",
-        intensity: "pop",
+        intensity: "POP",
         colour: GENRE_THEMES.Mainstream.border,
         x: WHEEL_CX,
         y: WHEEL_CY,
@@ -284,21 +284,21 @@ export default function GenreTransitionsWheel() {
     outer: number;
     opacity: number;
   }> = [
-    { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
+    { intensity: "POP", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
     {
-      intensity: "soft",
+      intensity: "SOFT",
       inner: R_POP_SOFT_LINE,
       outer: R_SOFT_EXPERIMENTAL_LINE,
       opacity: 0.2,
     },
     {
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
       inner: R_SOFT_EXPERIMENTAL_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE,
       opacity: 0.18,
     },
     {
-      intensity: "hardcore",
+      intensity: "HARDCORE",
       inner: R_EXPERIMENTAL_HARDCORE_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
       opacity: 0.16,
@@ -392,7 +392,7 @@ export default function GenreTransitionsWheel() {
             const node = data.byKey["Mainstream|pop"];
             if (node) {
               setHovered({
-                node: { kind: "genreIntensity", genre: "Mainstream", intensity: "pop" },
+                node: { kind: "genreIntensity", genre: "Mainstream", intensity: "POP" },
                 anchor: node,
               });
             }

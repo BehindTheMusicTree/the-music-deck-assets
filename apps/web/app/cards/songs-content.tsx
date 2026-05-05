@@ -131,19 +131,19 @@ export async function CardsSongsContent() {
   ];
 
   const intensityExamples: Array<{
-    level: "pop" | "soft" | "experimental" | "hardcore";
+    level: "POP" | "SOFT" | "EXPERIMENTAL" | "HARDCORE";
     card: CardData;
   }> = [
     {
-      level: "pop",
+      level: "POP",
       card: { ...genreExample(2), id: 9701, title: "Intensity Pop" },
     },
     {
-      level: "soft",
+      level: "SOFT",
       card: { ...genreExample(1), id: 9702, title: "Intensity Soft" },
     },
     {
-      level: "experimental",
+      level: "EXPERIMENTAL",
       card: {
         ...genreExample(3),
         id: 9703,
@@ -151,7 +151,7 @@ export async function CardsSongsContent() {
       },
     },
     {
-      level: "hardcore",
+      level: "HARDCORE",
       card: { ...genreExample(8), id: 9704, title: "Intensity Hardcore" },
     },
   ];
@@ -167,7 +167,7 @@ export async function CardsSongsContent() {
           id: 9800 + note,
           title: `Popularity ${note}`,
           pop,
-          rarity: note >= 8 ? "Legendary" : note >= 5 ? "Classic" : "Banger",
+          rarity: note >= 8 ? "LEGENDARY" : note >= 5 ? "CLASSIC" : "BANGER",
         },
       };
     });
@@ -208,7 +208,7 @@ export async function CardsSongsContent() {
       if (item.key === "mainstream-shape-of-you") {
         const node = {
           genre: "Mainstream" as GenreName,
-          intensity: "pop" as const,
+          intensity: "POP" as const,
         };
         return {
           ...item,

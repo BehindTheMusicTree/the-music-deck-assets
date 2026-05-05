@@ -57,17 +57,17 @@ type GenreTransitionStrip = {
 };
 
 const RARITY_COLOR: Record<CardRarity, string> = {
-  Legendary: "#c8a040",
-  Classic: "#a060c8",
-  Banger: "#4a7aaa",
-  Niche: "#666",
+  LEGENDARY: "#c8a040",
+  CLASSIC: "#a060c8",
+  BANGER: "#4a7aaa",
+  NICHE: "#666",
 };
 
 const RARITY_ICON: Record<CardRarity, string> = {
-  Legendary: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 8,3.5 10,7 5,10 0,7 2,3.5" fill="#c8a040"/></svg>`,
-  Classic: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
-  Banger: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
-  Niche: `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
+  LEGENDARY: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 8,3.5 10,7 5,10 0,7 2,3.5" fill="#c8a040"/></svg>`,
+  CLASSIC: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.2,10 5,7.8 1.8,10 3,6.2 0,3.8 3.8,3.8" fill="#a060c8"/></svg>`,
+  BANGER: `<svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6,3.5 9.5,3.5 6.8,5.7 7.8,9.2 5,7.2 2.2,9.2 3.2,5.7 0.5,3.5 4,3.5" fill="#4a7aaa"/></svg>`,
+  NICHE: `<svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#666" stroke-width="1.5"/></svg>`,
 };
 
 const STRIP_NAME_FOR_GENRE: Record<string, string> = {
@@ -341,19 +341,19 @@ export default function Card({
     icon: GENRE_THEMES[n.genre as keyof typeof GENRE_THEMES]?.icon ?? "",
   });
   const intensityRank: Record<Intensity, number> = {
-    pop: 0,
-    soft: 1,
-    experimental: 2,
-    hardcore: 3,
+    POP: 0,
+    SOFT: 1,
+    EXPERIMENTAL: 2,
+    HARDCORE: 3,
   };
   const sortWeakestIntensityFirstInGenreGroups = (
     nodes: Array<{ genre: string; intensity: Intensity }>,
   ) => {
     const intensityOrder: Record<Intensity, number> = {
-      pop: 0,
-      soft: 1,
-      experimental: 2,
-      hardcore: 3,
+      POP: 0,
+      SOFT: 1,
+      EXPERIMENTAL: 2,
+      HARDCORE: 3,
     };
     const out: Array<{ genre: string; intensity: Intensity }> = [];
     let i = 0;

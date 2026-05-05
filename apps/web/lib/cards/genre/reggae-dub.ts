@@ -11,7 +11,7 @@ export const REGGAE_DUB_CARDS: CardData[] = [
     ability: "Roots",
     abilityDesc: "Heals 20 HP when adjacent to a World genre card.",
     pop: 8,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.is-this-love-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.is-this-love-v1.png"],
   },
@@ -25,7 +25,7 @@ export const REGGAE_DUB_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 9,
-    rarity: "Legendary",
+    rarity: "LEGENDARY",
     artwork: `${ART}artwork.bob-marley-i-shot-the-sherif-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.bob-marley-i-shot-the-sherif-v1.png"],

@@ -9,6 +9,7 @@ type SongIndexApiRow = {
   artist?: string;
   genre?: string;
   artworkUrl?: string;
+  printedSetId?: string;
   songsOut: number[];
 };
 
@@ -19,7 +20,8 @@ export type GenreTaxonomyEntry = {
   parentBId?: number;
   isCountry: boolean;
   kind: "COUNTRY_ROOT" | "COUNTRY_SUB_GENRE" | "GENRE_ROOT" | "SUB_GENRE";
-  intensity?: "pop" | "soft" | "experimental" | "hardcore";
+  intensity?: "POP" | "SOFT" | "EXPERIMENTAL" | "HARDCORE";
+  printedTypeCode?: string;
   displayLabel?: string;
   theme?: GenreTheme;
   updatedAt: string;
@@ -76,9 +78,10 @@ export async function getCatalogSongIndex(): Promise<CardSongIndex> {
       id: row.id,
       title: row.title,
       artist: row.artist,
-      genre: row.genre,
+      genre: row.genre ?? "",
       artwork: row.artworkUrl,
       artworkUrl: row.artworkUrl,
+      printedSetId: row.printedSetId,
       songsOut: row.songsOut ?? [],
     };
   }

@@ -33,10 +33,10 @@ type PromptBlock = {
 };
 
 const INTENSITY_BANDS: Array<{ intensity: Intensity; inner: number; outer: number }> = [
-  { intensity: "pop", inner: 0, outer: 84 },
-  { intensity: "soft", inner: 84, outer: 116 },
-  { intensity: "experimental", inner: 116, outer: 148 },
-  { intensity: "hardcore", inner: 148, outer: 180 },
+  { intensity: "POP", inner: 0, outer: 84 },
+  { intensity: "SOFT", inner: 84, outer: 116 },
+  { intensity: "EXPERIMENTAL", inner: 116, outer: 148 },
+  { intensity: "HARDCORE", inner: 148, outer: 180 },
 ];
 
 function polarToXY(cx: number, cy: number, r: number, angleDeg: number) {
@@ -100,9 +100,9 @@ function shortLabel(el: BattleElement): string {
 }
 
 function intensityDescriptor(i: Intensity): string {
-  if (i === "pop") return "bright, accessible, hook-forward";
-  if (i === "soft") return "warm, restrained, low-friction";
-  if (i === "experimental") return "unpredictable, textural, risk-taking";
+  if (i === "POP") return "bright, accessible, hook-forward";
+  if (i === "SOFT") return "warm, restrained, low-friction";
+  if (i === "EXPERIMENTAL") return "unpredictable, textural, risk-taking";
   return "aggressive, high-energy, driving";
 }
 
@@ -163,14 +163,14 @@ export default function BattleAudioPromptBuilder() {
   const [firstElement, setFirstElement] = useState<BattleElement>({
     kind: "genreIntensity",
     genre: "Mainstream",
-    intensity: "pop",
+    intensity: "POP",
     colour: GENRE_THEMES.Mainstream.border,
   });
   const [secondElement, setSecondElement] = useState<BattleElement>({
     kind: "genreIntensity",
     genre: "Rock",
-    intensity: "soft",
-    colour: genreIntensityColor("Rock", "soft"),
+    intensity: "SOFT",
+    colour: genreIntensityColor("Rock", "SOFT"),
   });
   const [activeCountryTarget, setActiveCountryTarget] = useState<SelectorId>("first");
   const [lastCountrySelected, setLastCountrySelected] = useState<CountryElement | null>(null);
@@ -376,7 +376,7 @@ function WheelSelector({
             }
             strokeWidth={selected.kind === "genreIntensity" && selected.genre === "Mainstream" ? 2 : 1.5}
             style={{ cursor: "pointer" }}
-            onClick={() => onPick(selectorId, "Mainstream", "pop", GENRE_THEMES.Mainstream.border)}
+            onClick={() => onPick(selectorId, "Mainstream", "POP", GENRE_THEMES.Mainstream.border)}
           />
           <text
             x={220}

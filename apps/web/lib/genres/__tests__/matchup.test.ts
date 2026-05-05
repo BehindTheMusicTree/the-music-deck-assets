@@ -39,6 +39,6 @@ describe("genre mashup matchup rules", () => {
   });
 
   it("Mainstream app intensity is pop for transition graph lookups", () => {
-    expect(appGenreIntensity("Mainstream")).toBe("pop");
+    expect(appGenreIntensity("Mainstream")).toBe("POP");
   });
 });

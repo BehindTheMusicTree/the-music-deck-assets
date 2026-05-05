@@ -13,7 +13,7 @@ export const JAPAN_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.teriyaki-boys-tokyo-drift-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.teriyaki-boys-tokyo-drift-v1.png"],

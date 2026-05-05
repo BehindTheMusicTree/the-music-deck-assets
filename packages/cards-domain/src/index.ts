@@ -61,3 +61,15 @@ export type {
 } from "./genre-subgenres";
 
 export { intensityLevelIndex, SUBGENRES } from "./genre-subgenres";
+
+export {
+  PRINTED_DEFAULT_SEASON,
+  ROOT_GENRE_PRINTED_TYPE_CODE,
+  formatPrintedSetId,
+  printedSetIdTypeSegment,
+  printedTypeCodeForSongCard,
+  printedTypeCodeForTransitionGenre,
+  territoryToPrintedTypeCode,
+} from "./printed-set-id";
+
+export { ISO_ALPHA2_BY_TERRITORY_NAME } from "./iso-alpha2-by-territory-name";

@@ -1,7 +1,10 @@
 import {
   APP_GENRE_NAMES,
   APP_GENRE_THEMES,
+  ROOT_GENRE_PRINTED_TYPE_CODE,
   SUBGENRES,
+  territoryToPrintedTypeCode,
+  type RootGenreName,
 } from "@repo/cards-domain";
 import { Intensity, Prisma, type PrismaClient } from "@prisma/client";
 
@@ -19,14 +22,17 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
   // Pass 1: 8 RootGenre rows (no parentId)
   for (const name of APP_GENRE_NAMES) {
     const wheelIdx = WHEEL_ORDER.indexOf(name as (typeof WHEEL_ORDER)[number]);
+    const printedTypeCode =
+      ROOT_GENRE_PRINTED_TYPE_CODE[name as RootGenreName];
     await prisma.genre.upsert({
       where: { name },
       create: {
         name,
-        intensity: name === "Mainstream" ? Intensity.pop : Intensity.soft,
+        intensity: name === "Mainstream" ? Intensity.POP : Intensity.SOFT,
         displayLabel: name === "Mainstream" ? "Pop" : null,
         wheelOrder: wheelIdx >= 0 ? wheelIdx + 1 : null,
         isCountry: false,
+        printedTypeCode,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
@@ -34,6 +40,7 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
       },
       update: {
         isCountry: false,
+        printedTypeCode,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
@@ -49,10 +56,16 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
     ),
   ];
   for (const name of countryNames) {
+    const printedTypeCode = territoryToPrintedTypeCode(name);
     await prisma.genre.upsert({
       where: { name },
-      create: { name, intensity: Intensity.soft, isCountry: true },
-      update: { isCountry: true },
+      create: {
+        name,
+        intensity: Intensity.SOFT,
+        isCountry: true,
+        printedTypeCode,
+      },
+      update: { isCountry: true, printedTypeCode },
     });
   }
 

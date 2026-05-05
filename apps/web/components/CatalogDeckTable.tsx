@@ -56,10 +56,10 @@ const sortBtnActive = "border-gold/50 text-gold";
 const CATALOG_GRID_THUMB_SCALE = 0.58 * 4;
 
 const INTENSITY_VALUES: readonly Intensity[] = [
-  "pop",
-  "soft",
-  "experimental",
-  "hardcore",
+  "POP",
+  "SOFT",
+  "EXPERIMENTAL",
+  "HARDCORE",
 ];
 
 function artworkBasename(artworkUrl: string | undefined): string {

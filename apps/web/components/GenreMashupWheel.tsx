@@ -122,10 +122,10 @@ export default function GenreMashupWheel() {
   );
   const data = useMemo(() => {
     const intensityLevels: Intensity[] = [
-      "pop",
-      "soft",
-      "experimental",
-      "hardcore",
+      "POP",
+      "SOFT",
+      "EXPERIMENTAL",
+      "HARDCORE",
     ];
     const pointFor = (genre: GenreName, intensity: Intensity) => {
       if (genre === "Mainstream") return { x: WHEEL_CX, y: WHEEL_CY };
@@ -139,7 +139,7 @@ export default function GenreMashupWheel() {
       );
     };
     const nodes: Node[] = [
-      { genre: "Mainstream", intensity: "pop", x: WHEEL_CX, y: WHEEL_CY },
+      { genre: "Mainstream", intensity: "POP", x: WHEEL_CX, y: WHEEL_CY },
       ...WHEEL_GENRES.flatMap((g) =>
         intensityLevels.map((intensity) => ({
           genre: g.n,
@@ -220,8 +220,8 @@ export default function GenreMashupWheel() {
           .flatMap((g) => {
             const levels: Intensity[] =
               g === "Mainstream"
-                ? ["pop"]
-                : ["pop", "soft", "experimental", "hardcore"];
+                ? ["POP"]
+                : ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"];
             return levels
               .map((level) => {
                 const to = data.byKey[`${g}|${level}`];
@@ -238,8 +238,8 @@ export default function GenreMashupWheel() {
           .flatMap((g) => {
             const levels: Intensity[] =
               g === "Mainstream"
-                ? ["pop"]
-                : ["pop", "soft", "experimental", "hardcore"];
+                ? ["POP"]
+                : ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"];
             return levels
               .map((level) => {
                 const from = data.byKey[`${g}|${level}`];
@@ -258,21 +258,21 @@ export default function GenreMashupWheel() {
     outer: number;
     opacity: number;
   }> = [
-    { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
+    { intensity: "POP", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
     {
-      intensity: "soft",
+      intensity: "SOFT",
       inner: R_POP_SOFT_LINE,
       outer: R_SOFT_EXPERIMENTAL_LINE,
       opacity: 0.2,
     },
     {
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
       inner: R_SOFT_EXPERIMENTAL_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE,
       opacity: 0.18,
     },
     {
-      intensity: "hardcore",
+      intensity: "HARDCORE",
       inner: R_EXPERIMENTAL_HARDCORE_LINE,
       outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
       opacity: 0.16,

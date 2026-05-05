@@ -174,7 +174,7 @@ const _intermLaMacarena: IntermCatalogRow = {
     ability: "Festival Pulse",
     abilityDesc: "Gain +10 popularity when played after a World card.",
     pop: 9,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${CARD_ARTWORK_BASE}artwork.los-del-rio-la-macarena-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],

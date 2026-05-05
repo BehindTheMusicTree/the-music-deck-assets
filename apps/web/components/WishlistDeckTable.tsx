@@ -38,10 +38,10 @@ const sortBtnBase =
 const sortBtnActive = "border-gold/50 text-gold";
 
 const INTENSITY_VALUES: readonly Intensity[] = [
-  "pop",
-  "soft",
-  "experimental",
-  "hardcore",
+  "POP",
+  "SOFT",
+  "EXPERIMENTAL",
+  "HARDCORE",
 ];
 
 const ARTWORK_PROMPT_PREVIEW_WORDS = 7;

@@ -13,7 +13,7 @@ export const SPAIN_CARDS: CardData[] = [
     abilityDesc:
       "Opponent discards one card at random when this card enters play.",
     pop: 6,
-    rarity: "Banger",
+    rarity: "BANGER",
     country: "Spain",
     artwork: `${ART}artwork.ska-p-cannabis-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.ska-p-cannabis-v1.png"],
@@ -28,7 +28,7 @@ export const SPAIN_CARDS: CardData[] = [
     ability: "Choreography",
     abilityDesc: "+8 popularity when played after another dance track.",
     pop: 9,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.las-ketchup-the-ketchup-song-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.las-ketchup-the-ketchup-song-v1.png"],
@@ -44,7 +44,7 @@ export const SPAIN_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.me-gustas-tu-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.me-gustas-tu-v1.png"],
     catalogNumber: 2,

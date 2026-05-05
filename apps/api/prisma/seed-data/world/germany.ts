@@ -13,7 +13,7 @@ export const GERMANY_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.hannenmaykentereit-ich-geh-heut-nicht-mehr-tanzen-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT[

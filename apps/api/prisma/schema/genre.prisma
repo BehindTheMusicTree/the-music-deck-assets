@@ -27,6 +27,9 @@ model Genre {
   wheelOrder Int?
   isCountry  Boolean @default(false)
 
+  /** Printed catalogue TYPE segment (two chars): ISO alpha‑2 for country anchors; charter codes for wheel roots. */
+  printedTypeCode String? @db.VarChar(2)
+
   theme Json?
 
   createdAt DateTime @default(now())

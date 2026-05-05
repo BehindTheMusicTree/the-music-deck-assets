@@ -1,19 +1,18 @@
 enum CardRarity {
-  Legendary
-  Classic
-  Banger
-  Niche
+  LEGENDARY
+  CLASSIC
+  BANGER
+  NICHE
 }
 
 enum CardKind {
-  Song
-  Transition
+  SONG
+  TRANSITION
 }
 
 enum Intensity {
-  pop
-  soft
-  experimental
-  hardcore
+  POP
+  SOFT
+  EXPERIMENTAL
+  HARDCORE
 }
-

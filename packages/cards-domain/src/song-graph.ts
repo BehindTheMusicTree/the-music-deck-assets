@@ -5,7 +5,13 @@ export type SongGraph = {
     number,
     Pick<
       CardData,
-      "id" | "title" | "artist" | "genre" | "artwork" | "artworkUrl"
+      | "id"
+      | "title"
+      | "artist"
+      | "genre"
+      | "artwork"
+      | "artworkUrl"
+      | "printedSetId"
     >
   >;
   songsOutById: Record<number, number[]>;
@@ -35,6 +41,7 @@ export function buildSongGraph(cards: CardData[]): SongGraph {
       genre: card.genre,
       artwork: card.artwork,
       artworkUrl: card.artworkUrl,
+      printedSetId: card.printedSetId,
     };
     songsOutById[card.id] = [];
     songsInById[card.id] = [];
@@ -65,7 +72,13 @@ export function buildSongGraph(cards: CardData[]): SongGraph {
 /** One lookup per id: display fields + outgoing link ids (for `Card` transition strips). */
 export type CardSongIndexEntry = Pick<
   CardData,
-  "id" | "title" | "artist" | "genre" | "artwork" | "artworkUrl"
+  | "id"
+  | "title"
+  | "artist"
+  | "genre"
+  | "artwork"
+  | "artworkUrl"
+  | "printedSetId"
 > & {
   songsOut: number[];
 };

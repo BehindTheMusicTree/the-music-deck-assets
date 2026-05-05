@@ -4,6 +4,10 @@ import { CardKind, PrismaClient } from "@prisma/client";
 import {
   APP_GENRE_NAMES,
   assignCatalogRowKeys,
+  formatPrintedSetId,
+  printedTypeCodeForSongCard,
+  printedTypeCodeForTransitionGenre,
+  PRINTED_DEFAULT_SEASON,
   type CardData,
   type WishlistCardDef,
 } from "@repo/cards-domain";
@@ -92,6 +96,60 @@ function collectTransitionRows(shipped: ShippedRow[], wishlist: WishlistRow[]): 
   });
 }
 
+async function loadPrintedTypeCodeByGenreName(): Promise<Map<string, string>> {
+  const rows = await prisma.genre.findMany({
+    where: { printedTypeCode: { not: null } },
+    select: { name: true, printedTypeCode: true },
+  });
+  const out = new Map<string, string>();
+  for (const r of rows) {
+    if (r.printedTypeCode) out.set(r.name, r.printedTypeCode);
+  }
+  return out;
+}
+
+/** Global S1 numbering: one sequence for shipped songs + transition pillars (sorted by numeric id). */
+async function computePrintedSetIdsByCardId(
+  shipped: ShippedRow[],
+  transitions: TransitionRow[],
+  codeByAnchorName: ReadonlyMap<string, string>,
+): Promise<Map<number, string>> {
+  type Tagged =
+    | { id: number; kind: "song"; card: CardData }
+    | { id: number; kind: "transition"; genre: string };
+
+  const merged: Tagged[] = [
+    ...shipped.map((r) => ({ id: r.card.id, kind: "song" as const, card: r.card })),
+    ...transitions.map((t) => ({
+      id: t.id,
+      kind: "transition" as const,
+      genre: t.genre ?? "",
+    })),
+  ];
+  merged.sort((a, b) => a.id - b.id);
+
+  const season = PRINTED_DEFAULT_SEASON;
+  const out = new Map<number, string>();
+  let seq = 1;
+  for (const row of merged) {
+    const typeCode =
+      row.kind === "song"
+        ? printedTypeCodeForSongCard(
+            {
+              genre: row.card.genre,
+              country: row.card.country ?? null,
+              title: row.card.title,
+              id: row.card.id,
+            },
+            codeByAnchorName,
+          )
+        : printedTypeCodeForTransitionGenre(row.genre, codeByAnchorName);
+    out.set(row.id, formatPrintedSetId(typeCode, season, seq));
+    seq += 1;
+  }
+  return out;
+}
+
 function artworkKeyFromCard(card: CardData): string | null {
   if (!card.artwork) return null;
   return `deck/${basename(card.artwork)}`;
@@ -104,7 +162,7 @@ function dateFromArtworkCreatedAt(value: string | undefined): Date | null {
   return d;
 }
 
-async function upsertShipped(row: ShippedRow): Promise<void> {
+async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<void> {
   const { card, rowKey } = row;
   const genreRow = card.genre
     ? await prisma.genre.findUnique({
@@ -118,8 +176,9 @@ async function upsertShipped(row: ShippedRow): Promise<void> {
     create: {
       id: card.id,
       rowKey,
-      kind: CardKind.Song,
+      kind: CardKind.SONG,
       title: card.title,
+      printedSetId,
       artworkKey: artworkKeyFromCard(card),
       artworkContentType: card.artwork ? "image/png" : null,
       artworkOffsetY: card.artworkOffsetY ?? null,
@@ -129,8 +188,9 @@ async function upsertShipped(row: ShippedRow): Promise<void> {
     },
     update: {
       rowKey,
-      kind: CardKind.Song,
+      kind: CardKind.SONG,
       title: card.title,
+      printedSetId,
       artworkKey: artworkKeyFromCard(card),
       artworkContentType: card.artwork ? "image/png" : null,
       artworkOffsetY: card.artworkOffsetY ?? null,
@@ -228,7 +288,7 @@ async function upsertWishlist(row: WishlistRow): Promise<void> {
   });
 }
 
-async function upsertTransition(row: TransitionRow): Promise<void> {
+async function upsertTransition(row: TransitionRow, printedSetId: string): Promise<void> {
   const genreRow = row.genre
     ? await prisma.genre.findUnique({
         where: { name: row.genre },
@@ -241,13 +301,15 @@ async function upsertTransition(row: TransitionRow): Promise<void> {
     create: {
       id: row.id,
       rowKey: row.rowKey,
-      kind: CardKind.Transition,
+      kind: CardKind.TRANSITION,
       title: row.title,
+      printedSetId,
     },
     update: {
       rowKey: row.rowKey,
-      kind: CardKind.Transition,
+      kind: CardKind.TRANSITION,
       title: row.title,
+      printedSetId,
     },
   });
 
@@ -287,14 +349,22 @@ async function replaceSongs(
 
 async function main(): Promise<void> {
   await seedGenres(prisma);
+  const codeByAnchorName = await loadPrintedTypeCodeByGenreName();
   const { shipped, wishlist } = collectRows();
   const transitions = collectTransitionRows(shipped, wishlist);
+  const printedById = await computePrintedSetIdsByCardId(
+    shipped,
+    transitions,
+    codeByAnchorName,
+  );
   const validSongIds = new Set(shipped.map((r) => r.card.id));
 
-  for (const row of shipped) await upsertShipped(row);
+  for (const row of shipped)
+    await upsertShipped(row, printedById.get(row.card.id)!);
   for (const row of shipped) await replaceSongs(row.card, validSongIds);
   for (const row of wishlist) await upsertWishlist(row);
-  for (const row of transitions) await upsertTransition(row);
+  for (const row of transitions)
+    await upsertTransition(row, printedById.get(row.id)!);
 
   await prisma.songCard.deleteMany({
     where: { id: { notIn: Array.from(validSongIds) } },

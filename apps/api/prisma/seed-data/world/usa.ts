@@ -12,7 +12,7 @@ export const USA_CARDS: CardData[] = [
     ability: "Heartland",
     abilityDesc: "Restores 10 HP to all allied cards when played.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     country: "USA",
     artwork: `${ART}artwork.take-me-home-country-roads-v1.png`,
     artworkCreatedAt:
@@ -28,7 +28,7 @@ export const USA_CARDS: CardData[] = [
     ability: "Redemption",
     abilityDesc: "Revives one defeated allied card with 30 HP.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     country: "USA",
     artwork: `${ART}artwork.amazing-grace-v1.png`,
     artworkCreatedAt: ARTWORK_CREATED_AT["artwork.amazing-grace-v1.png"],
@@ -45,7 +45,7 @@ export const USA_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 7,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.golden-gate-quartet-take-five-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.golden-gate-quartet-take-five-v1.png"],
@@ -63,7 +63,7 @@ export const USA_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 9,
-    rarity: "Classic",
+    rarity: "CLASSIC",
     artwork: `${ART}artwork.the-platters-the-great-pretender-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.the-platters-the-great-pretender-v1.png"],

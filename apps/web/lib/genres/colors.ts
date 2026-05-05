@@ -77,10 +77,10 @@ export function genreIntensityColor(
     experimentalDarken + GENRE_STEP_EXPERIMENTAL_TO_HARDCORE_DARKEN;
 
   const byIntensity: Record<Intensity, number> = {
-    pop: popDarken,
-    soft: softDarken,
-    experimental: experimentalDarken,
-    hardcore: hardcoreDarken,
+    POP: popDarken,
+    SOFT: softDarken,
+    EXPERIMENTAL: experimentalDarken,
+    HARDCORE: hardcoreDarken,
   };
 
   return applyDarken(base, byIntensity[intensity]);
@@ -365,12 +365,12 @@ export function themeForCard(genre: string, country?: string): GenreTheme {
 export const WHEEL_GENRES: Array<{ n: GenreName; color: string }> = [
   {
     n: "Reggae/Dub",
-    color: genreIntensityColor("Reggae/Dub", "soft"),
+    color: genreIntensityColor("Reggae/Dub", "SOFT"),
   },
-  { n: "Electronic", color: genreIntensityColor("Electronic", "soft") },
-  { n: "Disco/Funk", color: genreIntensityColor("Disco/Funk", "soft") },
-  { n: "Hip-Hop", color: genreIntensityColor("Hip-Hop", "soft") },
-  { n: "Rock", color: genreIntensityColor("Rock", "soft") },
-  { n: "Classical", color: genreIntensityColor("Classical", "soft") },
-  { n: "Vintage", color: genreIntensityColor("Vintage", "soft") },
+  { n: "Electronic", color: genreIntensityColor("Electronic", "SOFT") },
+  { n: "Disco/Funk", color: genreIntensityColor("Disco/Funk", "SOFT") },
+  { n: "Hip-Hop", color: genreIntensityColor("Hip-Hop", "SOFT") },
+  { n: "Rock", color: genreIntensityColor("Rock", "SOFT") },
+  { n: "Classical", color: genreIntensityColor("Classical", "SOFT") },
+  { n: "Vintage", color: genreIntensityColor("Vintage", "SOFT") },
 ];

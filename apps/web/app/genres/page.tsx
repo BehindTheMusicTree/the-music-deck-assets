@@ -65,7 +65,7 @@ export default function GenresPage() {
                     {displayGenreLabel(genre)}
                   </div>
                   <div className="flex gap-0 rounded-[4px] overflow-hidden h-10">
-                    {(["pop", "soft", "experimental", "hardcore"] as const).map(
+                    {(["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"] as const).map(
                       (intensity) => {
                         const bg = genreIntensityColor(genre, intensity);
                         return (

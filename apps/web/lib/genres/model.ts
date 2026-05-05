@@ -81,10 +81,10 @@ export type TransitionNode =
   | TransitionSubgenreNode;
 
 const INTENSITY_ORDER: Intensity[] = [
-  "pop",
-  "soft",
-  "experimental",
-  "hardcore",
+  "POP",
+  "SOFT",
+  "EXPERIMENTAL",
+  "HARDCORE",
 ];
 
 function nextIntensity(i: Intensity): Intensity | undefined {
@@ -138,7 +138,7 @@ export function allGenreIntensityNodes(): GenreIntensityNode[] {
   const out: GenreIntensityNode[] = [];
   for (const genre of GENRE_NAMES) {
     const levels: Intensity[] =
-      genre === "Mainstream" ? ["pop"] : [...INTENSITY_ORDER];
+      genre === "Mainstream" ? ["POP"] : [...INTENSITY_ORDER];
     for (const intensity of levels) {
       out.push({ genre, intensity });
     }
@@ -204,10 +204,10 @@ function toTransitionSubgenreNode(subgenre: string): TransitionSubgenreNode {
 function baseGenreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
   if (node.genre === "Mainstream") {
     return uniqueGenreIntensity([
-      { genre: "Mainstream", intensity: "pop" },
+      { genre: "Mainstream", intensity: "POP" },
       ...NON_MAINSTREAM_WHEEL_ORDER.map((genre) => ({
         genre,
-        intensity: "pop" as Intensity,
+        intensity: "POP" as Intensity,
       })),
     ]);
   }
@@ -226,8 +226,8 @@ function baseGenreIntensityOut(node: GenreIntensityNode): GenreIntensityNode[] {
     out.push({ genre: nextGenre, intensity: down });
     out.push({ genre: previousGenre, intensity: down });
   }
-  if (node.intensity === "pop") {
-    out.push({ genre: "Mainstream", intensity: "pop" });
+  if (node.intensity === "POP") {
+    out.push({ genre: "Mainstream", intensity: "POP" });
   }
   return uniqueGenreIntensity(out);
 }
@@ -476,7 +476,7 @@ export function appGenreIntensity(genre: RootGenreName): Intensity {
   if (GENRE_NAMES.indexOf(genre as GenreName) === -1) {
     throw new Error(`Unknown app genre "${genre}"`);
   }
-  return genre === "Mainstream" ? "pop" : "soft";
+  return genre === "Mainstream" ? "POP" : "SOFT";
 }
 
 export function canonicalCountryFromSubgenre(subgenre: string): string {

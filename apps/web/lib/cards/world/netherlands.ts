@@ -13,7 +13,7 @@ export const NETHERLANDS_CARDS: CardData[] = [
     ability: "Reserve",
     abilityDesc: "Shipped catalogue entry.",
     pop: 8,
-    rarity: "Banger",
+    rarity: "BANGER",
     artwork: `${ART}artwork.lil-kleine-drank-drugs-v1.png`,
     artworkCreatedAt:
       ARTWORK_CREATED_AT["artwork.lil-kleine-drank-drugs-v1.png"],

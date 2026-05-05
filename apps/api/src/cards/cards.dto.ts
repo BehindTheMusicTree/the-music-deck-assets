@@ -12,8 +12,13 @@ import {
 } from "class-validator";
 
 const CARD_STATUS_VALUES = ["Shipped", "Wishlist"] as const;
-const CARD_RARITY_VALUES = ["Legendary", "Classic", "Banger", "Niche"] as const;
-const CARD_KIND_VALUES = ["Song"] as const;
+const CARD_RARITY_VALUES = [
+  "LEGENDARY",
+  "CLASSIC",
+  "BANGER",
+  "NICHE",
+] as const;
+const CARD_KIND_VALUES = ["SONG", "TRANSITION"] as const;
 
 export type CardStatusValue = (typeof CARD_STATUS_VALUES)[number];
 export type CardRarityValue = (typeof CARD_RARITY_VALUES)[number];
@@ -176,6 +181,14 @@ export class CardResponse {
 
   @ApiPropertyOptional({
     description:
+      "Immutable printed catalogue id (TYPE-SEASON-NNN, optional variant suffix). Only on shipped cards once assigned.",
+    example: "RK-S1-023",
+    maxLength: 32,
+  })
+  printedSetId?: string;
+
+  @ApiPropertyOptional({
+    description:
       "Public URL for the artwork (CDN/MinIO public). Empty when card has no uploaded artwork yet.",
   })
   artworkUrl?: string;
@@ -248,8 +261,10 @@ export class GenreTaxonomyEntryDto {
   @ApiProperty()
   isCountry!: boolean;
 
-  @ApiPropertyOptional({ enum: ["pop", "soft", "experimental", "hardcore"] })
-  intensity?: "pop" | "soft" | "experimental" | "hardcore";
+  @ApiPropertyOptional({
+    enum: ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"],
+  })
+  intensity?: "POP" | "SOFT" | "EXPERIMENTAL" | "HARDCORE";
 
   @ApiPropertyOptional()
   displayLabel?: string;
@@ -259,6 +274,13 @@ export class GenreTaxonomyEntryDto {
 
   @ApiProperty({ enum: GENRE_TAXONOMY_KIND_VALUES })
   kind!: GenreTaxonomyKindValue;
+
+  @ApiPropertyOptional({
+    description:
+      "Printed catalogue TYPE segment when set (ISO alpha‑2 or charter root code).",
+    maxLength: 2,
+  })
+  printedTypeCode?: string;
 
   @ApiProperty()
   updatedAt!: string;
@@ -296,6 +318,12 @@ export class CardSongIndexEntryDto {
   @ApiPropertyOptional()
   artworkUrl?: string;
 
+  @ApiPropertyOptional({
+    description: "Printed catalogue id when assigned (RK-S1-023).",
+    maxLength: 32,
+  })
+  printedSetId?: string;
+
   @ApiProperty({ type: [Number] })
   songsOut!: number[];
 }
@@ -327,7 +355,7 @@ export class CreateCardDto {
   @IsEnum(CARD_STATUS_VALUES)
   status!: CardStatusValue;
 
-  @ApiPropertyOptional({ enum: CARD_KIND_VALUES, default: "Song" })
+  @ApiPropertyOptional({ enum: CARD_KIND_VALUES, default: "SONG" })
   @IsOptional()
   @IsEnum(CARD_KIND_VALUES)
   kind?: CardKindValue;
@@ -387,6 +415,15 @@ export class CreateCardDto {
   @IsOptional()
   @IsInt()
   catalogNumber?: number;
+
+  @ApiPropertyOptional({
+    description:
+      "Leading TYPE segment must match Genre.printedTypeCode for this stripe. If omitted, remains unset until assigned.",
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  printedSetId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -522,6 +559,16 @@ export class UpdateCardDto {
   @IsOptional()
   @IsInt()
   catalogNumber?: number;
+
+  @ApiPropertyOptional({
+    description:
+      "Leading TYPE segment must match Genre.printedTypeCode for the effective stripe after this update.",
+    maxLength: 32,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  printedSetId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

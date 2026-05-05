@@ -33,9 +33,9 @@ export const WHEEL_SMALL_TILE_H = Math.round(54 * (1 - 1 / 3) * 0.6);
 export const WHEEL_SMALL_TILE_HALF_W = WHEEL_SMALL_TILE_W / 2;
 
 export function wheelSubgenreRadius(intensity: Intensity): number {
-  if (intensity === "pop") return R_POP_SUBGENRES;
-  if (intensity === "soft") return R_SOFT_SUBGENRES;
-  if (intensity === "hardcore") return R_HARDCORE_SUBGENRES;
+  if (intensity === "POP") return R_POP_SUBGENRES;
+  if (intensity === "SOFT") return R_SOFT_SUBGENRES;
+  if (intensity === "HARDCORE") return R_HARDCORE_SUBGENRES;
   return R_EXPERIMENTAL_SUBGENRES;
 }
 

@@ -13,7 +13,7 @@ export const LA_MACARENA_CARD: CardData = {
   ability: "Festival Pulse",
   abilityDesc: "Gain +10 popularity when played after a World card.",
   pop: 9,
-  rarity: "Classic",
+  rarity: "CLASSIC",
   artwork: `${ART}artwork.los-del-rio-la-macarena-v1.png`,
   artworkCreatedAt: ARTWORK_CREATED_AT["artwork.los-del-rio-la-macarena-v1.png"],
   country: "Spain",

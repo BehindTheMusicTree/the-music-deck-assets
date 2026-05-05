@@ -333,7 +333,7 @@ export default function GenreThemePreview() {
                 {subs.length > 0 && (
                   <div className="divide-y divide-[#d8cca8] border-t border-[#d8cca8]">
                     {(
-                      ["pop", "soft", "experimental", "hardcore"] as Intensity[]
+                      ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"] as Intensity[]
                     ).map((intensity) => {
                       const group = subs.filter(
                         (s) => s.intensity === intensity,

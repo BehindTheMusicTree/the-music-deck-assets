@@ -32,7 +32,7 @@ type ComboRow = {
   durationMin: number | null;
 };
 
-const INTENSITIES: Intensity[] = ["pop", "soft", "experimental", "hardcore"];
+const INTENSITIES: Intensity[] = ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"];
 
 function slugify(value: string): string {
   return value
@@ -54,7 +54,7 @@ function tokenForCountry(country: string): string {
 function buildSingles(): SingleRow[] {
   const rows: SingleRow[] = [];
   for (const genre of GENRE_NAMES) {
-    const levels = genre === "Mainstream" ? (["pop"] as const) : INTENSITIES;
+    const levels = genre === "Mainstream" ? (["POP"] as const) : INTENSITIES;
     for (const intensity of levels) {
       rows.push({
         key: tokenForGenreIntensity(genre, intensity),

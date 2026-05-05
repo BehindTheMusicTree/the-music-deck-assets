@@ -49,124 +49,124 @@ function sortedTransitionNodes(nodes: TransitionNode[]): TransitionNode[] {
 
 describe("genre transitions", () => {
   it("Mainstream out includes self (hub loop) and every genre at pop", () => {
-    const out = genreIntensityOut({ genre: "Mainstream", intensity: "pop" });
+    const out = genreIntensityOut({ genre: "Mainstream", intensity: "POP" });
     expect(out).toHaveLength(GENRE_NAMES.length);
     expect(out.some((n) => n.genre === "Mainstream")).toBe(true);
-    expect(out.every((n) => n.intensity === "pop")).toBe(true);
+    expect(out.every((n) => n.intensity === "POP")).toBe(true);
   });
 
   describe("genreIntensityOut — same genre across intensities (Rock)", () => {
     it("pop ring: self, +1 intensity, wheel neighbours at pop, hub", () => {
-      const out = genreIntensityOut({ genre: "Rock", intensity: "pop" });
+      const out = genreIntensityOut({ genre: "Rock", intensity: "POP" });
       expect(out).toEqual([
-        { genre: "Rock", intensity: "pop" },
-        { genre: "Rock", intensity: "soft" },
-        { genre: "Classical", intensity: "pop" },
-        { genre: "Hip-Hop", intensity: "pop" },
-        { genre: "Mainstream", intensity: "pop" },
+        { genre: "Rock", intensity: "POP" },
+        { genre: "Rock", intensity: "SOFT" },
+        { genre: "Classical", intensity: "POP" },
+        { genre: "Hip-Hop", intensity: "POP" },
+        { genre: "Mainstream", intensity: "POP" },
       ]);
     });
 
     it("soft: self, ±1 intensity, neighbours at soft and at neighbour-down (pop)", () => {
-      const out = genreIntensityOut({ genre: "Rock", intensity: "soft" });
+      const out = genreIntensityOut({ genre: "Rock", intensity: "SOFT" });
       expect(out).toEqual([
-        { genre: "Rock", intensity: "soft" },
-        { genre: "Rock", intensity: "experimental" },
-        { genre: "Rock", intensity: "pop" },
-        { genre: "Classical", intensity: "soft" },
-        { genre: "Hip-Hop", intensity: "soft" },
-        { genre: "Classical", intensity: "pop" },
-        { genre: "Hip-Hop", intensity: "pop" },
+        { genre: "Rock", intensity: "SOFT" },
+        { genre: "Rock", intensity: "EXPERIMENTAL" },
+        { genre: "Rock", intensity: "POP" },
+        { genre: "Classical", intensity: "SOFT" },
+        { genre: "Hip-Hop", intensity: "SOFT" },
+        { genre: "Classical", intensity: "POP" },
+        { genre: "Hip-Hop", intensity: "POP" },
       ]);
     });
 
     it("experimental: self, ±1 intensity, neighbours at experimental and at neighbour-down (soft)", () => {
-      const out = genreIntensityOut({ genre: "Rock", intensity: "experimental" });
+      const out = genreIntensityOut({ genre: "Rock", intensity: "EXPERIMENTAL" });
       expect(out).toEqual([
-        { genre: "Rock", intensity: "experimental" },
-        { genre: "Rock", intensity: "hardcore" },
-        { genre: "Rock", intensity: "soft" },
-        { genre: "Classical", intensity: "experimental" },
-        { genre: "Hip-Hop", intensity: "experimental" },
-        { genre: "Classical", intensity: "soft" },
-        { genre: "Hip-Hop", intensity: "soft" },
+        { genre: "Rock", intensity: "EXPERIMENTAL" },
+        { genre: "Rock", intensity: "HARDCORE" },
+        { genre: "Rock", intensity: "SOFT" },
+        { genre: "Classical", intensity: "EXPERIMENTAL" },
+        { genre: "Hip-Hop", intensity: "EXPERIMENTAL" },
+        { genre: "Classical", intensity: "SOFT" },
+        { genre: "Hip-Hop", intensity: "SOFT" },
       ]);
     });
 
     it("hardcore: no +1 branch; includes experimental via −1 and neighbours at hardcore / experimental", () => {
-      const out = genreIntensityOut({ genre: "Rock", intensity: "hardcore" });
+      const out = genreIntensityOut({ genre: "Rock", intensity: "HARDCORE" });
       expect(out).toEqual([
-        { genre: "Rock", intensity: "hardcore" },
-        { genre: "Rock", intensity: "experimental" },
-        { genre: "Classical", intensity: "hardcore" },
-        { genre: "Hip-Hop", intensity: "hardcore" },
-        { genre: "Classical", intensity: "experimental" },
-        { genre: "Hip-Hop", intensity: "experimental" },
+        { genre: "Rock", intensity: "HARDCORE" },
+        { genre: "Rock", intensity: "EXPERIMENTAL" },
+        { genre: "Classical", intensity: "HARDCORE" },
+        { genre: "Hip-Hop", intensity: "HARDCORE" },
+        { genre: "Classical", intensity: "EXPERIMENTAL" },
+        { genre: "Hip-Hop", intensity: "EXPERIMENTAL" },
       ]);
     });
   });
 
   it("hardcore (Vintage): pattern holds with different wheel neighbours", () => {
-    const out = genreIntensityOut({ genre: "Vintage", intensity: "hardcore" });
+    const out = genreIntensityOut({ genre: "Vintage", intensity: "HARDCORE" });
     expect(out).toEqual([
-      { genre: "Vintage", intensity: "hardcore" },
-      { genre: "Vintage", intensity: "experimental" },
-      { genre: "Reggae/Dub", intensity: "hardcore" },
-      { genre: "Classical", intensity: "hardcore" },
-      { genre: "Reggae/Dub", intensity: "experimental" },
-      { genre: "Classical", intensity: "experimental" },
+      { genre: "Vintage", intensity: "HARDCORE" },
+      { genre: "Vintage", intensity: "EXPERIMENTAL" },
+      { genre: "Reggae/Dub", intensity: "HARDCORE" },
+      { genre: "Classical", intensity: "HARDCORE" },
+      { genre: "Reggae/Dub", intensity: "EXPERIMENTAL" },
+      { genre: "Classical", intensity: "EXPERIMENTAL" },
     ]);
   });
 
   describe("transitionIn / transitionOut — exhaustive fixtures (Mainstream + Rock × intensities)", () => {
     it("Mainstream | pop — outs", () => {
       expect(
-        sortedTransitionNodes(transitionOut(transitionGiNode("Mainstream", "pop"))),
+        sortedTransitionNodes(transitionOut(transitionGiNode("Mainstream", "POP"))),
       ).toEqual(MAINSTREAM_POP_TRANSITION_OUT);
     });
     it("Mainstream | pop — ins", () => {
       expect(
-        sortedTransitionNodes(transitionIn(transitionGiNode("Mainstream", "pop"))),
+        sortedTransitionNodes(transitionIn(transitionGiNode("Mainstream", "POP"))),
       ).toEqual(MAINSTREAM_POP_TRANSITION_IN);
     });
     it("Rock | pop — outs", () => {
-      expect(sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "pop")))).toEqual(
+      expect(sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "POP")))).toEqual(
         ROCK_POP_TRANSITION_OUT,
       );
     });
     it("Rock | pop — ins", () => {
-      expect(sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "pop")))).toEqual(
+      expect(sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "POP")))).toEqual(
         ROCK_POP_TRANSITION_IN,
       );
     });
     it("Rock | soft — outs", () => {
-      expect(sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "soft")))).toEqual(
+      expect(sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "SOFT")))).toEqual(
         ROCK_SOFT_TRANSITION_OUT,
       );
     });
     it("Rock | soft — ins", () => {
-      expect(sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "soft")))).toEqual(
+      expect(sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "SOFT")))).toEqual(
         ROCK_SOFT_TRANSITION_IN,
       );
     });
     it("Rock | experimental — outs", () => {
       expect(
-        sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "experimental"))),
+        sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "EXPERIMENTAL"))),
       ).toEqual(ROCK_EXPERIMENTAL_TRANSITION_OUT);
     });
     it("Rock | experimental — ins", () => {
       expect(
-        sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "experimental"))),
+        sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "EXPERIMENTAL"))),
       ).toEqual(ROCK_EXPERIMENTAL_TRANSITION_IN);
     });
     it("Rock | hardcore — outs", () => {
       expect(
-        sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "hardcore"))),
+        sortedTransitionNodes(transitionOut(transitionGiNode("Rock", "HARDCORE"))),
       ).toEqual(ROCK_HARDCORE_TRANSITION_OUT);
     });
     it("Rock | hardcore — ins", () => {
       expect(
-        sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "hardcore"))),
+        sortedTransitionNodes(transitionIn(transitionGiNode("Rock", "HARDCORE"))),
       ).toEqual(ROCK_HARDCORE_TRANSITION_IN);
     });
   });
@@ -199,18 +199,18 @@ describe("genre transitions", () => {
     const hipHopExperimentalOut = transitionOut({
       kind: "genreIntensity",
       genre: "Hip-Hop",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
     expect(hipHopExperimentalOut).toContainEqual({
       kind: "subgenre",
       subgenre: "Turntablism",
       genre: "Electronic",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
     expect(hipHopExperimentalOut).not.toContainEqual({
       kind: "genreIntensity",
       genre: "Electronic",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
   });
 
@@ -219,12 +219,12 @@ describe("genre transitions", () => {
       kind: "subgenre",
       subgenre: "Turntablism",
       genre: "Electronic",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
     expect(turntablismOut).toContainEqual({
       kind: "genreIntensity",
       genre: "Hip-Hop",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
   });
 
@@ -233,12 +233,12 @@ describe("genre transitions", () => {
       kind: "subgenre",
       subgenre: "Turntablism",
       genre: "Electronic",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
     expect(turntablismIn).toContainEqual({
       kind: "genreIntensity",
       genre: "Hip-Hop",
-      intensity: "experimental",
+      intensity: "EXPERIMENTAL",
     });
   });
 });

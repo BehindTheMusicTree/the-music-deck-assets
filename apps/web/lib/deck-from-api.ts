@@ -38,6 +38,7 @@ export type ApiCardJson = {
   pop: number;
   rarity: CardData["rarity"];
   catalogNumber?: number;
+  printedSetId?: string;
   artworkUrl?: string;
   artworkKey?: string;
   artworkContentType?: string;
@@ -66,13 +67,14 @@ export function apiCardToCardData(a: ApiCardJson): CardData {
     title: a.title,
     artist: a.artist,
     year: a.year,
-    genre: a.genre,
+    genre: a.genre ?? "",
     country: a.country,
     ability: a.ability,
     abilityDesc: a.abilityDesc,
     pop: a.pop,
     rarity: a.rarity,
     catalogNumber: a.catalogNumber,
+    printedSetId: a.printedSetId,
     artworkUrl: a.artworkUrl,
     artworkKey: a.artworkKey,
     artworkPrompt: a.artworkPrompt,

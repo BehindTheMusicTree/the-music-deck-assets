@@ -1,14 +1,14 @@
-export type CardRarity = "Legendary" | "Classic" | "Banger" | "Niche";
+export type CardRarity = "LEGENDARY" | "CLASSIC" | "BANGER" | "NICHE";
 
 export const CARD_RARITY_ORDER: readonly CardRarity[] = [
-  "Niche",
-  "Banger",
-  "Classic",
-  "Legendary",
+  "NICHE",
+  "BANGER",
+  "CLASSIC",
+  "LEGENDARY",
 ] as const;
 
 /** Card variant — matches the Prisma `CardKind` enum. */
-export type CardKind = "Song" | "Transition";
+export type CardKind = "SONG" | "TRANSITION";
 
 /** Wishlist row classification (table view). */
 export type WishlistKindLabel = "Card" | "Wishlist";
@@ -20,8 +20,8 @@ export type CatalogEra = typeof CATALOG_DEFAULT_ERA;
 /** Shipped deck: how catalogue № is bucketed. */
 export type CatalogSeriesType = "genre" | "country";
 
-/** Intensity ramp shared with `apps/web/lib/genres`. Re-exported for convenience. */
-export type Intensity = "pop" | "soft" | "experimental" | "hardcore";
+/** Intensity ramp shared with `apps/web/lib/genres` and Prisma `Intensity`. */
+export type Intensity = "POP" | "SOFT" | "EXPERIMENTAL" | "HARDCORE";
 
 /** Shared properties for any card variant. */
 export interface BaseCardData {
@@ -62,6 +62,8 @@ export interface SongData extends BaseCardData {
   songsOut?: number[];
   /** Shipped deck only: catalogue number within the derived series. */
   catalogNumber?: number;
+  /** Player-facing stable id from API when shipped (e.g. RK-S1-023). */
+  printedSetId?: string;
 }
 
 /** Transition payload: dedicated card variant used for bridge/mix steps. */
