@@ -1,5 +1,5 @@
 export type {
-  AppGenreName,
+  RootGenreName,
   GenreName,
   NonMainstreamGenreName,
 } from "@repo/cards-domain";

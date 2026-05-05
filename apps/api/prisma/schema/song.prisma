@@ -1,35 +1,25 @@
-model Song {
-  id            Int        @id
-  rowKey        String     @unique
-  title         String
+model SongCard {
+  id            Int      @id
+  card          Card     @relation(fields: [id], references: [id], onDelete: Cascade)
   artist        String?
   year          String?
   genre         String
   genreId       Int?
-  genreRef      Genre?  @relation(fields: [genreId], references: [id])
+  genreRef      Genre?   @relation(fields: [genreId], references: [id])
   country       String?
   ability       String
   abilityDesc   String
   pop           Int
   rarity        CardRarity
   catalogNumber Int?
-  // Artwork bytes live in the S3-compatible bucket; DB only stores the object key + metadata.
-  artworkKey         String?
-  artworkContentType String?
-  artworkBytes       Int?
-  artworkChecksum    String?
-  artworkOffsetY     Int?
-  artworkOverBorder  Boolean   @default(false)
-  artworkCreatedAt   DateTime?
-  artworkPrompt      String?   @db.Text
   wikipediaUrl  String?
   spotifyUrl    String?
   appleMusicUrl String?
   youtubeUrl    String?
   bandcampUrl   String?
   soundcloudUrl String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   songsOut SongSongTransition[] @relation("from")
   songsIn  SongSongTransition[] @relation("to")

@@ -5,6 +5,11 @@ enum CardRarity {
   Niche
 }
 
+enum CardKind {
+  Song
+  Transition
+}
+
 enum Intensity {
   pop
   soft

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Card, { type CardData } from "@/components/Card";
 import {
-  type AppGenreName,
+  type RootGenreName,
   APP_GENRE_THEMES,
   appGenreIntensity,
   genreIntensityIn,
@@ -176,7 +176,7 @@ export async function CardsSongsContent() {
     key: string;
     label: string;
     card: CardData;
-    theme: (typeof APP_GENRE_THEMES)[AppGenreName];
+    theme: (typeof APP_GENRE_THEMES)[RootGenreName];
   }> = [
     {
       key: "mainstream-shape-of-you",
@@ -230,7 +230,7 @@ export async function CardsSongsContent() {
       if (!genreName) return { ...item, transitionsIn: [], transitionsOut: [] };
       const intensity = resolved?.resolvedSubgenre
         ? subgenreIntensity(resolved.resolvedSubgenre)
-        : appGenreIntensity(genreName as AppGenreName);
+        : appGenreIntensity(genreName as RootGenreName);
       const node = { genre: genreName, intensity };
       return {
         ...item,
@@ -253,7 +253,7 @@ export async function CardsSongsContent() {
     right: string;
     border: string;
     card: CardData;
-    theme: (typeof APP_GENRE_THEMES)[AppGenreName];
+    theme: (typeof APP_GENRE_THEMES)[RootGenreName];
   }> = [
     {
       key: "genre-subgenre-pop",

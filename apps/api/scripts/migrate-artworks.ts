@@ -58,19 +58,20 @@ async function main(): Promise<void> {
 
   for (const filename of files) {
     const key = `deck/${filename}`;
-    const card = await prisma.song.findFirst({
-      where: { artworkKey: key },
+    const card = await prisma.songCard.findFirst({
+      where: { card: { artworkKey: key } },
+      include: { card: true },
     });
     if (!card) {
       console.warn(`Orphan file (no card): ${filename}`);
       orphaned += 1;
       continue;
     }
-    const effectiveKey = card.artworkKey ?? key;
+    const effectiveKey = card.card.artworkKey ?? key;
     const filePath = join(deckDir, filename);
     const bytes = statSync(filePath).size;
     const sha = await sha256File(filePath);
-    if (card.artworkChecksum === sha) {
+    if (card.card.artworkChecksum === sha) {
       skipped += 1;
       continue;
     }
@@ -86,7 +87,7 @@ async function main(): Promise<void> {
     );
     const birth = ARTWORK_CREATED_AT[filename];
     const artworkCreatedAt = birth ? new Date(birth) : new Date();
-    await prisma.song.update({
+    await prisma.card.update({
       where: { id: card.id },
       data: {
         artworkKey: effectiveKey,

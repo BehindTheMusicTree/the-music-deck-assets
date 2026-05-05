@@ -6,8 +6,8 @@ import {
   SUBGENRES,
   WHEEL_GENRES,
   genreIntensityColor,
-  matchupTargetsForAppGenre,
-  type AppGenreName,
+  matchupTargetsForRootGenre,
+  type RootGenreName,
   type GenreName,
   type Intensity,
   type NonMainstreamGenreName,
@@ -74,7 +74,7 @@ function annularSectorPath(
   const outerEnd = polarToXY(cx, cy, outerR, endAngleDeg);
   const innerEnd = polarToXY(cx, cy, innerR, endAngleDeg);
   const innerStart = polarToXY(cx, cy, innerR, startAngleDeg);
-  const span = ((endAngleDeg - startAngleDeg) % 360 + 360) % 360;
+  const span = (((endAngleDeg - startAngleDeg) % 360) + 360) % 360;
   const largeArc = span > 180 ? 1 : 0;
   if (innerR <= 0) {
     return [
@@ -102,8 +102,10 @@ function lineToCircleEdge(
   const d = Math.hypot(dx, dy) || 1;
   const ux = dx / d;
   const uy = dy / d;
-  const rFrom = typeof from.r === "number" ? from.r : from.genre === "Mainstream" ? 24 : 16;
-  const rTo = typeof to.r === "number" ? to.r : to.genre === "Mainstream" ? 24 : 16;
+  const rFrom =
+    typeof from.r === "number" ? from.r : from.genre === "Mainstream" ? 24 : 16;
+  const rTo =
+    typeof to.r === "number" ? to.r : to.genre === "Mainstream" ? 24 : 16;
   return {
     x1: from.x + ux * rFrom,
     y1: from.y + uy * rFrom,
@@ -129,7 +131,12 @@ export default function GenreMashupWheel() {
       if (genre === "Mainstream") return { x: WHEEL_CX, y: WHEEL_CY };
       const idx = WHEEL_GENRES.findIndex((g) => g.n === genre);
       const angle = (idx / WHEEL_GENRES.length) * 360 - 90;
-      return polarToXY(WHEEL_CX, WHEEL_CY, wheelSubgenreRadius(intensity), angle);
+      return polarToXY(
+        WHEEL_CX,
+        WHEEL_CY,
+        wheelSubgenreRadius(intensity),
+        angle,
+      );
     };
     const nodes: Node[] = [
       { genre: "Mainstream", intensity: "pop", x: WHEEL_CX, y: WHEEL_CY },
@@ -171,7 +178,9 @@ export default function GenreMashupWheel() {
           angle += hubDelta >= 0 ? 7 - hubDelta : -7 - hubDelta;
         }
         const r =
-          wheelSubgenreRadius(s.intensity) + placement.rOffset + Math.abs(spreadIndex) * 3;
+          wheelSubgenreRadius(s.intensity) +
+          placement.rOffset +
+          Math.abs(spreadIndex) * 3;
         const pos = polarToXY(WHEEL_CX, WHEEL_CY, r, angle);
         const parentNode = byKey[`${s.parentA}|${s.intensity}`];
         if (!parentNode || !s.influence) return null;
@@ -181,12 +190,13 @@ export default function GenreMashupWheel() {
           y: pos.y,
           parentNode,
           influence: s.influence,
-          colour: parentNode.genre === "Mainstream"
-            ? GENRE_THEMES.Mainstream.border
-            : genreIntensityColor(
-                parentNode.genre as NonMainstreamGenreName,
-                parentNode.intensity,
-              ),
+          colour:
+            parentNode.genre === "Mainstream"
+              ? GENRE_THEMES.Mainstream.border
+              : genreIntensityColor(
+                  parentNode.genre as NonMainstreamGenreName,
+                  parentNode.intensity,
+                ),
           radius: 8,
         };
       })
@@ -196,8 +206,8 @@ export default function GenreMashupWheel() {
 
   const hoveredGenre = hovered?.node.genre;
   const hoveredIntensity = hovered?.node.intensity;
-  const { advantageVs, weakVs: baseWeakVs } = matchupTargetsForAppGenre(
-    hoveredGenre as AppGenreName | undefined,
+  const { advantageVs, weakVs: baseWeakVs } = matchupTargetsForRootGenre(
+    hoveredGenre as RootGenreName | undefined,
   );
   const weakVs = hovered?.subgenreInfluence
     ? baseWeakVs.filter((g) => g !== hovered.subgenreInfluence?.genre)
@@ -242,11 +252,31 @@ export default function GenreMashupWheel() {
       : [];
 
   const wheelSlice = 360 / WHEEL_GENRES.length;
-  const intensityBands: Array<{ intensity: Intensity; inner: number; outer: number; opacity: number }> = [
+  const intensityBands: Array<{
+    intensity: Intensity;
+    inner: number;
+    outer: number;
+    opacity: number;
+  }> = [
     { intensity: "pop", inner: 0, outer: R_POP_SOFT_LINE, opacity: 0.2 },
-    { intensity: "soft", inner: R_POP_SOFT_LINE, outer: R_SOFT_EXPERIMENTAL_LINE, opacity: 0.2 },
-    { intensity: "experimental", inner: R_SOFT_EXPERIMENTAL_LINE, outer: R_EXPERIMENTAL_HARDCORE_LINE, opacity: 0.18 },
-    { intensity: "hardcore", inner: R_EXPERIMENTAL_HARDCORE_LINE, outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA, opacity: 0.16 },
+    {
+      intensity: "soft",
+      inner: R_POP_SOFT_LINE,
+      outer: R_SOFT_EXPERIMENTAL_LINE,
+      opacity: 0.2,
+    },
+    {
+      intensity: "experimental",
+      inner: R_SOFT_EXPERIMENTAL_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE,
+      opacity: 0.18,
+    },
+    {
+      intensity: "hardcore",
+      inner: R_EXPERIMENTAL_HARDCORE_LINE,
+      outer: R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
+      opacity: 0.16,
+    },
   ];
 
   return (
@@ -258,10 +288,24 @@ export default function GenreMashupWheel() {
         className="w-full h-auto max-w-[1200px] shrink-0 overflow-visible"
       >
         <defs>
-          <marker id="genre-mashup-arrow-adv" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+          <marker
+            id="genre-mashup-arrow-adv"
+            markerWidth="10"
+            markerHeight="10"
+            refX="8"
+            refY="5"
+            orient="auto"
+          >
             <path d="M0,0 L10,5 L0,10 Z" fill="rgba(34,197,94,.95)" />
           </marker>
-          <marker id="genre-mashup-arrow-in" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+          <marker
+            id="genre-mashup-arrow-in"
+            markerWidth="10"
+            markerHeight="10"
+            refX="8"
+            refY="5"
+            orient="auto"
+          >
             <path d="M0,0 L10,5 L0,10 Z" fill="rgba(239,68,68,.95)" />
           </marker>
         </defs>
@@ -270,12 +314,23 @@ export default function GenreMashupWheel() {
           const start = i * wheelSlice - 90 - wheelSlice / 2;
           const end = i * wheelSlice - 90 + wheelSlice / 2;
           return intensityBands.map((band) => {
-            const isHovered = hoveredGenre === g.n && hoveredIntensity === band.intensity;
+            const isHovered =
+              hoveredGenre === g.n && hoveredIntensity === band.intensity;
             return (
               <path
                 key={`${g.n}-${band.intensity}`}
-                d={annularSectorPath(WHEEL_CX, WHEEL_CY, band.inner, band.outer, start, end)}
-                fill={genreIntensityColor(g.n as NonMainstreamGenreName, band.intensity)}
+                d={annularSectorPath(
+                  WHEEL_CX,
+                  WHEEL_CY,
+                  band.inner,
+                  band.outer,
+                  start,
+                  end,
+                )}
+                fill={genreIntensityColor(
+                  g.n as NonMainstreamGenreName,
+                  band.intensity,
+                )}
                 fillOpacity={isHovered ? 0.42 : band.opacity}
                 style={{ cursor: "pointer" }}
                 onMouseEnter={() => {
@@ -304,23 +359,72 @@ export default function GenreMashupWheel() {
           onMouseLeave={() => setHovered(null)}
         />
 
-        {[R_POP_SOFT_LINE, R_SOFT_EXPERIMENTAL_LINE, R_EXPERIMENTAL_HARDCORE_LINE].map((r) => (
-          <circle key={`mashup-ring-${r}`} cx={WHEEL_CX} cy={WHEEL_CY} r={r} fill="none" stroke="rgba(255,255,255,.12)" strokeDasharray="4 6" />
+        {[
+          R_POP_SOFT_LINE,
+          R_SOFT_EXPERIMENTAL_LINE,
+          R_EXPERIMENTAL_HARDCORE_LINE,
+        ].map((r) => (
+          <circle
+            key={`mashup-ring-${r}`}
+            cx={WHEEL_CX}
+            cy={WHEEL_CY}
+            r={r}
+            fill="none"
+            stroke="rgba(255,255,255,.12)"
+            strokeDasharray="4 6"
+          />
         ))}
         {WHEEL_GENRES.map((_, i) => {
           const angle = ((i + 0.5) / WHEEL_GENRES.length) * 360 - 90;
           const inner = polarToXY(WHEEL_CX, WHEEL_CY, 0, angle);
-          const outer = polarToXY(WHEEL_CX, WHEEL_CY, R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA, angle);
-          return <line key={i} x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y} stroke="rgba(255, 255, 255, 0.22)" strokeWidth={1} />;
+          const outer = polarToXY(
+            WHEEL_CX,
+            WHEEL_CY,
+            R_EXPERIMENTAL_HARDCORE_LINE + WHEEL_RADIAL_DIVIDER_EXTRA,
+            angle,
+          );
+          return (
+            <line
+              key={i}
+              x1={inner.x}
+              y1={inner.y}
+              x2={outer.x}
+              y2={outer.y}
+              stroke="rgba(255, 255, 255, 0.22)"
+              strokeWidth={1}
+            />
+          );
         })}
 
         {outLinks.map((l, i) => {
           const edge = lineToCircleEdge(l.from, l.to);
-          return <line key={`out-link-${i}`} x1={edge.x1} y1={edge.y1} x2={edge.x2} y2={edge.y2} stroke="rgba(255,255,255,.58)" strokeWidth={2.4} markerEnd="url(#genre-mashup-arrow-adv)" />;
+          return (
+            <line
+              key={`out-link-${i}`}
+              x1={edge.x1}
+              y1={edge.y1}
+              x2={edge.x2}
+              y2={edge.y2}
+              stroke="rgba(255,255,255,.58)"
+              strokeWidth={2.4}
+              markerEnd="url(#genre-mashup-arrow-adv)"
+            />
+          );
         })}
         {inLinks.map((l, i) => {
           const edge = lineToCircleEdge(l.from, l.to);
-          return <line key={`in-link-${i}`} x1={edge.x1} y1={edge.y1} x2={edge.x2} y2={edge.y2} stroke="rgba(255,255,255,.44)" strokeWidth={2.2} markerEnd="url(#genre-mashup-arrow-in)" />;
+          return (
+            <line
+              key={`in-link-${i}`}
+              x1={edge.x1}
+              y1={edge.y1}
+              x2={edge.x2}
+              y2={edge.y2}
+              stroke="rgba(255,255,255,.44)"
+              strokeWidth={2.2}
+              markerEnd="url(#genre-mashup-arrow-in)"
+            />
+          );
         })}
 
         {Object.values(data.byKey).map((n) => (
@@ -329,9 +433,20 @@ export default function GenreMashupWheel() {
             cx={n.x}
             cy={n.y}
             r={n.genre === "Mainstream" ? 24 : 16}
-            fill={n.genre === "Mainstream" ? GENRE_THEMES.Mainstream.border : genreIntensityColor(n.genre as NonMainstreamGenreName, n.intensity)}
+            fill={
+              n.genre === "Mainstream"
+                ? GENRE_THEMES.Mainstream.border
+                : genreIntensityColor(
+                    n.genre as NonMainstreamGenreName,
+                    n.intensity,
+                  )
+            }
             stroke="rgba(255,255,255,.45)"
-            strokeWidth={hoveredGenre === n.genre && hoveredIntensity === n.intensity ? 2.6 : 1.6}
+            strokeWidth={
+              hoveredGenre === n.genre && hoveredIntensity === n.intensity
+                ? 2.6
+                : 1.6
+            }
             style={{ cursor: "pointer" }}
             onMouseEnter={() => setHovered({ node: n, anchor: n })}
             onMouseLeave={() => setHovered(null)}
@@ -373,13 +488,16 @@ export default function GenreMashupWheel() {
                 Subgenre: {hovered.subgenreLabel}
               </div>
             ) : null}
-            <div className="font-mono text-[20px] uppercase tracking-[0.08em]">{hoveredGenre}</div>
+            <div className="font-mono text-[20px] uppercase tracking-[0.08em]">
+              {hoveredGenre}
+            </div>
             <div className="font-mono text-[12px] text-[#625947] uppercase tracking-[0.08em] mb-2">
               Selected ring: {hoveredIntensity}
             </div>
             {hovered.subgenreInfluence ? (
               <div className="font-mono text-[13px] text-[#625947] mb-2">
-                Influence: {hovered.subgenreInfluence.genre} ({hovered.subgenreInfluence.intensity})
+                Influence: {hovered.subgenreInfluence.genre} (
+                {hovered.subgenreInfluence.intensity})
               </div>
             ) : null}
             <div className="font-mono text-[18px] mt-2">Advantage vs:</div>

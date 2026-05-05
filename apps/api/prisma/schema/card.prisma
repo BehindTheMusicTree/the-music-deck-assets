@@ -1,0 +1,38 @@
+model Card {
+  id                 Int       @id
+  rowKey             String    @unique
+  kind               CardKind
+  title              String
+  artworkKey         String?
+  artworkContentType String?
+  artworkBytes       Int?
+  artworkChecksum    String?
+  artworkOffsetY     Int?
+  artworkOverBorder  Boolean   @default(false)
+  artworkCreatedAt   DateTime?
+  artworkPrompt      String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  songCard       SongCard?
+  transitionCard TransitionCard?
+}
+model Card {
+  id               Int      @id
+  rowKey           String   @unique
+  kind             CardKind
+  title            String
+  artworkKey       String?
+  artworkContentType String?
+  artworkBytes     Int?
+  artworkChecksum  String?
+  artworkOffsetY   Int?
+  artworkOverBorder Boolean @default(false)
+  artworkCreatedAt DateTime?
+  artworkPrompt    String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  song           Song?
+  transitionCard TransitionCard?
+}

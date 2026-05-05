@@ -1,4 +1,4 @@
-import type { AppGenreName, GenreName } from "./genre-names";
+import type { RootGenreName, GenreName } from "./genre-names";
 import type { GenreTheme } from "./genre-theme-types";
 
 // ---------------------------------------------------------------------------
@@ -173,7 +173,7 @@ export const GENRE_THEMES: Record<GenreName, GenreTheme> = {
   },
 };
 
-export const APP_GENRE_THEMES: Record<AppGenreName, GenreTheme> = {
+export const APP_GENRE_THEMES: Record<RootGenreName, GenreTheme> = {
   Rock: GENRE_THEMES.Rock,
   Mainstream: GENRE_THEMES.Mainstream,
   Electronic: GENRE_THEMES.Electronic,

@@ -19,9 +19,9 @@ export const GENRE_NAMES: GenreName[] = [
   "Vintage",
 ];
 
-export type AppGenreName = GenreName;
+export type RootGenreName = GenreName;
 
-export const APP_GENRE_NAMES: AppGenreName[] = [
+export const APP_GENRE_NAMES: RootGenreName[] = [
   "Rock",
   "Mainstream",
   "Electronic",

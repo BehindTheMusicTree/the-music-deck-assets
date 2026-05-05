@@ -6,3 +6,152 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum CardRarity {
+  Legendary
+  Classic
+  Banger
+  Niche
+}
+
+enum CardKind {
+  Song
+  Transition
+}
+
+enum Intensity {
+  pop
+  soft
+  experimental
+  hardcore
+}
+
+model Genre {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  displayLabel String?
+
+  // Hierarchy: null for RootGenre; points to parent RootGenre row for subgenres
+  parentId Int?
+  parent   Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
+  children Genre[] @relation("SubgenreParent")
+
+  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub @ t=0.42)
+  parentBId     Int?
+  parentB       Genre?  @relation("BlendParentB", fields: [parentBId], references: [id])
+  blendChildren Genre[] @relation("BlendParentB")
+  blendFactor   Float?
+
+  intensity     Intensity
+  colorOverride String?
+
+  // Transition/influence hint for GenreSubgenre
+  influenceId        Int?
+  influenceRef       Genre?  @relation("SubgenreInfluence", fields: [influenceId], references: [id])
+  influenced         Genre[] @relation("SubgenreInfluence")
+  influenceIntensity Intensity?
+
+  // RootGenre only
+  wheelOrder Int?
+  isCountry  Boolean @default(false)
+
+  theme Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  songs           SongCard[]
+  transitionCards TransitionCard[]
+}
+
+model Card {
+  id                 Int      @id
+  rowKey             String   @unique
+  kind               CardKind
+  title              String
+  artworkKey         String?
+  artworkContentType String?
+  artworkBytes       Int?
+  artworkChecksum    String?
+  artworkOffsetY     Int?
+  artworkOverBorder  Boolean  @default(false)
+  artworkCreatedAt   DateTime?
+  artworkPrompt      String?  @db.Text
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  songCard       SongCard?
+  transitionCard TransitionCard?
+}
+
+model SongCard {
+  id            Int      @id
+  card          Card     @relation(fields: [id], references: [id], onDelete: Cascade)
+  artist        String?
+  year          String?
+  genre         String
+  genreId       Int?
+  genreRef      Genre?   @relation(fields: [genreId], references: [id])
+  country       String?
+  ability       String
+  abilityDesc   String
+  pop           Int
+  rarity        CardRarity
+  catalogNumber Int?
+  wikipediaUrl  String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  bandcampUrl   String?
+  soundcloudUrl String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  songsOut SongSongTransition[] @relation("from")
+  songsIn  SongSongTransition[] @relation("to")
+}
+
+model WishlistSong {
+  id            Int      @id
+  rowKey        String   @unique
+  title         String
+  artist        String?
+  year          String?
+  genre         String?
+  country       String?
+  ability       String?
+  abilityDesc   String?
+  pop           Int?
+  rarity        CardRarity?
+  artworkPrompt String?  @db.Text
+  wikipediaUrl  String?
+  spotifyUrl    String?
+  appleMusicUrl String?
+  youtubeUrl    String?
+  bandcampUrl   String?
+  soundcloudUrl String?
+  comment       String?  @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model TransitionCard {
+  id        Int      @id
+  card      Card     @relation(fields: [id], references: [id], onDelete: Cascade)
+  genre     String?
+  genreId   Int?
+  genreRef  Genre?   @relation(fields: [genreId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SongSongTransition {
+  fromId Int
+  toId   Int
+
+  from SongCard @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to   SongCard @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@id([fromId, toId])
+  @@index([toId])
+}

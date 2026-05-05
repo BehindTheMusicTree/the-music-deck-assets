@@ -1,8 +1,9 @@
 model Genre {
   id   Int    @id @default(autoincrement())
   name String @unique
+  displayLabel String?
 
-  // Hierarchy: null for AppGenre; points to parent AppGenre row for subgenres
+  // Hierarchy: null for RootGenre; points to parent RootGenre row for subgenres
   parentId  Int?
   parent    Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
   children  Genre[] @relation("SubgenreParent")
@@ -22,17 +23,16 @@ model Genre {
   influenced         Genre[] @relation("SubgenreInfluence")
   influenceIntensity Intensity?
 
-  // AppGenre only
-  displayLabel String?
-  wheelOrder   Int?
-  isCountry    Boolean  @default(false)
+  // RootGenre only
+  wheelOrder Int?
+  isCountry  Boolean @default(false)
 
   theme Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  songs           Song[]
+  songs           SongCard[]
   transitionCards TransitionCard[]
 }
 

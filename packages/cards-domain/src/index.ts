@@ -29,7 +29,7 @@ export {
 export { catalogRowKey, assignCatalogRowKeys } from "./catalog-row-key";
 
 export type {
-  AppGenreName,
+  RootGenreName,
   GenreName,
   NonMainstreamGenreName,
 } from "./genre-names";

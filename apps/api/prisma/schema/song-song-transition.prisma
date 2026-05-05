@@ -2,8 +2,8 @@ model SongSongTransition {
   fromId Int
   toId   Int
 
-  from Song @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
-  to   Song @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+  from SongCard @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to   SongCard @relation("to", fields: [toId], references: [id], onDelete: Cascade)
 
   @@id([fromId, toId])
   @@index([toId])

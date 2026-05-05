@@ -1,7 +1,7 @@
 import { CARD_ARTWORK_PROMPTS } from "./artwork-prompts";
 import type { CardData } from "@/components/Card";
 import {
-  type AppGenreName,
+  type RootGenreName,
   displayGenreLabel,
   isCountrySubgenre,
   resolveThemeSelection,
@@ -9,12 +9,16 @@ import {
 export { ARTWORK_CREATED_AT } from "./artwork-created-at";
 export { CARD_ARTWORK_BASE as ART } from "./art-path";
 
-export function artworkPromptFor(id: number): { artworkPrompt: string } | undefined {
+export function artworkPromptFor(
+  id: number,
+): { artworkPrompt: string } | undefined {
   const s = CARD_ARTWORK_PROMPTS[id];
   return s ? { artworkPrompt: s } : undefined;
 }
 
-export function deriveCatalogSeriesLabel(card: Pick<CardData, "id" | "title" | "genre" | "country">): string {
+export function deriveCatalogSeriesLabel(
+  card: Pick<CardData, "id" | "title" | "genre" | "country">,
+): string {
   const { genre, country, title, id } = card;
   if (!genre) {
     throw new Error(
@@ -35,5 +39,5 @@ export function deriveCatalogSeriesLabel(card: Pick<CardData, "id" | "title" | "
       `Shipped card "${title}" (id ${id}): cannot resolve app genre from "${genre}"`,
     );
   }
-  return displayGenreLabel(resolved.resolvedGenre as AppGenreName);
+  return displayGenreLabel(resolved.resolvedGenre as RootGenreName);
 }

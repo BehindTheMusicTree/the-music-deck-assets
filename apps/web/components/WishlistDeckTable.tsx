@@ -226,7 +226,7 @@ export default function WishlistDeckTable({
   cardSongIndex: CardSongIndex;
 }) {
   const [filterKind, setFilterKind] = useState<string>("all");
-  const [filterAppGenre, setFilterAppGenre] = useState<string>("all");
+  const [filterRootGenre, setFilterRootGenre] = useState<string>("all");
   const [filterLineGenre, setFilterLineGenre] = useState<string>("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [filterRarity, setFilterRarity] = useState<string>("all");
@@ -269,7 +269,7 @@ export default function WishlistDeckTable({
 
   const clearAllFilters = () => {
     setFilterKind("all");
-    setFilterAppGenre("all");
+    setFilterRootGenre("all");
     setFilterLineGenre("all");
     setFilterCountry("all");
     setFilterRarity("all");
@@ -316,8 +316,8 @@ export default function WishlistDeckTable({
   const visibleRows = useMemo(() => {
     let rows = wishlistEntries;
     if (filterKind !== "all") rows = rows.filter((r) => r.kind === filterKind);
-    if (filterAppGenre !== "all") {
-      rows = rows.filter((r) => r.appGenreLabel === filterAppGenre);
+    if (filterRootGenre !== "all") {
+      rows = rows.filter((r) => r.appGenreLabel === filterRootGenre);
     }
     if (filterLineGenre !== "all") {
       rows = rows.filter((r) =>
@@ -362,7 +362,7 @@ export default function WishlistDeckTable({
     );
   }, [
     filterKind,
-    filterAppGenre,
+    filterRootGenre,
     filterLineGenre,
     filterCountry,
     filterRarity,
@@ -438,8 +438,8 @@ export default function WishlistDeckTable({
                   />
                   <select
                     className={selectBase}
-                    value={filterAppGenre}
-                    onChange={(e) => setFilterAppGenre(e.target.value)}
+                    value={filterRootGenre}
+                    onChange={(e) => setFilterRootGenre(e.target.value)}
                     aria-label="Filter by app genre"
                   >
                     <option value="all">All app genres</option>

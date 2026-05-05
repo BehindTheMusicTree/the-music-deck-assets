@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import styles from "./Card.module.css";
 import IntensityGauge from "@/components/IntensityGauge";
 import {
-  type AppGenreName,
+  type RootGenreName,
   appGenreIntensity,
   genreIntensityColor,
   genreIntensityIn,
@@ -14,7 +14,7 @@ import {
   sortGenreIntensityNodesForStripDisplay,
   matchupGenreDisplayLabel,
   matchupTargetDiamondColor,
-  matchupTargetsForAppGenre,
+  matchupTargetsForRootGenre,
   type ResolvedThemeSelection,
   resolveThemeSelection,
   subgenreIntensity,
@@ -214,8 +214,8 @@ export default function Card({
       };
   const effectiveTheme = resolved.theme;
   const strip = getTypeStripParts(resolved.leftLabel, resolved.rightLabel);
-  const matchup = matchupTargetsForAppGenre(
-    resolved.resolvedGenre as AppGenreName | undefined,
+  const matchup = matchupTargetsForRootGenre(
+    resolved.resolvedGenre as RootGenreName | undefined,
   );
   const stripLeftBorder =
     resolved.genreStripPrimaryBorder ?? effectiveTheme.border;
@@ -322,7 +322,7 @@ export default function Card({
   const currentIntensity: Intensity | undefined = (() => {
     if (resolved.resolvedSubgenre)
       return subgenreIntensity(resolved.resolvedSubgenre);
-    if (currentGenre) return appGenreIntensity(currentGenre as AppGenreName);
+    if (currentGenre) return appGenreIntensity(currentGenre as RootGenreName);
     return undefined;
   })();
   const toGenreTransitionStrip = (n: {
@@ -753,7 +753,7 @@ export default function Card({
                 }
                 if (resolved.resolvedGenre) {
                   return appGenreIntensity(
-                    resolved.resolvedGenre as AppGenreName,
+                    resolved.resolvedGenre as RootGenreName,
                   );
                 }
                 return undefined;

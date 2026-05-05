@@ -1,6 +1,6 @@
 import {
   GENRE_NAMES,
-  type AppGenreName,
+  type RootGenreName,
   type GenreName,
   type NonMainstreamGenreName,
 } from "./names";
@@ -11,7 +11,7 @@ import {
   type Subgenre,
 } from "./subgenres-data";
 
-export type { AppGenreName, GenreName, NonMainstreamGenreName } from "./names";
+export type { RootGenreName, GenreName, NonMainstreamGenreName } from "./names";
 export { APP_GENRE_NAMES, GENRE_NAMES } from "./names";
 
 export type {
@@ -424,7 +424,7 @@ export const GENRE_BATTLE_MATCHUP: Record<
   return out;
 })();
 
-export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
+export function matchupTargetsForRootGenre(genre: RootGenreName | undefined): {
   advantageVs: string[];
   weakVs: string[];
 } {
@@ -437,7 +437,9 @@ export function matchupTargetsForAppGenre(genre: AppGenreName | undefined): {
   };
 }
 
-export function matchupIncomingFrom(genre: AppGenreName | undefined): string[] {
+export function matchupIncomingFrom(
+  genre: RootGenreName | undefined,
+): string[] {
   if (!genre) return [];
   const target = genre as GenreName;
   return (Object.keys(GENRE_BATTLE_MATCHUP) as GenreName[]).filter(
@@ -470,7 +472,7 @@ export function subgenreIntensity(subgenre: string): Intensity {
   return sub.intensity;
 }
 
-export function appGenreIntensity(genre: AppGenreName): Intensity {
+export function appGenreIntensity(genre: RootGenreName): Intensity {
   if (GENRE_NAMES.indexOf(genre as GenreName) === -1) {
     throw new Error(`Unknown app genre "${genre}"`);
   }
@@ -501,16 +503,16 @@ export function canonicalGenreFromSubgenre(subgenre: string): GenreName {
   return sub.parentA;
 }
 
-export function appGenreFromSubgenre(subgenre: string): AppGenreName {
+export function appGenreFromSubgenre(subgenre: string): RootGenreName {
   const canonical = canonicalGenreFromSubgenre(subgenre);
-  return canonical as AppGenreName;
+  return canonical as RootGenreName;
 }
 
 export function isGenreName(genre: string): genre is GenreName {
   return GENRE_NAMES.indexOf(genre as GenreName) !== -1;
 }
 
-export function displayGenreLabel(genre: AppGenreName): string {
+export function displayGenreLabel(genre: RootGenreName): string {
   return genre === "Mainstream" ? "Pop" : genre;
 }
 

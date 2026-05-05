@@ -2,13 +2,10 @@
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
-CREATE TYPE "CardKind" AS ENUM ('Card', 'Planned');
-
--- CreateEnum
-CREATE TYPE "CardStatus" AS ENUM ('Shipped', 'Wishlist', 'Planned');
-
--- CreateEnum
 CREATE TYPE "CardRarity" AS ENUM ('Legendary', 'Classic', 'Banger', 'Niche');
+
+-- CreateEnum
+CREATE TYPE "CardKind" AS ENUM ('Song', 'Transition');
 
 -- CreateEnum
 CREATE TYPE "Intensity" AS ENUM ('pop', 'soft', 'experimental', 'hardcore');
@@ -17,6 +14,7 @@ CREATE TYPE "Intensity" AS ENUM ('pop', 'soft', 'experimental', 'hardcore');
 CREATE TABLE "Genre" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "displayLabel" TEXT,
     "parentId" INTEGER,
     "parentBId" INTEGER,
     "blendFactor" DOUBLE PRECISION,
@@ -24,8 +22,8 @@ CREATE TABLE "Genre" (
     "colorOverride" TEXT,
     "influenceId" INTEGER,
     "influenceIntensity" "Intensity",
-    "displayLabel" TEXT,
     "wheelOrder" INTEGER,
+    "isCountry" BOOLEAN NOT NULL DEFAULT false,
     "theme" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -37,13 +35,8 @@ CREATE TABLE "Genre" (
 CREATE TABLE "Card" (
     "id" INTEGER NOT NULL,
     "rowKey" TEXT NOT NULL,
-    "status" "CardStatus" NOT NULL,
     "kind" "CardKind" NOT NULL,
     "title" TEXT NOT NULL,
-    "pop" INTEGER NOT NULL,
-    "rarity" "CardRarity" NOT NULL,
-    "ability" TEXT NOT NULL,
-    "abilityDesc" TEXT NOT NULL,
     "artworkKey" TEXT,
     "artworkContentType" TEXT,
     "artworkBytes" INTEGER,
@@ -52,11 +45,6 @@ CREATE TABLE "Card" (
     "artworkOverBorder" BOOLEAN NOT NULL DEFAULT false,
     "artworkCreatedAt" TIMESTAMP(3),
     "artworkPrompt" TEXT,
-    "wikipediaUrl" TEXT,
-    "spotifyUrl" TEXT,
-    "appleMusicUrl" TEXT,
-    "youtubeUrl" TEXT,
-    "bandcampUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -67,21 +55,71 @@ CREATE TABLE "Card" (
 CREATE TABLE "SongCard" (
     "id" INTEGER NOT NULL,
     "artist" TEXT,
-    "year" TEXT NOT NULL,
+    "year" TEXT,
     "genre" TEXT NOT NULL,
     "genreId" INTEGER,
     "country" TEXT,
+    "ability" TEXT NOT NULL,
+    "abilityDesc" TEXT NOT NULL,
+    "pop" INTEGER NOT NULL,
+    "rarity" "CardRarity" NOT NULL,
     "catalogNumber" INTEGER,
+    "wikipediaUrl" TEXT,
+    "spotifyUrl" TEXT,
+    "appleMusicUrl" TEXT,
+    "youtubeUrl" TEXT,
+    "bandcampUrl" TEXT,
+    "soundcloudUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "SongCard_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "SongCardSongTransition" (
+CREATE TABLE "TransitionCard" (
+    "id" INTEGER NOT NULL,
+    "genre" TEXT,
+    "genreId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "TransitionCard_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WishlistSong" (
+    "id" INTEGER NOT NULL,
+    "rowKey" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "artist" TEXT,
+    "year" TEXT,
+    "genre" TEXT,
+    "country" TEXT,
+    "ability" TEXT,
+    "abilityDesc" TEXT,
+    "pop" INTEGER,
+    "rarity" "CardRarity",
+    "artworkPrompt" TEXT,
+    "wikipediaUrl" TEXT,
+    "spotifyUrl" TEXT,
+    "appleMusicUrl" TEXT,
+    "youtubeUrl" TEXT,
+    "bandcampUrl" TEXT,
+    "soundcloudUrl" TEXT,
+    "comment" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "WishlistSong_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SongSongTransition" (
     "fromId" INTEGER NOT NULL,
     "toId" INTEGER NOT NULL,
 
-    CONSTRAINT "SongCardSongTransition_pkey" PRIMARY KEY ("fromId","toId")
+    CONSTRAINT "SongSongTransition_pkey" PRIMARY KEY ("fromId","toId")
 );
 
 -- CreateIndex
@@ -91,7 +129,10 @@ CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");
 CREATE UNIQUE INDEX "Card_rowKey_key" ON "Card"("rowKey");
 
 -- CreateIndex
-CREATE INDEX "SongCardSongTransition_toId_idx" ON "SongCardSongTransition"("toId");
+CREATE UNIQUE INDEX "WishlistSong_rowKey_key" ON "WishlistSong"("rowKey");
+
+-- CreateIndex
+CREATE INDEX "SongSongTransition_toId_idx" ON "SongSongTransition"("toId");
 
 -- AddForeignKey
 ALTER TABLE "Genre" ADD CONSTRAINT "Genre_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -109,8 +150,14 @@ ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_id_fkey" FOREIGN KEY ("id") REFE
 ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SongCardSongTransition" ADD CONSTRAINT "SongCardSongTransition_fromId_fkey" FOREIGN KEY ("fromId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TransitionCard" ADD CONSTRAINT "TransitionCard_id_fkey" FOREIGN KEY ("id") REFERENCES "Card"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SongCardSongTransition" ADD CONSTRAINT "SongCardSongTransition_toId_fkey" FOREIGN KEY ("toId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "TransitionCard" ADD CONSTRAINT "TransitionCard_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SongSongTransition" ADD CONSTRAINT "SongSongTransition_fromId_fkey" FOREIGN KEY ("fromId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SongSongTransition" ADD CONSTRAINT "SongSongTransition_toId_fkey" FOREIGN KEY ("toId") REFERENCES "SongCard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

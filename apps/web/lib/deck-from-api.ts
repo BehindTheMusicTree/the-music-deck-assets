@@ -2,7 +2,7 @@ import type { CardData } from "@/components/Card";
 import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
 import {
   APP_GENRE_THEMES,
-  type AppGenreName,
+  type RootGenreName,
   type Intensity,
   appGenreIntensity,
   displayGenreLabel,
@@ -53,9 +53,12 @@ export type ApiCardJson = {
 
 const ID_TO_APP_GENRE = Object.fromEntries(
   (
-    Object.entries(CATALOG_GENRE_REPRESENTATIVE_IDS) as [AppGenreName, number][]
+    Object.entries(CATALOG_GENRE_REPRESENTATIVE_IDS) as [
+      RootGenreName,
+      number,
+    ][]
   ).map(([g, id]) => [id, g]),
-) as Record<number, AppGenreName>;
+) as Record<number, RootGenreName>;
 
 export function apiCardToCardData(a: ApiCardJson): CardData {
   return {
@@ -124,7 +127,7 @@ function catalogCardIntensity(row: RawCatalogRow): Intensity {
     return subgenreIntensity(resolved.resolvedSubgenre);
   }
   if (resolved.resolvedGenre) {
-    return appGenreIntensity(resolved.resolvedGenre as AppGenreName);
+    return appGenreIntensity(resolved.resolvedGenre as RootGenreName);
   }
   throw new Error(
     `Cannot resolve intensity for "${row.card.title}" (${row.rowKey})`,
@@ -137,22 +140,22 @@ function catalogGenreLabel(row: RawCatalogRow): string {
     return "World";
   }
   if (!card.genre) return "—";
-  return displayGenreLabel(resolvedAppGenre(row));
+  return displayGenreLabel(resolvedRootGenre(row));
 }
 
-function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
+function resolvedRootGenre(row: RawCatalogRow): RootGenreName {
   const { card } = row;
   if (!card.genre) {
     throw new Error(`Catalog row "${row.rowKey}" has no card.genre`);
   }
   if (isCountrySubgenre(card.genre)) {
     throw new Error(
-      `Catalog row "${row.rowKey}": country-native "${card.genre}" must not reach resolvedAppGenre`,
+      `Catalog row "${row.rowKey}": country-native "${card.genre}" must not reach resolvedRootGenre`,
     );
   }
   const r = resolveThemeSelection({ genre: card.genre, country: card.country });
   if (r.resolvedGenre) {
-    return r.resolvedGenre as AppGenreName;
+    return r.resolvedGenre as RootGenreName;
   }
   throw new Error(
     `Catalog row "${card.title}" (genre "${card.genre}") has no resolved app genre`,
@@ -211,14 +214,14 @@ function wishlistInterimFromApi(a: ApiCardJson): {
   return { rowKey: a.rowKey, kind, card, theme };
 }
 
-function wishlistAppGenreLabel(card: CardData, rowKey: string): string {
+function wishlistRootGenreLabel(card: CardData, rowKey: string): string {
   if (card.genre && isCountrySubgenre(card.genre)) {
     return "World";
   }
   if (!card.genre) return "—";
   const r = resolveThemeSelection({ genre: card.genre, country: card.country });
   if (r.resolvedGenre) {
-    return displayGenreLabel(r.resolvedGenre as AppGenreName);
+    return displayGenreLabel(r.resolvedGenre as RootGenreName);
   }
   throw new Error(
     `Wishlist row "${rowKey}" (genre "${card.genre}") has no resolved app genre`,
@@ -239,7 +242,7 @@ function wishlistIntensity(card: CardData, rowKey: string): Intensity {
     return subgenreIntensity(resolved.resolvedSubgenre);
   }
   if (resolved.resolvedGenre) {
-    return appGenreIntensity(resolved.resolvedGenre as AppGenreName);
+    return appGenreIntensity(resolved.resolvedGenre as RootGenreName);
   }
   throw new Error(
     `Wishlist row "${rowKey}" (${card.title}): cannot resolve intensity`,
@@ -269,7 +272,7 @@ export function buildWishlistEntriesFromApi(
     card: row.card,
     theme: row.theme,
     ordinal: i + 1,
-    appGenreLabel: wishlistAppGenreLabel(row.card, row.rowKey),
+    appGenreLabel: wishlistRootGenreLabel(row.card, row.rowKey),
     intensity: wishlistIntensity(row.card, row.rowKey),
   }));
 }

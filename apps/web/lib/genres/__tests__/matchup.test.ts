@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   appGenreIntensity,
   matchupIncomingFrom,
-  matchupTargetsForAppGenre,
+  matchupTargetsForRootGenre,
 } from "../model";
 
 describe("genre mashup matchup rules", () => {
   it("Mainstream has no advantage and no weakness", () => {
-    expect(matchupTargetsForAppGenre("Mainstream")).toEqual({
+    expect(matchupTargetsForRootGenre("Mainstream")).toEqual({
       advantageVs: [],
       weakVs: [],
     });
@@ -15,19 +15,19 @@ describe("genre mashup matchup rules", () => {
   });
 
   it("Rock follows circular +2/-3 advantage and -2/+3 weakness", () => {
-    expect(matchupTargetsForAppGenre("Rock")).toEqual({
+    expect(matchupTargetsForRootGenre("Rock")).toEqual({
       advantageVs: ["Vintage", "Electronic"],
       weakVs: ["Disco/Funk", "Reggae/Dub"],
     });
   });
 
   it("genre matchup does not inherit subgenre influences", () => {
-    expect(matchupTargetsForAppGenre("Hip-Hop")).toEqual({
+    expect(matchupTargetsForRootGenre("Hip-Hop")).toEqual({
       advantageVs: ["Classical", "Reggae/Dub"],
       weakVs: ["Electronic", "Vintage"],
     });
     // Even with influenced subgenres, base wheel rule applies unchanged at genre level.
-    expect(matchupTargetsForAppGenre("Disco/Funk")).toEqual({
+    expect(matchupTargetsForRootGenre("Disco/Funk")).toEqual({
       advantageVs: ["Rock", "Vintage"],
       weakVs: ["Reggae/Dub", "Classical"],
     });

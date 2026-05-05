@@ -3,7 +3,7 @@ import { assignCatalogRowKeys } from "@repo/cards-domain";
 import type { CatalogSeriesType, GenreTheme } from "@/lib/card-theme-types";
 import {
   APP_GENRE_THEMES,
-  type AppGenreName,
+  type RootGenreName,
   type Intensity,
   appGenreIntensity,
   canonicalCountryFromSubgenre,
@@ -59,7 +59,7 @@ export type RawCatalogRow = {
   theme: GenreTheme;
 };
 
-export const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<AppGenreName, number> = {
+export const CATALOG_GENRE_REPRESENTATIVE_IDS: Record<RootGenreName, number> = {
   Rock: 1,
   Mainstream: 2,
   Electronic: 3,
@@ -79,7 +79,7 @@ type IntermCatalogRow = {
 };
 
 const _intermGenreRows: IntermCatalogRow[] = (
-  Object.keys(CATALOG_GENRE_REPRESENTATIVE_IDS) as AppGenreName[]
+  Object.keys(CATALOG_GENRE_REPRESENTATIVE_IDS) as RootGenreName[]
 ).map((g) => {
   const card = _allGenreCardsById.get(CATALOG_GENRE_REPRESENTATIVE_IDS[g]);
   if (!card) {
@@ -137,7 +137,7 @@ export function catalogMetaForGenreDeckCard(card: CardData): {
   }
   return {
     kind: "Genre",
-    theme: APP_GENRE_THEMES[r.resolvedGenre as AppGenreName],
+    theme: APP_GENRE_THEMES[r.resolvedGenre as RootGenreName],
   };
 }
 
@@ -200,7 +200,7 @@ function catalogCardIntensity(row: RawCatalogRow): Intensity {
     return subgenreIntensity(resolved.resolvedSubgenre);
   }
   if (resolved.resolvedGenre) {
-    return appGenreIntensity(resolved.resolvedGenre as AppGenreName);
+    return appGenreIntensity(resolved.resolvedGenre as RootGenreName);
   }
   throw new Error(
     `Cannot resolve intensity for "${row.card.title}" (${row.rowKey})`,
@@ -218,22 +218,22 @@ function catalogGenreLabel(row: RawCatalogRow): string {
     return "World";
   }
   if (!card.genre) return "—";
-  return displayGenreLabel(resolvedAppGenre(row));
+  return displayGenreLabel(resolvedRootGenre(row));
 }
 
-function resolvedAppGenre(row: RawCatalogRow): AppGenreName {
+function resolvedRootGenre(row: RawCatalogRow): RootGenreName {
   const { card } = row;
   if (!card.genre) {
     throw new Error(`Catalog row "${row.rowKey}" has no card.genre`);
   }
   if (isCountrySubgenre(card.genre)) {
     throw new Error(
-      `Catalog row "${row.rowKey}": country-native "${card.genre}" must not reach resolvedAppGenre`,
+      `Catalog row "${row.rowKey}": country-native "${card.genre}" must not reach resolvedRootGenre`,
     );
   }
   const r = resolveThemeSelection({ genre: card.genre, country: card.country });
   if (r.resolvedGenre) {
-    return r.resolvedGenre as AppGenreName;
+    return r.resolvedGenre as RootGenreName;
   }
   throw new Error(
     `Catalog row "${card.title}" (genre "${card.genre}") has no resolved app genre`,

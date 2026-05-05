@@ -16,7 +16,7 @@ const WHEEL_ORDER = [
 ] as const;
 
 export async function seedGenres(prisma: PrismaClient): Promise<void> {
-  // Pass 1: 8 AppGenre rows (no parentId)
+  // Pass 1: 8 RootGenre rows (no parentId)
   for (const name of APP_GENRE_NAMES) {
     const wheelIdx = WHEEL_ORDER.indexOf(name as (typeof WHEEL_ORDER)[number]);
     await prisma.genre.upsert({
@@ -106,7 +106,7 @@ export async function backfillCardGenreIds(
     select: { id: true, name: true },
   });
   const byName = new Map(genres.map((g) => [g.name, g.id]));
-  const songCards = await prisma.song.findMany({
+  const songCards = await prisma.songCard.findMany({
     where: { genreId: null },
     select: { id: true, genre: true },
   });
@@ -114,7 +114,7 @@ export async function backfillCardGenreIds(
   for (const sc of songCards) {
     const genreId = sc.genre ? byName.get(sc.genre) : undefined;
     if (genreId) {
-      await prisma.song.update({ where: { id: sc.id }, data: { genreId } });
+      await prisma.songCard.update({ where: { id: sc.id }, data: { genreId } });
       filled++;
     }
   }

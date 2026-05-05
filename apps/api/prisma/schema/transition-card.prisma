@@ -1,10 +1,9 @@
 model TransitionCard {
-  id        Int      @id
-  rowKey    String   @unique
-  title     String
+  id        Int    @id
+  card      Card   @relation(fields: [id], references: [id], onDelete: Cascade)
   genre     String?
   genreId   Int?
-  genreRef  Genre?   @relation(fields: [genreId], references: [id])
+  genreRef  Genre? @relation(fields: [genreId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

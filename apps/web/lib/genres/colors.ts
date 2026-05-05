@@ -1,6 +1,6 @@
 import type { GenreTheme } from "@/lib/card-theme-types";
 import { COUNTRY_DATA, countryFlagForShell } from "@/lib/countries";
-import type { AppGenreName, GenreName, NonMainstreamGenreName } from "./model";
+import type { RootGenreName, GenreName, NonMainstreamGenreName } from "./model";
 import {
   appGenreFromSubgenre,
   appGenreIntensity,
@@ -276,7 +276,7 @@ export function resolveThemeSelection({
       `Unknown genre or subgenre "${g}" (not a canonical subgenre and not a known app genre).`,
     );
   }
-  const appGenre = g as AppGenreName;
+  const appGenre = g as RootGenreName;
   const genreOnlyColor =
     appGenre === "Mainstream"
       ? GENRE_THEMES.Mainstream.border

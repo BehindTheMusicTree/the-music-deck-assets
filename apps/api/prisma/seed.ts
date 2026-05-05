@@ -1,6 +1,6 @@
 /** Catalog seed — `rowKey` = slugified `title-year`; see ./README.md */
 import { basename } from "node:path";
-import { PrismaClient } from "@prisma/client";
+import { CardKind, PrismaClient } from "@prisma/client";
 import {
   APP_GENRE_NAMES,
   assignCatalogRowKeys,
@@ -113,12 +113,37 @@ async function upsertShipped(row: ShippedRow): Promise<void> {
       })
     : null;
 
-  await prisma.song.upsert({
+  await prisma.card.upsert({
     where: { id: card.id },
     create: {
       id: card.id,
       rowKey,
+      kind: CardKind.Song,
       title: card.title,
+      artworkKey: artworkKeyFromCard(card),
+      artworkContentType: card.artwork ? "image/png" : null,
+      artworkOffsetY: card.artworkOffsetY ?? null,
+      artworkOverBorder: card.artworkOverBorder ?? false,
+      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
+      artworkPrompt: card.artworkPrompt ?? null,
+    },
+    update: {
+      rowKey,
+      kind: CardKind.Song,
+      title: card.title,
+      artworkKey: artworkKeyFromCard(card),
+      artworkContentType: card.artwork ? "image/png" : null,
+      artworkOffsetY: card.artworkOffsetY ?? null,
+      artworkOverBorder: card.artworkOverBorder ?? false,
+      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
+      artworkPrompt: card.artworkPrompt ?? null,
+    },
+  });
+
+  await prisma.songCard.upsert({
+    where: { id: card.id },
+    create: {
+      id: card.id,
       artist: card.artist ?? null,
       year: card.year,
       genre: card.genre,
@@ -129,12 +154,6 @@ async function upsertShipped(row: ShippedRow): Promise<void> {
       pop: card.pop,
       rarity: card.rarity,
       catalogNumber: card.catalogNumber ?? null,
-      artworkKey: artworkKeyFromCard(card),
-      artworkContentType: card.artwork ? "image/png" : null,
-      artworkOffsetY: card.artworkOffsetY ?? null,
-      artworkOverBorder: card.artworkOverBorder ?? false,
-      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
-      artworkPrompt: card.artworkPrompt ?? null,
       wikipediaUrl: WIKIPEDIA_URLS[card.id] ?? null,
       spotifyUrl: STREAMING_URLS[card.id]?.spotifyUrl ?? null,
       appleMusicUrl: STREAMING_URLS[card.id]?.appleMusicUrl ?? null,
@@ -143,24 +162,16 @@ async function upsertShipped(row: ShippedRow): Promise<void> {
       soundcloudUrl: STREAMING_URLS[card.id]?.soundcloudUrl ?? null,
     },
     update: {
-      rowKey,
-      title: card.title,
       artist: card.artist ?? null,
       year: card.year,
       genre: card.genre,
-      genreId: genreRow?.id ?? null,
+      genreId: genreRow?.id ?? undefined,
       country: card.country ?? null,
       ability: card.ability,
       abilityDesc: card.abilityDesc,
       pop: card.pop,
       rarity: card.rarity,
       catalogNumber: card.catalogNumber ?? null,
-      artworkKey: artworkKeyFromCard(card),
-      artworkContentType: card.artwork ? "image/png" : null,
-      artworkOffsetY: card.artworkOffsetY ?? null,
-      artworkOverBorder: card.artworkOverBorder ?? false,
-      artworkCreatedAt: dateFromArtworkCreatedAt(card.artworkCreatedAt),
-      artworkPrompt: card.artworkPrompt ?? null,
       wikipediaUrl: WIKIPEDIA_URLS[card.id] ?? null,
       spotifyUrl: STREAMING_URLS[card.id]?.spotifyUrl ?? null,
       appleMusicUrl: STREAMING_URLS[card.id]?.appleMusicUrl ?? null,
@@ -225,20 +236,31 @@ async function upsertTransition(row: TransitionRow): Promise<void> {
       })
     : null;
 
-  await prisma.transitionCard.upsert({
+  await prisma.card.upsert({
     where: { id: row.id },
     create: {
       id: row.id,
       rowKey: row.rowKey,
+      kind: CardKind.Transition,
       title: row.title,
+    },
+    update: {
+      rowKey: row.rowKey,
+      kind: CardKind.Transition,
+      title: row.title,
+    },
+  });
+
+  await prisma.transitionCard.upsert({
+    where: { id: row.id },
+    create: {
+      id: row.id,
       genre: row.genre,
       genreId: genreRow?.id ?? null,
     },
     update: {
-      rowKey: row.rowKey,
-      title: row.title,
       genre: row.genre,
-      genreId: genreRow?.id ?? null,
+      genreId: genreRow?.id ?? undefined,
     },
   });
 }
@@ -274,7 +296,7 @@ async function main(): Promise<void> {
   for (const row of wishlist) await upsertWishlist(row);
   for (const row of transitions) await upsertTransition(row);
 
-  await prisma.song.deleteMany({
+  await prisma.songCard.deleteMany({
     where: { id: { notIn: Array.from(validSongIds) } },
   });
   await prisma.wishlistSong.deleteMany({
@@ -282,6 +304,16 @@ async function main(): Promise<void> {
   });
   await prisma.transitionCard.deleteMany({
     where: { id: { notIn: transitions.map((t) => t.id) } },
+  });
+  await prisma.card.deleteMany({
+    where: {
+      id: {
+        notIn: [
+          ...Array.from(validSongIds),
+          ...transitions.map((t) => t.id),
+        ],
+      },
+    },
   });
 
   console.log(
