@@ -53,15 +53,15 @@ services:
     depends_on:
       s3:
         condition: service_healthy
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        set -eu
-        mc alias set local http://s3:9000 minioadmin minioadmin
-        mc mb --ignore-existing local/tmd-admin-artworks-dev
-        mc anonymous set download local/tmd-admin-artworks-dev
-        echo "Bucket tmd-admin-artworks-dev ready."
+    environment:
+      MINIO_ENDPOINT: http://s3:9000
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_BUCKETS: tmd-admin-artworks-dev
+      MINIO_PUBLIC: "true"
+    volumes:
+      - ./scripts/minio-init-buckets.sh:/init-buckets.sh
+    entrypoint: ["/bin/sh", "/init-buckets.sh"]
 
 volumes:
   tmd-admin-api-db-dev:
