@@ -1,18 +1,17 @@
 model Genre {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
   displayLabel String?
 
-  // Hierarchy: null for RootGenre; points to parent RootGenre row for subgenres
-  parentId  Int?
-  parent    Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
-  children  Genre[] @relation("SubgenreParent")
+  // Hierarchy: null for root genres and country subgenres; points to parent root Genre for genre-linked subgenres
+  parentId Int?
+  parent   Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
+  children Genre[] @relation("SubgenreParent")
 
-  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub @ t=0.42)
+  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub)
   parentBId     Int?
   parentB       Genre?  @relation("BlendParentB", fields: [parentBId], references: [id])
   blendChildren Genre[] @relation("BlendParentB")
-  blendFactor   Float?
 
   intensity     Intensity
   colorOverride String?
@@ -23,12 +22,17 @@ model Genre {
   influenced         Genre[] @relation("SubgenreInfluence")
   influenceIntensity Intensity?
 
-  // RootGenre only
+  // Root genres only
   wheelOrder Int?
-  isCountry  Boolean @default(false)
 
-  /** Printed catalogue TYPE segment (two chars): ISO alpha‑2 for country anchors; charter codes for wheel roots. */
-  printedTypeCode String? @db.VarChar(2)
+  /** TYPE segment (two chars) — set on root genres, null on subgenres.
+   *  References TypeCode to enforce global uniqueness across genres and territories. */
+  code     String?   @unique @db.VarChar(2)
+  typeCode TypeCode? @relation(fields: [code], references: [code])
+
+  /** Country-linked subgenres only — points to the territory that anchors this style. */
+  parentTerritoryId Int?
+  parentTerritory   Territory? @relation(fields: [parentTerritoryId], references: [id])
 
   theme Json?
 
@@ -38,4 +42,3 @@ model Genre {
   songs           SongCard[]
   transitionCards TransitionCard[]
 }
-

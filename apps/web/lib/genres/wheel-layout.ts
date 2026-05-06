@@ -63,7 +63,7 @@ function blendAngle(s: GenreSubgenre): number {
   let delta = aB - aA;
   if (delta > 180) delta -= 360;
   if (delta < -180) delta += 360;
-  return aA + delta * (s.t ?? 0.5);
+  return aA + delta * 0.5;
 }
 
 /**

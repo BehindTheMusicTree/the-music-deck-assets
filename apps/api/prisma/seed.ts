@@ -103,14 +103,16 @@ function collectTransitionRows(shipped: ShippedRow[], wishlist: WishlistRow[]): 
 }
 
 async function loadPrintedTypeCodeByGenreName(): Promise<Map<string, string>> {
-  const rows = await prisma.genre.findMany({
-    where: { printedTypeCode: { not: null } },
-    select: { name: true, printedTypeCode: true },
-  });
+  const [genreRows, territoryRows] = await Promise.all([
+    prisma.genre.findMany({
+      where: { code: { not: null } },
+      select: { name: true, code: true },
+    }),
+    prisma.territory.findMany({ select: { name: true, code: true } }),
+  ]);
   const out = new Map<string, string>();
-  for (const r of rows) {
-    if (r.printedTypeCode) out.set(r.name, r.printedTypeCode);
-  }
+  for (const r of genreRows) if (r.code) out.set(r.name, r.code);
+  for (const r of territoryRows) out.set(r.name, r.code);
   return out;
 }
 
@@ -176,6 +178,16 @@ async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<voi
         select: { id: true },
       })
     : null;
+  const territoryName = card.country?.trim() ? card.country.trim() : null;
+  const territoryRow = territoryName
+    ? await prisma.territory.findUnique({
+        where: { name: territoryName },
+        select: { id: true },
+      })
+    : null;
+  if (territoryName && !territoryRow) {
+    throw new Error(`Unknown territory "${territoryName}" for song card ${card.id}`);
+  }
 
   await prisma.card.upsert({
     where: { id: card.id },
@@ -213,7 +225,7 @@ async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<voi
       artist: persistedArtist(card.artist),
       year: card.year,
       genreId: genreRow?.id ?? null,
-      country: card.country ?? null,
+      territoryId: territoryRow?.id ?? null,
       ability: card.ability,
       abilityDesc: card.abilityDesc,
       pop: card.pop,
@@ -230,7 +242,7 @@ async function upsertShipped(row: ShippedRow, printedSetId: string): Promise<voi
       artist: persistedArtist(card.artist),
       year: card.year,
       genreId: genreRow?.id ?? undefined,
-      country: card.country ?? null,
+      territoryId: territoryRow?.id ?? null,
       ability: card.ability,
       abilityDesc: card.abilityDesc,
       pop: card.pop,

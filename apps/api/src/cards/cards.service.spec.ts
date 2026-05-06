@@ -1,19 +1,16 @@
 import { classifyGenreKind } from "./cards.service";
 
 describe("classifyGenreKind", () => {
-  it("returns COUNTRY_ROOT for country rows", () => {
-    expect(classifyGenreKind(true, false, null)).toBe("COUNTRY_ROOT");
+  it("returns COUNTRY_SUB_GENRE when parentTerritoryId is set", () => {
+    expect(classifyGenreKind(7, null)).toBe("COUNTRY_SUB_GENRE");
+    expect(classifyGenreKind(7, 42)).toBe("COUNTRY_SUB_GENRE");
   });
 
-  it("returns COUNTRY_SUB_GENRE when parent is country", () => {
-    expect(classifyGenreKind(false, true, 42)).toBe("COUNTRY_SUB_GENRE");
+  it("returns GENRE_ROOT when no parent and no territory", () => {
+    expect(classifyGenreKind(null, null)).toBe("GENRE_ROOT");
   });
 
-  it("returns GENRE_ROOT when no parent and not country", () => {
-    expect(classifyGenreKind(false, false, null)).toBe("GENRE_ROOT");
-  });
-
-  it("returns SUB_GENRE for non-country child with non-country parent", () => {
-    expect(classifyGenreKind(false, false, 42)).toBe("SUB_GENRE");
+  it("returns SUB_GENRE for genre-linked subgenre", () => {
+    expect(classifyGenreKind(null, 42)).toBe("SUB_GENRE");
   });
 });

@@ -14,7 +14,6 @@ interface BaseSubgenre {
   /** parentA is NonMainstreamGenreName for genre-linked, country name string for country-linked. */
   parentA: string;
   parentB?: NonMainstreamGenreName;
-  t?: number;
   intensity: Intensity;
   influence?: {
     genre: NonMainstreamGenreName;
@@ -226,7 +225,6 @@ export const SUBGENRES: Subgenre[] = [
     n: "Jungle",
     parentA: "Electronic",
     parentB: "Reggae/Dub",
-    t: 0.42,
     intensity: "EXPERIMENTAL",
     influence: { genre: "Reggae/Dub", intensity: "EXPERIMENTAL" },
   },

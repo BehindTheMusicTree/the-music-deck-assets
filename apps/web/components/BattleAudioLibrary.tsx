@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { COUNTRY_DATA } from "@/lib/countries";
 import { genreIntensityPromptTextOrEmpty } from "@/lib/battle-audio-element-prompts";
 import { GENRE_NAMES, type Intensity } from "@/lib/genres";
@@ -30,6 +30,13 @@ type ComboRow = {
   prompt: string;
   fileSizeMb: number | null;
   durationMin: number | null;
+};
+
+type AudioMeta = {
+  token: string;
+  version: number;
+  bytes: number;
+  durationSec: number | null;
 };
 
 const INTENSITIES: Intensity[] = ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"];
@@ -110,8 +117,44 @@ function buildCombinations(singles: SingleRow[]): ComboRow[] {
   return out;
 }
 
+/** Build a map from token → best metadata (highest version wins). */
+function buildMetaMap(audioList: AudioMeta[]): Map<string, { bytes: number; durationSec: number | null }> {
+  const map = new Map<string, { bytes: number; durationSec: number | null; version: number }>();
+  for (const a of audioList) {
+    const existing = map.get(a.token);
+    if (!existing || a.version > existing.version) {
+      map.set(a.token, { bytes: a.bytes, durationSec: a.durationSec, version: a.version });
+    }
+  }
+  return map;
+}
+
 export default function BattleAudioLibrary() {
-  const singles = useMemo(() => buildSingles(), []);
+  const baseSingles = useMemo(() => buildSingles(), []);
+  const [audioMeta, setAudioMeta] = useState<AudioMeta[]>([]);
+
+  useEffect(() => {
+    fetch("/api/battle-audio")
+      .then((r) => r.json() as Promise<AudioMeta[]>)
+      .then(setAudioMeta)
+      .catch(() => {/* silently ignore — metadata stays null */});
+  }, []);
+
+  const metaMap = useMemo(() => buildMetaMap(audioMeta), [audioMeta]);
+
+  const singles = useMemo<SingleRow[]>(() =>
+    baseSingles.map((row) => {
+      const meta = metaMap.get(row.key);
+      if (!meta) return row;
+      return {
+        ...row,
+        fileSizeMb: meta.bytes / (1024 * 1024),
+        durationMin: meta.durationSec != null ? meta.durationSec / 60 : null,
+      };
+    }),
+    [baseSingles, metaMap],
+  );
+
   const combos = useMemo(() => buildCombinations(singles), [singles]);
 
   const [singleSortBy, setSingleSortBy] = useState<keyof SingleRow>("key");
@@ -409,7 +452,7 @@ export default function BattleAudioLibrary() {
                     {row.fileSizeMb != null ? row.fileSizeMb.toFixed(1) : "—"}
                   </td>
                   <td className="px-3 py-2">
-                    {row.durationMin != null ? row.durationMin : "—"}
+                    {row.durationMin != null ? row.durationMin.toFixed(1) : "—"}
                   </td>
                 </tr>
               ))}
@@ -488,7 +531,7 @@ export default function BattleAudioLibrary() {
                     {row.fileSizeMb != null ? row.fileSizeMb.toFixed(1) : "—"}
                   </td>
                   <td className="px-3 py-2">
-                    {row.durationMin != null ? row.durationMin : "—"}
+                    {row.durationMin != null ? row.durationMin.toFixed(1) : "—"}
                   </td>
                 </tr>
               ))}

@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { BattleAudioModule } from "./battle-audio/battle-audio.module";
 import { CardsModule } from "./cards/cards.module";
 import { HealthController } from "./health.controller";
 import { PrismaModule } from "./prisma/prisma.module";
@@ -32,6 +33,7 @@ import { StorageModule } from "./storage/storage.module";
     PrismaModule,
     StorageModule,
     CardsModule,
+    BattleAudioModule,
   ],
   controllers: [HealthController],
 })

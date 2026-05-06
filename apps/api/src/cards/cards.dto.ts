@@ -26,7 +26,6 @@ export type CardStatusValue = (typeof CARD_STATUS_VALUES)[number];
 export type CardRarityValue = (typeof CARD_RARITY_VALUES)[number];
 export type CardKindValue = (typeof CARD_KIND_VALUES)[number];
 export const GENRE_TAXONOMY_KIND = {
-  COUNTRY_ROOT: "COUNTRY_ROOT",
   COUNTRY_SUB_GENRE: "COUNTRY_SUB_GENRE",
   GENRE_ROOT: "GENRE_ROOT",
   SUB_GENRE: "SUB_GENRE",
@@ -260,8 +259,11 @@ export class GenreTaxonomyEntryDto {
   @ApiPropertyOptional()
   parentBId?: number;
 
-  @ApiProperty()
-  isCountry!: boolean;
+  @ApiPropertyOptional({
+    description:
+      "Set on country-linked subgenres — ID of the Territory that anchors this style.",
+  })
+  parentTerritoryId?: number;
 
   @ApiPropertyOptional({
     enum: ["POP", "SOFT", "EXPERIMENTAL", "HARDCORE"],
@@ -279,10 +281,10 @@ export class GenreTaxonomyEntryDto {
 
   @ApiPropertyOptional({
     description:
-      "Printed catalogue TYPE segment when set (ISO alpha‑2 or charter root code).",
+      "Printed catalogue TYPE segment — set on root genres (charter code), null on subgenres.",
     maxLength: 2,
   })
-  printedTypeCode?: string;
+  code?: string;
 
   @ApiProperty()
   updatedAt!: string;

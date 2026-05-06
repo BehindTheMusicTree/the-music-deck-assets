@@ -5,6 +5,7 @@ import Link from "next/link";
 import BattlesSubTabs from "@/components/BattlesSubTabs";
 import BattleAudioPromptBuilder from "@/components/BattleAudioPromptBuilder";
 import BattleAudioLibrary from "@/components/BattleAudioLibrary";
+import { BattleAudioUploadForm } from "@/components/BattleAudioUploadForm";
 
 type BattlesTab = "overview" | "audio";
 
@@ -242,7 +243,7 @@ function BattlesOverview() {
 }
 
 function BattlesAudio() {
-  const [audioTab, setAudioTab] = useState<"overview" | "library">("overview");
+  const [audioTab, setAudioTab] = useState<"overview" | "library" | "upload">("overview");
   return (
     <div className="min-h-[calc(100vh-56px)] bg-bg px-6 py-12 sm:py-[60px] max-w-4xl mx-auto">
       <div className="page-kicker mb-4">Game</div>
@@ -259,11 +260,12 @@ function BattlesAudio() {
           {[
             { id: "overview", label: "Overview" },
             { id: "library", label: "Library" },
+            { id: "upload", label: "Upload" },
           ].map(({ id, label }) => (
             <button
               key={id}
               type="button"
-              onClick={() => setAudioTab(id as "overview" | "library")}
+              onClick={() => setAudioTab(id as "overview" | "library" | "upload")}
               className={[
                 "tab-font-13 whitespace-nowrap font-mono tracking-[0.12em] px-2.5 sm:px-3 py-2 no-underline border-b-2 -mb-px transition-colors",
                 audioTab === id
@@ -277,7 +279,17 @@ function BattlesAudio() {
         </div>
       </nav>
 
-      {audioTab === "overview" ? (
+      {audioTab === "upload" ? (
+        <section className="max-w-[760px]">
+          <h2 className="section-title mb-4">Upload battle audio</h2>
+          <p className="font-garamond text-muted mb-6">
+            Upload an MP3 to S3. The token must match the slug used by the
+            game client (e.g. <span className="font-mono text-white/70">genre-rock--intensity-experimental</span>).
+            Version 1 is the default; use higher versions for alternate takes.
+          </p>
+          <BattleAudioUploadForm />
+        </section>
+      ) : audioTab === "overview" ? (
         <>
           <section className="mb-10 max-w-[760px]">
             <h2 className="section-title mb-2">1) Battle audio strategy</h2>

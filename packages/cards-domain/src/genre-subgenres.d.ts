@@ -6,7 +6,6 @@ interface BaseSubgenre {
     color?: string;
     parentA: string;
     parentB?: NonMainstreamGenreName;
-    t?: number;
     intensity: Intensity;
     influence?: {
         genre: NonMainstreamGenreName;

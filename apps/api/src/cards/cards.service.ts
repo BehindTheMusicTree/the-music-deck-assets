@@ -39,6 +39,13 @@ function patchArtist(value: string | null | undefined): string | null | undefine
   return persistedArtist(value);
 }
 
+function normalizeCountry(value: string | null | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  const t = value.trim();
+  return t.length > 0 ? t : null;
+}
+
 type SongFull = SongCard & {
   card: Card;
   songsOut: { fromId: number; toId: number }[];
@@ -48,6 +55,7 @@ type SongFull = SongCard & {
     theme: Prisma.JsonValue | null;
     parent: { theme: Prisma.JsonValue | null } | null;
   } | null;
+  territory: { name: string } | null;
 };
 
 @Injectable()
@@ -82,7 +90,7 @@ export class CardsService {
       genre: genreRef?.name ?? "",
       genreId: genreRef?.id,
       genreTheme: toGenreThemeDto(genreRef?.theme ?? genreRef?.parent?.theme),
-      country: song.country ?? undefined,
+      country: song.territory?.name ?? undefined,
       ability: song.ability,
       abilityDesc: song.abilityDesc,
       pop: song.pop,
@@ -208,10 +216,10 @@ export class CardsService {
         name: true,
         parentId: true,
         parentBId: true,
-        isCountry: true,
+        parentTerritoryId: true,
         intensity: true,
         displayLabel: true,
-        printedTypeCode: true,
+        code: true,
         theme: true,
         updatedAt: true,
       },
@@ -223,22 +231,17 @@ export class CardsService {
       null,
     );
     const updatedAt = (latestUpdatedAt ?? new Date(0)).toISOString();
-    const byId = new Map(genres.map((g) => [g.id, g]));
     const entries: GenreTaxonomyEntryDto[] = genres.map((g) => ({
       id: g.id,
       name: g.name,
       parentId: g.parentId ?? undefined,
       parentBId: g.parentBId ?? undefined,
-      isCountry: g.isCountry,
+      parentTerritoryId: g.parentTerritoryId ?? undefined,
       intensity: g.intensity,
       displayLabel: g.displayLabel ?? undefined,
       theme: toGenreThemeDto(g.theme),
-      kind: classifyGenreKind(
-        g.isCountry,
-        g.parentId ? (byId.get(g.parentId)?.isCountry ?? false) : false,
-        g.parentId ?? null,
-      ),
-      printedTypeCode: g.printedTypeCode ?? undefined,
+      kind: classifyGenreKind(g.parentTerritoryId, g.parentId ?? null),
+      code: g.code ?? undefined,
       updatedAt: g.updatedAt.toISOString(),
     }));
     return {
@@ -293,6 +296,7 @@ export class CardsService {
           throw new BadRequestException("rarity is required for shipped songs");
         await this.assertSongsReferentialIntegrity(tx, songsOut, dto.id);
         const genreId = await this.resolveGenreId(tx, dto.genre);
+        const territoryId = await this.resolveTerritoryId(tx, dto.country);
         await this.assertPrintedSetIdMatchesSongStripe(
           tx,
           dto.printedSetId,
@@ -317,7 +321,7 @@ export class CardsService {
             artist: persistedArtist(dto.artist),
             year: dto.year,
             genreId,
-            country: dto.country ?? null,
+            territoryId,
             ability: dto.ability,
             abilityDesc: dto.abilityDesc,
             pop: dto.pop,
@@ -373,6 +377,7 @@ export class CardsService {
         include: {
           card: true,
           genreRef: { select: { name: true } },
+          territory: { select: { name: true } },
         },
       });
       const existingWishlist = await tx.wishlistSong.findUnique({
@@ -401,10 +406,16 @@ export class CardsService {
         const genreId = dto.genre
           ? await this.resolveGenreId(tx, dto.genre)
           : undefined;
+        const territoryId =
+          dto.country !== undefined
+            ? await this.resolveTerritoryId(tx, dto.country)
+            : undefined;
         const nextGenre =
           dto.genre ?? existingSong.genreRef?.name ?? "";
         const nextCountry =
-          dto.country !== undefined ? dto.country : existingSong.country;
+          dto.country !== undefined
+            ? normalizeCountry(dto.country)
+            : existingSong.territory?.name;
         const nextPrintedSetId =
           dto.printedSetId !== undefined
             ? dto.printedSetId
@@ -437,7 +448,7 @@ export class CardsService {
             artist: patchArtist(dto.artist),
             year: dto.year ?? undefined,
             genreId: genreId ?? undefined,
-            country: dto.country ?? undefined,
+            territoryId,
             ability: dto.ability ?? undefined,
             abilityDesc: dto.abilityDesc ?? undefined,
             pop: dto.pop ?? undefined,
@@ -642,14 +653,16 @@ export class CardsService {
   private async printedTypeCodeAnchorMap(
     tx: Prisma.TransactionClient,
   ): Promise<Map<string, string>> {
-    const rows = await tx.genre.findMany({
-      where: { printedTypeCode: { not: null } },
-      select: { name: true, printedTypeCode: true },
-    });
+    const [genreRows, territoryRows] = await Promise.all([
+      tx.genre.findMany({
+        where: { code: { not: null } },
+        select: { name: true, code: true },
+      }),
+      tx.territory.findMany({ select: { name: true, code: true } }),
+    ]);
     const m = new Map<string, string>();
-    for (const r of rows) {
-      if (r.printedTypeCode) m.set(r.name, r.printedTypeCode);
-    }
+    for (const r of genreRows) if (r.code) m.set(r.name, r.code);
+    for (const r of territoryRows) m.set(r.name, r.code);
     return m;
   }
 
@@ -696,6 +709,20 @@ export class CardsService {
     return g.id;
   }
 
+  private async resolveTerritoryId(
+    tx: Prisma.TransactionClient,
+    country: string | null | undefined,
+  ): Promise<number | null> {
+    const normalized = normalizeCountry(country);
+    if (normalized == null) return null;
+    const t = await tx.territory.findUnique({
+      where: { name: normalized },
+      select: { id: true },
+    });
+    if (!t) throw new BadRequestException(`Unknown country "${normalized}"`);
+    return t.id;
+  }
+
   private async assertSongsReferentialIntegrity(
     tx: Prisma.TransactionClient,
     songsOut: number[],
@@ -726,12 +753,10 @@ export class CardsService {
 }
 
 export function classifyGenreKind(
-  isCountry: boolean,
-  parentIsCountry: boolean,
+  parentTerritoryId: number | null | undefined,
   parentId: number | null,
 ): GenreTaxonomyKindValue {
-  if (isCountry) return "COUNTRY_ROOT";
-  if (parentIsCountry) return "COUNTRY_SUB_GENRE";
+  if (parentTerritoryId != null) return "COUNTRY_SUB_GENRE";
   if (!parentId) return "GENRE_ROOT";
   return "SUB_GENRE";
 }
@@ -832,6 +857,7 @@ const SONG_INCLUDE = {
       parent: { select: { theme: true } },
     },
   },
+  territory: { select: { name: true } },
 } satisfies Prisma.SongCardInclude;
 
 function safeDeckBasename(original: string, id: number): string {

@@ -3,7 +3,7 @@ import {
   APP_GENRE_THEMES,
   ROOT_GENRE_PRINTED_TYPE_CODE,
   SUBGENRES,
-  territoryToPrintedTypeCode,
+  TERRITORY_PRINTED_TYPE_CODE,
   type RootGenreName,
 } from "@repo/cards-domain";
 import { Intensity, Prisma, type PrismaClient } from "@prisma/client";
@@ -19,11 +19,36 @@ const WHEEL_ORDER = [
 ] as const;
 
 export async function seedGenres(prisma: PrismaClient): Promise<void> {
-  // Pass 1: 8 RootGenre rows (no parentId)
+  // Validate no code is used for both a root genre and a territory
+  const genreCodes = new Set(Object.values(ROOT_GENRE_PRINTED_TYPE_CODE));
+  const territoryCodes = new Set(Object.values(TERRITORY_PRINTED_TYPE_CODE));
+  const overlap = [...genreCodes].filter((c) => territoryCodes.has(c));
+  if (overlap.length > 0) {
+    throw new Error(`Genre/territory code collision: ${overlap.join(", ")}`);
+  }
+
+  // Pass 1: Register all TypeCode values (must exist before Genre and Territory rows)
+  for (const code of [...genreCodes, ...territoryCodes]) {
+    await prisma.typeCode.upsert({
+      where: { code },
+      create: { code },
+      update: {},
+    });
+  }
+
+  // Pass 2: Seed all Territory rows from the canonical territory map
+  for (const [name, code] of Object.entries(TERRITORY_PRINTED_TYPE_CODE)) {
+    await prisma.territory.upsert({
+      where: { name },
+      create: { name, code },
+      update: { code },
+    });
+  }
+
+  // Pass 3: Root genre rows (wheel anchors, no parent)
   for (const name of APP_GENRE_NAMES) {
     const wheelIdx = WHEEL_ORDER.indexOf(name as (typeof WHEEL_ORDER)[number]);
-    const printedTypeCode =
-      ROOT_GENRE_PRINTED_TYPE_CODE[name as RootGenreName];
+    const code = ROOT_GENRE_PRINTED_TYPE_CODE[name as RootGenreName];
     await prisma.genre.upsert({
       where: { name },
       create: {
@@ -31,16 +56,14 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
         intensity: name === "Mainstream" ? Intensity.POP : Intensity.SOFT,
         displayLabel: name === "Mainstream" ? "Pop" : null,
         wheelOrder: wheelIdx >= 0 ? wheelIdx + 1 : null,
-        isCountry: false,
-        printedTypeCode,
+        code,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
           )[name] ?? Prisma.DbNull,
       },
       update: {
-        isCountry: false,
-        printedTypeCode,
+        code,
         theme:
           (
             APP_GENRE_THEMES as unknown as Record<string, Prisma.InputJsonValue>
@@ -49,65 +72,63 @@ export async function seedGenres(prisma: PrismaClient): Promise<void> {
     });
   }
 
-  // Pass 2: one row per distinct country referenced by country subgenres
-  const countryNames = [
-    ...new Set(
-      SUBGENRES.filter((s) => s.kind === "country").map((s) => s.parentA),
-    ),
-  ];
-  for (const name of countryNames) {
-    const printedTypeCode = territoryToPrintedTypeCode(name);
-    await prisma.genre.upsert({
-      where: { name },
-      create: {
-        name,
-        intensity: Intensity.SOFT,
-        isCountry: true,
-        printedTypeCode,
-      },
-      update: { isCountry: true, printedTypeCode },
-    });
-  }
-
-  // Pass 3: ~80 subgenre rows
+  // Pass 4: Subgenre rows
   for (const sub of SUBGENRES) {
-    const parentId = (
-      await prisma.genre.findUniqueOrThrow({ where: { name: sub.parentA } })
-    ).id;
-
-    const parentBId =
-      sub.kind === "genre" && sub.parentB
+    if (sub.kind === "country") {
+      const territory = await prisma.territory.findUniqueOrThrow({
+        where: { name: sub.parentA },
+      });
+      await prisma.genre.upsert({
+        where: { name: sub.n },
+        create: {
+          name: sub.n,
+          intensity: sub.intensity as Intensity,
+          colorOverride: sub.color ?? null,
+          parentTerritoryId: territory.id,
+        },
+        update: {
+          parentTerritoryId: territory.id,
+          parentId: null,
+          code: null,
+        },
+      });
+    } else {
+      const parent = await prisma.genre.findUniqueOrThrow({
+        where: { name: sub.parentA },
+      });
+      const parentBId = sub.parentB
+        ? (
+            await prisma.genre.findUniqueOrThrow({ where: { name: sub.parentB } })
+          ).id
+        : null;
+      const influenceId = sub.influence
         ? (
             await prisma.genre.findUniqueOrThrow({
-              where: { name: sub.parentB },
+              where: { name: sub.influence.genre },
             })
           ).id
         : null;
 
-    const influenceId = sub.influence
-      ? (
-          await prisma.genre.findUniqueOrThrow({
-            where: { name: sub.influence.genre },
-          })
-        ).id
-      : null;
-
-    await prisma.genre.upsert({
-      where: { name: sub.n },
-      create: {
-        name: sub.n,
-        parentId,
-        parentBId,
-        blendFactor: "t" in sub ? (sub.t ?? null) : null,
-        intensity: sub.intensity as Intensity,
-        colorOverride: sub.color ?? null,
-        isCountry: false,
-        influenceId,
-        influenceIntensity: sub.influence
-          ? (sub.influence.intensity as Intensity)
-          : null,
-      },
-      update: { isCountry: false },
-    });
+      await prisma.genre.upsert({
+        where: { name: sub.n },
+        create: {
+          name: sub.n,
+          parentId: parent.id,
+          parentBId,
+          intensity: sub.intensity as Intensity,
+          colorOverride: sub.color ?? null,
+          influenceId,
+          influenceIntensity: sub.influence
+            ? (sub.influence.intensity as Intensity)
+            : null,
+        },
+        update: {
+          parentId: parent.id,
+          parentBId,
+          code: null,
+          parentTerritoryId: null,
+        },
+      });
+    }
   }
 }

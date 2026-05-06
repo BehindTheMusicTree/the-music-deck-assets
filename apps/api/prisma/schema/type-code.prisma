@@ -1,0 +1,10 @@
+/** Registry of all valid two-character TYPE segments.
+ *  Both Genre.code and Territory.code FK here, so a code can never be
+ *  used by two rows in the same table (unique FKs) — cross-table exclusivity
+ *  is validated at seed time. */
+model TypeCode {
+  code String @id @db.VarChar(2)
+
+  genre     Genre?
+  territory Territory?
+}

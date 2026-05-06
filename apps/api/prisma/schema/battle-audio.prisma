@@ -1,0 +1,17 @@
+// Kept in sync with root `schema.prisma` (generator entry point). Prisma loads `prisma/schema.prisma` only.
+
+model BattleAudio {
+  id          Int       @id @default(autoincrement())
+  /// Slug identifying the combination, e.g. "genre-rock--intensity-experimental", "country-france"
+  token       String
+  version     Int       @default(1)
+  audioKey    String
+  contentType String    @default("audio/mpeg")
+  bytes       Int
+  checksum    String
+  durationSec Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([token, version])
+}

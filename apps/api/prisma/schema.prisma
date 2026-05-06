@@ -26,21 +26,44 @@ enum Intensity {
   HARDCORE
 }
 
+/** Registry of all valid two-character TYPE segments.
+ *  Both Genre.code and Territory.code FK here, so a code can never be
+ *  used by two rows in the same table (unique FKs) — cross-table exclusivity
+ *  is validated at seed time. */
+model TypeCode {
+  code String @id @db.VarChar(2)
+
+  genre     Genre?
+  territory Territory?
+}
+
+/** One row per territory (sovereign state or significant sub-national region).
+ *  Seeded from TERRITORY_PRINTED_TYPE_CODE in cards-domain — do not edit manually. */
+model Territory {
+  id       Int      @id @default(autoincrement())
+  /** FK into TypeCode — guarantees the code is registered and unique across the registry. */
+  code     String   @unique @db.VarChar(2)
+  typeCode TypeCode @relation(fields: [code], references: [code])
+  name     String   @unique
+
+  genres     Genre[]
+  songCards  SongCard[]
+}
+
 model Genre {
   id           Int     @id @default(autoincrement())
   name         String  @unique
   displayLabel String?
 
-  // Hierarchy: null for RootGenre; points to parent RootGenre row for subgenres
+  // Hierarchy: null for root genres and country subgenres; points to parent root Genre for genre-linked subgenres
   parentId Int?
   parent   Genre?  @relation("SubgenreParent", fields: [parentId], references: [id])
   children Genre[] @relation("SubgenreParent")
 
-  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub @ t=0.42)
+  // Blend: second parent (e.g. Jungle = Electronic + Reggae/Dub)
   parentBId     Int?
   parentB       Genre?  @relation("BlendParentB", fields: [parentBId], references: [id])
   blendChildren Genre[] @relation("BlendParentB")
-  blendFactor   Float?
 
   intensity     Intensity
   colorOverride String?
@@ -51,12 +74,17 @@ model Genre {
   influenced         Genre[] @relation("SubgenreInfluence")
   influenceIntensity Intensity?
 
-  // RootGenre only
+  // Root genres only
   wheelOrder Int?
-  isCountry  Boolean @default(false)
 
-  /** Printed catalogue TYPE segment (two chars): ISO alpha‑2 for country anchors; charter codes for wheel roots. */
-  printedTypeCode String? @db.VarChar(2)
+  /** TYPE segment (two chars) — set on root genres, null on subgenres.
+   *  References TypeCode to enforce global uniqueness across genres and territories. */
+  code     String?   @unique @db.VarChar(2)
+  typeCode TypeCode? @relation(fields: [code], references: [code])
+
+  /** Country-linked subgenres only — points to the territory that anchors this style. */
+  parentTerritoryId Int?
+  parentTerritory   Territory? @relation(fields: [parentTerritoryId], references: [id])
 
   theme Json?
 
@@ -96,8 +124,9 @@ model SongCard {
   artist        String?
   year          String?
   genreId       Int?
-  genreRef      Genre?   @relation(fields: [genreId], references: [id])
-  country       String?
+  genreRef      Genre?     @relation(fields: [genreId], references: [id])
+  territoryId   Int?
+  territory     Territory? @relation(fields: [territoryId], references: [id])
   ability       String
   abilityDesc   String
   pop           Int
@@ -160,4 +189,20 @@ model SongSongTransition {
 
   @@id([fromId, toId])
   @@index([toId])
+}
+
+model BattleAudio {
+  id          Int       @id @default(autoincrement())
+  /// Slug identifying the combination, e.g. "genre-rock--intensity-experimental", "country-france"
+  token       String
+  version     Int       @default(1)
+  audioKey    String
+  contentType String    @default("audio/mpeg")
+  bytes       Int
+  checksum    String
+  durationSec Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([token, version])
 }

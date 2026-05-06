@@ -5,8 +5,9 @@ model SongCard {
   artist        String?
   year          String?
   genreId       Int?
-  genreRef      Genre?   @relation(fields: [genreId], references: [id])
-  country       String?
+  genreRef      Genre?     @relation(fields: [genreId], references: [id])
+  territoryId   Int?
+  territory     Territory? @relation(fields: [territoryId], references: [id])
   ability       String
   abilityDesc   String
   pop           Int

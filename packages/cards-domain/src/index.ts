@@ -65,6 +65,7 @@ export { intensityLevelIndex, SUBGENRES } from "./genre-subgenres";
 export {
   PRINTED_DEFAULT_SEASON,
   ROOT_GENRE_PRINTED_TYPE_CODE,
+  TERRITORY_PRINTED_TYPE_CODE,
   formatPrintedSetId,
   printedSetIdTypeSegment,
   printedTypeCodeForSongCard,

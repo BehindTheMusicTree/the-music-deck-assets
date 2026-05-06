@@ -1,0 +1,12 @@
+/** One row per territory (sovereign state or significant sub-national region).
+ *  Seeded from TERRITORY_PRINTED_TYPE_CODE in cards-domain — do not edit manually. */
+model Territory {
+  id   Int    @id @default(autoincrement())
+  /** FK into TypeCode — guarantees the code is registered and unique across the registry. */
+  code String @unique @db.VarChar(2)
+  typeCode TypeCode @relation(fields: [code], references: [code])
+  name String @unique
+
+  genres    Genre[]
+  songCards SongCard[]
+}

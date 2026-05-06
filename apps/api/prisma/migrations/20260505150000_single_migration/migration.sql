@@ -10,21 +10,34 @@ CREATE TYPE "CardKind" AS ENUM ('SONG', 'TRANSITION');
 -- CreateEnum
 CREATE TYPE "Intensity" AS ENUM ('POP', 'SOFT', 'EXPERIMENTAL', 'HARDCORE');
 
--- CreateTable
+-- CreateTable TypeCode (shared code registry — enforces global uniqueness of TYPE segments)
+CREATE TABLE "TypeCode" (
+    "code" VARCHAR(2) NOT NULL,
+    CONSTRAINT "TypeCode_pkey" PRIMARY KEY ("code")
+);
+
+-- CreateTable Territory
+CREATE TABLE "Territory" (
+    "id" SERIAL NOT NULL,
+    "code" VARCHAR(2) NOT NULL,
+    "name" TEXT NOT NULL,
+    CONSTRAINT "Territory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable Genre
 CREATE TABLE "Genre" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "displayLabel" TEXT,
     "parentId" INTEGER,
     "parentBId" INTEGER,
-    "blendFactor" DOUBLE PRECISION,
     "intensity" "Intensity" NOT NULL,
     "colorOverride" TEXT,
     "influenceId" INTEGER,
     "influenceIntensity" "Intensity",
     "wheelOrder" INTEGER,
-    "isCountry" BOOLEAN NOT NULL DEFAULT false,
-    "printedTypeCode" VARCHAR(2),
+    "code" VARCHAR(2),
+    "parentTerritoryId" INTEGER,
     "theme" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -32,7 +45,7 @@ CREATE TABLE "Genre" (
     CONSTRAINT "Genre_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable Card
 CREATE TABLE "Card" (
     "id" INTEGER NOT NULL,
     "rowKey" TEXT NOT NULL,
@@ -53,13 +66,13 @@ CREATE TABLE "Card" (
     CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable SongCard
 CREATE TABLE "SongCard" (
     "id" INTEGER NOT NULL,
     "artist" TEXT,
     "year" TEXT,
     "genreId" INTEGER,
-    "country" TEXT,
+    "territoryId" INTEGER,
     "ability" TEXT NOT NULL,
     "abilityDesc" TEXT NOT NULL,
     "pop" INTEGER NOT NULL,
@@ -79,7 +92,7 @@ CREATE TABLE "SongCard" (
       CHECK ("artist" IS NULL OR length(trim("artist")) > 0)
 );
 
--- CreateTable
+-- CreateTable TransitionCard
 CREATE TABLE "TransitionCard" (
     "id" INTEGER NOT NULL,
     "genre" TEXT,
@@ -90,7 +103,7 @@ CREATE TABLE "TransitionCard" (
     CONSTRAINT "TransitionCard_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable WishlistSong
 CREATE TABLE "WishlistSong" (
     "id" INTEGER NOT NULL,
     "rowKey" TEXT NOT NULL,
@@ -119,7 +132,7 @@ CREATE TABLE "WishlistSong" (
       CHECK ("artist" IS NULL OR length(trim("artist")) > 0)
 );
 
--- CreateTable
+-- CreateTable SongSongTransition
 CREATE TABLE "SongSongTransition" (
     "fromId" INTEGER NOT NULL,
     "toId" INTEGER NOT NULL,
@@ -127,8 +140,33 @@ CREATE TABLE "SongSongTransition" (
     CONSTRAINT "SongSongTransition_pkey" PRIMARY KEY ("fromId","toId")
 );
 
+-- CreateTable BattleAudio
+CREATE TABLE "BattleAudio" (
+    "id" SERIAL NOT NULL,
+    "token" TEXT NOT NULL,
+    "version" INTEGER NOT NULL DEFAULT 1,
+    "audioKey" TEXT NOT NULL,
+    "contentType" TEXT NOT NULL DEFAULT 'audio/mpeg',
+    "bytes" INTEGER NOT NULL,
+    "checksum" TEXT NOT NULL,
+    "durationSec" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "BattleAudio_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Territory_code_key" ON "Territory"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Territory_name_key" ON "Territory"("name");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Genre_name_key" ON "Genre"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Genre_code_key" ON "Genre"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Card_rowKey_key" ON "Card"("rowKey");
@@ -141,6 +179,18 @@ CREATE UNIQUE INDEX "WishlistSong_rowKey_key" ON "WishlistSong"("rowKey");
 
 -- CreateIndex
 CREATE INDEX "SongSongTransition_toId_idx" ON "SongSongTransition"("toId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BattleAudio_token_version_key" ON "BattleAudio"("token", "version");
+
+-- AddForeignKey
+ALTER TABLE "Territory" ADD CONSTRAINT "Territory_code_fkey" FOREIGN KEY ("code") REFERENCES "TypeCode"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Genre" ADD CONSTRAINT "Genre_code_fkey" FOREIGN KEY ("code") REFERENCES "TypeCode"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Genre" ADD CONSTRAINT "Genre_parentTerritoryId_fkey" FOREIGN KEY ("parentTerritoryId") REFERENCES "Territory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Genre" ADD CONSTRAINT "Genre_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -156,6 +206,9 @@ ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_id_fkey" FOREIGN KEY ("id") REFE
 
 -- AddForeignKey
 ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "Genre"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SongCard" ADD CONSTRAINT "SongCard_territoryId_fkey" FOREIGN KEY ("territoryId") REFERENCES "Territory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TransitionCard" ADD CONSTRAINT "TransitionCard_id_fkey" FOREIGN KEY ("id") REFERENCES "Card"("id") ON DELETE CASCADE ON UPDATE CASCADE;
