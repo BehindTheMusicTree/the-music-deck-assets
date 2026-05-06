@@ -1,0 +1,128 @@
+# Sync environment variables from GitHub to Vercel (Production and Preview).
+# Run manually: Actions → Sync Vercel env → Run workflow.
+# Uses GitHub Environments so BACKEND_URL can differ per env:
+#   GitHub PROD → Vercel "production"; GitHub STAGING → Vercel "preview".
+# Required secrets/vars:
+#   Repo secrets: VERCEL_TOKEN, VERCEL_PROJECT_ID
+#   In each GitHub Environment (PROD, STAGING):
+#     vars: BACKEND_URL
+#     secrets: ADMIN_API_TOKEN, VERCEL_DEPLOY_HOOK
+name: Sync Vercel env
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync-production:
+    name: Sync to Vercel production
+    runs-on: ubuntu-latest
+    environment: PROD
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
+      ADMIN_API_TOKEN: ${{ secrets.ADMIN_API_TOKEN }}
+    steps:
+      - name: Validate required env vars
+        run: |
+          missing=""
+          [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
+          [ -z "$VERCEL_PROJECT_ID" ] && missing="$missing VERCEL_PROJECT_ID"
+          [ -z "$VERCEL_DEPLOY_HOOK" ] && missing="$missing VERCEL_DEPLOY_HOOK"
+          [ -z "$BACKEND_URL" ] && missing="$missing BACKEND_URL"
+          [ -z "$ADMIN_API_TOKEN" ] && missing="$missing ADMIN_API_TOKEN"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing or empty (repo secrets/vars or PROD env):$missing"
+            exit 1
+          fi
+          echo "All required env vars are set."
+
+      - name: Sync to Vercel production
+        run: |
+          set -e
+          sync_var() {
+            local value="$1"
+            local key="$2"
+            [ -z "$value" ] && return 0
+            echo "Syncing $key to production..."
+            body=$(jq -n --arg key "$key" --arg value "$value" '{key:$key, value:$value, type:"plain", target:["production"]}')
+            curl -sS -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/env?upsert=true" \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "$body"
+          }
+          sync_secret_var() {
+            local value="$1"
+            local key="$2"
+            [ -z "$value" ] && return 0
+            echo "Syncing $key (secret) to production..."
+            body=$(jq -n --arg key "$key" --arg value "$value" '{key:$key, value:$value, type:"sensitive", target:["production"]}')
+            curl -sS -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/env?upsert=true" \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "$body"
+          }
+          sync_var "$BACKEND_URL" "BACKEND_URL"
+          sync_secret_var "$ADMIN_API_TOKEN" "ADMIN_API_TOKEN"
+          echo "Production sync done."
+
+      - name: Trigger Vercel production deploy
+        run: curl -f -sS -X POST "$VERCEL_DEPLOY_HOOK"
+
+  sync-staging:
+    name: Sync to Vercel preview (staging)
+    runs-on: ubuntu-latest
+    environment: STAGING
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
+      ADMIN_API_TOKEN: ${{ secrets.ADMIN_API_TOKEN }}
+    steps:
+      - name: Validate required env vars
+        run: |
+          missing=""
+          [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
+          [ -z "$VERCEL_PROJECT_ID" ] && missing="$missing VERCEL_PROJECT_ID"
+          [ -z "$VERCEL_DEPLOY_HOOK" ] && missing="$missing VERCEL_DEPLOY_HOOK"
+          [ -z "$BACKEND_URL" ] && missing="$missing BACKEND_URL"
+          [ -z "$ADMIN_API_TOKEN" ] && missing="$missing ADMIN_API_TOKEN"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing or empty (repo secrets/vars or STAGING env):$missing"
+            exit 1
+          fi
+          echo "All required env vars are set."
+
+      - name: Sync to Vercel preview
+        run: |
+          set -e
+          sync_var() {
+            local value="$1"
+            local key="$2"
+            [ -z "$value" ] && return 0
+            echo "Syncing $key to preview..."
+            body=$(jq -n --arg key "$key" --arg value "$value" '{key:$key, value:$value, type:"plain", target:["preview"]}')
+            curl -sS -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/env?upsert=true" \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "$body"
+          }
+          sync_secret_var() {
+            local value="$1"
+            local key="$2"
+            [ -z "$value" ] && return 0
+            echo "Syncing $key (secret) to preview..."
+            body=$(jq -n --arg key "$key" --arg value "$value" '{key:$key, value:$value, type:"sensitive", target:["preview"]}')
+            curl -sS -X POST "https://api.vercel.com/v10/projects/${VERCEL_PROJECT_ID}/env?upsert=true" \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "$body"
+          }
+          sync_var "$BACKEND_URL" "BACKEND_URL"
+          sync_secret_var "$ADMIN_API_TOKEN" "ADMIN_API_TOKEN"
+          echo "Preview sync done."
+
+      - name: Trigger Vercel preview (staging) deploy
+        run: curl -f -sS -X POST "$VERCEL_DEPLOY_HOOK"
