@@ -1,4 +1,4 @@
-name: API image (GHCR)
+name: Build and push API image (GHCR)
 
 on:
   workflow_call:

@@ -12,8 +12,6 @@ on:
     branches: [main, develop]
     tags:
       - "v*"
-      - "dev"
-      - "dev-*"
 
 permissions:
   contents: read
@@ -24,8 +22,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  resolve-version:
-    name: Resolve version & target env
+  determine-version:
+    name: Determine version
     runs-on: ubuntu-latest
     outputs:
       app_version: ${{ steps.version.outputs.app_version }}
@@ -34,6 +32,13 @@ jobs:
       deployment_environment: ${{ steps.version.outputs.deployment_environment }}
     steps:
       - name: Checkout code
+        if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/checkout@v5.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Checkout for main branch
+        if: github.ref == 'refs/heads/main'
         uses: actions/checkout@v5.0.1
         with:
           fetch-depth: 0
@@ -41,43 +46,26 @@ jobs:
       - name: Set version and environment
         id: version
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/dev ]]; then
-            VERSION=$(tr -d '[:space:]' < VERSION)
-            if [ -z "$VERSION" ]; then
-              echo "Error: VERSION file is empty or missing."
-              exit 1
-            fi
-            {
-              echo "app_version=${VERSION}-dev"
-              echo "image_tag=dev"
-              echo "env=staging"
-              echo "deployment_environment=STAGING"
-            } >> "$GITHUB_OUTPUT"
-            echo "dev tag -> STAGING"
-          elif [[ "$GITHUB_REF" == refs/tags/dev-* ]]; then
-            VERSION=$(tr -d '[:space:]' < VERSION)
-            if [ -z "$VERSION" ]; then
-              echo "Error: VERSION file is empty or missing."
-              exit 1
-            fi
-            TAG="${GITHUB_REF#refs/tags/}"
-            {
-              echo "app_version=${VERSION}-${TAG}"
-              echo "image_tag=${TAG}"
-              echo "env=staging"
-              echo "deployment_environment=STAGING"
-            } >> "$GITHUB_OUTPUT"
-            echo "dev-* tag -> STAGING (${TAG})"
-          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
-            {
-              echo "app_version=$VERSION"
-              echo "image_tag=$VERSION"
-              echo "env=prod"
-              echo "deployment_environment=PROD"
-            } >> "$GITHUB_OUTPUT"
-            echo "Release tag v${VERSION} -> PROD"
-          elif [[ "$GITHUB_REF" == refs/heads/develop ]]; then
+            if [[ "$VERSION" == *-* ]]; then
+              {
+                echo "app_version=$VERSION"
+                echo "image_tag=$VERSION"
+                echo "env=staging"
+                echo "deployment_environment=STAGING"
+              } >> "$GITHUB_OUTPUT"
+              echo "Prerelease/dev tag -> STAGING, staging"
+            else
+              {
+                echo "app_version=$VERSION"
+                echo "image_tag=$VERSION"
+                echo "env=prod"
+                echo "deployment_environment=PROD"
+              } >> "$GITHUB_OUTPUT"
+              echo "Release tag -> PROD, production"
+            fi
+          elif [[ "$GITHUB_REF" == refs/heads/main ]]; then
             VERSION=$(tr -d '[:space:]' < VERSION)
             if [ -z "$VERSION" ]; then
               echo "Error: VERSION file is empty or missing."
@@ -89,41 +77,28 @@ jobs:
               echo "env=staging"
               echo "deployment_environment=STAGING"
             } >> "$GITHUB_OUTPUT"
-            echo "develop push -> STAGING, staging"
-          elif [[ "$GITHUB_REF" == refs/heads/main ]]; then
-            VERSION=$(tr -d '[:space:]' < VERSION)
-            if [ -z "$VERSION" ]; then
-              echo "Error: VERSION file is empty or missing."
-              exit 1
-            fi
-            {
-              echo "app_version=${VERSION}-prod"
-              echo "image_tag=prod"
-              echo "env=prod"
-              echo "deployment_environment=PROD"
-            } >> "$GITHUB_OUTPUT"
-            echo "main push -> PROD, prod"
+            echo "Main push -> STAGING, staging"
           else
             echo "Error: Unsupported ref '$GITHUB_REF'."
-            echo "Only branches 'main', 'develop', tags 'dev' / 'dev-*', or release tags matching 'v*' are supported."
+            echo "Only 'main' branch or tags matching 'v*' are supported."
             exit 1
           fi
 
   build-api-image:
     name: Build API container image
-    needs: [resolve-version]
-    uses: ./.github/workflows/api-image-ghcr.yml
+    needs: [determine-version]
+    uses: ./.github/workflows/build-and-push-api-image-ghcr.yml
     with:
-      app_version: ${{ needs.resolve-version.outputs.app_version }}
-      image_tag: ${{ needs.resolve-version.outputs.image_tag }}
-      environment: ${{ needs.resolve-version.outputs.deployment_environment }}
+      app_version: ${{ needs.determine-version.outputs.app_version }}
+      image_tag: ${{ needs.determine-version.outputs.image_tag }}
+      environment: ${{ needs.determine-version.outputs.deployment_environment }}
     secrets: inherit
 
   deploy-preflight:
     name: Verify deploy configuration
     runs-on: ubuntu-latest
-    needs: [resolve-version]
-    environment: ${{ needs.resolve-version.outputs.deployment_environment }}
+    needs: [determine-version]
+    environment: ${{ needs.determine-version.outputs.deployment_environment }}
     steps:
       - name: Require deploy and app-name vars (set-image-tag-on-server)
         run: |
@@ -144,20 +119,20 @@ jobs:
 
   set-remote-api-tag:
     name: Set API image tag on server
-    needs: [build-api-image, resolve-version, deploy-preflight]
+    needs: [build-api-image, determine-version, deploy-preflight]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/set-image-tag-on-server.yml@main
     with:
-      env: ${{ needs.resolve-version.outputs.env }}
-      tag: ${{ needs.resolve-version.outputs.image_tag }}
+      env: ${{ needs.determine-version.outputs.env }}
+      tag: ${{ needs.determine-version.outputs.image_tag }}
       app_name: ${{ vars.TMD_ADMIN_API_APP_NAME }}
     secrets: inherit
 
   trigger-redeploy:
     name: Trigger VPS redeploy webhook
     needs:
-      [build-api-image, set-remote-api-tag, deploy-preflight, resolve-version]
+      [build-api-image, set-remote-api-tag, deploy-preflight, determine-version]
     uses: BehindTheMusicTree/github-workflows/.github/workflows/call-redeployment-webhook.yml@v1.0.4
     with:
-      env: ${{ needs.resolve-version.outputs.env }}
+      env: ${{ needs.determine-version.outputs.env }}
       hook_id_base: ${{ vars.TMD_ADMIN_REDEPLOYMENT_HOOK_ID_BASE }}
     secrets: inherit
