@@ -10,7 +10,7 @@ const TABS = [
   { href: "/rarities", label: "Rarities" },
   { href: "/collection", label: "Collection" },
   { href: "/catalog", label: "Catalog" },
-  { href: "/tracklists", label: "Song Lists" },
+  { href: "/tracklists", label: "Track Lists" },
   { href: "/battles", label: "Battles" },
   { href: "/charter", label: "Charter" },
 ] as const;

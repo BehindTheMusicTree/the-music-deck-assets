@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Song Lists" };
+export const metadata: Metadata = { title: "Track Lists" };
 
 export default function SongListsPage() {
   return (
     <div className="min-h-[calc(100vh-56px)] bg-bg px-6 py-12 sm:py-[60px] max-w-4xl mx-auto">
       <div className="page-kicker mb-4">Game</div>
       <h1 className="font-cinzel text-3xl font-bold tracking-[4px] text-white mb-3">
-        Song Lists
+        Track Lists
       </h1>
       <p className="font-garamond italic text-muted mb-8 max-w-[560px]">
         Deck building — assemble your track list before a battle. Choose your
